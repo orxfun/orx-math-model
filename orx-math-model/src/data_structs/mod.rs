@@ -1,0 +1,10 @@
+pub(crate) mod current_set_indices;
+pub(crate) mod expr_sum_refs;
+pub(crate) mod expr_term_refs;
+pub(crate) mod forall_set_refs;
+pub mod funvec;
+mod funvec_from_data;
+mod funvec_from_numbers;
+pub(crate) mod smallvec;
+pub(crate) mod sum_over_set_refs;
+pub(crate) mod var_scalar_refs;
