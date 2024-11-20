@@ -20,15 +20,15 @@ fn print<X: Debug + Display>(x: &X) {
 }
 // fn consume_data(_: Model<Built>) {}
 
-#[allow(clippy::precedence)]
-fn main() {
-    let graph = Rc::new(SoaMcnfGraph::default());
-    let mcnf = Mcnf::new(graph).unwrap();
+// #[allow(clippy::precedence)]
+// fn main() {
+//     let graph = Rc::new(SoaMcnfGraph::default());
+//     let mcnf = Mcnf::new(graph).unwrap();
 
-    println!("{}", mcnf.x);
+//     println!("{}", mcnf.x);
 
-    println!("{:?}", mcnf.model);
-}
+//     println!("{:?}", mcnf.model);
+// }
 
 fn get_constraint<C: Into<Constraint<Building>> + Debug + Display>(c: C) {
     let c: Constraint<Building> = c.into();

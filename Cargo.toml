@@ -1,10 +1,16 @@
 [package]
-name = "okay"
-version = "0.1.0"
+name = "orx-math-model"
+version = "1.0.3"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+authors = ["orxfun <orx.ugur.arikan@gmail.com>"]
+description = "Traits to unify all vectors!"
+license = "MIT"
+repository = "https://github.com/orxfun/orx-v/"
+keywords = ["optimization", "mathematical", "model", "linear", "solver"]
+categories = ["mathematics", "algorithms", "science", "no-std"]
 
 [dependencies]
-orx-imp-vec = "0.9.7"
-smallvec = "1.11.2"
+
+[features]
+default = ["std"]
+std = []
