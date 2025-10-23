@@ -1,4 +1,5 @@
 mod sets;
+mod symbol;
 mod symbol_data;
 mod symbol_ref;
 
