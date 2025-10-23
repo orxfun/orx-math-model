@@ -1,5 +1,6 @@
 use crate::{model::Model, symbols::SetData};
 
+#[derive(Clone, Copy)]
 pub struct Set<'m> {
     model: &'m Model,
     data: &'m SetData,
