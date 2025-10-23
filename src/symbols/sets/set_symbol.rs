@@ -1,5 +1,6 @@
 use crate::symbols::{sets::set_ref::Set, symbol::Symbol, SetData};
 
+#[derive(Default)]
 pub struct SetSymbol;
 
 impl Symbol for SetSymbol {
