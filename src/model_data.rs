@@ -1,5 +1,5 @@
-use crate::symbols::{SetData, SymbolDataCollection};
+use crate::symbols::{SetSymbol, SymbolDataCollection};
 
 pub struct ModelData {
-    sets: SymbolDataCollection<SetData>,
+    sets: SymbolDataCollection<SetSymbol>,
 }
