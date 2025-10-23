@@ -1,3 +1,4 @@
+mod definition;
 mod sets;
 mod symbol;
 mod symbol_data;
