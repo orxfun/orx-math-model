@@ -6,4 +6,6 @@ fn sets() {
     let i = model.set("i");
     let j = i;
     let k = i;
+
+    i.definition("definition");
 }
