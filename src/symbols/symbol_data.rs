@@ -2,8 +2,10 @@ use orx_imp_vec::ImpVec;
 
 pub trait SymbolData {}
 
-pub struct SymbolDataCollection<S: SymbolData> {
-    storage: ImpVec<S>,
+pub struct SymbolDataCollection<D: SymbolData> {
+    storage: ImpVec<D>,
 }
 
-impl<S: SymbolData> SymbolDataCollection<S> {}
+impl<D: SymbolData> SymbolDataCollection<D> {
+    pub fn push(&self) {}
+}

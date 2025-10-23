@@ -1,11 +1,11 @@
 use crate::model::Model;
 
-pub struct Symbol<'m, Data> {
+pub struct SymbolRef<'m, Data> {
     model: &'m Model,
     data: &'m Data,
 }
 
-impl<'m, Data> Clone for Symbol<'m, Data> {
+impl<'m, Data> Clone for SymbolRef<'m, Data> {
     fn clone(&self) -> Self {
         Self {
             model: self.model,
@@ -14,9 +14,9 @@ impl<'m, Data> Clone for Symbol<'m, Data> {
     }
 }
 
-impl<'m, Data> Copy for Symbol<'m, Data> {}
+impl<'m, Data> Copy for SymbolRef<'m, Data> {}
 
-impl<'m, Data> Symbol<'m, Data> {
+impl<'m, Data> SymbolRef<'m, Data> {
     pub fn new(model: &'m Model, data: &'m Data) -> Self {
         Self { model, data }
     }
