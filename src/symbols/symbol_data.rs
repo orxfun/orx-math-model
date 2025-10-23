@@ -1,24 +1,8 @@
-use crate::{
-    model::Model,
-    symbols::{symbol::Symbol, symbol_ref::SymbolRef},
-};
-use orx_imp_vec::ImpVec;
+use crate::symbols::definition::Definition;
+use alloc::string::String;
 
-pub struct SymbolDataCollection<S: Symbol> {
-    data_vec: ImpVec<S::Data>,
-}
-
-impl<S: Symbol> Default for SymbolDataCollection<S> {
-    fn default() -> Self {
-        Self {
-            data_vec: Default::default(),
-        }
-    }
-}
-
-impl<S: Symbol> SymbolDataCollection<S> {
-    pub fn push<'m>(&'m self, model: &'m Model, data: S::Data) -> S::Ref<'m> {
-        let data_ref = self.data_vec.imp_push_get_ref(data);
-        SymbolRef::new(model, data_ref).into()
-    }
+pub struct SymbolData<Data> {
+    pub key: String,
+    pub definition: Definition,
+    pub data: Data,
 }

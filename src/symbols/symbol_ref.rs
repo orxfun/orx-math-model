@@ -1,8 +1,8 @@
-use crate::model::Model;
+use crate::{model::Model, symbols::symbol_data::SymbolData};
 
 pub struct SymbolRef<'m, Data> {
     model: &'m Model,
-    data: &'m Data,
+    data: &'m SymbolData<Data>,
 }
 
 impl<'m, Data> Clone for SymbolRef<'m, Data> {
@@ -17,7 +17,7 @@ impl<'m, Data> Clone for SymbolRef<'m, Data> {
 impl<'m, Data> Copy for SymbolRef<'m, Data> {}
 
 impl<'m, Data> SymbolRef<'m, Data> {
-    pub fn new(model: &'m Model, data: &'m Data) -> Self {
+    pub fn new(model: &'m Model, data: &'m SymbolData<Data>) -> Self {
         Self { model, data }
     }
 }
