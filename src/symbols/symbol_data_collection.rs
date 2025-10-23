@@ -20,18 +20,7 @@ impl<S: Symbol> Default for SymbolDataCollection<S> {
 }
 
 impl<S: Symbol> SymbolDataCollection<S> {
-    pub fn push<'m>(
-        &'m self,
-        model: &'m Model,
-        key: String,
-        definition: Definition,
-        data: S::Data,
-    ) -> S::Ref<'m> {
-        let symbol_data = SymbolData {
-            key,
-            definition,
-            data,
-        };
+    pub fn push<'m>(&'m self, model: &'m Model, symbol_data: SymbolData<S::Data>) -> S::Ref<'m> {
         let data_ref = self.data_vec.imp_push_get_ref(symbol_data);
         SymbolRef::new(model, data_ref).into()
     }

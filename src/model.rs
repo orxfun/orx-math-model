@@ -1,6 +1,6 @@
 use crate::{
     model_data::ModelData,
-    symbols::{Set, SetData},
+    symbols::{Set, SetData, SymbolData},
 };
 use alloc::string::String;
 
@@ -17,11 +17,13 @@ impl Model {
     // symbols
 
     pub fn set(&self, key: impl Into<String>) -> Set<'_> {
-        todo!()
-        // let data = SetData {
-        //     key: key.into(),
-        //     definition: Default::default(),
-        // };
-        // self.data.sets.push(self, data)
+        let data = SetData {};
+        let symbol_data = SymbolData {
+            key: key.into(),
+            definition: Default::default(),
+            data,
+        };
+
+        self.data.sets.push(self, symbol_data)
     }
 }
