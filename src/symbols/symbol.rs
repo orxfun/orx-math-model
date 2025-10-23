@@ -1,1 +1,1 @@
-pub trait Symbol {}
+pub trait SymbolData {}
