@@ -1,4 +1,4 @@
-use crate::symbols::symbol::SymbolData;
+use crate::symbols::symbol_data::SymbolData;
 use alloc::string::String;
 
 pub struct SetData {

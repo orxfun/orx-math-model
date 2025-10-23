@@ -1,6 +1,6 @@
 mod sets;
 mod symbol;
-mod symbol_data_collection;
+mod symbol_data;
 
 pub use sets::SetData;
-pub use symbol_data_collection::SymbolDataCollection;
+pub use symbol_data::SymbolDataCollection;

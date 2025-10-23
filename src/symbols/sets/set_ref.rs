@@ -1,13 +1,10 @@
-use crate::{model::Model, symbols::SetData};
+use crate::symbols::{symbol::Symbol, SetData};
 
 #[derive(Clone, Copy)]
-pub struct Set<'m> {
-    model: &'m Model,
-    data: &'m SetData,
-}
+pub struct Set<'m>(Symbol<'m, SetData>);
 
-impl<'m> Set<'m> {
-    pub fn new(model: &'m Model, data: &'m SetData) -> Self {
-        Self { model, data }
+impl<'m> From<Symbol<'m, SetData>> for Set<'m> {
+    fn from(value: Symbol<'m, SetData>) -> Self {
+        Self(value)
     }
 }
