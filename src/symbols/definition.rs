@@ -12,4 +12,9 @@ impl Definition {
         let x = unsafe { &mut *self.0.get() };
         *x = definition.into();
     }
+
+    pub fn value(&self) -> &str {
+        let x = unsafe { &*self.0.get() };
+        x.as_str()
+    }
 }
