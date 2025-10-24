@@ -1,12 +1,12 @@
 use crate::{
     model::Model,
-    symbols::{symbol_data::SymbolData, symbol_definition::SymbolDef},
+    symbols::{symbol::Symbol, symbol_data::SymbolData},
 };
 use alloc::string::String;
 
 pub struct SymbolRef<'m, S>
 where
-    S: SymbolDef,
+    S: Symbol,
 {
     pub(crate) model: &'m Model,
     pub(crate) data: &'m SymbolData<S>,
@@ -14,7 +14,7 @@ where
 
 impl<'m, S> Clone for SymbolRef<'m, S>
 where
-    S: SymbolDef,
+    S: Symbol,
 {
     fn clone(&self) -> Self {
         Self {
@@ -24,11 +24,11 @@ where
     }
 }
 
-impl<'m, S> Copy for SymbolRef<'m, S> where S: SymbolDef {}
+impl<'m, S> Copy for SymbolRef<'m, S> where S: Symbol {}
 
 impl<'m, S> SymbolRef<'m, S>
 where
-    S: SymbolDef,
+    S: Symbol,
 {
     // pub(crate) fn new(model: &'m Model, data: &'m SymbolData<Data>) -> Self {
     //     Self { model, data }

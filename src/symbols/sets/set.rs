@@ -1,4 +1,4 @@
-use crate::symbols::{symbol_ref::SymbolRef, SetData, SetSymbol, Symbol};
+use crate::symbols::{symbol_ref::SymbolRef, SetData, SetSymbol, Sym};
 use core::fmt::Debug;
 
 #[derive(Clone, Copy)]
@@ -6,7 +6,7 @@ pub struct Set<'m> {
     symbol: SymbolRef<'m, SetSymbol>,
 }
 
-impl<'m> Symbol<'m, SetSymbol> for Set<'m> {
+impl<'m> Sym<'m, SetSymbol> for Set<'m> {
     type Data = SetData;
 }
 
