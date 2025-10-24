@@ -1,8 +1,8 @@
-use crate::symbols::definition::Definition;
+use crate::symbols::{definition::Definition, symbol_definition::SymbolDef};
 use alloc::string::String;
 
-pub struct SymbolData<Data> {
+pub struct SymbolData<S: SymbolDef> {
     pub key: String,
     pub definition: Definition,
-    pub data: Data,
+    pub data: S::Data,
 }

@@ -1,26 +1,26 @@
-use crate::symbols::symbol_ref::SymbolRef;
-use core::{fmt::Debug, ops::Deref};
+use crate::symbols::{symbol_definition::SymbolDef, symbol_ref::SymbolRef};
+use core::fmt::Debug;
 
-pub trait Symbol: Default {
+pub trait Symbol<'m, S>
+where
+    S: SymbolDef,
+    Self: SymbolReq<'m, S>,
+    S::Data: 'm,
+{
     type Data;
-
-    type Ref<'m>: SymbolRefReq<'m, Self::Data>
-    where
-        <Self as Symbol>::Data: 'm;
 }
 
 // required traits from Symbol::Ref
 
-pub trait SymbolRefReq<'m, Data>:
-    From<SymbolRef<'m, Data>> + Deref<Target = SymbolRef<'m, Data>> + Debug
+pub trait SymbolReq<'m, S>: From<SymbolRef<'m, S>> + Debug
 where
-    Data: 'm,
+    S: SymbolDef,
 {
 }
 
-impl<'m, Data, X> SymbolRefReq<'m, Data> for X
+impl<'m, S, X> SymbolReq<'m, S> for X
 where
-    Data: 'm,
-    X: From<SymbolRef<'m, Data>> + Deref<Target = SymbolRef<'m, Data>> + Debug,
+    S: SymbolDef,
+    X: From<SymbolRef<'m, S>> + Debug,
 {
 }
