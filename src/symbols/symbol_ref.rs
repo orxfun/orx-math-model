@@ -1,0 +1,34 @@
+use crate::{
+    model::Model,
+    symbols::{symbol::Symbol, symbol_data::SymbolData},
+};
+use alloc::string::String;
+
+pub struct SymbolRef<'m, S>
+where
+    S: Symbol,
+{
+    pub model: &'m Model,
+    pub data: &'m SymbolData<S>,
+}
+
+impl<'m, S> Clone for SymbolRef<'m, S>
+where
+    S: Symbol,
+{
+    fn clone(&self) -> Self {
+        *self
+    }
+}
+
+impl<'m, S> Copy for SymbolRef<'m, S> where S: Symbol {}
+
+impl<'m, S> SymbolRef<'m, S>
+where
+    S: Symbol,
+{
+    pub fn definition(self, definition: impl Into<String>) -> Self {
+        self.data.definition.set(definition);
+        self
+    }
+}

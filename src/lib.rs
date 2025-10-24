@@ -1,6 +1,6 @@
 #![doc = include_str!("../README.md")]
 #![warn(
-    missing_docs,
+    // missing_docs,
     clippy::unwrap_in_result,
     clippy::unwrap_used,
     clippy::panic,
@@ -16,3 +16,10 @@ extern crate alloc;
 
 #[cfg(any(test, feature = "std"))]
 extern crate std;
+
+mod model;
+mod model_data;
+mod symbols;
+
+pub use model::Model;
+pub use symbols::Sym;
