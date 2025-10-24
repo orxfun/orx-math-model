@@ -10,9 +10,9 @@ keywords = ["optimization", "mathematical", "model", "linear", "solver"]
 categories = ["mathematics", "algorithms", "science", "no-std"]
 
 [dependencies]
-orx-imp-vec = "2.8"
-orx-pinned-vec = "3.10"
-orx-split-vec = "3.10"
+orx-imp-vec = "2.17"
+orx-pinned-vec = "3.21"
+orx-split-vec = "3.22"
 
 [features]
 default = []
