@@ -1,9 +1,7 @@
-use alloc::boxed::Box;
-
-pub type Elements<S> = Box<dyn Iterator<Item = <S as SetGen>::Element>>;
+use alloc::vec::Vec;
 
 pub trait SetGen {
-    type Element;
-
-    fn elements(&self, set_values: usize) -> Elements<Self>;
+    /// TODO: set_values as usize is a placeholder
+    /// Takes storage, returns (elements, storage) tuple.
+    fn elements(&self, set_values: usize, storage: Vec<usize>) -> (Vec<usize>, Vec<usize>);
 }
