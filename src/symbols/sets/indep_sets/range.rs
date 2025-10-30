@@ -28,7 +28,7 @@ where
     Range<T>: ExactSizeIterator<Item = T> + Clone,
 {
     fn elements(&self, _: usize, storage: &mut Elements) {
-        storage.fill(
+        storage.fill_from_iter(
             Some(self.range.len()),
             self.range.clone().into_iter().map(|x| x.into()),
         );
