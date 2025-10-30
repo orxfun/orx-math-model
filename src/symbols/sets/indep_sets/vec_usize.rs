@@ -1,4 +1,4 @@
-use crate::symbols::sets::set_gen::{Elements, SetGen};
+use crate::symbols::sets::set_gen::{Elements, SetGenZzz};
 use alloc::vec::Vec;
 
 pub struct SetVecUsize {
@@ -18,7 +18,7 @@ impl From<&[usize]> for SetVecUsize {
     }
 }
 
-impl SetGen for SetVecUsize {
+impl SetGenZzz for SetVecUsize {
     fn elements<'a>(&'a self, _: usize, _: &'a mut [usize]) -> Elements<'a> {
         Elements::Owned(&self.values)
     }

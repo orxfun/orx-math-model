@@ -1,11 +1,11 @@
-use crate::symbols::sets::set_gen::{Elements, SetGen};
+use crate::symbols::sets::{elements::Elements, set_gen::SetGen};
 use alloc::vec::Vec;
 use core::ops::Range;
 
 pub struct SetRange<T>
 where
     T: Into<usize>,
-    Range<T>: Iterator<Item = T> + Clone,
+    Range<T>: ExactSizeIterator<Item = T> + Clone,
 {
     range: Range<T>,
     values: Vec<usize>,
@@ -14,7 +14,7 @@ where
 impl<T> From<Range<T>> for SetRange<T>
 where
     T: Into<usize>,
-    Range<T>: Iterator<Item = T> + Clone,
+    Range<T>: ExactSizeIterator<Item = T> + Clone,
 {
     fn from(range: Range<T>) -> Self {
         let values = range.clone().map(|x| x.into()).collect();
@@ -25,9 +25,12 @@ where
 impl<T> SetGen for SetRange<T>
 where
     T: Into<usize>,
-    Range<T>: Iterator<Item = T> + Clone,
+    Range<T>: ExactSizeIterator<Item = T> + Clone,
 {
-    fn elements<'a>(&'a self, _: usize, _: &'a mut [usize]) -> Elements<'a> {
-        Elements::Owned(&self.values)
+    fn elements(&self, _: usize, storage: &mut Elements) {
+        storage.fill(
+            Some(self.range.len()),
+            self.range.clone().into_iter().map(|x| x.into()),
+        );
     }
 }

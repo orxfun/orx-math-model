@@ -1,4 +1,4 @@
-use crate::symbols::sets::set_gen::{Elements, SetGen};
+use crate::symbols::sets::set_gen::{Elements, SetGenZzz};
 use alloc::vec::Vec;
 
 macro_rules! define_set_vec_integer {
