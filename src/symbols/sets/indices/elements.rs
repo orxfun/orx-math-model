@@ -23,7 +23,7 @@ impl<'a> Elements<'a> {
         self.independent_elements[depth.depth()] = elements;
     }
 
-    pub fn set_stored_elements(&mut self, depth: Depth, elements: impl Iterator<Item = usize>) {
+    pub fn set_stored_elements(&mut self, depth: Depth, elements: impl IntoIterator<Item = usize>) {
         let vec = &mut self.stored_elements[depth.depth()];
         vec.clear();
         vec.extend(elements);

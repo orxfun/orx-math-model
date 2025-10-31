@@ -17,7 +17,7 @@ where
         &'m self,
         depth: Depth,
         set_depths: SetDepths<'_>,
-        current_indices: &IndexValues,
+        index_values: &IndexValues,
         elements: &'m mut Elements<'m>,
     ) {
         let set_depth = set_depths.depth_of(self.set);

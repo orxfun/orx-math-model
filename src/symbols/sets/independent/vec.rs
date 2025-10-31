@@ -4,8 +4,8 @@ use alloc::vec::Vec;
 
 // usize
 
-impl SetGen for Vec<usize> {
-    fn set_elements<'m>(
+impl<'m> SetGen<'m> for Vec<usize> {
+    fn set_elements(
         &'m self,
         depth: Depth,
         _: SetDepths<'_>,
@@ -17,9 +17,9 @@ impl SetGen for Vec<usize> {
 }
 
 impl IntoSetGen for Vec<usize> {
-    type SetGen = Self;
+    type SetGen<'m> = Self;
 
-    fn into_set_gen(self) -> Self::SetGen {
+    fn into_set_gen<'m>(self) -> Self::SetGen<'m> {
         self
     }
 }

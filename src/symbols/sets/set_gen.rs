@@ -1,17 +1,17 @@
 use crate::symbols::sets::indices::{Depth, Elements, IndexValues, SetDepths};
 
-pub trait SetGen {
-    fn set_elements<'m>(
+pub trait SetGen<'m> {
+    fn set_elements(
         &'m self,
         depth: Depth,
         set_depths: SetDepths<'_>,
-        current_indices: &IndexValues,
+        index_values: &IndexValues,
         elements: &'m mut Elements<'m>,
     );
 }
 
 pub trait IntoSetGen {
-    type SetGen: SetGen;
+    type SetGen<'m>: SetGen<'m>;
 
-    fn into_set_gen(self) -> Self::SetGen;
+    fn into_set_gen<'m>(self) -> Self::SetGen<'m>;
 }
