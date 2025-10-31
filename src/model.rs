@@ -1,8 +1,5 @@
-use crate::{
-    model_data::ModelData,
-    symbols::{Set, SetData, SymbolData},
-};
-use alloc::string::String;
+use crate::model_data::ModelData;
+use crate::symbols::{Set, SetData, SetKind, SymbolData};
 
 #[derive(Default)]
 pub struct Model {
@@ -17,7 +14,10 @@ impl Model {
     // symbols
 
     pub fn set(&self) -> Set<'_> {
-        let data = SetData {};
+        let data = SetData {
+            kind: SetKind::Independent,
+        };
+
         let symbol_data = SymbolData {
             key: Default::default(),
             definition: Default::default(),

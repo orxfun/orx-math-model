@@ -1,5 +1,5 @@
 use crate::symbols::symbol_ref::SymbolRef;
-use crate::symbols::{sets::dependent::DependentSubset, SetData, SetSymbol, Sym};
+use crate::symbols::{sets::dependent::DependentSubset, SetKind, SetSymbol, Sym};
 use core::fmt::Debug;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -29,7 +29,7 @@ impl<'m> From<Set<'m>> for SymbolRef<'m, SetSymbol> {
 }
 
 impl<'m> Sym<'m, SetSymbol> for Set<'m> {
-    type Data = SetData;
+    type Data = SetKind;
 }
 
 // derive from Set

@@ -8,5 +8,5 @@ mod set_symbol;
 mod subsets;
 
 pub use set::Set;
-pub use set_data::SetData;
+pub use set_data::{SetData, SetKind};
 pub use set_symbol::SetSymbol;

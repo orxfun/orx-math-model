@@ -9,7 +9,7 @@ mod symbol_data_collection;
 mod symbol_map;
 mod symbol_ref;
 
-pub use sets::{Set, SetData, SetSymbol};
+pub use sets::{Set, SetData, SetKind, SetSymbol};
 pub use sym::Sym;
 pub use symbol_data::SymbolData;
 pub use symbol_data_collection::SymbolDataCollection;
