@@ -7,9 +7,9 @@ where
     usize: From<T>,
     Range<T>: Iterator<Item = T>,
 {
-    type SetGen<'m> = Vec<usize>;
+    type SetGen = Vec<usize>;
 
-    fn into_set_gen<'m>(self) -> Self::SetGen<'m> {
+    fn into_set_gen(self) -> Self::SetGen {
         self.map(usize::from).collect()
     }
 }

@@ -18,11 +18,11 @@ where
     }
 }
 
-impl<'m, F> SetGen<'m> for DependentSubset<'m, F>
+impl<'a, F> SetGen for DependentSubset<'a, F>
 where
     F: Fn(usize, usize) -> bool,
 {
-    fn set_elements(
+    fn set_elements<'m>(
         &'m self,
         depth: Depth,
         set_depths: SetDepths<'_>,

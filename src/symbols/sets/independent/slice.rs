@@ -4,9 +4,9 @@ use alloc::vec::Vec;
 // usize
 
 impl IntoSet for &[usize] {
-    type SetGen<'m> = Vec<usize>;
+    type SetGen = Vec<usize>;
 
-    fn into_set_gen<'m>(self) -> Self::SetGen<'m> {
+    fn into_set_gen(self) -> Self::SetGen {
         self.to_vec()
     }
 }

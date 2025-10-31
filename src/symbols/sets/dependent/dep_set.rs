@@ -11,12 +11,12 @@ where
     elements: E,
 }
 
-impl<'m, const N: usize, I, E> SetGen<'m> for DependentSet<'m, N, I, E>
+impl<'a, const N: usize, I, E> SetGen for DependentSet<'a, N, I, E>
 where
     I: IntoIterator<Item = usize>,
     E: Fn(&[usize], [usize; N]) -> I,
 {
-    fn set_elements(
+    fn set_elements<'m>(
         &'m self,
         depth: Depth,
         set_depths: SetDepths<'_>,
