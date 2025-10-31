@@ -11,7 +11,7 @@ impl SetGen for Vec<usize> {
         depth: Depth,
         _: SetDepths<'_>,
         _: &IndexValues,
-        elements: &'m mut Elements<'m>,
+        elements: &mut Elements<'m>,
     ) {
         elements.set_independent_elements(depth, &self);
     }

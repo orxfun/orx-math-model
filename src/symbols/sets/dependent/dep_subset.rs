@@ -27,7 +27,7 @@ where
         depth: Depth,
         set_depths: SetDepths<'_>,
         index_values: &IndexValues,
-        elements: &'m mut Elements<'m>,
+        elements: &mut Elements<'m>,
     ) {
         let parent_depth = set_depths.depth_of(self.parent);
         let parent_elements = elements.parent_elements(depth, parent_depth);

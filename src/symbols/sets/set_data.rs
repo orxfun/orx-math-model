@@ -6,6 +6,14 @@ pub struct SetData {
     pub kind: SetKind,
 }
 
+impl SetData {
+    pub fn set_gen(&self) -> &Box<dyn SetGen> {
+        match &self.kind {
+            SetKind::Independent(x) => x,
+        }
+    }
+}
+
 pub enum SetKind {
     Independent(Box<dyn SetGen>),
 }

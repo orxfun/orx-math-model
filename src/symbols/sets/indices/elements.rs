@@ -29,4 +29,14 @@ impl<'a> Elements<'a> {
         vec.clear();
         vec.extend(elements);
     }
+
+    pub fn elements<'b>(&self, depth: Depth) -> &'b [usize] {
+        let d = depth.depth();
+        let parent_elements = match self.independent_elements[d].len() {
+            0 => &self.stored_elements[d],
+            _ => self.independent_elements[d],
+        };
+        let (ptr, len) = (parent_elements.as_ptr(), parent_elements.len());
+        unsafe { core::slice::from_raw_parts(ptr, len) }
+    }
 }

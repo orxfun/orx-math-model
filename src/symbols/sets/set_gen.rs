@@ -6,6 +6,6 @@ pub trait SetGen {
         depth: Depth,
         set_depths: SetDepths<'_>,
         index_values: &IndexValues,
-        elements: &'m mut Elements<'m>,
+        elements: &mut Elements<'m>,
     );
 }
