@@ -3,6 +3,7 @@ use alloc::vec::Vec;
 
 const MAX_DEPTH: usize = 32;
 
+#[derive(Default)]
 pub struct Elements<'a> {
     independent_elements: [&'a [usize]; MAX_DEPTH],
     stored_elements: [Vec<usize>; MAX_DEPTH],
