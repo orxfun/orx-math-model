@@ -1,9 +1,7 @@
 use crate::symbols::{symbol_ref::SymbolRef, SetData, SetSymbol, Sym};
 use core::fmt::Debug;
 
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg(feature = "std")]
-#[derive(Hash)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub struct Set<'m> {
     symbol: SymbolRef<'m, SetSymbol>,
 }

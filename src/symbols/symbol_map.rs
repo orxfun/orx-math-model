@@ -1,6 +1,6 @@
 #[cfg(not(feature = "std"))]
 use alloc::collections::BTreeMap;
-use core::{marker::PhantomData, ptr::addr_of};
+use core::marker::PhantomData;
 #[cfg(feature = "std")]
 use std::collections::HashMap;
 
@@ -8,7 +8,7 @@ use std::collections::HashMap;
 type Map<K, V> = BTreeMap<K, V>;
 #[cfg(feature = "std")]
 type Map<K, V> = HashMap<K, V>;
-use crate::symbols::{symbol::Symbol, symbol_ref::SymbolRef};
+use crate::symbols::{symbol::Symbol, symbol_ref::SymbolRef, SymbolData};
 
 pub struct SymbolMap<'m, S, K, V>
 where
@@ -24,15 +24,34 @@ where
     S: Symbol,
     K: Into<SymbolRef<'m, S>>,
 {
-    pub fn insert(&mut self, symbol: impl Into<SymbolRef<'m, S>>, value: V) {
-        let symbol = symbol.into();
-        let data_addr = addr_of!(symbol.data) as usize;
-        self.map.insert(data_addr, value);
+    pub fn new() -> Self {
+        Self {
+            map: Map::new(),
+            phantom: PhantomData,
+        }
     }
 
-    pub fn get(&self, symbol: impl Into<SymbolRef<'m, S>>) -> Option<&V> {
+    pub fn insert(&mut self, symbol: K, value: V) {
+        self.map.insert(Self::addr_of(symbol), value);
+    }
+
+    pub fn get(&self, symbol: K) -> Option<&V> {
+        self.map.get(&Self::addr_of(symbol))
+    }
+
+    pub fn len(&self) -> usize {
+        self.map.len()
+    }
+
+    pub fn contains_key(&self, symbol: K) -> bool {
+        self.map.contains_key(&Self::addr_of(symbol))
+    }
+
+    // helper
+
+    #[inline(always)]
+    fn addr_of(symbol: K) -> usize {
         let symbol = symbol.into();
-        let data_addr = addr_of!(symbol.data) as usize;
-        self.map.get(&data_addr)
+        symbol.data as *const SymbolData<S> as usize
     }
 }

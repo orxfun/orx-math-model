@@ -1,3 +1,6 @@
+#[cfg(test)]
+mod tests;
+
 mod definition;
 mod sets;
 mod sym;
