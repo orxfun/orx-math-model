@@ -1,8 +1,8 @@
-use crate::symbols::sets::elements::Elements;
+use crate::symbols::sets::index_values::IndexValues;
 
 pub trait SetGen {
     /// TODO: set_values as usize is a placeholder
-    fn elements(&self, set_values: usize, storage: &mut Elements) -> Option<&[usize]>;
+    fn elements(&self, index_values: &mut IndexValues) -> Option<&[usize]>;
 }
 
 pub trait IntoSetGen {
