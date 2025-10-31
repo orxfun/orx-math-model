@@ -13,5 +13,4 @@ mod subsets;
 pub use independent::IntoSet;
 pub use set::Set;
 pub use set_data::{SetData, SetKind};
-pub use set_gen::SetGen;
 pub use set_symbol::SetSymbol;
