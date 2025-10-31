@@ -1,3 +1,6 @@
 mod range;
-mod vec_usize;
-// mod vec_integer;
+mod slice;
+mod vec;
+
+#[cfg(feature = "std")]
+mod set;

@@ -1,36 +1,15 @@
-use crate::symbols::sets::{elements::Elements, set_gen::SetGen};
+use crate::symbols::sets::set_gen::IntoSetGen;
 use alloc::vec::Vec;
 use core::ops::Range;
 
-pub struct SetRange<T>
+impl<T> IntoSetGen for Range<T>
 where
-    T: Into<usize>,
-    Range<T>: ExactSizeIterator<Item = T> + Clone,
+    usize: From<T>,
+    Range<T>: Iterator<Item = T>,
 {
-    range: Range<T>,
-    values: Vec<usize>,
-}
+    type SetGen = Vec<usize>;
 
-impl<T> From<Range<T>> for SetRange<T>
-where
-    T: Into<usize>,
-    Range<T>: ExactSizeIterator<Item = T> + Clone,
-{
-    fn from(range: Range<T>) -> Self {
-        let values = range.clone().map(|x| x.into()).collect();
-        Self { range, values }
-    }
-}
-
-impl<T> SetGen for SetRange<T>
-where
-    T: Into<usize>,
-    Range<T>: ExactSizeIterator<Item = T> + Clone,
-{
-    fn elements(&self, _: usize, storage: &mut Elements) {
-        storage.fill_from_iter(
-            Some(self.range.len()),
-            self.range.clone().into_iter().map(|x| x.into()),
-        );
+    fn into_set_gen(self) -> Self::SetGen {
+        self.map(usize::from).collect()
     }
 }
