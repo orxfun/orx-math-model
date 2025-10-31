@@ -4,6 +4,14 @@ pub struct Depth {
 }
 
 impl Depth {
+    pub fn zero() -> Self {
+        Self { d: 0 }
+    }
+
+    pub fn next(self) -> Self {
+        Self { d: self.d + 1 }
+    }
+
     pub(super) fn new(d: usize) -> Self {
         Self { d }
     }
