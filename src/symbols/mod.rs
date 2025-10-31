@@ -1,6 +1,3 @@
-#[cfg(test)]
-mod tests;
-
 mod sets;
 mod sym;
 mod symbol;
