@@ -2,14 +2,10 @@ use super::into_set::IntoSet;
 use alloc::vec::Vec;
 use core::ops::Range;
 
-impl<T> IntoSet for Range<T>
-where
-    usize: From<T>,
-    Range<T>: Iterator<Item = T>,
-{
+impl IntoSet for Range<usize> {
     type SetGen = Vec<usize>;
 
     fn into_set(self) -> Self::SetGen {
-        self.map(usize::from).collect()
+        self.collect()
     }
 }
