@@ -30,3 +30,9 @@ impl<'m> From<Set<'m>> for SymbolRef<'m, SetSymbol> {
 impl<'m> Sym<'m, SetSymbol> for Set<'m> {
     type Data = SetData;
 }
+
+// derive from Set
+
+impl<'m> Set<'m> {
+    //
+}
