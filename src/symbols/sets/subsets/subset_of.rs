@@ -1,4 +1,7 @@
-use crate::symbols::sets::{index_values::IndexValues, set_gen::SetGen};
+use crate::symbols::sets::{
+    indices::{Depth, Elements, IndexValues},
+    set_gen::SetGen,
+};
 
 pub struct Subset<S, F>
 where
@@ -14,9 +17,5 @@ where
     S: SetGen,
     F: Fn(usize) -> bool,
 {
-    fn elements(&self, index_values: &mut IndexValues) -> Option<&[usize]> {
-        let set = self.set.elements(index_values);
-
-        None
-    }
+    fn set_elements(&self, depth: Depth, current_indices: &IndexValues, elements: &mut Elements) {}
 }

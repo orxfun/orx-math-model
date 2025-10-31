@@ -17,15 +17,13 @@ impl Model {
     // symbols
 
     pub fn set(&self, key: impl Into<String>) -> Set<'_> {
-        // let data = SetData {};
-        // let symbol_data = SymbolData {
-        //     key: key.into(),
-        //     definition: Default::default(),
-        //     data,
-        // };
+        let data = SetData {};
+        let symbol_data = SymbolData {
+            key: key.into(),
+            definition: Default::default(),
+            data,
+        };
 
-        // self.data.sets.push(self, symbol_data)
-
-        todo!()
+        self.data.sets.push(self, symbol_data)
     }
 }

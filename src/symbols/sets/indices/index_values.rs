@@ -1,5 +1,5 @@
 use alloc::vec::Vec;
 
-pub struct CurrentIndices {
+pub struct IndexValues {
     indices: Vec<usize>,
 }

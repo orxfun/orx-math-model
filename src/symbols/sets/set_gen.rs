@@ -1,8 +1,12 @@
-use crate::symbols::sets::index_values::IndexValues;
+use crate::symbols::sets::indices::{Depth, Elements, IndexValues};
 
 pub trait SetGen {
-    /// TODO: set_values as usize is a placeholder
-    fn elements(&self, index_values: &mut IndexValues) -> Option<&[usize]>;
+    fn set_elements<'a>(
+        &'a self,
+        depth: Depth,
+        current_indices: &IndexValues,
+        elements: &'a mut Elements<'a>,
+    );
 }
 
 pub trait IntoSetGen {

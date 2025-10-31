@@ -32,3 +32,16 @@ where
         self
     }
 }
+
+// reference equality
+
+impl<S> PartialEq for SymbolRef<'_, S>
+where
+    S: Symbol,
+{
+    fn eq(&self, other: &Self) -> bool {
+        core::ptr::addr_eq(self.data, other.data)
+    }
+}
+
+impl<S> Eq for SymbolRef<'_, S> where S: Symbol {}
