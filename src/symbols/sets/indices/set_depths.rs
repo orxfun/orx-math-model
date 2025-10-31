@@ -14,4 +14,8 @@ impl<'m> SetDepths<'m> {
 
         Self { map }
     }
+
+    pub fn depth_of(&self, set: Set<'m>) -> Depth {
+        *self.map.get(set).expect("must exist")
+    }
 }
