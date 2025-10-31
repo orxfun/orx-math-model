@@ -9,9 +9,3 @@ pub trait SetGen<'m> {
         elements: &'m mut Elements<'m>,
     );
 }
-
-pub trait IntoSetGen {
-    type SetGen<'m>: SetGen<'m>;
-
-    fn into_set_gen<'m>(self) -> Self::SetGen<'m>;
-}

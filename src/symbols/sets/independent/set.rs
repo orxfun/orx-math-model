@@ -1,10 +1,10 @@
-use crate::symbols::sets::set_gen::IntoSetGen;
+use super::into_set::IntoSet;
 use alloc::vec::Vec;
 use std::collections::HashSet;
 
 // usize
 
-impl IntoSetGen for HashSet<usize> {
+impl IntoSet for HashSet<usize> {
     type SetGen<'m> = Vec<usize>;
 
     fn into_set_gen<'m>(self) -> Self::SetGen<'m> {
@@ -12,7 +12,7 @@ impl IntoSetGen for HashSet<usize> {
     }
 }
 
-impl IntoSetGen for &HashSet<usize> {
+impl IntoSet for &HashSet<usize> {
     type SetGen<'m> = Vec<usize>;
 
     fn into_set_gen<'m>(self) -> Self::SetGen<'m> {

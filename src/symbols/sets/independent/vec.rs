@@ -1,5 +1,6 @@
+use super::into_set::IntoSet;
 use crate::symbols::sets::indices::{Depth, Elements, IndexValues, SetDepths};
-use crate::symbols::sets::set_gen::{IntoSetGen, SetGen};
+use crate::symbols::sets::set_gen::SetGen;
 use alloc::vec::Vec;
 
 // usize
@@ -16,7 +17,7 @@ impl<'m> SetGen<'m> for Vec<usize> {
     }
 }
 
-impl IntoSetGen for Vec<usize> {
+impl IntoSet for Vec<usize> {
     type SetGen<'m> = Self;
 
     fn into_set_gen<'m>(self) -> Self::SetGen<'m> {

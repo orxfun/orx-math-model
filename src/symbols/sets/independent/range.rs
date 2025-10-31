@@ -1,8 +1,8 @@
-use crate::symbols::sets::set_gen::IntoSetGen;
+use super::into_set::IntoSet;
 use alloc::vec::Vec;
 use core::ops::Range;
 
-impl<T> IntoSetGen for Range<T>
+impl<T> IntoSet for Range<T>
 where
     usize: From<T>,
     Range<T>: Iterator<Item = T>,

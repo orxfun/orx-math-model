@@ -1,3 +1,4 @@
+mod into_set;
 mod range;
 mod slice;
 mod vec;
