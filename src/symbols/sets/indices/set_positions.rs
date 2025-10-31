@@ -1,14 +1,17 @@
-use crate::symbols::Set;
-#[cfg(not(feature = "std"))]
-use alloc::collections::BTreeMap;
-#[cfg(feature = "std")]
-use std::{collections::HashMap, hash::Hash};
-
-#[cfg(not(feature = "std"))]
-type Map<N> = BTreeMap<N, usize>;
-#[cfg(feature = "std")]
-type Map<N> = HashMap<N, usize>;
+use crate::symbols::{symbol_map::SymbolMap, Set, SetSymbol};
 
 pub struct SetPositions<'m> {
-    map: Map<Set<'m>>,
+    map: SymbolMap<'m, SetSymbol, Set<'m>, usize>,
+}
+
+impl<'m> SetPositions<'m> {
+    pub fn new(sets: impl Iterator<Item = Set<'m>>) -> Self {
+        let mut map = SymbolMap::new();
+
+        for (i, set) in sets.enumerate() {
+            map.insert(set, i);
+        }
+
+        Self { map }
+    }
 }
