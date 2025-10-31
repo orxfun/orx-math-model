@@ -9,7 +9,7 @@ where
 {
     type SetGen = Vec<usize>;
 
-    fn into_set_gen(self) -> Self::SetGen {
+    fn into_set(self) -> Self::SetGen {
         self.map(usize::from).collect()
     }
 }

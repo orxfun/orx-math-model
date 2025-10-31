@@ -20,7 +20,7 @@ impl SetGen for Vec<usize> {
 impl IntoSet for Vec<usize> {
     type SetGen = Self;
 
-    fn into_set_gen(self) -> Self::SetGen {
+    fn into_set(self) -> Self::SetGen {
         self
     }
 }
