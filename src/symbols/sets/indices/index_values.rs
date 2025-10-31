@@ -1,4 +1,5 @@
 use crate::symbols::sets::indices::Depth;
+use alloc::vec;
 use alloc::vec::Vec;
 use core::ops::Index;
 
@@ -7,8 +8,10 @@ pub struct IndexValues {
 }
 
 impl IndexValues {
-    pub fn values<const N: usize>(&self, depths: [Depth; N]) -> [usize; N] {
-        depths.map(|d| self.indices[d.depth()])
+    pub fn new(max_depth: usize) -> Self {
+        Self {
+            indices: vec![usize::MAX; max_depth],
+        }
     }
 }
 
