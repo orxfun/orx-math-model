@@ -16,10 +16,10 @@ impl Model {
 
     // symbols
 
-    pub fn set(&self, key: impl Into<String>) -> Set<'_> {
+    pub fn set(&self) -> Set<'_> {
         let data = SetData {};
         let symbol_data = SymbolData {
-            key: key.into(),
+            key: Default::default(),
             definition: Default::default(),
             data,
         };
