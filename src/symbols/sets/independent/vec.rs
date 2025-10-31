@@ -1,11 +1,17 @@
-use crate::symbols::sets::indices::{Depth, Elements, IndexValues};
+use crate::symbols::sets::indices::{Depth, Elements, IndexValues, SetDepths};
 use crate::symbols::sets::set_gen::{IntoSetGen, SetGen};
 use alloc::vec::Vec;
 
 // usize
 
 impl SetGen for Vec<usize> {
-    fn set_elements<'a>(&'a self, depth: Depth, _: &IndexValues, elements: &'a mut Elements<'a>) {
+    fn set_elements<'m>(
+        &'m self,
+        depth: Depth,
+        _: SetDepths<'_>,
+        _: &IndexValues,
+        elements: &'m mut Elements<'m>,
+    ) {
         elements.set_independent_elements(depth, &self);
     }
 }

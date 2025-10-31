@@ -1,11 +1,12 @@
-use crate::symbols::sets::indices::{Depth, Elements, IndexValues};
+use crate::symbols::sets::indices::{Depth, Elements, IndexValues, SetDepths};
 
 pub trait SetGen {
-    fn set_elements<'a>(
-        &'a self,
+    fn set_elements<'m>(
+        &'m self,
         depth: Depth,
+        set_depths: SetDepths<'_>,
         current_indices: &IndexValues,
-        elements: &'a mut Elements<'a>,
+        elements: &'m mut Elements<'m>,
     );
 }
 

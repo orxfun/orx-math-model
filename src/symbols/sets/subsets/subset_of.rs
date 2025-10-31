@@ -1,21 +1,24 @@
-use crate::symbols::sets::{
-    indices::{Depth, Elements, IndexValues},
-    set_gen::SetGen,
-};
+use crate::symbols::sets::indices::{Depth, Elements, IndexValues, SetDepths};
+use crate::symbols::{sets::set_gen::SetGen, Set};
 
-pub struct Subset<S, F>
+pub struct Subset<'m, F>
 where
-    S: SetGen,
     F: Fn(usize) -> bool,
 {
-    set: S,
+    set: Set<'m>,
     filter: F,
 }
 
-impl<S, F> SetGen for Subset<S, F>
+impl<F> SetGen for Subset<'_, F>
 where
-    S: SetGen,
     F: Fn(usize) -> bool,
 {
-    fn set_elements(&self, depth: Depth, current_indices: &IndexValues, elements: &mut Elements) {}
+    fn set_elements<'m>(
+        &'m self,
+        depth: Depth,
+        set_depths: SetDepths<'_>,
+        current_indices: &IndexValues,
+        elements: &'m mut Elements<'m>,
+    ) {
+    }
 }
