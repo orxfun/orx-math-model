@@ -1,7 +1,5 @@
-use crate::{
-    model::Model,
-    symbols::{symbol::Symbol, symbol_meta::SymbolMeta, symbol_ref_core::SymbolRefCore},
-};
+use crate::model::Model;
+use crate::symbols::{symbol::Symbol, symbol_meta::SymbolMeta, symbol_ref_core::SymbolRefCore};
 use orx_imp_vec::*;
 
 pub struct SymbolDataCollection<M: SymbolMeta> {
