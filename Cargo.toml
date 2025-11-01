@@ -15,5 +15,5 @@ orx-pinned-vec = "3.21"
 orx-split-vec = "3.22"
 
 [features]
-default = ["std"]
+default = []
 std = []
