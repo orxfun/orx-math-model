@@ -1,7 +1,5 @@
-use crate::{
-    stages::Stage,
-    symbols::{symbol_meta::SymbolMeta, symbol_ref_core::SymbolRefCore},
-};
+use crate::stages::Stage;
+use crate::symbols::{symbol_meta::SymbolMeta, symbol_ref_core::SymbolRefCore};
 use alloc::string::String;
 use core::fmt::Debug;
 
