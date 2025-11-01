@@ -20,8 +20,10 @@ extern crate std;
 mod model;
 mod model_data;
 // mod no_std_types;
+mod stages;
 mod symbols;
 
 pub use model::Model;
+pub use stages::{ModelWithData, Modeling, Solved};
 pub use symbols::Set;
 pub use symbols::{set_of, SymbolRef};
