@@ -2,16 +2,16 @@ use crate::symbols::symbol_meta::SymbolMeta;
 use alloc::string::String;
 use core::{cell::UnsafeCell, ops::Deref};
 
-pub struct Symbol<S: SymbolMeta> {
+pub struct Symbol<M: SymbolMeta> {
     pub key: Key,
     pub definition: Definition,
     // TODO: temporary clippy fix until we use the data
     #[allow(dead_code)]
-    pub data: S::Data,
+    pub data: M::Data,
 }
 
-impl<S: SymbolMeta> Symbol<S> {
-    pub fn new(data: S::Data) -> Self {
+impl<M: SymbolMeta> Symbol<M> {
+    pub fn new(data: M::Data) -> Self {
         Self {
             key: Default::default(),
             definition: Default::default(),

@@ -4,28 +4,28 @@ use crate::{
 };
 use alloc::string::String;
 
-pub struct SymbolRefCore<'m, S>
+pub struct SymbolRefCore<'m, M>
 where
-    S: SymbolMeta,
+    M: SymbolMeta,
 {
     pub model: &'m Model,
-    pub symbol: &'m Symbol<S>,
+    pub symbol: &'m Symbol<M>,
 }
 
-impl<'m, S> Clone for SymbolRefCore<'m, S>
+impl<'m, M> Clone for SymbolRefCore<'m, M>
 where
-    S: SymbolMeta,
+    M: SymbolMeta,
 {
     fn clone(&self) -> Self {
         *self
     }
 }
 
-impl<'m, S> Copy for SymbolRefCore<'m, S> where S: SymbolMeta {}
+impl<'m, M> Copy for SymbolRefCore<'m, M> where M: SymbolMeta {}
 
-impl<'m, S> SymbolRefCore<'m, S>
+impl<'m, M> SymbolRefCore<'m, M>
 where
-    S: SymbolMeta,
+    M: SymbolMeta,
 {
     pub fn key(self, key: impl Into<String>) -> Self {
         self.symbol.key.set(key);
@@ -40,10 +40,10 @@ where
 
 // reference equality
 
-impl<S: SymbolMeta> PartialEq for SymbolRefCore<'_, S> {
+impl<M: SymbolMeta> PartialEq for SymbolRefCore<'_, M> {
     fn eq(&self, other: &Self) -> bool {
         core::ptr::addr_eq(self.symbol, other.symbol)
     }
 }
 
-impl<S: SymbolMeta> Eq for SymbolRefCore<'_, S> {}
+impl<M: SymbolMeta> Eq for SymbolRefCore<'_, M> {}
