@@ -18,6 +18,10 @@ impl Model {
         self.data.sets.push(self, SymbolData::new(data))
     }
 
+    pub fn set_by_key(&self, key: &str) -> Option<Set<'_>> {
+        self.data.sets.by_key(self, key).map(Set::from)
+    }
+
     pub(crate) fn dep_set<'m, const N: usize>(&'m self, sets: [Set<'m>; N]) -> Set<'m> {
         let sets = sets.to_vec();
         let mut data = SetData::new();

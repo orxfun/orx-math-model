@@ -28,6 +28,11 @@ impl<S: Symbol> SymbolDataCollection<S> {
         Some(SymbolRef { model, data })
     }
 
+    pub fn by_key<'m>(&'m self, model: &'m Model, key: &str) -> Option<SymbolRef<'m, S>> {
+        let data = self.data_vec.iter().find(|x| x.key.eq(key))?;
+        Some(SymbolRef { model, data })
+    }
+
     pub fn index_of(&self, symbol: SymbolRef<'_, S>) -> Option<usize> {
         self.data_vec.index_of(symbol.data)
     }
