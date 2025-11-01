@@ -27,8 +27,23 @@ impl<'m, S> SymbolRef<'m, S>
 where
     S: Symbol,
 {
+    pub fn key(self, key: impl Into<String>) -> Self {
+        self.data.key.set(key);
+        self
+    }
+
     pub fn definition(self, definition: impl Into<String>) -> Self {
         self.data.definition.set(definition);
         self
     }
 }
+
+// reference equality
+
+impl<S: Symbol> PartialEq for SymbolRef<'_, S> {
+    fn eq(&self, other: &Self) -> bool {
+        core::ptr::addr_eq(self.data, other.data)
+    }
+}
+
+impl<S: Symbol> Eq for SymbolRef<'_, S> {}

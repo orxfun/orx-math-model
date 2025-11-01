@@ -2,7 +2,7 @@ use crate::{
     model::Model,
     symbols::{symbol::Symbol, symbol_data::SymbolData, symbol_ref::SymbolRef},
 };
-use orx_imp_vec::ImpVec;
+use orx_imp_vec::*;
 
 pub struct SymbolDataCollection<S: Symbol> {
     data_vec: ImpVec<SymbolData<S>>,
@@ -21,5 +21,14 @@ impl<S: Symbol> SymbolDataCollection<S> {
         let data = self.data_vec.imp_push_get_ref(symbol_data);
         let symbol_ref = SymbolRef { model, data };
         symbol_ref.into()
+    }
+
+    pub fn at<'m>(&'m self, model: &'m Model, idx: usize) -> Option<SymbolRef<'m, S>> {
+        let data = self.data_vec.get(idx)?;
+        Some(SymbolRef { model, data })
+    }
+
+    pub fn index_of(&self, symbol: SymbolRef<'_, S>) -> Option<usize> {
+        self.data_vec.index_of(symbol.data)
     }
 }

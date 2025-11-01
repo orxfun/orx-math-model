@@ -1,12 +1,9 @@
-use crate::{
-    model_data::ModelData,
-    symbols::{Set, SetData, SymbolData},
-};
-use alloc::string::String;
+use crate::model_data::ModelData;
+use crate::symbols::{Set, SetData, SymbolData};
 
 #[derive(Default)]
 pub struct Model {
-    data: ModelData,
+    pub(crate) data: ModelData,
 }
 
 impl Model {
@@ -14,16 +11,25 @@ impl Model {
         Self::default()
     }
 
-    // symbols
+    // sets
 
-    pub fn set(&self, key: impl Into<String>) -> Set<'_> {
-        let data = SetData {};
-        let symbol_data = SymbolData {
-            key: key.into(),
-            definition: Default::default(),
-            data,
-        };
+    pub fn set(&self) -> Set<'_> {
+        let data = SetData::new();
+        self.data.sets.push(self, SymbolData::new(data))
+    }
 
-        self.data.sets.push(self, symbol_data)
+    pub(crate) fn dep_set<'m, const N: usize>(&'m self, sets: [Set<'m>; N]) -> Set<'m> {
+        let sets = sets.to_vec();
+        let mut data = SetData::new();
+        for set in &sets {
+            data.add_depending_set(*set);
+        }
+        self.data.sets.push(self, SymbolData::new(data))
+    }
+
+    // helpers
+
+    pub(crate) fn set_at(&self, idx: usize) -> Option<Set<'_>> {
+        self.data.sets.at(self, idx).map(Set::from)
     }
 }

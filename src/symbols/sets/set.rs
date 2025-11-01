@@ -1,7 +1,8 @@
-use crate::symbols::{symbol_ref::SymbolRef, SetData, SetSymbol, Sym};
+use crate::symbols::symbol_ref::SymbolRef;
+use crate::symbols::{SetData, SetSymbol, Sym};
 use core::fmt::Debug;
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub struct Set<'m> {
     symbol: SymbolRef<'m, SetSymbol>,
 }
@@ -9,8 +10,9 @@ pub struct Set<'m> {
 impl<'m> Debug for Set<'m> {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         f.debug_struct("Set")
-            .field("key", &self.symbol.data.key)
+            .field("key", &self.symbol.data.key.value())
             .field("definition", &self.symbol.data.definition.value())
+            .field("data", &self.symbol.data.data)
             .finish()
     }
 }
@@ -29,4 +31,28 @@ impl<'m> From<Set<'m>> for SymbolRef<'m, SetSymbol> {
 
 impl<'m> Sym<'m, SetSymbol> for Set<'m> {
     type Data = SetData;
+}
+
+// derive from Set
+
+impl<'m> Set<'m> {
+    pub(crate) fn symbol(self) -> SymbolRef<'m, SetSymbol> {
+        self.into()
+    }
+
+    pub(crate) fn idx(self) -> usize {
+        let model = self.symbol().model;
+        model
+            .data
+            .sets
+            .index_of(self.symbol())
+            .expect("exist in this model")
+    }
+
+    pub fn dependant_sets(self) -> impl Iterator<Item = Set<'m>> {
+        let model = self.symbol().model;
+        let indices = self.symbol().data.data.depends_on_indices();
+        let set_at = |idx: &usize| model.set_at(*idx).expect("exist in this model");
+        indices.iter().map(set_at)
+    }
 }

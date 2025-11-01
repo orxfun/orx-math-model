@@ -12,6 +12,11 @@ where
 
     // provided
 
+    fn key(self, key: impl Into<String>) -> Self {
+        let symbol_ref: SymbolRef<'_, _> = self.into();
+        symbol_ref.key(key).into()
+    }
+
     fn definition(self, definition: impl Into<String>) -> Self {
         let symbol_ref: SymbolRef<'_, _> = self.into();
         symbol_ref.definition(definition).into()
