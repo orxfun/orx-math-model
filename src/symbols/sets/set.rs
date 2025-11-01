@@ -1,10 +1,10 @@
-use crate::symbols::symbol_ref::SymbolRef;
-use crate::symbols::{SetData, SetSymbol, Sym};
+use crate::symbols::symbol_ref_core::SymbolRefCore;
+use crate::symbols::{SetData, SetSymbol, SymbolRef};
 use core::fmt::Debug;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub struct Set<'m> {
-    symbol: SymbolRef<'m, SetSymbol>,
+    symbol: SymbolRefCore<'m, SetSymbol>,
 }
 
 impl<'m> Debug for Set<'m> {
@@ -17,26 +17,26 @@ impl<'m> Debug for Set<'m> {
     }
 }
 
-impl<'m> From<SymbolRef<'m, SetSymbol>> for Set<'m> {
-    fn from(symbol: SymbolRef<'m, SetSymbol>) -> Self {
+impl<'m> From<SymbolRefCore<'m, SetSymbol>> for Set<'m> {
+    fn from(symbol: SymbolRefCore<'m, SetSymbol>) -> Self {
         Self { symbol }
     }
 }
 
-impl<'m> From<Set<'m>> for SymbolRef<'m, SetSymbol> {
+impl<'m> From<Set<'m>> for SymbolRefCore<'m, SetSymbol> {
     fn from(value: Set<'m>) -> Self {
         value.symbol
     }
 }
 
-impl<'m> Sym<'m, SetSymbol> for Set<'m> {
+impl<'m> SymbolRef<'m, SetSymbol> for Set<'m> {
     type Data = SetData;
 }
 
 // derive from Set
 
 impl<'m> Set<'m> {
-    pub(crate) fn symbol(self) -> SymbolRef<'m, SetSymbol> {
+    pub(crate) fn symbol(self) -> SymbolRefCore<'m, SetSymbol> {
         self.into()
     }
 
