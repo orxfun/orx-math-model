@@ -1,6 +1,7 @@
 #[cfg(test)]
 mod tests;
 
+mod dep_set_indices;
 mod free_functions;
 mod indices;
 mod set;

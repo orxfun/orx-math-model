@@ -39,4 +39,13 @@ impl<'m> Set<'m> {
     pub(crate) fn symbol(self) -> SymbolRef<'m, SetSymbol> {
         self.into()
     }
+
+    pub(crate) fn idx(self) -> usize {
+        let model = self.symbol().model;
+        model
+            .data
+            .sets
+            .index_of(self.symbol())
+            .expect("exist in this model")
+    }
 }

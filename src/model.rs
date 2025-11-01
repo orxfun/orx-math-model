@@ -4,7 +4,7 @@ use crate::symbols::{Set, SetData, SymbolData};
 
 #[derive(Default)]
 pub struct Model {
-    data: ModelData,
+    pub(crate) data: ModelData,
 }
 
 impl Model {
