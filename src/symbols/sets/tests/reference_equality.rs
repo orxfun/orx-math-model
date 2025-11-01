@@ -1,5 +1,5 @@
 use crate::Model;
-use crate::Sym;
+use crate::SymbolRef;
 
 #[test]
 fn set_reference_equality_different_model() {

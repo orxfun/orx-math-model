@@ -1,49 +1,40 @@
-use crate::{
-    model::Model,
-    symbols::{symbol::Symbol, symbol_data::SymbolData},
-};
+use crate::symbols::{symbol_meta::SymbolMeta, symbol_ref_core::SymbolRefCore};
 use alloc::string::String;
+use core::fmt::Debug;
 
-pub struct SymbolRef<'m, S>
+pub trait SymbolRef<'m, S>
 where
-    S: Symbol,
+    S: SymbolMeta,
+    Self: SymbolReq<'m, S>,
+    S::Data: 'm,
 {
-    pub model: &'m Model,
-    pub data: &'m SymbolData<S>,
+    type Data;
+
+    // provided
+
+    fn key(self, key: impl Into<String>) -> Self {
+        let symbol_ref: SymbolRefCore<'_, _> = self.into();
+        symbol_ref.key(key).into()
+    }
+
+    fn definition(self, definition: impl Into<String>) -> Self {
+        let symbol_ref: SymbolRefCore<'_, _> = self.into();
+        symbol_ref.definition(definition).into()
+    }
 }
 
-impl<'m, S> Clone for SymbolRef<'m, S>
+// required traits from Symbol::Ref
+
+pub trait SymbolReq<'m, S>:
+    From<SymbolRefCore<'m, S>> + Into<SymbolRefCore<'m, S>> + Debug
 where
-    S: Symbol,
+    S: SymbolMeta,
 {
-    fn clone(&self) -> Self {
-        *self
-    }
 }
 
-impl<'m, S> Copy for SymbolRef<'m, S> where S: Symbol {}
-
-impl<'m, S> SymbolRef<'m, S>
+impl<'m, S, X> SymbolReq<'m, S> for X
 where
-    S: Symbol,
+    S: SymbolMeta,
+    X: From<SymbolRefCore<'m, S>> + Into<SymbolRefCore<'m, S>> + Debug,
 {
-    pub fn key(self, key: impl Into<String>) -> Self {
-        self.data.key.set(key);
-        self
-    }
-
-    pub fn definition(self, definition: impl Into<String>) -> Self {
-        self.data.definition.set(definition);
-        self
-    }
 }
-
-// reference equality
-
-impl<S: Symbol> PartialEq for SymbolRef<'_, S> {
-    fn eq(&self, other: &Self) -> bool {
-        core::ptr::addr_eq(self.data, other.data)
-    }
-}
-
-impl<S: Symbol> Eq for SymbolRef<'_, S> {}

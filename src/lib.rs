@@ -24,4 +24,4 @@ mod symbols;
 
 pub use model::Model;
 pub use symbols::Set;
-pub use symbols::{set_of, Sym};
+pub use symbols::{set_of, SymbolRef};

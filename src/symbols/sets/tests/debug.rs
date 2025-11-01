@@ -1,4 +1,4 @@
-use crate::{set_of, Model, Sym};
+use crate::{set_of, Model, SymbolRef};
 use alloc::format;
 
 #[test]
