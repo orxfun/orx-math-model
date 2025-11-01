@@ -1,12 +1,19 @@
 use crate::model_data::ModelData;
+use crate::stages::Stage;
 use crate::symbols::{Set, SetData, Symbol};
+use crate::Modeling;
+use core::marker::PhantomData;
 
 #[derive(Default)]
-pub struct Model {
+pub struct Model<S = Modeling>
+where
+    S: Stage,
+{
     pub(crate) data: ModelData,
+    phantom: PhantomData<S>,
 }
 
-impl Model {
+impl Model<Modeling> {
     pub fn new() -> Self {
         Self::default()
     }
@@ -17,6 +24,10 @@ impl Model {
         let data = SetData::new();
         self.data.sets.push(self, Symbol::new(data))
     }
+}
+
+impl<S: Stage> Model<S> {
+    // sets
 
     pub fn set_by_key(&self, key: &str) -> Option<Set<'_>> {
         self.data.sets.by_key(self, key).map(Set::from)
