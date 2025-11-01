@@ -1,12 +1,14 @@
 use crate::model::Model;
+use crate::stages::Stage;
 use crate::symbols::{symbol::Symbol, symbol_meta::SymbolMeta, symbol_ref_core::SymbolRefCore};
 use orx_imp_vec::*;
 
-pub struct SymbolDataCollection<M: SymbolMeta> {
+pub struct SymbolDataCollection<S: Stage, M: SymbolMeta> {
     data_vec: ImpVec<Symbol<M>>,
+    phantom: core::marker::PhantomData<S>,
 }
 
-impl<M: SymbolMeta> Default for SymbolDataCollection<M> {
+impl<S: Stage, M: SymbolMeta> Default for SymbolDataCollection<S, M> {
     fn default() -> Self {
         Self {
             data_vec: Default::default(),
@@ -14,7 +16,7 @@ impl<M: SymbolMeta> Default for SymbolDataCollection<M> {
     }
 }
 
-impl<M: SymbolMeta> SymbolDataCollection<M> {
+impl<S: Stage, M: SymbolMeta> SymbolDataCollection<S, M> {
     pub fn push<'m>(&'m self, model: &'m Model, symbol_data: Symbol<M>) -> M::Ref<'m> {
         let data = self.data_vec.imp_push_get_ref(symbol_data);
         let symbol_ref = SymbolRefCore {
