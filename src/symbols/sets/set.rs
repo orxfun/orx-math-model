@@ -10,7 +10,7 @@ pub struct Set<'m> {
 impl<'m> Debug for Set<'m> {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         f.debug_struct("Set")
-            .field("kind", &self.symbol.data.data.kind)
+            .field("kind", &self.symbol.data.data)
             .field("key", &self.symbol.data.key.value())
             .field("definition", &self.symbol.data.definition.value())
             .finish()

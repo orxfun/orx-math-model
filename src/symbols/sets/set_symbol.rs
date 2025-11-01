@@ -1,10 +1,10 @@
-use crate::symbols::{sets::set::Set, symbol::Symbol, SetData};
+use crate::symbols::{sets::set::Set, symbol::Symbol, SetKind};
 
 #[derive(Default)]
 pub struct SetSymbol;
 
 impl Symbol for SetSymbol {
-    type Data = SetData;
+    type Data = SetKind;
 
     type Ref<'m>
         = Set<'m>

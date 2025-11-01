@@ -7,25 +7,25 @@ use alloc::vec;
 fn sets() {
     let m = Model::new();
 
-    let i = m.set(vec![]);
+    let i = m.set();
     assert_eq!(
         format!("{i:?}"),
         "Set { kind: Independent, key: \"\", definition: \"\" }"
     );
 
-    let i = m.set(0..1).key("i");
+    let i = m.set().key("i");
     assert_eq!(
         format!("{i:?}"),
         "Set { kind: Independent, key: \"i\", definition: \"\" }"
     );
 
-    let i = m.set(0..1).definition("machines");
+    let i = m.set().definition("machines");
     assert_eq!(
         format!("{i:?}"),
         "Set { kind: Independent, key: \"\", definition: \"machines\" }"
     );
 
-    let i = m.set(0..1).key("i").definition("machines");
+    let i = m.set().key("i").definition("machines");
     assert_eq!(
         format!("{i:?}"),
         "Set { kind: Independent, key: \"i\", definition: \"machines\" }"

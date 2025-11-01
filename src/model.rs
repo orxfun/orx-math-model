@@ -1,6 +1,5 @@
 use crate::model_data::ModelData;
-use crate::symbols::{IntoSet, Set, SetData, SetKind, SymbolData};
-use alloc::boxed::Box;
+use crate::symbols::{Set, SetKind, SymbolData};
 
 #[derive(Default)]
 pub struct Model {
@@ -14,12 +13,8 @@ impl Model {
 
     // symbols
 
-    pub fn set(&self, data: impl IntoSet) -> Set<'_> {
-        let set = data.into_set();
-        let data = Box::new(set);
-        let data = SetData {
-            kind: SetKind::Independent(data),
-        };
+    pub fn set(&self) -> Set<'_> {
+        let data = SetKind::Independent;
 
         let symbol_data = SymbolData {
             key: Default::default(),
