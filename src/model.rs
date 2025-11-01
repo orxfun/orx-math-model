@@ -22,6 +22,15 @@ impl Model<Modeling> {
         let data = SetData::new();
         self.data.sets.push(self, Symbol::new(data))
     }
+
+    pub(crate) fn dep_set<'m, const N: usize>(&'m self, sets: [Set<'m>; N]) -> Set<'m> {
+        let sets = sets.to_vec();
+        let mut data = SetData::new();
+        for set in &sets {
+            data.add_depending_set(*set);
+        }
+        self.data.sets.push(self, Symbol::new(data))
+    }
 }
 
 impl<S: Stage> Model<S> {
@@ -29,15 +38,6 @@ impl<S: Stage> Model<S> {
 
     pub fn set_by_key(&self, key: &str) -> Option<Set<'_, S>> {
         self.data.sets.by_key(self, key).map(Set::from)
-    }
-
-    pub(crate) fn dep_set<'m, const N: usize>(&'m self, sets: [Set<'m>; N]) -> Set<'m, S> {
-        let sets = sets.to_vec();
-        let mut data = SetData::new();
-        for set in &sets {
-            data.add_depending_set(*set);
-        }
-        self.data.sets.push(self, Symbol::new(data))
     }
 
     // helpers

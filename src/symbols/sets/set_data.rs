@@ -1,5 +1,6 @@
 use crate::stages::Stage;
 use crate::symbols::{sets::dep_set_indices::DependentSetIndices, Set};
+use crate::Modeling;
 use core::fmt::Debug;
 
 #[derive(Default)]
@@ -8,14 +9,16 @@ where
     S: Stage,
 {
     depends_on: DependentSetIndices,
-    phantom: core::marker::PhantomData<S>,
+    stage_data: S::SetData,
 }
 
-impl<S: Stage> SetData<S> {
+impl SetData<Modeling> {
     pub fn new() -> Self {
         Self::default()
     }
+}
 
+impl<S: Stage> SetData<S> {
     pub fn add_depending_set(&mut self, set: Set<'_>) {
         self.depends_on.push(set);
         for set in set.dependant_sets() {
