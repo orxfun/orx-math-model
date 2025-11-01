@@ -1,14 +1,8 @@
-#[cfg(not(feature = "std"))]
-use alloc::collections::BTreeMap;
+use crate::{
+    no_std_types::Map,
+    symbols::{symbol::Symbol, symbol_ref::SymbolRef, SymbolData},
+};
 use core::marker::PhantomData;
-#[cfg(feature = "std")]
-use std::collections::HashMap;
-
-#[cfg(not(feature = "std"))]
-type Map<K, V> = BTreeMap<K, V>;
-#[cfg(feature = "std")]
-type Map<K, V> = HashMap<K, V>;
-use crate::symbols::{symbol::Symbol, symbol_ref::SymbolRef, SymbolData};
 
 pub struct SymbolMap<'m, S, K, V>
 where
