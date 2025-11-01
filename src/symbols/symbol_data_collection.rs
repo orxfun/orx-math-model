@@ -4,8 +4,7 @@ use crate::symbols::{symbol::Symbol, symbol_meta::SymbolMeta, symbol_ref_core::S
 use orx_imp_vec::*;
 
 pub struct SymbolDataCollection<S: Stage, M: SymbolMeta> {
-    data_vec: ImpVec<Symbol<M>>,
-    phantom: core::marker::PhantomData<S>,
+    data_vec: ImpVec<Symbol<S, M>>,
 }
 
 impl<S: Stage, M: SymbolMeta> Default for SymbolDataCollection<S, M> {
@@ -17,7 +16,7 @@ impl<S: Stage, M: SymbolMeta> Default for SymbolDataCollection<S, M> {
 }
 
 impl<S: Stage, M: SymbolMeta> SymbolDataCollection<S, M> {
-    pub fn push<'m>(&'m self, model: &'m Model, symbol_data: Symbol<M>) -> M::Ref<'m> {
+    pub fn push<'m>(&'m self, model: &'m Model, symbol_data: Symbol<S, M>) -> M::Ref<'m> {
         let data = self.data_vec.imp_push_get_ref(symbol_data);
         let symbol_ref = SymbolRefCore {
             model,

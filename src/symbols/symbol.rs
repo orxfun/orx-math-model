@@ -1,16 +1,17 @@
-use crate::symbols::symbol_meta::SymbolMeta;
+use crate::{stages::Stage, symbols::symbol_meta::SymbolMeta};
 use alloc::string::String;
 use core::{cell::UnsafeCell, ops::Deref};
 
-pub struct Symbol<M: SymbolMeta> {
+pub struct Symbol<S: Stage, M: SymbolMeta> {
     pub key: Key,
     pub definition: Definition,
     // TODO: temporary clippy fix until we use the data
     #[allow(dead_code)]
     pub data: M::Data,
+    phantom: core::marker::PhantomData<S>,
 }
 
-impl<M: SymbolMeta> Symbol<M> {
+impl<S: Stage, M: SymbolMeta> Symbol<S, M> {
     pub fn new(data: M::Data) -> Self {
         Self {
             key: Default::default(),

@@ -1,19 +1,22 @@
 use crate::{
     model::Model,
+    stages::Stage,
     symbols::{symbol::Symbol, symbol_meta::SymbolMeta},
 };
 use alloc::string::String;
 
-pub struct SymbolRefCore<'m, M>
+pub struct SymbolRefCore<'m, S, M>
 where
+    S: Stage,
     M: SymbolMeta,
 {
     pub model: &'m Model,
-    pub symbol: &'m Symbol<M>,
+    pub symbol: &'m Symbol<S, M>,
 }
 
-impl<'m, M> Clone for SymbolRefCore<'m, M>
+impl<'m, S, M> Clone for SymbolRefCore<'m, S, M>
 where
+    S: Stage,
     M: SymbolMeta,
 {
     fn clone(&self) -> Self {
@@ -21,10 +24,16 @@ where
     }
 }
 
-impl<'m, M> Copy for SymbolRefCore<'m, M> where M: SymbolMeta {}
-
-impl<'m, M> SymbolRefCore<'m, M>
+impl<'m, S, M> Copy for SymbolRefCore<'m, S, M>
 where
+    S: Stage,
+    M: SymbolMeta,
+{
+}
+
+impl<'m, S, M> SymbolRefCore<'m, S, M>
+where
+    S: Stage,
     M: SymbolMeta,
 {
     pub fn key(self, key: impl Into<String>) -> Self {
@@ -40,10 +49,10 @@ where
 
 // reference equality
 
-impl<M: SymbolMeta> PartialEq for SymbolRefCore<'_, M> {
+impl<S: Stage, M: SymbolMeta> PartialEq for SymbolRefCore<'_, S, M> {
     fn eq(&self, other: &Self) -> bool {
         core::ptr::addr_eq(self.symbol, other.symbol)
     }
 }
 
-impl<M: SymbolMeta> Eq for SymbolRefCore<'_, M> {}
+impl<S: Stage, M: SymbolMeta> Eq for SymbolRefCore<'_, S, M> {}
