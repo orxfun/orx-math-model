@@ -2,15 +2,13 @@ use crate::model_data::ModelData;
 use crate::stages::Stage;
 use crate::symbols::{Set, SetData, Symbol};
 use crate::Modeling;
-use core::marker::PhantomData;
 
 #[derive(Default)]
 pub struct Model<S = Modeling>
 where
     S: Stage,
 {
-    pub(crate) data: ModelData,
-    phantom: PhantomData<S>,
+    pub(crate) data: ModelData<S>,
 }
 
 impl Model<Modeling> {
