@@ -6,7 +6,7 @@ mod symbol_data_collection;
 mod symbol_map;
 mod symbol_ref;
 
-pub use sets::{set_of, IntoSet, Set, SetData, SetSymbol};
+pub use sets::{set_of, Set, SetData, SetSymbol};
 pub use sym::Sym;
 pub use symbol_data::SymbolData;
 pub use symbol_data_collection::SymbolDataCollection;

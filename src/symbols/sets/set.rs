@@ -1,5 +1,5 @@
 use crate::symbols::symbol_ref::SymbolRef;
-use crate::symbols::{sets::dependent::DependentSubset, SetData, SetSymbol, Sym};
+use crate::symbols::{SetData, SetSymbol, Sym};
 use core::fmt::Debug;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -36,11 +36,6 @@ impl<'m> Sym<'m, SetSymbol> for Set<'m> {
 // derive from Set
 
 impl<'m> Set<'m> {
-    pub fn st(self, filter: impl Fn(usize, usize) -> bool) {
-        let x = DependentSubset::new(self, filter);
-        todo!()
-    }
-
     pub(crate) fn symbol(self) -> SymbolRef<'m, SetSymbol> {
         self.into()
     }
