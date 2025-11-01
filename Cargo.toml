@@ -12,7 +12,6 @@ categories = ["mathematics", "algorithms", "science", "no-std"]
 [dependencies]
 orx-imp-vec = "2.17"
 orx-pinned-vec = "3.21"
-orx-self-or = { version = "1.2.0", registry = "artifactory" }
 orx-split-vec = "3.22"
 
 [features]
