@@ -52,7 +52,8 @@ impl<'m> Set<'m> {
     pub fn dependant_sets(self) -> impl Iterator<Item = Set<'m>> {
         let model = self.symbol().model;
         let indices = self.symbol().data.data.depends_on_indices();
-        let set_at = |idx: &usize| model.set_at(*idx).expect("exist in this model");
+        #[allow(clippy::missing_panics_doc)]
+        let set_at = |idx: &usize| model.set_at(*idx).expect("certain to exist in this model");
         indices.iter().map(set_at)
     }
 }

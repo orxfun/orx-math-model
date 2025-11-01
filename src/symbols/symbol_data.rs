@@ -57,3 +57,9 @@ impl UnsafeString {
         x.as_str()
     }
 }
+
+impl PartialEq<str> for UnsafeString {
+    fn eq(&self, other: &str) -> bool {
+        self.value().eq(other)
+    }
+}
