@@ -10,6 +10,16 @@ pub struct SymbolData<S: Symbol> {
     pub data: S::Data,
 }
 
+impl<S: Symbol> SymbolData<S> {
+    pub fn new(data: S::Data) -> Self {
+        Self {
+            key: Default::default(),
+            definition: Default::default(),
+            data,
+        }
+    }
+}
+
 #[derive(Default)]
 pub struct Key(UnsafeString);
 

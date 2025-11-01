@@ -1,3 +1,7 @@
+pub struct DependentSet<const N: usize> {
+    //
+}
+
 // use crate::symbols::sets::indices::{Depth, Elements, IndexValues, SetDepths};
 // use crate::symbols::{sets::set_gen::SetGen, Set};
 
