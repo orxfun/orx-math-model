@@ -1,10 +1,10 @@
-use crate::symbols::{symbol::Symbol, symbol_ref_core::SymbolRefCore};
+use crate::symbols::{symbol_meta::SymbolMeta, symbol_ref_core::SymbolRefCore};
 use alloc::string::String;
 use core::fmt::Debug;
 
 pub trait SymbolRef<'m, S>
 where
-    S: Symbol,
+    S: SymbolMeta,
     Self: SymbolReq<'m, S>,
     S::Data: 'm,
 {
@@ -28,13 +28,13 @@ where
 pub trait SymbolReq<'m, S>:
     From<SymbolRefCore<'m, S>> + Into<SymbolRefCore<'m, S>> + Debug
 where
-    S: Symbol,
+    S: SymbolMeta,
 {
 }
 
 impl<'m, S, X> SymbolReq<'m, S> for X
 where
-    S: Symbol,
+    S: SymbolMeta,
     X: From<SymbolRefCore<'m, S>> + Into<SymbolRefCore<'m, S>> + Debug,
 {
 }

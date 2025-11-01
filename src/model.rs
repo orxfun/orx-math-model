@@ -1,5 +1,5 @@
 use crate::model_data::ModelData;
-use crate::symbols::{Set, SetData, SymbolData};
+use crate::symbols::{Set, SetData, Symbol};
 
 #[derive(Default)]
 pub struct Model {
@@ -15,7 +15,7 @@ impl Model {
 
     pub fn set(&self) -> Set<'_> {
         let data = SetData::new();
-        self.data.sets.push(self, SymbolData::new(data))
+        self.data.sets.push(self, Symbol::new(data))
     }
 
     pub fn set_by_key(&self, key: &str) -> Option<Set<'_>> {
@@ -28,7 +28,7 @@ impl Model {
         for set in &sets {
             data.add_depending_set(*set);
         }
-        self.data.sets.push(self, SymbolData::new(data))
+        self.data.sets.push(self, Symbol::new(data))
     }
 
     // helpers

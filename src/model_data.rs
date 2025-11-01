@@ -1,6 +1,6 @@
-use crate::symbols::{SetSymbol, SymbolDataCollection};
+use crate::symbols::{SetMeta, SymbolDataCollection};
 
 #[derive(Default)]
 pub struct ModelData {
-    pub(super) sets: SymbolDataCollection<SetSymbol>,
+    pub(super) sets: SymbolDataCollection<SetMeta>,
 }
