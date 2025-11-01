@@ -16,7 +16,7 @@ impl<S: Stage, M: SymbolMeta> Default for SymbolDataCollection<S, M> {
 }
 
 impl<S: Stage, M: SymbolMeta> SymbolDataCollection<S, M> {
-    pub fn push<'m>(&'m self, model: &'m Model, symbol_data: Symbol<S, M>) -> M::Ref<'m> {
+    pub fn push<'m>(&'m self, model: &'m Model<S>, symbol_data: Symbol<S, M>) -> M::Ref<'m, S> {
         let data = self.data_vec.imp_push_get_ref(symbol_data);
         let symbol_ref = SymbolRefCore {
             model,
@@ -25,7 +25,7 @@ impl<S: Stage, M: SymbolMeta> SymbolDataCollection<S, M> {
         symbol_ref.into()
     }
 
-    pub fn at<'m>(&'m self, model: &'m Model, idx: usize) -> Option<SymbolRefCore<'m, M>> {
+    pub fn at<'m>(&'m self, model: &'m Model<S>, idx: usize) -> Option<SymbolRefCore<'m, S, M>> {
         let data = self.data_vec.get(idx)?;
         Some(SymbolRefCore {
             model,
@@ -33,7 +33,7 @@ impl<S: Stage, M: SymbolMeta> SymbolDataCollection<S, M> {
         })
     }
 
-    pub fn by_key<'m>(&'m self, model: &'m Model, key: &str) -> Option<SymbolRefCore<'m, M>> {
+    pub fn by_key<'m>(&'m self, model: &'m Model<S>, key: &str) -> Option<SymbolRefCore<'m, S, M>> {
         let data = self.data_vec.iter().find(|x| x.key.eq(key))?;
         Some(SymbolRefCore {
             model,
@@ -41,7 +41,7 @@ impl<S: Stage, M: SymbolMeta> SymbolDataCollection<S, M> {
         })
     }
 
-    pub fn index_of(&self, symbol: SymbolRefCore<'_, M>) -> Option<usize> {
+    pub fn index_of(&self, symbol: SymbolRefCore<'_, S, M>) -> Option<usize> {
         self.data_vec.index_of(symbol.symbol)
     }
 }

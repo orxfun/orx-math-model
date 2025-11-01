@@ -27,11 +27,11 @@ impl Model<Modeling> {
 impl<S: Stage> Model<S> {
     // sets
 
-    pub fn set_by_key(&self, key: &str) -> Option<Set<'_>> {
+    pub fn set_by_key(&self, key: &str) -> Option<Set<'_, S>> {
         self.data.sets.by_key(self, key).map(Set::from)
     }
 
-    pub(crate) fn dep_set<'m, const N: usize>(&'m self, sets: [Set<'m>; N]) -> Set<'m> {
+    pub(crate) fn dep_set<'m, const N: usize>(&'m self, sets: [Set<'m>; N]) -> Set<'m, S> {
         let sets = sets.to_vec();
         let mut data = SetData::new();
         for set in &sets {
@@ -42,7 +42,7 @@ impl<S: Stage> Model<S> {
 
     // helpers
 
-    pub(crate) fn set_at(&self, idx: usize) -> Option<Set<'_>> {
+    pub(crate) fn set_at(&self, idx: usize) -> Option<Set<'_, S>> {
         self.data.sets.at(self, idx).map(Set::from)
     }
 }

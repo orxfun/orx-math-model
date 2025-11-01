@@ -8,7 +8,7 @@ where
     S: Stage,
     M: SymbolMeta,
     Self: SymbolReq<'m, S, M>,
-    M::Data: 'm,
+    M::Data<S>: 'm,
 {
     type Data;
 

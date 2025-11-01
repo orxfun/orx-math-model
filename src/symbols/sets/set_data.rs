@@ -1,12 +1,17 @@
+use crate::stages::Stage;
 use crate::symbols::{sets::dep_set_indices::DependentSetIndices, Set};
 use core::fmt::Debug;
 
 #[derive(Default)]
-pub struct SetData {
+pub struct SetData<S>
+where
+    S: Stage,
+{
     depends_on: DependentSetIndices,
+    phantom: core::marker::PhantomData<S>,
 }
 
-impl SetData {
+impl<S: Stage> SetData<S> {
     pub fn new() -> Self {
         Self::default()
     }
@@ -31,7 +36,7 @@ impl SetData {
     }
 }
 
-impl Debug for SetData {
+impl<S: Stage> Debug for SetData<S> {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         f.debug_struct("SetData")
             .field("depends_on", &self.depends_on_indices())

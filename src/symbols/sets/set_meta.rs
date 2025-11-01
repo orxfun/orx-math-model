@@ -1,13 +1,18 @@
+use crate::stages::Stage;
 use crate::symbols::{sets::set::Set, symbol_meta::SymbolMeta, SetData};
 
 #[derive(Default)]
 pub struct SetMeta;
 
 impl SymbolMeta for SetMeta {
-    type Data = SetData;
-
-    type Ref<'m>
-        = Set<'m>
+    type Data<S>
+        = SetData<S>
     where
-        <Self as SymbolMeta>::Data: 'm;
+        S: Stage;
+
+    type Ref<'m, S>
+        = Set<'m, S>
+    where
+        S: Stage,
+        <Self as SymbolMeta>::Data<S>: 'm;
 }

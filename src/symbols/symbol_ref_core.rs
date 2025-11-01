@@ -10,7 +10,7 @@ where
     S: Stage,
     M: SymbolMeta,
 {
-    pub model: &'m Model,
+    pub model: &'m Model<S>,
     pub symbol: &'m Symbol<S, M>,
 }
 

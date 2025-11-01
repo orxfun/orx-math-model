@@ -7,12 +7,11 @@ pub struct Symbol<S: Stage, M: SymbolMeta> {
     pub definition: Definition,
     // TODO: temporary clippy fix until we use the data
     #[allow(dead_code)]
-    pub data: M::Data,
-    phantom: core::marker::PhantomData<S>,
+    pub data: M::Data<S>,
 }
 
 impl<S: Stage, M: SymbolMeta> Symbol<S, M> {
-    pub fn new(data: M::Data) -> Self {
+    pub fn new(data: M::Data<S>) -> Self {
         Self {
             key: Default::default(),
             definition: Default::default(),
