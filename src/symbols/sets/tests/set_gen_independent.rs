@@ -56,7 +56,9 @@ fn set_range() {
 fn set_hash_set() {
     let m = Model::new();
     let i = m.set(HashSet::from([0, 2, 4]));
-    assert_eq!(&get_elements(i), &[0, 2, 4]);
+    let mut elements = get_elements(i);
+    elements.sort();
+    assert_eq!(&elements, &[0, 2, 4]);
 }
 
 #[test]
