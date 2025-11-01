@@ -14,4 +14,8 @@ impl DependentSetIndices {
         }
         self.set_indices.sort();
     }
+
+    pub fn indices(&self) -> &[usize] {
+        &self.set_indices
+    }
 }

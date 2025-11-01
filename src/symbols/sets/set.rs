@@ -48,4 +48,14 @@ impl<'m> Set<'m> {
             .index_of(self.symbol())
             .expect("exist in this model")
     }
+
+    pub fn dependant_sets(self) -> impl Iterator<Item = Set<'m>> {
+        let model = self.symbol().model;
+        let sets = &model.data.sets;
+        let indices = self.symbol().data.data.depends_on_indices();
+        indices
+            .iter()
+            .map(|idx| sets.at(model, *idx).expect("exist in this model"))
+            .map(Set::from)
+    }
 }
