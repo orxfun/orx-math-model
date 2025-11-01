@@ -1,15 +1,14 @@
 use crate::symbols::{sets::dep_set_indices::DependentSetIndices, Set};
 use core::fmt::Debug;
 
+#[derive(Default)]
 pub struct SetData {
     depends_on: DependentSetIndices,
 }
 
 impl SetData {
     pub fn new() -> Self {
-        Self {
-            depends_on: DependentSetIndices::default(),
-        }
+        Self::default()
     }
 
     pub fn add_depending_set(&mut self, set: Set<'_>) {
