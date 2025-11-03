@@ -1,4 +1,4 @@
-use crate::symbols::{sets::set::Set, symbol_meta::SymbolMeta, SetData};
+use crate::symbols::{sets::r#ref::SetCore, symbol_meta::SymbolMeta, SetData};
 
 #[derive(Default)]
 pub struct SetMeta;
@@ -7,7 +7,7 @@ impl SymbolMeta for SetMeta {
     type Data = SetData;
 
     type Ref<'m>
-        = Set<'m>
+        = SetCore<'m>
     where
         <Self as SymbolMeta>::Data: 'm;
 }

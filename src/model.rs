@@ -15,7 +15,8 @@ impl Model {
 
     pub fn set(&self) -> Set<'_> {
         let data = SetData::new();
-        self.data.sets.push(self, Symbol::new(data))
+        let set_core = self.data.sets.push(self, Symbol::new(data));
+        todo!()
     }
 
     pub(crate) fn dep_set<'m, const N: usize>(&'m self, sets: [Set<'m>; N]) -> Set<'m> {
@@ -24,7 +25,8 @@ impl Model {
         for set in &sets {
             data.add_depending_set(*set);
         }
-        self.data.sets.push(self, Symbol::new(data))
+        let set_core = self.data.sets.push(self, Symbol::new(data));
+        todo!()
     }
 
     pub fn set_by_key(&self, key: &str) -> Option<Set<'_>> {
