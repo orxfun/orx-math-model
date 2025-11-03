@@ -23,9 +23,10 @@ impl Model {
         self.data.sets.push(self, Symbol::new(data)).set_ref()
     }
 
-    // pub fn set_by_key(&self, key: &str) -> Option<Set<'_>> {
-    //     self.data.sets.by_key(self, key).map(Set::from)
-    // }
+    pub fn set_by_key<const N: usize>(&self, key: &str) -> Option<Set<'_, N>> {
+        let core = self.data.sets.by_key(self, key).map(SetCore::from);
+        core.and_then(|x| x.set_ref_checked::<N>())
+    }
 
     // helpers
 

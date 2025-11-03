@@ -13,7 +13,7 @@ impl Mcfp {
         Self(model)
     }
 
-    pub fn i(&self) -> Set<'_> {
+    pub fn i(&self) -> Set<'_, 1> {
         self.0.set_by_key("i").unwrap()
     }
 
@@ -21,7 +21,7 @@ impl Mcfp {
         self.0.set_by_key("j").unwrap()
     }
 
-    pub fn k(&self) -> Set<'_> {
+    pub fn k(&self) -> Set<'_, 1> {
         self.0.set_by_key("k").unwrap()
     }
 }

@@ -55,4 +55,9 @@ impl<'m> SetCore<'m> {
         debug_assert_eq!(self.data().depends_on_indices().len(), N);
         self.symbol.into()
     }
+
+    pub(crate) fn set_ref_checked<const N: usize>(self) -> Option<Set<'m, N>> {
+        let matches = self.data().depends_on_indices().len() == N;
+        matches.then_some(self.symbol.into())
+    }
 }
