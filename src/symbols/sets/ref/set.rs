@@ -5,7 +5,7 @@ use core::fmt::Debug;
 use core::ops::Deref;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
-pub struct Set<'m, const N: usize = 0> {
+pub struct Set<'m, const N: usize> {
     core: SetCore<'m>,
 }
 

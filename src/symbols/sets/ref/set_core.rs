@@ -1,5 +1,6 @@
 use crate::symbols::symbol_ref_core::SymbolRefCore;
 use crate::symbols::{SetData, SetMeta, SymbolRef};
+use crate::Set;
 use core::fmt::Debug;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -42,10 +43,16 @@ impl<'m> SetCore<'m> {
 
     pub(crate) fn idx(self) -> usize {
         let model = self.symbol().model;
-        model
-            .data
-            .sets
-            .index_of(self.symbol())
-            .expect("exist in this model")
+        let sets = &model.data.sets;
+        sets.index_of(self.symbol()).expect("exist in this model")
+    }
+
+    pub(crate) fn data(self) -> &'m SetData {
+        &self.symbol.symbol.data
+    }
+
+    pub(crate) fn set_ref<const N: usize>(self) -> Set<'m, N> {
+        debug_assert_eq!(self.data().depends_on_indices().len(), N);
+        self.symbol.into()
     }
 }
