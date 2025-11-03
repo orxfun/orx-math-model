@@ -48,12 +48,4 @@ impl<'m> SetCore<'m> {
             .index_of(self.symbol())
             .expect("exist in this model")
     }
-
-    // pub fn dependant_sets(self) -> impl Iterator<Item = SetCore<'m>> {
-    //     let model = self.symbol().model;
-    //     let indices = self.symbol().symbol.data.depends_on_indices();
-    //     #[allow(clippy::missing_panics_doc)]
-    //     let set_at = |idx: &usize| model.set_at(*idx).expect("certain to exist in this model");
-    //     indices.iter().map(set_at)
-    // }
 }

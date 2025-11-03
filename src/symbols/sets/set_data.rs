@@ -1,4 +1,4 @@
-use crate::symbols::{sets::dep_set_indices::DependentSetIndices, Set};
+use crate::symbols::sets::{dep_set_indices::DependentSetIndices, r#ref::SetCore};
 use core::fmt::Debug;
 
 #[derive(Default)]
@@ -11,11 +11,12 @@ impl SetData {
         Self::default()
     }
 
-    pub fn add_depending_set(&mut self, set: Set<'_>) {
-        self.depends_on.push(set);
-        for set in set.dependant_sets() {
-            self.depends_on.push(set);
-        }
+    pub fn add_depending_set(&mut self, set: SetCore<'_>) {
+        // self.depends_on.push(set);
+        // for set in set.dependant_sets() {
+        //     self.depends_on.push(set);
+        // }
+        todo!()
     }
 
     pub fn depends_on_indices(&self) -> &[usize] {

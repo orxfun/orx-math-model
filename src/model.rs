@@ -23,7 +23,8 @@ impl Model {
         let sets = sets.to_vec();
         let mut data = SetData::new();
         for set in &sets {
-            data.add_depending_set(*set);
+            // data.add_depending_set(*set);
+            todo!()
         }
         let set_core = self.data.sets.push(self, Symbol::new(data));
         todo!()
