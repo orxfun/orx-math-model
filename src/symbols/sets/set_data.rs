@@ -18,14 +18,6 @@ impl SetData {
         }
     }
 
-    // pub fn new(depends_on: impl IntoIterator<Item = usize>) -> Self {
-    //     let mut depends_on = DependentSetIndices::default();
-    //     depends_on.into_iter().for_each(|idx| depends_on.push(idx));
-    //     let mut depends_on: Vec<_> = depends_on.into_iter().collect();
-    //     depends_on.sort();
-    //     Self { depends_on }
-    // }
-
     pub fn depends_on_indices(&self) -> &[usize] {
         self.depends_on.indices()
     }
