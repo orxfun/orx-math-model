@@ -23,4 +23,8 @@ impl DependentSetIndices {
     pub fn indices(&self) -> &[usize] {
         &self.set_indices
     }
+
+    pub fn dim(&self) -> usize {
+        self.set_indices.len()
+    }
 }
