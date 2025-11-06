@@ -34,8 +34,6 @@ impl<'m> SymbolRef<'m, SetMeta> for SetCore<'m> {
     type Data = SetData;
 }
 
-// derive from Set
-
 impl<'m> SetCore<'m> {
     pub(crate) fn symbol(self) -> SymbolRefCore<'m, SetMeta> {
         self.into()

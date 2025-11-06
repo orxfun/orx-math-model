@@ -10,7 +10,7 @@ pub struct ParCore<'m> {
 
 impl<'m> Debug for ParCore<'m> {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        f.debug_struct("Set")
+        f.debug_struct("Par")
             .field("key", &self.symbol.symbol.key.value())
             .field("definition", &self.symbol.symbol.definition.value())
             .field("data", &self.symbol.symbol.data)
@@ -34,30 +34,28 @@ impl<'m> SymbolRef<'m, ParMeta> for ParCore<'m> {
     type Data = ParData;
 }
 
-// derive from Set
+impl<'m> ParCore<'m> {
+    pub(crate) fn symbol(self) -> SymbolRefCore<'m, ParMeta> {
+        self.into()
+    }
 
-// impl<'m> ParCore<'m> {
-//     pub(crate) fn symbol(self) -> SymbolRefCore<'m, ParMeta> {
-//         self.into()
-//     }
+    pub(crate) fn idx(self) -> usize {
+        let model = self.symbol().model;
+        let pars = &model.data.pars;
+        pars.index_of(self.symbol()).expect("exist in this model")
+    }
 
-//     pub(crate) fn idx(self) -> usize {
-//         let model = self.symbol().model;
-//         let sets = &model.data.sets;
-//         sets.index_of(self.symbol()).expect("exist in this model")
-//     }
+    pub(crate) fn sym_data(self) -> &'m ParData {
+        &self.symbol.symbol.data
+    }
 
-//     pub(crate) fn sym_data(self) -> &'m ParData {
-//         &self.symbol.symbol.data
-//     }
+    // pub(crate) fn set_ref<const N: usize>(self) -> Set<'m, N> {
+    //     debug_assert_eq!(self.sym_data().depends_on_indices().len(), N);
+    //     self.symbol.into()
+    // }
 
-//     pub(crate) fn set_ref<const N: usize>(self) -> Set<'m, N> {
-//         debug_assert_eq!(self.sym_data().depends_on_indices().len(), N);
-//         self.symbol.into()
-//     }
-
-//     pub(crate) fn set_ref_checked<const N: usize>(self) -> Option<Set<'m, N>> {
-//         let matches = self.sym_data().depends_on_indices().len() == N;
-//         matches.then_some(self.symbol.into())
-//     }
-// }
+    // pub(crate) fn set_ref_checked<const N: usize>(self) -> Option<Set<'m, N>> {
+    //     let matches = self.sym_data().depends_on_indices().len() == N;
+    //     matches.then_some(self.symbol.into())
+    // }
+}
