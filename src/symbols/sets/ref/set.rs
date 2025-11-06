@@ -1,6 +1,6 @@
-use crate::symbols::sets::r#ref::SetCore;
+use crate::symbols::sets::{SetCore, SetData, SetMeta};
 use crate::symbols::symbol_ref_core::SymbolRefCore;
-use crate::symbols::{SetData, SetMeta, SymbolRef};
+use crate::symbols::SymbolRef;
 use core::fmt::Debug;
 use core::ops::Deref;
 

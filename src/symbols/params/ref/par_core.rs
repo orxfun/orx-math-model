@@ -1,7 +1,6 @@
 use crate::symbols::params::{ParData, ParMeta};
 use crate::symbols::symbol_ref_core::SymbolRefCore;
 use crate::symbols::SymbolRef;
-use crate::Set;
 use core::fmt::Debug;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -37,28 +36,28 @@ impl<'m> SymbolRef<'m, ParMeta> for ParCore<'m> {
 
 // derive from Set
 
-impl<'m> ParCore<'m> {
-    pub(crate) fn symbol(self) -> SymbolRefCore<'m, ParMeta> {
-        self.into()
-    }
+// impl<'m> ParCore<'m> {
+//     pub(crate) fn symbol(self) -> SymbolRefCore<'m, ParMeta> {
+//         self.into()
+//     }
 
-    pub(crate) fn idx(self) -> usize {
-        let model = self.symbol().model;
-        let sets = &model.data.sets;
-        sets.index_of(self.symbol()).expect("exist in this model")
-    }
+//     pub(crate) fn idx(self) -> usize {
+//         let model = self.symbol().model;
+//         let sets = &model.data.sets;
+//         sets.index_of(self.symbol()).expect("exist in this model")
+//     }
 
-    pub(crate) fn sym_data(self) -> &'m ParData {
-        &self.symbol.symbol.data
-    }
+//     pub(crate) fn sym_data(self) -> &'m ParData {
+//         &self.symbol.symbol.data
+//     }
 
-    pub(crate) fn set_ref<const N: usize>(self) -> Set<'m, N> {
-        debug_assert_eq!(self.sym_data().depends_on_indices().len(), N);
-        self.symbol.into()
-    }
+//     pub(crate) fn set_ref<const N: usize>(self) -> Set<'m, N> {
+//         debug_assert_eq!(self.sym_data().depends_on_indices().len(), N);
+//         self.symbol.into()
+//     }
 
-    pub(crate) fn set_ref_checked<const N: usize>(self) -> Option<Set<'m, N>> {
-        let matches = self.sym_data().depends_on_indices().len() == N;
-        matches.then_some(self.symbol.into())
-    }
-}
+//     pub(crate) fn set_ref_checked<const N: usize>(self) -> Option<Set<'m, N>> {
+//         let matches = self.sym_data().depends_on_indices().len() == N;
+//         matches.then_some(self.symbol.into())
+//     }
+// }

@@ -1,4 +1,4 @@
-use crate::symbols::{Set, SetCore};
+use crate::symbols::sets::{Set, SetCore};
 use alloc::vec::Vec;
 
 pub struct DependentSetIndices {

@@ -1,5 +1,6 @@
 use crate::model_data::ModelData;
-use crate::symbols::{DependentSetIndices, Set, SetCore, SetData, Symbol};
+use crate::symbols::sets::{Set, SetCore, SetData};
+use crate::symbols::{DependentSetIndices, Symbol};
 
 #[derive(Default)]
 pub struct Model {

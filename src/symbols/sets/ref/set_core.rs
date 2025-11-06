@@ -1,6 +1,6 @@
+use crate::symbols::sets::{Set, SetData, SetMeta};
 use crate::symbols::symbol_ref_core::SymbolRefCore;
-use crate::symbols::{SetData, SetMeta, SymbolRef};
-use crate::Set;
+use crate::symbols::SymbolRef;
 use core::fmt::Debug;
 
 #[derive(Clone, Copy, PartialEq, Eq)]

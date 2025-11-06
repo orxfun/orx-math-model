@@ -1,5 +1,6 @@
 use super::Depth;
-use crate::symbols::{Set, SetCore, SetMeta, SymbolMap};
+use crate::symbols::sets::{Set, SetCore, SetMeta};
+use crate::symbols::SymbolMap;
 
 pub struct SetDepths<'m> {
     map: SymbolMap<'m, SetMeta, SetCore<'m>, Depth>,
