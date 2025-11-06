@@ -10,3 +10,12 @@ fn set_with_values_d0() {
 
     let j = m.set().values(4..8);
 }
+
+#[test]
+fn set_with_values_d1() {
+    let m = Model::new();
+
+    let i = m.set().values(vec![1, 2, 3]);
+
+    let j = set_of([i]);
+}
