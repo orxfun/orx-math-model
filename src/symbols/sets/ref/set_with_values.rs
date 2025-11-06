@@ -17,13 +17,14 @@ impl<'m> Set<'m, 0> {
 }
 
 impl<'m> Set<'m, 1> {
-    pub fn data<'d, Data, I>(
+    pub fn data<'d, Data, I, T>(
         self,
         data: &'d Data,
         fun: fn(&'d Data, usize) -> I,
-    ) -> FunSetAndDataD1<'m, 'd, Data, I>
+    ) -> FunSetAndDataD1<'m, 'd, Data, I, T>
     where
-        I: IntoIterator<Item = usize>,
+        I: IntoIterator<Item = T>,
+        T: SoR<usize>,
     {
         FunSetAndDataD1::new(self, data, fun)
     }
