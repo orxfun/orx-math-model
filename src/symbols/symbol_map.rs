@@ -1,7 +1,6 @@
-use crate::{
-    no_std_types::Map,
-    symbols::{symbol_meta::SymbolMeta, symbol_ref_core::SymbolRefCore},
-};
+use crate::no_std_types::Map;
+use crate::symbols::Symbol;
+use crate::symbols::{symbol_meta::SymbolMeta, symbol_ref_core::SymbolRefCore};
 use core::marker::PhantomData;
 
 pub struct SymbolMap<'m, S, K, V>
@@ -46,9 +45,6 @@ where
     #[inline(always)]
     fn addr_of(symbol: K) -> usize {
         let symbol = symbol.into();
-        // symbol.symbol.data as *const <S as SymbolMeta>::Data as usize;
-        let x = symbol.symbol;
-        let y = &x.data;
-        todo!()
+        symbol.symbol as *const Symbol<S> as usize
     }
 }
