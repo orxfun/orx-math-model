@@ -47,17 +47,17 @@ impl<'m> SetCore<'m> {
         sets.index_of(self.symbol()).expect("exist in this model")
     }
 
-    pub(crate) fn data(self) -> &'m SetData {
+    pub(crate) fn sym_data(self) -> &'m SetData {
         &self.symbol.symbol.data
     }
 
     pub(crate) fn set_ref<const N: usize>(self) -> Set<'m, N> {
-        debug_assert_eq!(self.data().depends_on_indices().len(), N);
+        debug_assert_eq!(self.sym_data().depends_on_indices().len(), N);
         self.symbol.into()
     }
 
     pub(crate) fn set_ref_checked<const N: usize>(self) -> Option<Set<'m, N>> {
-        let matches = self.data().depends_on_indices().len() == N;
+        let matches = self.sym_data().depends_on_indices().len() == N;
         matches.then_some(self.symbol.into())
     }
 }
