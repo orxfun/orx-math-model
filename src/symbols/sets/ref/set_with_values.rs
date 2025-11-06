@@ -1,3 +1,4 @@
+use crate::data::FunSetAndDataD1;
 use crate::symbols::{values::SetGen, Elements};
 use crate::Set;
 use alloc::boxed::Box;
@@ -12,17 +13,14 @@ impl<'m> Set<'m, 0> {
 }
 
 impl<'m> Set<'m, 1> {
-    pub fn values<I>(self, elements: Box<dyn Fn(usize) -> I>) -> Self
+    pub fn data<'d, Data, I>(
+        self,
+        data: &'d Data,
+        fun: fn(&'d Data, usize) -> I,
+    ) -> FunSetAndDataD1<'m, 'd, Data, I>
     where
-        I: Iterator<Item = usize> + 'static,
+        I: Iterator<Item = usize>,
     {
-        let set = Box::new(elements);
-        let elements = Elements::D1(set);
-        // self.data().update_elements(elements);
-        // let fun = |data: &Data, [i]: [usize; 1]| elements(data, i);
-        // let set = Box::new(FunSet::new(data, fun));
-        // let elements = Elements::D1(set);
-        // self.data().update_elements(elements);
-        self
+        FunSetAndDataD1::new(self, data, fun)
     }
 }
