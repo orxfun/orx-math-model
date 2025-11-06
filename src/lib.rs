@@ -23,5 +23,6 @@ mod model_data;
 mod no_std_types;
 mod symbols;
 
+pub use data::{FunSetAndDataD0, FunSetAndDataD1, SetAndData, SetGen};
 pub use model::Model;
 pub use symbols::{set_of, Set, SymbolRef};

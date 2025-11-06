@@ -74,6 +74,7 @@ impl<'m, const N: usize> Set<'m, N> {
         indices.map(|idx| Set::from(m.set_at(idx).expect("exists")))
     }
 
+    #[cfg(test)]
     pub(crate) fn core(self) -> SetCore<'m> {
         self.core
     }

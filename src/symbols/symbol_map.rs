@@ -32,10 +32,12 @@ where
         self.map.get(&Self::addr_of(symbol))
     }
 
+    #[cfg(test)]
     pub fn len(&self) -> usize {
         self.map.len()
     }
 
+    #[cfg(test)]
     pub fn contains_key(&self, symbol: K) -> bool {
         self.map.contains_key(&Self::addr_of(symbol))
     }
