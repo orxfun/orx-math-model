@@ -1,15 +1,15 @@
-use crate::{symbols::symbol_map::SymbolMap, Model, Sym};
+use crate::{symbols::symbol_map::SymbolMap, Model};
 
 #[test]
 fn set_in_symbol_map() {
     let m = Model::new();
 
-    let i = m.set().key("i");
-    let j = m.set().key("j");
+    let i = m.set();
+    let j = m.set();
     let i2 = i;
 
     let m2 = Model::new();
-    let k = m2.set().key("i");
+    let k = m2.set();
 
     let mut map = SymbolMap::new();
     map.insert(i, 0);

@@ -1,3 +1,6 @@
+#[cfg(test)]
+mod tests;
+
 mod sets;
 mod symbol;
 mod symbol_data_collection;
