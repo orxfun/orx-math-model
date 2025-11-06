@@ -6,17 +6,17 @@ pub struct SetDepths<'m> {
 }
 
 impl<'m> SetDepths<'m> {
-    pub fn new(sets: impl Iterator<Item = Set<'m>>) -> Self {
+    pub fn new<S: Into<SetCore<'m>>>(sets: impl IntoIterator<Item = S>) -> Self {
         let mut map = SymbolMap::new();
 
-        for (i, set) in sets.enumerate() {
-            map.insert(set.into_core(), Depth::new(i));
+        for (i, set) in sets.into_iter().enumerate() {
+            map.insert(set.into(), Depth::new(i));
         }
 
         Self { map }
     }
 
     pub fn depth_of(&self, set: Set<'m>) -> Depth {
-        *self.map.get(set.into_core()).expect("must exist")
+        *self.map.get(set.into()).expect("must exist")
     }
 }

@@ -1,13 +1,25 @@
-use crate::*;
+use crate::data::set_data::indices::{Depth, IndexValues, SetDepths};
+use crate::data::{SetAndData, SetGen};
+use crate::Model;
 use alloc::vec;
+use alloc::vec::Vec;
 
 #[test]
 fn set_data_dim0_range() {
     let m = Model::new();
 
     let i = m.set();
+    let j = m.set();
+    let k = m.set();
+
+    let set_depths = SetDepths::new([j, i, k]);
+    let index_values = IndexValues::new(Depth::zero().next().next().next());
 
     let di = i.data(&(), |_| 0..10);
+    let values: Vec<_> = di
+        .set_gen()
+        .elements(di.set(), &set_depths, &index_values)
+        .collect();
 }
 
 #[test]

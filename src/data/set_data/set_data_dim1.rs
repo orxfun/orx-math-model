@@ -50,7 +50,7 @@ where
         self.set
     }
 
-    fn data(&self) -> &impl SetGen<1> {
+    fn set_gen(&self) -> &impl SetGen<1> {
         &self.data
     }
 }

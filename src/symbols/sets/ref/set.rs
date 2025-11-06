@@ -35,6 +35,18 @@ impl<'m, const N: usize> From<Set<'m, N>> for SymbolRefCore<'m, SetMeta> {
     }
 }
 
+impl<'m, const N: usize> From<Set<'m, N>> for SetCore<'m> {
+    fn from(value: Set<'m, N>) -> Self {
+        value.core
+    }
+}
+
+impl<'m, const N: usize> From<SetCore<'m>> for Set<'m, N> {
+    fn from(core: SetCore<'m>) -> Self {
+        Self { core }
+    }
+}
+
 impl<'m, const N: usize> Debug for Set<'m, N> {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         let sym = self.symbol().symbol;
@@ -48,14 +60,6 @@ impl<'m, const N: usize> Debug for Set<'m, N> {
 }
 
 impl<'m, const N: usize> Set<'m, N> {
-    pub(crate) fn from_core(core: SetCore<'m>) -> Self {
-        Self { core }
-    }
-
-    pub(crate) fn into_core(self) -> SetCore<'m> {
-        self.core
-    }
-
     fn depends_on_indices(self) -> [usize; N] {
         let mut indices = [0; N];
         for (i, idx) in self.sym_data().depends_on_indices().iter().enumerate() {
@@ -67,6 +71,6 @@ impl<'m, const N: usize> Set<'m, N> {
     pub fn depending_sets(self) -> [Set<'m, 0>; N] {
         let m = self.core.symbol().model;
         let indices = self.depends_on_indices();
-        indices.map(|idx| Set::from_core(m.set_at(idx).expect("exists")))
+        indices.map(|idx| Set::from(m.set_at(idx).expect("exists")))
     }
 }

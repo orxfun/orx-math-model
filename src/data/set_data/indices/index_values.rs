@@ -1,7 +1,7 @@
 use super::Depth;
 use alloc::vec;
 use alloc::vec::Vec;
-use core::ops::Index;
+use core::ops::{Index, IndexMut};
 
 pub struct IndexValues {
     indices: Vec<usize>,
@@ -20,5 +20,11 @@ impl Index<Depth> for IndexValues {
 
     fn index(&self, index: Depth) -> &Self::Output {
         &self.indices[index.depth()]
+    }
+}
+
+impl IndexMut<Depth> for IndexValues {
+    fn index_mut(&mut self, index: Depth) -> &mut Self::Output {
+        &mut self.indices[index.depth()]
     }
 }

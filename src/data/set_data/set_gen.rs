@@ -11,7 +11,7 @@ pub trait SetGen<const N: usize> {
     fn elements<'m>(
         &self,
         set: Set<'m, N>,
-        depths: SetDepths<'m>,
+        depths: &SetDepths<'m>,
         index_values: &IndexValues,
     ) -> Box<dyn Iterator<Item = usize> + '_> {
         let dep_sets = set.depending_sets();
