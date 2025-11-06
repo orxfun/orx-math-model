@@ -35,36 +35,46 @@ impl<'m, const N: usize> From<Set<'m, N>> for SymbolRefCore<'m, SetMeta> {
     }
 }
 
+impl<'m, const N: usize> From<Set<'m, N>> for SetCore<'m> {
+    fn from(value: Set<'m, N>) -> Self {
+        value.core
+    }
+}
+
+impl<'m, const N: usize> From<SetCore<'m>> for Set<'m, N> {
+    fn from(core: SetCore<'m>) -> Self {
+        Self { core }
+    }
+}
+
 impl<'m, const N: usize> Debug for Set<'m, N> {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         let sym = self.symbol().symbol;
+        let dep_sets = self.depending_sets();
         f.debug_struct("Set")
             .field("key", &sym.key.value())
             .field("definition", &sym.definition.value())
-            .field("data", &sym.data)
+            .field("depending_sets", &dep_sets)
             .finish()
     }
 }
 
 impl<'m, const N: usize> Set<'m, N> {
-    // pub(crate) fn symbol(self) -> SymbolRefCore<'m, SetMeta> {
-    //     self.into()
-    // }
+    fn depends_on_indices(self) -> [usize; N] {
+        let mut indices = [0; N];
+        for (i, idx) in self.sym_data().depends_on_indices().iter().enumerate() {
+            indices[i] = *idx;
+        }
+        indices
+    }
 
-    // pub(crate) fn idx(self) -> usize {
-    //     let model = self.symbol().model;
-    //     model
-    //         .data
-    //         .sets
-    //         .index_of(self.symbol())
-    //         .expect("exist in this model")
-    // }
+    pub fn depending_sets(self) -> [Set<'m, 0>; N] {
+        let m = self.core.symbol().model;
+        let indices = self.depends_on_indices();
+        indices.map(|idx| Set::from(m.set_at(idx).expect("exists")))
+    }
 
-    // pub fn dependant_sets(self) -> impl Iterator<Item = SetCore<'m>> {
-    //     let model = self.symbol().model;
-    //     let indices = self.symbol().symbol.data.depends_on_indices();
-    //     #[allow(clippy::missing_panics_doc)]
-    //     let set_at = |idx: &usize| model.set_at(*idx).expect("certain to exist in this model");
-    //     indices.iter().map(set_at)
-    // }
+    pub(crate) fn core(self) -> SetCore<'m> {
+        self.core
+    }
 }
