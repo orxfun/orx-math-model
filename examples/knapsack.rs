@@ -1,5 +1,7 @@
 use orx_math_model::*;
 
+// model
+
 struct Knapsack(Model);
 
 impl Knapsack {
@@ -16,10 +18,30 @@ impl Knapsack {
     }
 }
 
+// data
+
+struct KnapsackData {
+    costs: Vec<u64>,
+    weights: Vec<u64>,
+    knapsack_capacity: u64,
+}
+
+impl KnapsackData {
+    fn num_items(&self) -> usize {
+        self.costs.len()
+    }
+}
+
 fn main() {
     let knapsack = Knapsack::new();
 
-    println!("{:?}", knapsack.i());
+    let data = KnapsackData {
+        costs: vec![3, 1, 7, 6],
+        weights: vec![2, 5, 4, 6],
+        knapsack_capacity: 11,
+    };
+
+    let di = knapsack.i().data(&data, |d| 0..d.num_items());
 
     drop(knapsack);
 }
