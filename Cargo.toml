@@ -10,6 +10,7 @@ keywords = ["optimization", "mathematical", "model", "linear", "solver"]
 categories = ["mathematics", "algorithms", "science", "no-std"]
 
 [dependencies]
+orx-concurrent-option = { version = "1.5.0", default-features = false }
 orx-imp-vec = "2.17"
 orx-pinned-vec = "3.21"
 orx-split-vec = "3.22"

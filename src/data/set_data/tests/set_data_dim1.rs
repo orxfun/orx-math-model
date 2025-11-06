@@ -8,7 +8,7 @@ fn set_data_dim1_jagged() {
 
     let m = Model::new();
 
-    let i = m.set();
+    let i = m.set().key("i");
     let j = set_of([i]);
 
     let data1 = vec![vec![], vec![1, 2, 3], vec![3, 5]];
