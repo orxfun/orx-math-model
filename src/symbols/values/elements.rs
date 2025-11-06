@@ -1,7 +1,13 @@
+use crate::symbols::values::set_gen::SetGen;
 use alloc::boxed::Box;
-use alloc::vec::Vec;
 
 pub enum Elements {
-    D0(Vec<usize>),
-    D1(Box<dyn Fn(usize, &mut Vec<usize>)>),
+    D0(Box<dyn SetGen<0>>),
+    D1(Box<dyn SetGen<1>>),
+}
+
+impl<S0: SetGen<0> + 'static> From<S0> for Elements {
+    fn from(value: S0) -> Self {
+        Self::D0(Box::new(value))
+    }
 }
