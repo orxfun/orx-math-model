@@ -14,6 +14,6 @@ pub trait SetAndData<'m, const N: usize> {
         index_values: &IndexValues,
     ) -> Box<dyn Iterator<Item = usize> + '_> {
         self.set_gen()
-            .elements(self.set(), &set_depths, &index_values)
+            .elements(self.set(), set_depths, index_values)
     }
 }
