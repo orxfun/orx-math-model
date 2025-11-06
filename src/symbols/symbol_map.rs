@@ -1,22 +1,22 @@
 use crate::{
     no_std_types::Map,
-    symbols::{symbol::Symbol, symbol_ref::SymbolRef, SymbolData},
+    symbols::{symbol_meta::SymbolMeta, symbol_ref_core::SymbolRefCore},
 };
 use core::marker::PhantomData;
 
 pub struct SymbolMap<'m, S, K, V>
 where
-    S: Symbol,
-    K: Into<SymbolRef<'m, S>>,
+    S: SymbolMeta,
+    K: Into<SymbolRefCore<'m, S>>,
 {
     map: Map<usize, V>,
-    phantom: PhantomData<(K, SymbolRef<'m, S>)>,
+    phantom: PhantomData<(K, SymbolRefCore<'m, S>)>,
 }
 
 impl<'m, S, K, V> SymbolMap<'m, S, K, V>
 where
-    S: Symbol,
-    K: Into<SymbolRef<'m, S>>,
+    S: SymbolMeta,
+    K: Into<SymbolRefCore<'m, S>>,
 {
     pub fn new() -> Self {
         Self {
@@ -46,6 +46,9 @@ where
     #[inline(always)]
     fn addr_of(symbol: K) -> usize {
         let symbol = symbol.into();
-        symbol.data as *const SymbolData<S> as usize
+        // symbol.symbol.data as *const <S as SymbolMeta>::Data as usize;
+        let x = symbol.symbol;
+        let y = &x.data;
+        todo!()
     }
 }

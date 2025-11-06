@@ -1,9 +1,9 @@
 mod sets;
 mod symbol;
 mod symbol_data_collection;
+mod symbol_map;
 mod symbol_meta;
 mod symbol_ref;
-// mod symbol_map; // TODO: park for now until we fill sets with data
 mod symbol_ref_core;
 mod values;
 
