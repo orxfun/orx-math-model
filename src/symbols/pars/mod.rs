@@ -4,3 +4,4 @@ mod r#ref;
 
 pub use par_data::ParData;
 pub use par_meta::ParMeta;
+pub use r#ref::ParCore;

@@ -1,4 +1,4 @@
-use crate::symbols::params::{ParData, ParMeta};
+use crate::symbols::pars::{ParData, ParMeta};
 use crate::symbols::symbol_ref_core::SymbolRefCore;
 use crate::symbols::SymbolRef;
 use core::fmt::Debug;

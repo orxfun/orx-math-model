@@ -1,4 +1,4 @@
-use crate::symbols::params::ParMeta;
+use crate::symbols::pars::ParMeta;
 use crate::symbols::sets::SetMeta;
 use crate::symbols::SymbolDataCollection;
 

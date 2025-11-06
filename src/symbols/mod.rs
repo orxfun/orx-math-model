@@ -2,7 +2,7 @@
 mod tests;
 
 mod dep_set_indices;
-pub(crate) mod params;
+pub(crate) mod pars;
 pub(crate) mod sets;
 mod symbol;
 mod symbol_data_collection;

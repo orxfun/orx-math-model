@@ -1,5 +1,5 @@
 use crate::symbols::{
-    params::{par_data::ParData, r#ref::ParCore},
+    pars::{par_data::ParData, r#ref::ParCore},
     symbol_meta::SymbolMeta,
 };
 
