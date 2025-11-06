@@ -8,49 +8,49 @@ fn debug_independent_sets() {
     let i = m.set();
     assert_eq!(
         format!("{i:?}"),
-        "Set { key: \"\", definition: \"\", data: SetData { depends_on: [] } }"
+        "Set { key: \"\", definition: \"\", depending_sets: [] }"
     );
 
     let i = m.set().key("i");
     assert_eq!(
         format!("{i:?}"),
-        "Set { key: \"i\", definition: \"\", data: SetData { depends_on: [] } }"
+        "Set { key: \"i\", definition: \"\", depending_sets: [] }"
     );
 
     let i = m.set().definition("machines");
     assert_eq!(
         format!("{i:?}"),
-        "Set { key: \"\", definition: \"machines\", data: SetData { depends_on: [] } }"
+        "Set { key: \"\", definition: \"machines\", depending_sets: [] }"
     );
 
     let i = m.set().key("i").definition("machines");
     assert_eq!(
         format!("{i:?}"),
-        "Set { key: \"i\", definition: \"machines\", data: SetData { depends_on: [] } }"
+        "Set { key: \"i\", definition: \"machines\", depending_sets: [] }"
     );
 }
 
 #[test]
 fn debug_dependent_sets() {
     let m = Model::new();
-    let i = m.set();
-    let j = m.set();
+    let i = m.set().key("i");
+    let j = m.set().key("j");
 
-    let k = set_of([i]);
+    let k = set_of([i]).key("k");
     assert_eq!(
         format!("{k:?}"),
-        "Set { key: \"\", definition: \"\", data: SetData { depends_on: [0] } }"
+        "Set { key: \"k\", definition: \"\", depending_sets: [Set { key: \"i\", definition: \"\", depending_sets: [] }] }"
     );
 
-    let k = set_of([j]);
+    let k = set_of([j]).key("k");
     assert_eq!(
         format!("{k:?}"),
-        "Set { key: \"\", definition: \"\", data: SetData { depends_on: [1] } }"
+        "Set { key: \"k\", definition: \"\", depending_sets: [Set { key: \"j\", definition: \"\", depending_sets: [] }] }"
     );
 
-    let k = set_of([i, j]);
+    let k = set_of([i, j]).key("k");
     assert_eq!(
         format!("{k:?}"),
-        "Set { key: \"\", definition: \"\", data: SetData { depends_on: [0, 1] } }"
+        "Set { key: \"k\", definition: \"\", depending_sets: [Set { key: \"i\", definition: \"\", depending_sets: [] }, Set { key: \"j\", definition: \"\", depending_sets: [] }] }"
     );
 }

@@ -38,10 +38,11 @@ impl<'m, const N: usize> From<Set<'m, N>> for SymbolRefCore<'m, SetMeta> {
 impl<'m, const N: usize> Debug for Set<'m, N> {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         let sym = self.symbol().symbol;
+        let dep_sets = self.depending_sets();
         f.debug_struct("Set")
             .field("key", &sym.key.value())
             .field("definition", &sym.definition.value())
-            .field("data", &sym.data)
+            .field("depending_sets", &dep_sets)
             .finish()
     }
 }
