@@ -45,3 +45,9 @@ impl<'m, const N: usize> Debug for Set<'m, N> {
             .finish()
     }
 }
+
+impl<'m, const N: usize> Set<'m, N> {
+    pub(crate) fn core(self) -> SetCore<'m> {
+        self.core
+    }
+}

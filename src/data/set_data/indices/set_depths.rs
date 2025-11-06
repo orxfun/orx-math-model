@@ -1,27 +1,22 @@
 use super::Depth;
-use crate::symbols::{Set, SetCore, SetMeta};
+use crate::symbols::{Set, SetCore, SetMeta, SymbolMap};
 
 pub struct SetDepths<'m> {
-    // map: SymbolMap<'m, SetMeta, SetCore<'m>, Depth>,
-    p: core::marker::PhantomData<&'m ()>,
+    map: SymbolMap<'m, SetMeta, SetCore<'m>, Depth>,
 }
 
 impl<'m> SetDepths<'m> {
-    pub fn new(mut sets: impl Iterator<Item = Set<'m>>) -> Self {
-        let x = sets.next().unwrap();
-        let y = x.sym_data();
-        // let mut map = SymbolMap::new();
+    pub fn new(sets: impl Iterator<Item = Set<'m>>) -> Self {
+        let mut map = SymbolMap::new();
 
-        // for (i, set) in sets.enumerate() {
-        //     map.insert(set, Depth::new(i));
-        // }
+        for (i, set) in sets.enumerate() {
+            map.insert(set.core(), Depth::new(i));
+        }
 
-        // Self { map }
-        todo!()
+        Self { map }
     }
 
     pub fn depth_of(&self, set: Set<'m>) -> Depth {
-        // *self.map.get(set).expect("must exist")
-        todo!()
+        *self.map.get(set.core()).expect("must exist")
     }
 }
