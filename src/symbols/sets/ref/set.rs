@@ -71,9 +71,10 @@ impl<'m, const N: usize> Set<'m, N> {
     pub fn depending_sets(self) -> [Set<'m, 0>; N] {
         let m = self.core.symbol().model;
         let indices = self.depends_on_indices();
-        indices.map(|idx| Set::from(m.set_at(idx).expect("exists")))
+        indices.map(|idx| Set::from(m.set_at_unchecked(idx)))
     }
 
+    #[cfg(test)]
     pub(crate) fn core(self) -> SetCore<'m> {
         self.core
     }

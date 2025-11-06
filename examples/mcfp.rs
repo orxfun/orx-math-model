@@ -1,5 +1,7 @@
 use orx_math_model::*;
 
+// model
+
 struct Mcfp(Model);
 
 impl Mcfp {
@@ -26,12 +28,28 @@ impl Mcfp {
     }
 }
 
+// data
+
+struct McfpData {
+    in_nodes: Vec<Vec<usize>>,
+    out_nodes: Vec<Vec<usize>>,
+}
+
+impl McfpData {
+    fn n(&self) -> usize {
+        self.in_nodes.len()
+    }
+}
+
 fn main() {
     let mcfp = Mcfp::new();
 
-    println!("{:?}", mcfp.j());
-    println!("{:?}", mcfp.i());
-    println!("{:?}", mcfp.k());
+    let data = McfpData {
+        in_nodes: vec![vec![], vec![0], vec![0], vec![1, 2]],
+        out_nodes: vec![vec![1, 2], vec![3], vec![3], vec![]],
+    };
 
-    drop(mcfp);
+    let dj = mcfp.j().data(&data, |d| 0..d.n());
+    let di = mcfp.i().data(&data, |d, j| &d.in_nodes[j]);
+    let dk = mcfp.k().data(&data, |d, k| &d.out_nodes[k]);
 }

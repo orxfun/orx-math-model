@@ -1,5 +1,5 @@
 use crate::model_data::ModelData;
-use crate::symbols::{DependentSetIndices, Elements, Set, SetCore, SetData, Symbol};
+use crate::symbols::{DependentSetIndices, Set, SetCore, SetData, Symbol};
 
 #[derive(Default)]
 pub struct Model {
@@ -15,15 +15,13 @@ impl Model {
 
     pub fn set(&self) -> Set<'_, 0> {
         let dep = DependentSetIndices::new(core::iter::empty());
-        let elem = Elements::empty(0);
-        let data = SetData::new(dep, elem);
+        let data = SetData::new(dep);
         self.data.sets.push(self, Symbol::new(data)).set_ref()
     }
 
     pub(crate) fn dep_set<'m, const N: usize>(&'m self, sets: [Set<'m, 0>; N]) -> Set<'m, N> {
         let dep = DependentSetIndices::new(sets.into_iter());
-        let elem = Elements::empty(N);
-        let data = SetData::new(dep, elem);
+        let data = SetData::new(dep);
         self.data.sets.push(self, Symbol::new(data)).set_ref()
     }
 
@@ -34,7 +32,13 @@ impl Model {
 
     // helpers
 
+    #[inline(always)]
     pub(crate) fn set_at(&self, idx: usize) -> Option<SetCore<'_>> {
         self.data.sets.at(self, idx).map(SetCore::from)
+    }
+
+    #[inline(always)]
+    pub(crate) fn set_at_unchecked(&self, idx: usize) -> SetCore<'_> {
+        self.set_at(idx).expect("must exist")
     }
 }

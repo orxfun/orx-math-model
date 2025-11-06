@@ -1,4 +1,4 @@
-use crate::symbols::{sets::dep_set_indices::DependentSetIndices, values::Elements};
+use crate::symbols::sets::dep_set_indices::DependentSetIndices;
 use core::fmt::Debug;
 
 pub struct SetData {
@@ -6,8 +6,7 @@ pub struct SetData {
 }
 
 impl SetData {
-    pub fn new(depends_on: DependentSetIndices, elements: Elements) -> Self {
-        assert_eq!(depends_on.dim(), elements.dim());
+    pub fn new(depends_on: DependentSetIndices) -> Self {
         Self { depends_on }
     }
 
