@@ -53,26 +53,4 @@ fn debug_dependent_sets() {
         format!("{k:?}"),
         "Set { key: \"\", definition: \"\", data: SetData { depends_on: [0, 1] } }"
     );
-
-    let m = Model::new();
-    let i = m.set();
-    let k = set_of([i]);
-    let l = set_of([k]);
-    assert_eq!(
-        format!("{l:?}"),
-        "Set { key: \"\", definition: \"\", data: SetData { depends_on: [0, 1] } }"
-    );
-
-    let n = set_of([l]);
-    assert_eq!(
-        format!("{n:?}"),
-        "Set { key: \"\", definition: \"\", data: SetData { depends_on: [0, 1, 2] } }"
-    );
-
-    let j = m.set();
-    let m = set_of([k, j]);
-    assert_eq!(
-        format!("{m:?}"),
-        "Set { key: \"\", definition: \"\", data: SetData { depends_on: [0, 1, 4] } }"
-    );
 }

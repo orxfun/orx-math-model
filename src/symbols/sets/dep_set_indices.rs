@@ -1,13 +1,18 @@
-use crate::symbols::Set;
+use crate::symbols::{Set, SetCore};
 use alloc::vec::Vec;
 
-#[derive(Default)]
 pub struct DependentSetIndices {
     set_indices: Vec<usize>,
 }
 
 impl DependentSetIndices {
-    pub fn push(&mut self, set: Set<'_>) {
+    pub fn new<'m>(sets: impl Iterator<Item = Set<'m, 0>>) -> Self {
+        Self {
+            set_indices: sets.map(|s| s.idx()).collect(),
+        }
+    }
+
+    pub fn push(&mut self, set: SetCore<'_>) {
         let idx = set.idx();
         if !self.set_indices.contains(&idx) {
             self.set_indices.push(idx);
@@ -17,5 +22,9 @@ impl DependentSetIndices {
 
     pub fn indices(&self) -> &[usize] {
         &self.set_indices
+    }
+
+    pub fn dim(&self) -> usize {
+        self.set_indices.len()
     }
 }
