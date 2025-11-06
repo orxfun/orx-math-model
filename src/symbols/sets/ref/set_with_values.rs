@@ -1,10 +1,27 @@
+use crate::symbols::values::FunSet;
 use crate::symbols::{values::SetGen, Elements};
 use crate::Set;
 use alloc::boxed::Box;
 
 impl<'m> Set<'m, 0> {
     pub fn values(self, elements: impl SetGen<0> + 'static) -> Self {
-        let elements = Elements::D0(Box::new(elements));
+        let set = Box::new(elements);
+        let elements = Elements::D0(set);
+        self.data().update_elements(elements);
+        self
+    }
+}
+
+impl<'m> Set<'m, 1> {
+    pub fn values<Data, I>(self, data: Data, elements: impl Fn(&Data, usize) -> I + 'static) -> Self
+    where
+        I: IntoIterator<Item = usize>,
+        Data: 'static,
+        I: 'static,
+    {
+        let fun = move |data: &Data, [i]: [usize; 1]| elements(data, i);
+        let set = Box::new(FunSet::new(data, fun));
+        let elements = Elements::D1(set);
         self.data().update_elements(elements);
         self
     }
