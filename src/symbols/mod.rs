@@ -1,6 +1,7 @@
 #[cfg(test)]
 mod tests;
 
+mod params;
 mod sets;
 mod symbol;
 mod symbol_data_collection;
