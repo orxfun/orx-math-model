@@ -1,6 +1,5 @@
-use crate::data::set_data::indices::{IndexValues, SetDepths};
 use crate::data::set_data::{set_and_data::SetAndData, set_gen::SetGen};
-use crate::{symbols::SetCore, Set};
+use crate::Set;
 use alloc::boxed::Box;
 
 pub struct FunSetD1<'d, Data, I>
@@ -18,16 +17,6 @@ where
     fn elements_by_dependencies(&self, [i]: [usize; 1]) -> Box<dyn Iterator<Item = usize> + '_> {
         let elements = (self.fun)(self.data, i).into_iter();
         Box::new(elements)
-    }
-
-    fn elements<'m>(
-        &self,
-        set: SetCore<'m>,
-        depths: SetDepths<'m>,
-        index_values: &IndexValues,
-    ) -> Box<dyn Iterator<Item = usize> + '_> {
-        set.sym_data().depends_on_indices();
-        todo!()
     }
 }
 
