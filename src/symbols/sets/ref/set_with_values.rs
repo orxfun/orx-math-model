@@ -13,16 +13,17 @@ impl<'m> Set<'m, 0> {
 }
 
 impl<'m> Set<'m, 1> {
-    pub fn values<Data, I>(self, data: Data, elements: impl Fn(&Data, usize) -> I + 'static) -> Self
+    pub fn values<I>(self, elements: Box<dyn Fn(usize) -> I>) -> Self
     where
-        I: IntoIterator<Item = usize>,
-        Data: 'static,
-        I: 'static,
+        I: Iterator<Item = usize> + 'static,
     {
-        let fun = move |data: &Data, [i]: [usize; 1]| elements(data, i);
-        let set = Box::new(FunSet::new(data, fun));
+        let set = Box::new(elements);
         let elements = Elements::D1(set);
         self.data().update_elements(elements);
+        // let fun = |data: &Data, [i]: [usize; 1]| elements(data, i);
+        // let set = Box::new(FunSet::new(data, fun));
+        // let elements = Elements::D1(set);
+        // self.data().update_elements(elements);
         self
     }
 }
