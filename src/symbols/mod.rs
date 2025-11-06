@@ -1,6 +1,7 @@
 #[cfg(test)]
 mod tests;
 
+mod dep_set_indices;
 mod params;
 mod sets;
 mod symbol;
@@ -10,7 +11,8 @@ mod symbol_meta;
 mod symbol_ref;
 mod symbol_ref_core;
 
-pub use sets::{set_of, DependentSetIndices, Set, SetCore, SetData, SetMeta};
+pub use dep_set_indices::DependentSetIndices;
+pub use sets::{set_of, Set, SetCore, SetData, SetMeta};
 pub use symbol::Symbol;
 pub use symbol_data_collection::SymbolDataCollection;
 pub use symbol_map::SymbolMap;

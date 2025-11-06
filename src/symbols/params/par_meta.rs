@@ -1,10 +1,10 @@
-use crate::symbols::symbol_meta::SymbolMeta;
+use crate::symbols::{params::par_data::ParData, symbol_meta::SymbolMeta};
 
 #[derive(Default)]
 pub struct ParMeta;
 
 // impl SymbolMeta for ParMeta {
-//     type Data = ();
+//     type Data = ParData;
 
 //     type Ref<'m>
 //         = SetCore<'m>

@@ -17,8 +17,8 @@ impl ParData {
 
 impl Debug for ParData {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        f.debug_struct("SetData")
-            .field("depends_on", &self.depends_on_indices())
+        f.debug_struct("ParData")
+            .field("depends_on_indices", &self.depends_on_indices())
             .finish()
     }
 }
