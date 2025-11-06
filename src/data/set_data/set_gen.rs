@@ -13,7 +13,5 @@ pub trait SetGen<const N: usize> {
         set: SetCore<'m>,
         depths: SetDepths<'m>,
         index_values: &IndexValues,
-    ) -> Box<dyn Iterator<Item = usize> + '_> {
-        todo!()
-    }
+    ) -> Box<dyn Iterator<Item = usize> + '_>;
 }

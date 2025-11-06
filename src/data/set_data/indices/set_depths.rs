@@ -10,13 +10,13 @@ impl<'m> SetDepths<'m> {
         let mut map = SymbolMap::new();
 
         for (i, set) in sets.enumerate() {
-            map.insert(set.core(), Depth::new(i));
+            map.insert(set.into_core(), Depth::new(i));
         }
 
         Self { map }
     }
 
     pub fn depth_of(&self, set: Set<'m>) -> Depth {
-        *self.map.get(set.core()).expect("must exist")
+        *self.map.get(set.into_core()).expect("must exist")
     }
 }
