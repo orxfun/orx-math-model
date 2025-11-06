@@ -17,7 +17,7 @@ where
     I: IntoIterator<Item = T>,
     T: SoR<usize>,
 {
-    fn elements(&self, _: [usize; 0]) -> Box<dyn Iterator<Item = usize> + '_> {
+    fn elements_by_dependencies(&self, _: [usize; 0]) -> Box<dyn Iterator<Item = usize> + '_> {
         let elements = (self.fun)(self.data).into_iter().map(|x| *x.get_ref());
         Box::new(elements)
     }

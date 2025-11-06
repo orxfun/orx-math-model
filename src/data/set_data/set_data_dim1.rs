@@ -14,7 +14,7 @@ impl<'d, Data, I> SetGen<1> for FunSetD1<'d, Data, I>
 where
     I: IntoIterator<Item = usize>,
 {
-    fn elements(&self, [i]: [usize; 1]) -> Box<dyn Iterator<Item = usize> + '_> {
+    fn elements_by_dependencies(&self, [i]: [usize; 1]) -> Box<dyn Iterator<Item = usize> + '_> {
         let elements = (self.fun)(self.data, i).into_iter();
         Box::new(elements)
     }

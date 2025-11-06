@@ -8,9 +8,9 @@ pub struct IndexValues {
 }
 
 impl IndexValues {
-    pub fn new(max_depth: usize) -> Self {
+    pub fn new(max_depth: Depth) -> Self {
         Self {
-            indices: vec![usize::MAX; max_depth],
+            indices: vec![usize::MAX; max_depth.depth()],
         }
     }
 }
