@@ -32,7 +32,13 @@ impl Model {
 
     // helpers
 
+    #[inline(always)]
     pub(crate) fn set_at(&self, idx: usize) -> Option<SetCore<'_>> {
         self.data.sets.at(self, idx).map(SetCore::from)
+    }
+
+    #[inline(always)]
+    pub(crate) fn set_at_unchecked(&self, idx: usize) -> SetCore<'_> {
+        self.set_at(idx).expect("must exist")
     }
 }
