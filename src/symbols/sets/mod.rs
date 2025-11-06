@@ -3,7 +3,6 @@ mod tests;
 
 mod dep_set_indices;
 mod free_functions;
-// mod indices; // TODO: park for now until we fill sets with data
 mod r#ref;
 mod set_data;
 mod set_meta;
