@@ -2,6 +2,7 @@
 mod tests;
 
 mod set_and_data;
+mod set_data_dim0;
 mod set_data_dim1;
 mod set_gen;
 
