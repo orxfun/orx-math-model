@@ -1,4 +1,5 @@
-use crate::data::set_data::set_gen::SetGen;
+use crate::data::set_data::{set_and_data::SetAndData, set_gen::SetGen};
+use crate::Set;
 use alloc::boxed::Box;
 
 pub struct FunSetD1<'d, Data, I>
@@ -25,5 +26,28 @@ where
     fn elements(&self, [i]: [usize; 1]) -> Box<dyn Iterator<Item = usize> + '_> {
         let elements = (self.fun)(self.data, i).into_iter();
         Box::new(elements)
+    }
+}
+
+// set & data
+
+pub struct FunSetAndDataD1<'m, 'd, Data, I>
+where
+    I: IntoIterator<Item = usize>,
+{
+    set: Set<'m>,
+    data: FunSetD1<'d, Data, I>,
+}
+
+impl<'m, 'd, Data, I> SetAndData<'m, 1> for FunSetAndDataD1<'m, 'd, Data, I>
+where
+    I: IntoIterator<Item = usize>,
+{
+    fn set(&self) -> Set<'m> {
+        self.set
+    }
+
+    fn data(&self) -> &impl SetGen<1> {
+        &self.data
     }
 }
