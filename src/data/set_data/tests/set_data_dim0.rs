@@ -22,5 +22,5 @@ fn set_data_dim0_slice() {
     let i = m.set();
 
     let data = vec![3, 5, 1];
-    let di = i.data(&data, |d| d.iter().copied());
+    let di = i.data(&data, |d| d);
 }
