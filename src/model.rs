@@ -21,7 +21,7 @@ impl Model {
         self.data.sets.push(self, Symbol::new(data)).with_dim()
     }
 
-    pub(crate) fn dep_set<'m, S>(&'m self, sets: S) -> S::Set
+    pub(crate) fn set_of<'m, S>(&'m self, sets: S) -> S::Set
     where
         S: IndependentSetCollection<'m>,
     {
@@ -49,7 +49,7 @@ impl Model {
 
     // pars
 
-    pub(crate) fn par<'m, S>(&'m self, sets: S) -> S::Par
+    pub(crate) fn par_of<'m, S>(&'m self, sets: S) -> S::Par
     where
         S: SetCollection<'m>,
     {

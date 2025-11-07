@@ -4,5 +4,5 @@ pub fn set_of<'m, S>(sets: S) -> S::Set
 where
     S: IndependentSetCollection<'m>,
 {
-    sets.model().dep_set(sets)
+    sets.model().set_of(sets)
 }
