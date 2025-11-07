@@ -1,6 +1,7 @@
 use crate::symbols::{symbol_ref_core::SymbolRefCore, Set};
 use core::num::NonZeroUsize;
 
+// TODO: make sure that this cannot be called with N = 0
 /// # Panics
 ///
 /// Panics if called with an empty array `[]`.

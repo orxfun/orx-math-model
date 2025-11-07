@@ -40,12 +40,6 @@ impl<'m> ParCore<'m> {
         self.into()
     }
 
-    pub(crate) fn idx(self) -> usize {
-        let model = self.symbol().model;
-        let pars = &model.data.pars;
-        pars.index_of(self.symbol()).expect("exist in this model")
-    }
-
     pub(crate) fn sym_data(self) -> &'m ParData {
         &self.symbol.symbol.data
     }
