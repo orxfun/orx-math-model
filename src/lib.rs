@@ -25,4 +25,4 @@ mod symbols;
 
 pub use data::{FunSetAndDataD0, FunSetAndDataD1, SetAndData, SetGen};
 pub use model::Model;
-pub use symbols::{set_of, Par, Set, SymbolRef};
+pub use symbols::{par, set_of, Par, Set, SymbolRef};
