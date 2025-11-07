@@ -12,8 +12,8 @@ impl Mcfp {
         let i = set_of([j]).key("i").def("nodes into i");
         let k = set_of([j]).key("k").def("nodes from i");
 
-        let c = par([*j, *k]).key("c").def("unit cost of using arc (j, k)");
-        let b = par([*j, *k]).key("b").def("capacity of arc (j, k)");
+        let c = par((j, k)).key("c").def("unit cost of using arc (j, k)");
+        let b = par((j, k)).key("b").def("capacity of arc (j, k)");
 
         Self(model)
     }
