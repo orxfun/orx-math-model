@@ -91,18 +91,22 @@ fn main() {
             Node {
                 in_nodes: vec![],
                 out_nodes: vec![1, 2],
+                out_edges: vec![Edge { cost: 1, cap: 3 }, Edge { cost: 3, cap: 5 }],
             },
             Node {
                 in_nodes: vec![0],
                 out_nodes: vec![2, 3],
+                out_edges: vec![Edge { cost: 7, cap: 5 }, Edge { cost: 4, cap: 4 }],
             },
             Node {
                 in_nodes: vec![0],
                 out_nodes: vec![3],
+                out_edges: vec![Edge { cost: 2, cap: 9 }],
             },
             Node {
                 in_nodes: vec![1, 2],
                 out_nodes: vec![],
+                out_edges: vec![],
             },
         ],
     };
