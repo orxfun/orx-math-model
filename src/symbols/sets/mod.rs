@@ -2,6 +2,7 @@
 mod tests;
 
 mod free_functions;
+mod heterogeneous_set_collections;
 mod r#ref;
 mod set_data;
 mod set_meta;
