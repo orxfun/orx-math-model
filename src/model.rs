@@ -1,6 +1,6 @@
 use crate::model_data::ModelData;
 use crate::symbols::pars::{Par, ParData};
-use crate::symbols::sets::{Set, SetCore, SetData};
+use crate::symbols::sets::{Set, SetCollection, SetCore, SetData};
 use crate::symbols::{DependentSetIndices, Symbol};
 
 #[derive(Default)]
@@ -44,9 +44,14 @@ impl Model {
 
     // pars
 
-    pub(crate) fn par<'m, const N: usize>(&'m self, sets: [SetCore<'m>; N]) -> Par<'m, N> {
+    pub(crate) fn par<'m, S>(&'m self, sets: S) -> S::Par
+    where
+        S: SetCollection<'m>,
+    {
+        let sets = sets.to_sets_array();
         let dep = DependentSetIndices::new(sets.into_iter());
         let data = ParData::new(dep);
-        self.data.pars.push(self, Symbol::new(data)).with_dim()
+        let par_core = self.data.pars.push(self, Symbol::new(data));
+        S::par_from_core(par_core)
     }
 }
