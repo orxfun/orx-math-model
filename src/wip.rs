@@ -144,26 +144,3 @@ impl<'m, const N: usize> From<Set<'m, N>> for [SetCore<'m>; 1] {
         [x1.into()]
     }
 }
-
-#[test]
-fn abc() {
-    use super::*;
-    use crate::*;
-
-    let m = Model::new();
-    let i = m.set();
-    let j = set_of([i]);
-
-    let sets = QueueSingle {
-        f: i,
-        p: PhantomData,
-    };
-    type IJ<'m> = QueueMulti<'m, Set<'m>, QueueSingle<'m, Set<'m, 1>>>;
-
-    let sets: IJ = sets.push(j);
-
-    let sets: IJ = (i, j).into();
-    // m.par2::<2, QueueMulti<'_, Set<'_>, QueueMulti<'_, Set<'_>, QueueSingle<'_, Set<'_, 1>>>>, (Set<'_>, Set<'_, 1>)>((i, j));
-
-    m.par2::<2, IJ, _>((i, j));
-}
