@@ -1,6 +1,6 @@
 use crate::model_data::ModelData;
 use crate::symbols::pars::{Par, ParData};
-use crate::symbols::sets::{Set, SetCollection, SetCore, SetData};
+use crate::symbols::sets::{IndependentSetCollection, Set, SetCollection, SetCore, SetData};
 use crate::symbols::{DependentSetIndices, Symbol};
 
 #[derive(Default)]
@@ -21,10 +21,15 @@ impl Model {
         self.data.sets.push(self, Symbol::new(data)).with_dim()
     }
 
-    pub(crate) fn dep_set<'m, const N: usize>(&'m self, sets: [Set<'m, 0>; N]) -> Set<'m, N> {
-        let dep = DependentSetIndices::new(sets.into_iter().map(|x| *x));
+    pub(crate) fn dep_set<'m, S>(&'m self, sets: S) -> S::Set
+    where
+        S: IndependentSetCollection<'m>,
+    {
+        let sets = sets.to_sets_array();
+        let dep = DependentSetIndices::new(sets.into_iter());
         let data = SetData::new(dep);
-        self.data.sets.push(self, Symbol::new(data)).with_dim()
+        let core = self.data.sets.push(self, Symbol::new(data));
+        S::set_from_core(core)
     }
 
     pub fn set_by_key<const N: usize>(&self, key: &str) -> Option<Set<'_, N>> {
@@ -51,7 +56,7 @@ impl Model {
         let sets = sets.to_sets_array();
         let dep = DependentSetIndices::new(sets.into_iter());
         let data = ParData::new(dep);
-        let par_core = self.data.pars.push(self, Symbol::new(data));
-        S::par_from_core(par_core)
+        let core = self.data.pars.push(self, Symbol::new(data));
+        S::par_from_core(core)
     }
 }
