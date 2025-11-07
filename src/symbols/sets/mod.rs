@@ -2,6 +2,7 @@
 mod tests;
 
 mod free_functions;
+mod indep_set_collection;
 mod r#ref;
 mod set_collection;
 mod set_data;
