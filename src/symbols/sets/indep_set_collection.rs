@@ -9,6 +9,8 @@ pub trait IndependentSetCollection<'m> {
     fn model(&self) -> &'m Model;
 
     fn to_sets_array(self) -> Self::SetsArray;
+
+    fn set_from_core(core: SetCore<'m>) -> Self::Set;
 }
 
 impl<'m> IndependentSetCollection<'m> for Set<'m, 0> {
@@ -22,6 +24,10 @@ impl<'m> IndependentSetCollection<'m> for Set<'m, 0> {
 
     fn to_sets_array(self) -> Self::SetsArray {
         [self.into()]
+    }
+
+    fn set_from_core(core: SetCore<'m>) -> Self::Set {
+        core.with_dim()
     }
 }
 
@@ -37,6 +43,10 @@ impl<'m> IndependentSetCollection<'m> for (Set<'m, 0>, Set<'m, 0>) {
     fn to_sets_array(self) -> Self::SetsArray {
         [self.0.into(), self.1.into()]
     }
+
+    fn set_from_core(core: SetCore<'m>) -> Self::Set {
+        core.with_dim()
+    }
 }
 
 impl<'m> IndependentSetCollection<'m> for (Set<'m, 0>, Set<'m, 0>, Set<'m, 0>) {
@@ -51,6 +61,10 @@ impl<'m> IndependentSetCollection<'m> for (Set<'m, 0>, Set<'m, 0>, Set<'m, 0>) {
     fn to_sets_array(self) -> Self::SetsArray {
         [self.0.into(), self.1.into(), self.2.into()]
     }
+
+    fn set_from_core(core: SetCore<'m>) -> Self::Set {
+        core.with_dim()
+    }
 }
 
 impl<'m> IndependentSetCollection<'m> for (Set<'m, 0>, Set<'m, 0>, Set<'m, 0>, Set<'m, 0>) {
@@ -64,5 +78,9 @@ impl<'m> IndependentSetCollection<'m> for (Set<'m, 0>, Set<'m, 0>, Set<'m, 0>, S
 
     fn to_sets_array(self) -> Self::SetsArray {
         [self.0.into(), self.1.into(), self.2.into(), self.3.into()]
+    }
+
+    fn set_from_core(core: SetCore<'m>) -> Self::Set {
+        core.with_dim()
     }
 }
