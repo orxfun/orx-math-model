@@ -1,3 +1,6 @@
+#[cfg(test)]
+mod tests;
+
 mod free_functions;
 mod par_data;
 mod par_meta;

@@ -2,6 +2,7 @@ use crate::model_data::ModelData;
 use crate::symbols::pars::ParData;
 use crate::symbols::sets::{IndependentSetCollection, Set, SetCollection, SetCore, SetData};
 use crate::symbols::{DependentSetIndices, Symbol};
+use crate::Par;
 
 #[derive(Default)]
 pub struct Model {
@@ -21,7 +22,7 @@ impl Model {
         self.data.sets.push(self, Symbol::new(data)).with_dim()
     }
 
-    pub(crate) fn set_of<'m, S>(&'m self, sets: S) -> S::Set
+    pub fn set_of<'m, S>(&'m self, sets: S) -> S::Set
     where
         S: IndependentSetCollection<'m>,
     {
@@ -49,7 +50,13 @@ impl Model {
 
     // pars
 
-    pub(crate) fn par_of<'m, S>(&'m self, sets: S) -> S::Par
+    pub fn scalar(&self) -> Par<'_, 0> {
+        let dep = DependentSetIndices::new(core::iter::empty());
+        let data = ParData::new(dep);
+        self.data.pars.push(self, Symbol::new(data)).with_dim()
+    }
+
+    pub fn par<'m, S>(&'m self, sets: S) -> S::Par
     where
         S: SetCollection<'m>,
     {
