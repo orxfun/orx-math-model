@@ -17,7 +17,7 @@ where
         symbol_ref.key(key).into()
     }
 
-    fn definition(self, definition: impl Into<String>) -> Self {
+    fn def(self, definition: impl Into<String>) -> Self {
         let symbol_ref: SymbolRefCore<'_, _> = self.into();
         symbol_ref.definition(definition).into()
     }
