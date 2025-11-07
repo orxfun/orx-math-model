@@ -22,6 +22,7 @@ mod model;
 mod model_data;
 mod no_std_types;
 mod symbols;
+mod wip;
 
 pub use data::{FunSetAndDataD0, FunSetAndDataD1, SetAndData, SetGen};
 pub use model::Model;
