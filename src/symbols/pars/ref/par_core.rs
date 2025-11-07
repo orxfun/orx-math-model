@@ -1,3 +1,4 @@
+use crate::symbols::pars::r#ref::par::Par;
 use crate::symbols::pars::{ParData, ParMeta};
 use crate::symbols::symbol_ref_core::SymbolRefCore;
 use crate::symbols::SymbolRef;
@@ -49,10 +50,10 @@ impl<'m> ParCore<'m> {
         &self.symbol.symbol.data
     }
 
-    // pub(crate) fn set_ref<const N: usize>(self) -> Set<'m, N> {
-    //     debug_assert_eq!(self.sym_data().depends_on_indices().len(), N);
-    //     self.symbol.into()
-    // }
+    pub(crate) fn with_dim<const N: usize>(self) -> Par<'m, N> {
+        debug_assert_eq!(self.sym_data().depends_on_indices().len(), N);
+        self.symbol.into()
+    }
 
     // pub(crate) fn set_ref_checked<const N: usize>(self) -> Option<Set<'m, N>> {
     //     let matches = self.sym_data().depends_on_indices().len() == N;

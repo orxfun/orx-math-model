@@ -1,4 +1,4 @@
-use crate::symbols::sets::{Set, SetCore};
+use crate::symbols::sets::SetCore;
 use alloc::vec::Vec;
 
 pub struct DependentSetIndices {
@@ -6,7 +6,7 @@ pub struct DependentSetIndices {
 }
 
 impl DependentSetIndices {
-    pub fn new<'m>(sets: impl Iterator<Item = Set<'m, 0>>) -> Self {
+    pub fn new<'m>(sets: impl Iterator<Item = SetCore<'m>>) -> Self {
         Self {
             set_indices: sets.map(|s| s.idx()).collect(),
         }

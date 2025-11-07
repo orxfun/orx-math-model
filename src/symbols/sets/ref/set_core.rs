@@ -49,12 +49,12 @@ impl<'m> SetCore<'m> {
         &self.symbol.symbol.data
     }
 
-    pub(crate) fn set_ref<const N: usize>(self) -> Set<'m, N> {
+    pub(crate) fn with_dim<const N: usize>(self) -> Set<'m, N> {
         debug_assert_eq!(self.sym_data().depends_on_indices().len(), N);
         self.symbol.into()
     }
 
-    pub(crate) fn set_ref_checked<const N: usize>(self) -> Option<Set<'m, N>> {
+    pub(crate) fn with_dim_checked<const N: usize>(self) -> Option<Set<'m, N>> {
         let matches = self.sym_data().depends_on_indices().len() == N;
         matches.then_some(self.symbol.into())
     }
