@@ -36,19 +36,19 @@ fn debug_dependent_sets() {
     let i = m.set().key("i");
     let j = m.set().key("j");
 
-    let k = set_of([i]).key("k");
+    let k = set_of(i).key("k");
     assert_eq!(
         format!("{k:?}"),
         "Set { key: \"k\", definition: \"\", depending_sets: [Set { key: \"i\", definition: \"\", depending_sets: [] }] }"
     );
 
-    let k = set_of([j]).key("k");
+    let k = set_of(j).key("k");
     assert_eq!(
         format!("{k:?}"),
         "Set { key: \"k\", definition: \"\", depending_sets: [Set { key: \"j\", definition: \"\", depending_sets: [] }] }"
     );
 
-    let k = set_of([i, j]).key("k");
+    let k = set_of((i, j)).key("k");
     assert_eq!(
         format!("{k:?}"),
         "Set { key: \"k\", definition: \"\", depending_sets: [Set { key: \"i\", definition: \"\", depending_sets: [] }, Set { key: \"j\", definition: \"\", depending_sets: [] }] }"

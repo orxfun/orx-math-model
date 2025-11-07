@@ -9,8 +9,8 @@ impl Knapsack {
         let model = Model::new();
 
         let i = model.set().key("i").def("items");
-        let w = par([*i]).key("w").def("weight of item i");
-        let u = par([*i]).key("u").def("utilization of item i");
+        let w = par(i).key("w").def("weight of item i");
+        let u = par(i).key("u").def("utilization of item i");
 
         Self(model)
     }

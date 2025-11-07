@@ -9,7 +9,7 @@ fn set_data_dim1_jagged() {
     let m = Model::new();
 
     let i = m.set();
-    let j = set_of([i]);
+    let j = set_of(i);
 
     let data1 = vec![vec![], vec![1, 2, 3], vec![3, 5]];
     let dj = j.data(&data1, |d, i| &d[i]);
@@ -36,7 +36,7 @@ fn set_data_dim1_next() {
     let m = Model::new();
 
     let i = m.set();
-    let j = set_of([i]);
+    let j = set_of(i);
 
     let card_i = 5;
     let dj = j.data(&card_i, |c, i| (i < c - 1).then_some(i + 1));
@@ -67,7 +67,7 @@ fn set_data_dim1_up_to() {
     let m = Model::new();
 
     let i = m.set();
-    let j = set_of([i]);
+    let j = set_of(i);
 
     let dj = j.data(&(), |_, i| 0..i);
 
@@ -97,7 +97,7 @@ fn set_data_dim1_from() {
     let m = Model::new();
 
     let i = m.set();
-    let j = set_of([i]);
+    let j = set_of(i);
 
     let card_i = 5;
     let dj = j.data(&card_i, |c, i| (i + 1)..*c);
