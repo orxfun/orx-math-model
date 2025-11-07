@@ -12,6 +12,7 @@ mod symbol_ref;
 mod symbol_ref_core;
 
 pub use dep_set_indices::DependentSetIndices;
+pub use pars::Par;
 pub use sets::{set_of, Set};
 pub use symbol::Symbol;
 pub use symbol_data_collection::SymbolDataCollection;

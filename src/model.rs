@@ -50,16 +50,3 @@ impl Model {
         self.data.pars.push(self, Symbol::new(data)).with_dim()
     }
 }
-
-#[test]
-fn abc() {
-    use crate::*;
-
-    let m = Model::new();
-    let i = m.set();
-    let j = set_of([i]);
-
-    let x = m.par([i.core(), j.core()]);
-    let x = m.par([i.into(), j.into()]);
-    let x = m.par([*i, *j]);
-}

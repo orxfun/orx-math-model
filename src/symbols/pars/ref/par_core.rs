@@ -55,7 +55,7 @@ impl<'m> ParCore<'m> {
         self.symbol.into()
     }
 
-    // pub(crate) fn set_ref_checked<const N: usize>(self) -> Option<Set<'m, N>> {
+    // pub(crate) fn with_dim_checked<const N: usize>(self) -> Option<Set<'m, N>> {
     //     let matches = self.sym_data().depends_on_indices().len() == N;
     //     matches.then_some(self.symbol.into())
     // }
