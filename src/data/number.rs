@@ -11,3 +11,7 @@ impl Number for isize {}
 impl Number for i64 {}
 
 impl Number for i32 {}
+
+impl Number for f64 {}
+
+impl Number for f32 {}
