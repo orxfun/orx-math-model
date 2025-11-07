@@ -17,13 +17,13 @@ fn debug_independent_sets() {
         "Set { key: \"i\", definition: \"\", depending_sets: [] }"
     );
 
-    let i = m.set().definition("machines");
+    let i = m.set().def("machines");
     assert_eq!(
         format!("{i:?}"),
         "Set { key: \"\", definition: \"machines\", depending_sets: [] }"
     );
 
-    let i = m.set().key("i").definition("machines");
+    let i = m.set().key("i").def("machines");
     assert_eq!(
         format!("{i:?}"),
         "Set { key: \"i\", definition: \"machines\", depending_sets: [] }"

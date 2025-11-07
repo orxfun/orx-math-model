@@ -1,4 +1,5 @@
-use crate::symbols::{sets::r#ref::SetCore, symbol_meta::SymbolMeta, SetData};
+use crate::symbols::sets::{SetCore, SetData};
+use crate::symbols::symbol_meta::SymbolMeta;
 
 #[derive(Default)]
 pub struct SetMeta;

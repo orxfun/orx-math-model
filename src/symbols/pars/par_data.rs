@@ -1,11 +1,11 @@
-use crate::symbols::dep_set_indices::DependentSetIndices;
+use crate::symbols::DependentSetIndices;
 use core::fmt::Debug;
 
-pub struct SetData {
+pub struct ParData {
     depends_on: DependentSetIndices,
 }
 
-impl SetData {
+impl ParData {
     pub fn new(depends_on: DependentSetIndices) -> Self {
         Self { depends_on }
     }
@@ -15,10 +15,10 @@ impl SetData {
     }
 }
 
-impl Debug for SetData {
+impl Debug for ParData {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        f.debug_struct("depends_on_indices")
-            .field("depends_on", &self.depends_on_indices())
+        f.debug_struct("ParData")
+            .field("depends_on_indices", &self.depends_on_indices())
             .finish()
     }
 }

@@ -1,6 +1,6 @@
+use crate::symbols::sets::{Set, SetData, SetMeta};
 use crate::symbols::symbol_ref_core::SymbolRefCore;
-use crate::symbols::{SetData, SetMeta, SymbolRef};
-use crate::Set;
+use crate::symbols::SymbolRef;
 use core::fmt::Debug;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -34,8 +34,6 @@ impl<'m> SymbolRef<'m, SetMeta> for SetCore<'m> {
     type Data = SetData;
 }
 
-// derive from Set
-
 impl<'m> SetCore<'m> {
     pub(crate) fn symbol(self) -> SymbolRefCore<'m, SetMeta> {
         self.into()
@@ -51,12 +49,12 @@ impl<'m> SetCore<'m> {
         &self.symbol.symbol.data
     }
 
-    pub(crate) fn set_ref<const N: usize>(self) -> Set<'m, N> {
+    pub(crate) fn with_dim<const N: usize>(self) -> Set<'m, N> {
         debug_assert_eq!(self.sym_data().depends_on_indices().len(), N);
         self.symbol.into()
     }
 
-    pub(crate) fn set_ref_checked<const N: usize>(self) -> Option<Set<'m, N>> {
+    pub(crate) fn with_dim_checked<const N: usize>(self) -> Option<Set<'m, N>> {
         let matches = self.sym_data().depends_on_indices().len() == N;
         matches.then_some(self.symbol.into())
     }
