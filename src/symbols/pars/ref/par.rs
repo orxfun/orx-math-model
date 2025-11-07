@@ -74,9 +74,4 @@ impl<'m, const N: usize> Par<'m, N> {
         let indices = self.depends_on_indices();
         indices.map(|idx| Set::from(m.set_at_unchecked(idx)))
     }
-
-    #[cfg(test)]
-    pub(crate) fn core(self) -> ParCore<'m> {
-        self.core
-    }
 }

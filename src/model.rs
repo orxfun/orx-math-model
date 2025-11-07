@@ -1,5 +1,5 @@
 use crate::model_data::ModelData;
-use crate::symbols::pars::{Par, ParData};
+use crate::symbols::pars::ParData;
 use crate::symbols::sets::{IndependentSetCollection, Set, SetCollection, SetCore, SetData};
 use crate::symbols::{DependentSetIndices, Symbol};
 
