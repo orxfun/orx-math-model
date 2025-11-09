@@ -1,5 +1,4 @@
 use crate::data::set_data::SetDataCollection;
-use crate::symbols::sets::IndependentSetCollection;
 use crate::symbols::SetCoreMap;
 use crate::SetAndData;
 use alloc::boxed::Box;
