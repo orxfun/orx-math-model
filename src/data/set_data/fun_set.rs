@@ -18,9 +18,17 @@ where
 {
     pub fn d0(
         data: &'d Data,
-        fun2: impl Fn(&'d Data) -> I,
+        fun: impl Fn(&'d Data) -> I,
     ) -> FunSet<'d, Data, I, T, impl Fn(&'d Data, &[usize]) -> I> {
-        let fun = move |data: &'d Data, _: &[usize]| fun2(data);
+        let fun = move |data: &'d Data, _: &[usize]| fun(data);
+        FunSet { data, fun }
+    }
+
+    pub fn d1(
+        data: &'d Data,
+        fun: impl Fn(&'d Data, usize) -> I,
+    ) -> FunSet<'d, Data, I, T, impl Fn(&'d Data, &[usize]) -> I> {
+        let fun = move |data: &'d Data, indices: &[usize]| fun(data, indices[0]);
         FunSet { data, fun }
     }
 }
