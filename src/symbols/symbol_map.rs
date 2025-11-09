@@ -38,11 +38,11 @@ where
     }
 
     pub fn insert(&mut self, symbol: K, value: V) {
-        self.map.insert(Self::addr_of(symbol), value);
+        self.map.insert(Self::key_of(symbol), value);
     }
 
     pub fn get(&self, symbol: K) -> Option<&V> {
-        self.map.get(&Self::addr_of(symbol))
+        self.map.get(&Self::key_of(symbol))
     }
 
     #[cfg(test)]
@@ -50,15 +50,19 @@ where
         self.map.len()
     }
 
-    pub fn contains_key(&self, symbol: K) -> bool {
-        self.map.contains_key(&Self::addr_of(symbol))
+    pub fn contains_key(&self, key: usize) -> bool {
+        self.map.contains_key(&key)
+    }
+
+    pub fn contains_symbol(&self, symbol: K) -> bool {
+        self.contains_key(Self::key_of(symbol))
     }
 
     // helper
 
     #[inline(always)]
-    fn addr_of(symbol: K) -> usize {
+    fn key_of(symbol: K) -> usize {
         let symbol = symbol.into();
-        symbol.symbol as *const Symbol<S> as usize
+        Symbol::key(symbol.symbol)
     }
 }

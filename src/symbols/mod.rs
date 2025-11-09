@@ -18,3 +18,4 @@ pub use symbol::Symbol;
 pub use symbol_data_collection::SymbolDataCollection;
 pub use symbol_map::{SetCoreMap, SymbolMap};
 pub use symbol_ref::SymbolRef;
+pub use symbol_ref_core::SymbolRefCore;

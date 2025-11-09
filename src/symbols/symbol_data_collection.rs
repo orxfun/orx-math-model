@@ -1,7 +1,5 @@
-use crate::{
-    model::Model,
-    symbols::{symbol::Symbol, symbol_meta::SymbolMeta, symbol_ref_core::SymbolRefCore},
-};
+use crate::model::Model;
+use crate::symbols::{symbol::Symbol, symbol_meta::SymbolMeta, symbol_ref_core::SymbolRefCore};
 use orx_imp_vec::*;
 
 pub struct SymbolDataCollection<S: SymbolMeta> {
@@ -44,5 +42,25 @@ impl<S: SymbolMeta> SymbolDataCollection<S> {
 
     pub fn index_of(&self, symbol: SymbolRefCore<'_, S>) -> Option<usize> {
         self.data_vec.index_of(symbol.symbol)
+    }
+}
+
+impl<'a, S: SymbolMeta> IntoIterator for &'a SymbolDataCollection<S> {
+    type Item = &'a Symbol<S>;
+
+    type IntoIter = <&'a SplitVec<Symbol<S>> as IntoIterator>::IntoIter;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.data_vec.iter()
+    }
+}
+
+impl<S: SymbolMeta> IntoIterator for SymbolDataCollection<S> {
+    type Item = Symbol<S>;
+
+    type IntoIter = <SplitVec<Symbol<S>> as IntoIterator>::IntoIter;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.data_vec.into_iter()
     }
 }

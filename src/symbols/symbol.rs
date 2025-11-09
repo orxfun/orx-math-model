@@ -18,6 +18,11 @@ impl<S: SymbolMeta> Symbol<S> {
             data,
         }
     }
+
+    #[inline(always)]
+    pub(crate) fn key(&self) -> usize {
+        self as *const Self as usize
+    }
 }
 
 #[derive(Default)]
