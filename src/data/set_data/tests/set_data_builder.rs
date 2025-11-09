@@ -67,7 +67,7 @@ fn data_builder_error_on_missing_set() {
         assert!(data.is_err());
         assert_eq!(
             data.err().unwrap(),
-            format!("missing data for set with key {}", j)
+            format!("missing data for set with key {j}")
         );
     }
 }
@@ -91,7 +91,20 @@ fn data_builder_error_double_declaration() {
         assert!(data.is_err());
         assert_eq!(
             data.err().unwrap(),
-            format!("set with key {} is already added", i)
+            format!("double data definition for set with key {i}")
+        );
+    }
+
+    {
+        let dk = k.data(&(), |_, i| i..7);
+        let dk2 = k.data(&(), |_, i| i..7);
+
+        let builder = m.data_builder().sets((dk2, dk));
+        let data = builder.finish();
+        assert!(data.is_err());
+        assert_eq!(
+            data.err().unwrap(),
+            format!("double data definition for set with key {k}")
         );
     }
 }
