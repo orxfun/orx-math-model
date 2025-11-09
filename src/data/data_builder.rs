@@ -1,16 +1,20 @@
+use crate::data::data::Data;
 use crate::data::set_data::SetDataCollection;
 use crate::symbols::SetCoreMap;
-use crate::SetAndData;
+use crate::{Model, SetAndData};
 use alloc::boxed::Box;
 
-#[derive(Default)]
 pub struct DataBuilder<'m> {
+    model: &'m Model,
     sets: SetCoreMap<'m, Box<dyn SetAndData<'m> + 'm>>,
 }
 
 impl<'m> DataBuilder<'m> {
-    pub fn new() -> Self {
-        Self::default()
+    pub fn new(model: &'m Model) -> Self {
+        Self {
+            model,
+            sets: Default::default(),
+        }
     }
 
     pub fn sets(mut self, sets: impl SetDataCollection<'m>) -> Self {
@@ -20,5 +24,11 @@ impl<'m> DataBuilder<'m> {
             self.sets.insert(set, set_and_data);
         }
         self
+    }
+
+    pub fn finish(self) -> Result<Data<'m>, &'static str> {
+        // TODO: proper error type
+
+        //
     }
 }
