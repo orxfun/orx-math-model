@@ -6,7 +6,7 @@ use alloc::boxed::Box;
 
 #[derive(Default)]
 pub struct DataBuilder<'m> {
-    sets: SetCoreMap<'m, Box<dyn SetAndData<'m>>>,
+    sets: SetCoreMap<'m, Box<dyn SetAndData<'m> + 'm>>,
 }
 
 impl<'m> DataBuilder<'m> {
@@ -16,8 +16,9 @@ impl<'m> DataBuilder<'m> {
 
     pub fn with_sets(mut self, sets: impl SetDataCollection<'m>) -> Self {
         for set_and_data in sets.into_iter() {
-            // assert!(!self.sets.contains_key(set), "set is already added");
-            // self.sets.insert(set, value);
+            let set = set_and_data.set();
+            assert!(!self.sets.contains_key(set), "set is already added");
+            self.sets.insert(set, set_and_data);
         }
         self
     }
