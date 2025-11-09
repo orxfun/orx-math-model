@@ -1,12 +1,12 @@
 use crate::symbols::sets::{IndependentSetCollection, SetCore};
 use crate::symbols::SetCoreMap;
-use crate::SetAndDataCore;
+use crate::SetAndData;
 use alloc::boxed::Box;
 use alloc::vec::Vec;
 
 #[derive(Default)]
 pub struct DataBuilder<'m> {
-    set0: SetCoreMap<'m, Box<dyn SetAndDataCore<'m>>>,
+    set0: SetCoreMap<'m, Box<dyn SetAndData<'m>>>,
 }
 
 impl<'m> DataBuilder<'m> {

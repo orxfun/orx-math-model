@@ -1,5 +1,5 @@
 use crate::data::set_data::indices::{IndexValues, SetDepths};
-use crate::data::set_data::set_and_data::SetAndDataCore;
+use crate::data::set_data::set_and_data::SetAndData;
 use crate::data::set_data::set_gen::SetGen;
 use crate::symbols::sets::SetCore;
 use crate::Set;
@@ -60,7 +60,7 @@ where
     }
 }
 
-impl<'m, 'd, Data, I, T> SetAndDataCore<'m> for FunSetAndDataD1<'m, 'd, Data, I, T>
+impl<'m, 'd, Data, I, T> SetAndData<'m> for FunSetAndDataD1<'m, 'd, Data, I, T>
 where
     I: IntoIterator<Item = T>,
     T: SoR<usize>,
