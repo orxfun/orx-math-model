@@ -8,6 +8,17 @@ pub struct IndexValuesIter<'m> {
     i: usize,
 }
 
+impl<'m> IndexValuesIter<'m> {
+    pub fn new(set: SetCore<'m>, depths: &'m SetDepths<'m>, index_values: &'m IndexValues) -> Self {
+        Self {
+            set,
+            depths,
+            index_values,
+            i: 0,
+        }
+    }
+}
+
 impl<'m> Iterator for IndexValuesIter<'m> {
     type Item = usize;
 

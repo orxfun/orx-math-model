@@ -44,21 +44,21 @@ where
     }
 }
 
-// impl<'d, 'm, Data, I, T, F> SetGen<'m> for FunSet<'d, Data, I, T, F>
-// where
-//     I: IntoIterator<Item = T>,
-//     T: SoR<usize>,
-//     F: Fn(&'d Data, &[usize]) -> I,
-// {
-//     fn elements(
-//         &self,
-//         set: SetCore<'m>,
-//         depths: &SetDepths<'m>,
-//         index_values: &IndexValues,
-//     ) -> Box<dyn Iterator<Item = usize> + '_> {
-//         let dep_sets = set.depending_sets_core();
-//         let depths = dep_sets.map(|s| depths.depth_of(s));
-//         let indices = depths.map(|d| index_values[d]);
-//         todo!()
-//     }
-// }
+impl<'d, 'm, Data, I, T, F> SetGen<'m> for FunSet<'d, Data, I, T, F>
+where
+    I: IntoIterator<Item = T>,
+    T: SoR<usize>,
+    F: Fn(&'d Data, IndexValuesIter<'_>) -> I,
+{
+    fn elements(
+        &self,
+        set: SetCore<'m>,
+        depths: &SetDepths<'m>,
+        index_values: &IndexValues,
+    ) -> Box<dyn Iterator<Item = usize> + '_> {
+        let indices = IndexValuesIter::new(set, depths, index_values);
+        let elements = (self.fun)(self.data, indices);
+        let elements = elements.into_iter().map(|x| *x.get_ref());
+        Box::new(elements)
+    }
+}
