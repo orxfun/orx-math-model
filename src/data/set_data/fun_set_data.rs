@@ -21,33 +21,8 @@ where
     T: SoR<usize>,
     F: Fn(&'d Data, IndexValuesIter<'_>) -> I,
 {
-    pub fn d0(
-        set: SetCore<'m>,
-        data: &'d Data,
-        fun: impl Fn(&'d Data) -> I,
-    ) -> FunSetAndData<'d, 'm, Data, I, T, impl Fn(&'d Data, IndexValuesIter<'_>) -> I> {
-        debug_assert_eq!(set.dim(), 0);
-
-        let fun = move |data: &'d Data, indices: IndexValuesIter<'_>| {
-            debug_assert_eq!(indices.len(), 0);
-            fun(data)
-        };
-        FunSetAndData { set, data, fun }
-    }
-
-    pub fn d1(
-        set: SetCore<'m>,
-        data: &'d Data,
-        fun: impl Fn(&'d Data, usize) -> I,
-    ) -> FunSetAndData<'d, 'm, Data, I, T, impl Fn(&'d Data, IndexValuesIter<'_>) -> I> {
-        debug_assert_eq!(set.dim(), 1);
-
-        let fun = move |data: &'d Data, mut indices: IndexValuesIter<'_>| {
-            debug_assert_eq!(indices.len(), 1);
-            let i1 = indices.next().unwrap();
-            fun(data, i1)
-        };
-        FunSetAndData { set, data, fun }
+    pub(crate) fn new(set: SetCore<'m>, data: &'d Data, fun: F) -> Self {
+        Self { set, data, fun }
     }
 }
 

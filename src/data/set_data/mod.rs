@@ -9,6 +9,8 @@ mod set_data_dim0;
 mod set_data_dim1;
 mod set_gen;
 
+pub use fun_set_data::FunSetAndData;
+pub use indices::IndexValuesIter;
 pub use set_and_data::SetAndData;
 pub use set_data_dim0::FunSetAndDataD0;
 pub use set_data_dim1::FunSetAndDataD1;
