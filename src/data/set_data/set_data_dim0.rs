@@ -1,6 +1,6 @@
 use crate::data::set_data::indices::{IndexValues, SetDepths};
 use crate::data::set_data::set_gen::SetGenCore;
-use crate::data::{set_data::set_gen::SetGen, SetAndData};
+use crate::data::SetAndData;
 use crate::symbols::sets::SetCore;
 use crate::Set;
 use alloc::boxed::Box;
@@ -13,17 +13,6 @@ where
 {
     data: &'d Data,
     fun: fn(&'d Data) -> I,
-}
-
-impl<'d, Data, I, T> SetGen<0> for FunSetD0<'d, Data, I, T>
-where
-    I: IntoIterator<Item = T>,
-    T: SoR<usize>,
-{
-    fn elements_by_dependencies(&self, _: [usize; 0]) -> Box<dyn Iterator<Item = usize> + '_> {
-        let elements = (self.fun)(self.data).into_iter().map(|x| *x.get_ref());
-        Box::new(elements)
-    }
 }
 
 impl<'d, Data, I, T> SetGenCore for FunSetD0<'d, Data, I, T>
