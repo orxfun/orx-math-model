@@ -1,50 +1,57 @@
 use crate::data::set_data::indices::{IndexValues, IndexValuesIter, SetDepths};
+use crate::data::set_data::set_gen::SetGenNew;
 use crate::symbols::sets::SetCore;
-use crate::SetGen;
 use alloc::boxed::Box;
 use orx_self_or::SoR;
 
-pub struct FunSet<'d, Data, I, T, F>
+pub struct FunSetAndData<'d, 'm, Data, I, T, F>
 where
     I: IntoIterator<Item = T>,
     T: SoR<usize>,
     F: Fn(&'d Data, IndexValuesIter<'_>) -> I,
 {
+    set: SetCore<'m>,
     data: &'d Data,
     fun: F,
 }
 
-impl<'d, Data, I, T, F> FunSet<'d, Data, I, T, F>
+impl<'d, 'm, Data, I, T, F> FunSetAndData<'d, 'm, Data, I, T, F>
 where
     I: IntoIterator<Item = T>,
     T: SoR<usize>,
     F: Fn(&'d Data, IndexValuesIter<'_>) -> I,
 {
     pub fn d0(
+        set: SetCore<'m>,
         data: &'d Data,
         fun: impl Fn(&'d Data) -> I,
-    ) -> FunSet<'d, Data, I, T, impl Fn(&'d Data, IndexValuesIter<'_>) -> I> {
+    ) -> FunSetAndData<'d, 'm, Data, I, T, impl Fn(&'d Data, IndexValuesIter<'_>) -> I> {
+        debug_assert_eq!(set.dim(), 0);
+
         let fun = move |data: &'d Data, indices: IndexValuesIter<'_>| {
             debug_assert_eq!(indices.len(), 0);
             fun(data)
         };
-        FunSet { data, fun }
+        FunSetAndData { set, data, fun }
     }
 
     pub fn d1(
+        set: SetCore<'m>,
         data: &'d Data,
         fun: impl Fn(&'d Data, usize) -> I,
-    ) -> FunSet<'d, Data, I, T, impl Fn(&'d Data, IndexValuesIter<'_>) -> I> {
+    ) -> FunSetAndData<'d, 'm, Data, I, T, impl Fn(&'d Data, IndexValuesIter<'_>) -> I> {
+        debug_assert_eq!(set.dim(), 1);
+
         let fun = move |data: &'d Data, mut indices: IndexValuesIter<'_>| {
             debug_assert_eq!(indices.len(), 1);
             let i1 = indices.next().unwrap();
             fun(data, i1)
         };
-        FunSet { data, fun }
+        FunSetAndData { set, data, fun }
     }
 }
 
-impl<'d, 'm, Data, I, T, F> SetGen<'m> for FunSet<'d, Data, I, T, F>
+impl<'d, 'm, Data, I, T, F> SetGenNew<'m> for FunSetAndData<'d, 'm, Data, I, T, F>
 where
     I: IntoIterator<Item = T>,
     T: SoR<usize>,
@@ -52,11 +59,10 @@ where
 {
     fn elements(
         &self,
-        set: SetCore<'m>,
         depths: &SetDepths<'m>,
         index_values: &IndexValues,
     ) -> Box<dyn Iterator<Item = usize> + '_> {
-        let indices = IndexValuesIter::new(set, depths, index_values);
+        let indices = IndexValuesIter::new(self.set, depths, index_values);
         let elements = (self.fun)(self.data, indices);
         let elements = elements.into_iter().map(|x| *x.get_ref());
         Box::new(elements)
