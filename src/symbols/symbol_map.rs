@@ -41,6 +41,17 @@ where
         self.map.insert(Self::key_of(symbol), value);
     }
 
+    pub fn try_insert(&mut self, symbol: K, value: V) -> bool {
+        let key = Self::key_of(symbol);
+        match self.contains_key(key) {
+            true => false,
+            false => {
+                self.map.insert(key, value);
+                true
+            }
+        }
+    }
+
     pub fn get(&self, symbol: K) -> Option<&V> {
         self.map.get(&Self::key_of(symbol))
     }
