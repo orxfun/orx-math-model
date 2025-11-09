@@ -1,3 +1,4 @@
+use crate::data::DataBuilder;
 use crate::model_data::ModelData;
 use crate::symbols::pars::ParData;
 use crate::symbols::sets::{IndependentSetCollection, Set, SetCollection, SetCore, SetData};
@@ -12,6 +13,10 @@ pub struct Model {
 impl Model {
     pub fn new() -> Self {
         Self::default()
+    }
+
+    pub fn data_builder(&self) -> DataBuilder<'_> {
+        DataBuilder::new(self)
     }
 
     // sets
