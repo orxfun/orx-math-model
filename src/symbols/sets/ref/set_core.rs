@@ -59,6 +59,12 @@ impl<'m> SetCore<'m> {
         indices.map(|idx| SetCore::from(m.set_at_unchecked(*idx)))
     }
 
+    pub(crate) fn depending_set_core_at(self, idx: usize) -> Option<SetCore<'m>> {
+        let m = self.symbol().model;
+        let idx = self.sym_data().depends_on_indices().get(idx);
+        idx.map(|idx| SetCore::from(m.set_at_unchecked(*idx)))
+    }
+
     pub(crate) fn with_dim<const N: usize>(self) -> Set<'m, N> {
         debug_assert_eq!(self.dim(), N);
         self.symbol.into()
