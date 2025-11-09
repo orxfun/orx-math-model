@@ -1,6 +1,7 @@
 use crate::data::set_data::indices::{IndexValues, IndexValuesIter, SetDepths};
 use crate::data::set_data::set_gen::SetGenNew;
 use crate::symbols::sets::SetCore;
+use crate::SetAndData;
 use alloc::boxed::Box;
 use orx_self_or::SoR;
 
@@ -34,6 +35,24 @@ where
 {
     fn elements(
         &self,
+        depths: &SetDepths<'m>,
+        index_values: &IndexValues,
+    ) -> Box<dyn Iterator<Item = usize> + '_> {
+        let indices = IndexValuesIter::new(self.set, depths, index_values);
+        let elements = (self.fun)(self.data, indices);
+        let elements = elements.into_iter().map(|x| *x.get_ref());
+        Box::new(elements)
+    }
+}
+
+impl<'d, 'm, Data, I, T, F> SetAndData<'m> for FunSetAndData<'d, 'm, Data, I, T, F>
+where
+    I: IntoIterator<Item = T>,
+    T: SoR<usize>,
+    F: Fn(&'d Data, IndexValuesIter<'_>) -> I,
+{
+    fn elements(
+        &'m self,
         depths: &SetDepths<'m>,
         index_values: &IndexValues,
     ) -> Box<dyn Iterator<Item = usize> + '_> {
