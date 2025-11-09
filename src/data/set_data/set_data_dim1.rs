@@ -26,11 +26,12 @@ where
         depths: &SetDepths<'m>,
         index_values: &IndexValues,
     ) -> Box<dyn Iterator<Item = usize> + '_> {
-        let dep_sets = set.depending_sets_core();
-        let depths = dep_sets.map(|s| depths.depth_of(s));
-        let mut depending_indices = depths.map(|d| index_values[d]);
-        let i = depending_indices.next().unwrap();
-        let elements = (self.fun)(self.data, i).into_iter().map(|x| *x.get_ref());
+        let mut dep_sets = set.depending_sets_core();
+        // SAFETY: can have only 1 dep set since it can only be created with Set<1>.
+        let s1 = dep_sets.next().unwrap();
+        let depth_i1 = depths.depth_of(s1);
+        let i1 = index_values[depth_i1];
+        let elements = (self.fun)(self.data, i1).into_iter().map(|x| *x.get_ref());
         Box::new(elements)
     }
 }
