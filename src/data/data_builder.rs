@@ -1,3 +1,4 @@
+use crate::data::set_data::SetDataCollection;
 use crate::symbols::sets::IndependentSetCollection;
 use crate::symbols::SetCoreMap;
 use crate::SetAndData;
@@ -13,9 +14,9 @@ impl<'m> DataBuilder<'m> {
         Self::default()
     }
 
-    pub fn with_sets(mut self, sets: impl IndependentSetCollection<'m>) -> Self {
-        for set in sets.into_iter() {
-            assert!(!self.sets.contains_key(set), "set is already added");
+    pub fn with_sets(mut self, sets: impl SetDataCollection<'m>) -> Self {
+        for set_and_data in sets.into_iter() {
+            // assert!(!self.sets.contains_key(set), "set is already added");
             // self.sets.insert(set, value);
         }
         self

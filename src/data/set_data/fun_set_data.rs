@@ -32,6 +32,10 @@ where
     T: SoR<usize>,
     F: Fn(&'d Data, IndexValuesIter<'_>) -> I,
 {
+    fn set(&self) -> SetCore<'m> {
+        self.set
+    }
+
     fn elements(
         &'m self,
         depths: &SetDepths<'m>,

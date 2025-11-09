@@ -1,7 +1,12 @@
-use crate::data::set_data::indices::{IndexValues, SetDepths};
+use crate::{
+    data::set_data::indices::{IndexValues, SetDepths},
+    symbols::sets::SetCore,
+};
 use alloc::boxed::Box;
 
 pub trait SetAndData<'m> {
+    fn set(&self) -> SetCore<'m>;
+
     fn elements(
         &'m self,
         depths: &SetDepths<'m>,
