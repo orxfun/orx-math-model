@@ -1,5 +1,5 @@
 use crate::data::set_data::indices::{IndexValues, SetDepths};
-use crate::data::set_data::set_and_data::SetAndData;
+use crate::data::set_data::set_and_data::{SetAndData, SetAndDataCore};
 use crate::data::set_data::set_gen::SetGen;
 use crate::symbols::sets::SetCore;
 use crate::Set;
@@ -15,12 +15,12 @@ where
     fun: fn(&'d Data, usize) -> I,
 }
 
-impl<'d, Data, I, T> SetGen for FunSetD1<'d, Data, I, T>
+impl<'d, 'm, Data, I, T> SetGen<'m> for FunSetD1<'d, Data, I, T>
 where
     I: IntoIterator<Item = T>,
     T: SoR<usize>,
 {
-    fn elements<'m>(
+    fn elements(
         &self,
         set: SetCore<'m>,
         depths: &SetDepths<'m>,
@@ -69,6 +69,21 @@ where
         self.set
     }
 
+    fn elements(
+        &'m self,
+        set_depths: &SetDepths<'m>,
+        index_values: &IndexValues,
+    ) -> Box<dyn Iterator<Item = usize> + '_> {
+        let set = self.set.into();
+        self.data.elements(set, set_depths, index_values)
+    }
+}
+
+impl<'m, 'd, Data, I, T> SetAndDataCore<'m> for FunSetAndDataD1<'m, 'd, Data, I, T>
+where
+    I: IntoIterator<Item = T>,
+    T: SoR<usize>,
+{
     fn elements(
         &'m self,
         set_depths: &SetDepths<'m>,
