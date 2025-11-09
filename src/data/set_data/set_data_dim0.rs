@@ -1,3 +1,4 @@
+use crate::data::set_data::indices::{IndexValues, SetDepths};
 use crate::data::{set_data::set_gen::SetGen, SetAndData};
 use crate::Set;
 use alloc::boxed::Box;
@@ -56,7 +57,11 @@ where
         self.set
     }
 
-    fn set_gen(&self) -> &impl SetGen<0> {
-        &self.data
+    fn elements(
+        &'m self,
+        set_depths: &SetDepths<'m>,
+        index_values: &IndexValues,
+    ) -> Box<dyn Iterator<Item = usize> + '_> {
+        self.data.elements(self.set(), set_depths, index_values)
     }
 }

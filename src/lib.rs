@@ -19,6 +19,7 @@ extern crate std;
 
 mod data;
 mod model;
+mod model_and_data;
 mod model_data;
 mod no_std_types;
 mod symbols;
