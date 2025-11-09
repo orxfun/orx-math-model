@@ -13,7 +13,7 @@ impl<'m> DataBuilder<'m> {
         Self::default()
     }
 
-    pub fn with_sets(mut self, sets: impl SetDataCollection<'m>) -> Self {
+    pub fn sets(mut self, sets: impl SetDataCollection<'m>) -> Self {
         for set_and_data in sets.into_iter() {
             let set = set_and_data.set();
             assert!(!self.sets.contains_key(set), "set is already added");
