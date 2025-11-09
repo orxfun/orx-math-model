@@ -10,11 +10,3 @@ pub trait SetGen<'m> {
         index_values: &IndexValues,
     ) -> Box<dyn Iterator<Item = usize> + '_>;
 }
-
-pub trait SetGenNew<'m> {
-    fn elements(
-        &self,
-        depths: &SetDepths<'m>,
-        index_values: &IndexValues,
-    ) -> Box<dyn Iterator<Item = usize> + '_>;
-}
