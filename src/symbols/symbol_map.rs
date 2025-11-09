@@ -63,6 +63,6 @@ where
     #[inline(always)]
     fn key_of(symbol: K) -> usize {
         let symbol = symbol.into();
-        Symbol::key(symbol.symbol)
+        Symbol::addr(symbol.symbol)
     }
 }

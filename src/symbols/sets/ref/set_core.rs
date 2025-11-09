@@ -1,7 +1,7 @@
 use crate::symbols::sets::{Set, SetData, SetMeta};
 use crate::symbols::symbol_ref_core::SymbolRefCore;
 use crate::symbols::SymbolRef;
-use core::fmt::Debug;
+use core::fmt::{Debug, Display};
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub struct SetCore<'m> {
@@ -15,6 +15,12 @@ impl<'m> Debug for SetCore<'m> {
             .field("definition", &self.symbol.symbol.definition.value())
             .field("data", &self.symbol.symbol.data)
             .finish()
+    }
+}
+
+impl<'m> Display for SetCore<'m> {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        writeln!(f, "{}", *self.symbol.symbol.key)
     }
 }
 

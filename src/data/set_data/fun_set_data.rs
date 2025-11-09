@@ -4,6 +4,7 @@ use crate::SetAndData;
 use alloc::boxed::Box;
 use orx_self_or::SoR;
 
+#[derive(Debug)]
 pub struct FunSetAndData<'d, 'm, Data, I, T, F>
 where
     I: IntoIterator<Item = T>,

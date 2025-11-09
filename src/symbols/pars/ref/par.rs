@@ -2,12 +2,18 @@ use crate::symbols::pars::{ParCore, ParData, ParMeta};
 use crate::symbols::sets::Set;
 use crate::symbols::symbol_ref_core::SymbolRefCore;
 use crate::symbols::SymbolRef;
-use core::fmt::Debug;
+use core::fmt::{Debug, Display};
 use core::ops::Deref;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub struct Par<'m, const N: usize = 0> {
     core: ParCore<'m>,
+}
+
+impl<'m, const N: usize> Display for Par<'m, N> {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        writeln!(f, "{}", &self.core)
+    }
 }
 
 impl<'m, const N: usize> Deref for Par<'m, N> {

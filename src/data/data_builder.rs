@@ -35,10 +35,10 @@ impl<'m> DataBuilder<'m> {
         let m = self.model;
 
         let symbols = m.data.sets.iter();
-        let keys = symbols.map(|s| (Symbol::key(s), s));
+        let keys = symbols.map(|s| (Symbol::addr(s), s));
         let missing = keys.filter(|(key, _)| !self.sets.contains_key(*key));
         for (_, set) in missing {
-            return Err(format!("missing data for set with key {}", set.key()));
+            return Err(format!("missing data for set with key {}", *set.key));
         }
 
         let data = Data::new(self.model, self.sets);
