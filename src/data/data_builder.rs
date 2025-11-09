@@ -1,12 +1,11 @@
-use crate::symbols::sets::{IndependentSetCollection, SetCore};
+use crate::symbols::sets::IndependentSetCollection;
 use crate::symbols::SetCoreMap;
 use crate::SetAndData;
 use alloc::boxed::Box;
-use alloc::vec::Vec;
 
 #[derive(Default)]
 pub struct DataBuilder<'m> {
-    set0: SetCoreMap<'m, Box<dyn SetAndData<'m>>>,
+    sets: SetCoreMap<'m, Box<dyn SetAndData<'m>>>,
 }
 
 impl<'m> DataBuilder<'m> {
@@ -16,17 +15,9 @@ impl<'m> DataBuilder<'m> {
 
     pub fn with_sets(mut self, sets: impl IndependentSetCollection<'m>) -> Self {
         for set in sets.into_iter() {
-            assert!(!self.contains_set(set), "set is already added");
-            // match set.dim() {
-            //     0 => self.set0.insert(set, value),
-            //     1 => {}
-            //     _ => todo!(),
-            // }
+            assert!(!self.sets.contains_key(set), "set is already added");
+            // self.sets.insert(set, value);
         }
         self
-    }
-
-    fn contains_set(&self, set: SetCore<'m>) -> bool {
-        self.set0.contains_key(set)
     }
 }
