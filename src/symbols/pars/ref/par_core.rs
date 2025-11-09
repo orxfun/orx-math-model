@@ -21,7 +21,7 @@ impl<'m> Debug for ParCore<'m> {
 
 impl<'m> Display for ParCore<'m> {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        writeln!(f, "{}", *self.symbol.symbol.key)
+        write!(f, "{}", *self.symbol.symbol.key)
     }
 }
 

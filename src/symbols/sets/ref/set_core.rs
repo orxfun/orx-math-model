@@ -20,7 +20,7 @@ impl<'m> Debug for SetCore<'m> {
 
 impl<'m> Display for SetCore<'m> {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        writeln!(f, "{}", *self.symbol.symbol.key)
+        write!(f, "{}", *self.symbol.symbol.key)
     }
 }
 
