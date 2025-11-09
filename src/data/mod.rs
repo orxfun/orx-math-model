@@ -3,6 +3,4 @@ mod number;
 mod par_data;
 mod set_data;
 
-pub use set_data::{
-    FunSetAndData, FunSetAndDataD0, FunSetAndDataD1, IndexValuesIter, SetAndData, SetGen,
-};
+pub use set_data::{FunSetAndData, IndexValuesIter, SetAndData, SetGen};

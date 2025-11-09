@@ -1,4 +1,4 @@
-use crate::data::{FunSetAndData, FunSetAndDataD0, FunSetAndDataD1, IndexValuesIter};
+use crate::data::{FunSetAndData, IndexValuesIter};
 use crate::symbols::sets::SetCore;
 use crate::Set;
 use orx_self_or::SoR;
