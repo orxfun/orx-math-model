@@ -3,16 +3,6 @@ use crate::symbols::sets::SetCore;
 use crate::{Set, SetGen};
 use alloc::boxed::Box;
 
-pub trait SetAndData<'m, const N: usize> {
-    fn set(&self) -> Set<'m, N>;
-
-    fn elements(
-        &'m self,
-        set_depths: &SetDepths<'m>,
-        index_values: &IndexValues,
-    ) -> Box<dyn Iterator<Item = usize> + '_>;
-}
-
 pub trait SetAndDataCore<'m> {
     fn elements(
         &'m self,
