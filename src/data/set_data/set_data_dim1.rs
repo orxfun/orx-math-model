@@ -84,6 +84,7 @@ where
         set_depths: &SetDepths<'m>,
         index_values: &IndexValues,
     ) -> Box<dyn Iterator<Item = usize> + '_> {
-        self.data.elements(self.set(), set_depths, index_values)
+        let set = self.set.into();
+        self.data.elements2(set, set_depths, index_values)
     }
 }
