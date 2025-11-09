@@ -50,7 +50,6 @@ where
         self.map.len()
     }
 
-    #[cfg(test)]
     pub fn contains_key(&self, symbol: K) -> bool {
         self.map.contains_key(&Self::addr_of(symbol))
     }
