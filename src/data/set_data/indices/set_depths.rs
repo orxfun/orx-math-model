@@ -18,6 +18,6 @@ impl<'m> SetDepths<'m> {
     }
 
     pub fn depth_of(&self, set: SetCore<'m>) -> Depth {
-        *self.map.get(set.into()).expect("must exist")
+        *self.map.get(set).expect("must exist")
     }
 }

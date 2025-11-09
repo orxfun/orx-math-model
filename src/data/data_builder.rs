@@ -45,6 +45,8 @@ impl<'m> DataBuilder<'m> {
         let symbols = m.data.sets.iter();
         let keys = symbols.map(|s| (Symbol::addr(s), s));
         let missing = keys.filter(|(key, _)| !sets.contains_key(*key));
+        // TODO: report all missing elements at once
+        #[allow(clippy::never_loop)]
         for (_, set) in missing {
             return Err(format!("missing data for set with key {}", *set.key));
         }

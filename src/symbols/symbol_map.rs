@@ -56,15 +56,16 @@ where
         self.map.get(&Self::key_of(symbol))
     }
 
+    pub fn contains_key(&self, key: usize) -> bool {
+        self.map.contains_key(&key)
+    }
+
     #[cfg(test)]
     pub fn len(&self) -> usize {
         self.map.len()
     }
 
-    pub fn contains_key(&self, key: usize) -> bool {
-        self.map.contains_key(&key)
-    }
-
+    #[cfg(test)]
     pub fn contains_symbol(&self, symbol: K) -> bool {
         self.contains_key(Self::key_of(symbol))
     }

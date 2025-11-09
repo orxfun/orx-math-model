@@ -40,6 +40,7 @@ impl<'m> Set<'m, 1> {
 
         let fun = move |data: &'d Data, mut indices: IndexValuesIter<'_>| {
             debug_assert_eq!(indices.len(), 1);
+            #[allow(clippy::missing_panics_doc, clippy::unwrap_used)]
             let i1 = indices.next().unwrap();
             fun(data, i1)
         };
