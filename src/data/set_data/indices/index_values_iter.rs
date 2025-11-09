@@ -17,4 +17,11 @@ impl<'m> Iterator for IndexValuesIter<'m> {
         let depth = self.depths.depth_of(dep_set);
         Some(self.index_values[depth])
     }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        let len = self.set.dim();
+        (len, Some(len))
+    }
 }
+
+impl<'m> ExactSizeIterator for IndexValuesIter<'m> {}
