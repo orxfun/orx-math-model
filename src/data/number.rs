@@ -1,4 +1,4 @@
-pub trait Number {}
+pub trait Number: Clone + Copy {}
 
 impl Number for usize {}
 
