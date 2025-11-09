@@ -1,10 +1,7 @@
-use crate::data::SetGen;
 use crate::Par;
 
 pub trait ParAndData<'m, const N: usize> {
     fn par(&self) -> Par<'m, N>;
-
-    fn set_gen(&self) -> &impl SetGen<N>;
 
     // fn elements(
     //     &'m self,
