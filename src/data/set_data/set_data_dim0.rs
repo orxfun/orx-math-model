@@ -1,5 +1,7 @@
 use crate::data::set_data::indices::{IndexValues, SetDepths};
+use crate::data::set_data::set_gen::SetGenCore;
 use crate::data::{set_data::set_gen::SetGen, SetAndData};
+use crate::symbols::sets::SetCore;
 use crate::Set;
 use alloc::boxed::Box;
 use orx_self_or::SoR;
@@ -19,6 +21,22 @@ where
     T: SoR<usize>,
 {
     fn elements_by_dependencies(&self, _: [usize; 0]) -> Box<dyn Iterator<Item = usize> + '_> {
+        let elements = (self.fun)(self.data).into_iter().map(|x| *x.get_ref());
+        Box::new(elements)
+    }
+}
+
+impl<'d, Data, I, T> SetGenCore for FunSetD0<'d, Data, I, T>
+where
+    I: IntoIterator<Item = T>,
+    T: SoR<usize>,
+{
+    fn elements2<'m>(
+        &self,
+        _: SetCore<'m>,
+        _: &SetDepths<'m>,
+        _: &IndexValues,
+    ) -> Box<dyn Iterator<Item = usize> + '_> {
         let elements = (self.fun)(self.data).into_iter().map(|x| *x.get_ref());
         Box::new(elements)
     }

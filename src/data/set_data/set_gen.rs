@@ -3,7 +3,7 @@ use crate::symbols::sets::SetCore;
 use crate::Set;
 use alloc::boxed::Box;
 
-pub trait SetGen<const N: usize> {
+pub trait SetGen<const N: usize>: SetGenCore {
     fn elements_by_dependencies(
         &self,
         depending_indices: [usize; N],
@@ -33,4 +33,13 @@ pub trait SetGen<const N: usize> {
         // self.elements_by_dependencies(depending_indices)
         todo!()
     }
+}
+
+pub trait SetGenCore {
+    fn elements2<'m>(
+        &self,
+        set: SetCore<'m>,
+        depths: &SetDepths<'m>,
+        index_values: &IndexValues,
+    ) -> Box<dyn Iterator<Item = usize> + '_>;
 }
