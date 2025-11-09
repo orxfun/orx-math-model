@@ -16,5 +16,5 @@ pub use pars::{par, Par};
 pub use sets::{set_of, Set};
 pub use symbol::Symbol;
 pub use symbol_data_collection::SymbolDataCollection;
-pub use symbol_map::SymbolMap;
+pub use symbol_map::{SetCoreMap, SymbolMap};
 pub use symbol_ref::SymbolRef;

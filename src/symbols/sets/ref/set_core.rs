@@ -49,8 +49,12 @@ impl<'m> SetCore<'m> {
         &self.symbol.symbol.data
     }
 
+    pub(crate) fn dim(self) -> usize {
+        self.sym_data().depends_on_indices().len()
+    }
+
     pub(crate) fn with_dim<const N: usize>(self) -> Set<'m, N> {
-        debug_assert_eq!(self.sym_data().depends_on_indices().len(), N);
+        debug_assert_eq!(self.dim(), N);
         self.symbol.into()
     }
 

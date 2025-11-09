@@ -11,6 +11,13 @@ pub trait IndependentSetCollection<'m> {
     fn to_sets_array(self) -> Self::SetsArray;
 
     fn set_from_core(core: SetCore<'m>) -> Self::Set;
+
+    fn into_iter(self) -> impl Iterator<Item = SetCore<'m>>
+    where
+        Self: Sized,
+    {
+        self.to_sets_array().into_iter()
+    }
 }
 
 impl<'m> IndependentSetCollection<'m> for Set<'m, 0> {

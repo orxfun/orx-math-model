@@ -1,7 +1,10 @@
 use crate::no_std_types::Map;
+use crate::symbols::sets::{SetCore, SetMeta};
 use crate::symbols::Symbol;
 use crate::symbols::{symbol_meta::SymbolMeta, symbol_ref_core::SymbolRefCore};
 use core::marker::PhantomData;
+
+pub type SetCoreMap<'m, V> = SymbolMap<'m, SetMeta, SetCore<'m>, V>;
 
 pub struct SymbolMap<'m, S, K, V>
 where
@@ -12,16 +15,26 @@ where
     phantom: PhantomData<(K, SymbolRefCore<'m, S>)>,
 }
 
+impl<'m, S, K, V> Default for SymbolMap<'m, S, K, V>
+where
+    S: SymbolMeta,
+    K: Into<SymbolRefCore<'m, S>>,
+{
+    fn default() -> Self {
+        Self {
+            map: Map::default(),
+            phantom: PhantomData,
+        }
+    }
+}
+
 impl<'m, S, K, V> SymbolMap<'m, S, K, V>
 where
     S: SymbolMeta,
     K: Into<SymbolRefCore<'m, S>>,
 {
     pub fn new() -> Self {
-        Self {
-            map: Map::new(),
-            phantom: PhantomData,
-        }
+        Self::default()
     }
 
     pub fn insert(&mut self, symbol: K, value: V) {
