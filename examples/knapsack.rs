@@ -34,6 +34,8 @@ impl KnapsackData1 {
     fn num_items(&self) -> usize {
         self.costs.len()
     }
+
+    // fn data(&self, model:&Model ) -> Data
 }
 
 // data
