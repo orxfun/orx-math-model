@@ -73,6 +73,17 @@ struct McfpData2 {
 }
 
 impl McfpData2 {
+    fn data<'m>(&'m self, mcfp: &'m Mcfp) -> Data<'m> {
+        let n = self.nodes.len();
+        let (i, j, k) = (mcfp.i(), mcfp.j(), mcfp.k());
+
+        let dj = j.data(self, |d| 0..d.n());
+        let di = i.data(self, |d, j| &d.nodes[j].in_nodes);
+        let dk = k.data(self, |d, k| &d.nodes[k].out_nodes);
+
+        mcfp.0.data_builder().sets((di, dj, dk)).finish().unwrap()
+    }
+
     fn n(&self) -> usize {
         self.nodes.len()
     }
@@ -116,8 +127,5 @@ fn main() {
             },
         ],
     };
-
-    let dj = mcfp.j().data(&data_source, |d| 0..d.n());
-    let di = mcfp.i().data(&data_source, |d, j| &d.nodes[j].in_nodes);
-    let dk = mcfp.k().data(&data_source, |d, k| &d.nodes[k].out_nodes);
+    let data = data_source.data(&mcfp);
 }
