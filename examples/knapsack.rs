@@ -35,7 +35,10 @@ impl KnapsackData1 {
         self.costs.len()
     }
 
-    // fn data(&self, model:&Model ) -> Data
+    fn data<'m>(&'m self, knapsack: &'m Knapsack) -> Data<'m> {
+        let di = knapsack.i().data(self, |d| 0..d.num_items());
+        knapsack.0.data_builder().sets(di).finish().unwrap()
+    }
 }
 
 // data
@@ -59,12 +62,12 @@ impl KnapsackData2 {
 fn main() {
     let knapsack = Knapsack::new();
 
-    let data = KnapsackData1 {
+    let data_source = KnapsackData1 {
         costs: vec![3, 1, 7, 6],
         weights: vec![2, 5, 4, 6],
         knapsack_capacity: 11,
     };
-    let di = knapsack.i().data(&data, |d| 0..d.num_items());
+    let data = data_source.data(&knapsack);
 
     let data = KnapsackData2 {
         items: vec![
