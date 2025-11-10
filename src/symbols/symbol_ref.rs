@@ -1,8 +1,8 @@
 use crate::symbols::{symbol_meta::SymbolMeta, symbol_ref_core::SymbolRefCore};
 use alloc::string::String;
-use core::fmt::Debug;
+use core::fmt::{Debug, Display};
 
-pub trait SymbolRef<'m, S>
+pub trait SymbolRef<'m, S>: Display
 where
     S: SymbolMeta,
     Self: SymbolReq<'m, S>,

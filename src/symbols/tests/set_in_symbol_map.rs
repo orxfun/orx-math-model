@@ -17,10 +17,10 @@ fn set_in_symbol_map() {
     map.insert(j, 1);
     assert_eq!(map.len(), 2);
 
-    assert!(map.contains_key(i));
-    assert!(map.contains_key(j));
-    assert!(map.contains_key(i2));
-    assert!(!map.contains_key(k));
+    assert!(map.contains_symbol(i));
+    assert!(map.contains_symbol(j));
+    assert!(map.contains_symbol(i2));
+    assert!(!map.contains_symbol(k));
 
     assert_eq!(map.get(i), Some(&0));
     assert_eq!(map.get(i2), Some(&0));

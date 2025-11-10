@@ -11,9 +11,11 @@ categories = ["mathematics", "algorithms", "science", "no-std"]
 
 [dependencies]
 orx-imp-vec = "2.17"
+orx-iterable = { version = "1.3.0", default-features = false }
 orx-pinned-vec = "3.21"
 orx-self-or = { version = "1.2.0", default-features = false }
 orx-split-vec = "3.22"
+orx-v = { version = "1.5.0", default-features = false }
 
 [features]
 default = []

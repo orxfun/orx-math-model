@@ -2,7 +2,7 @@ use crate::symbols::pars::r#ref::par::Par;
 use crate::symbols::pars::{ParData, ParMeta};
 use crate::symbols::symbol_ref_core::SymbolRefCore;
 use crate::symbols::SymbolRef;
-use core::fmt::Debug;
+use core::fmt::{Debug, Display};
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub struct ParCore<'m> {
@@ -16,6 +16,12 @@ impl<'m> Debug for ParCore<'m> {
             .field("definition", &self.symbol.symbol.definition.value())
             .field("data", &self.symbol.symbol.data)
             .finish()
+    }
+}
+
+impl<'m> Display for ParCore<'m> {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(f, "{}", *self.symbol.symbol.key)
     }
 }
 

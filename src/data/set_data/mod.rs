@@ -1,13 +1,14 @@
 #[cfg(test)]
 mod tests;
 
+mod fun_set_data;
 mod indices;
 mod set_and_data;
-mod set_data_dim0;
-mod set_data_dim1;
+mod set_data_collection;
 mod set_gen;
 
+pub use fun_set_data::FunSetAndData;
+pub use indices::IndexValuesIter;
 pub use set_and_data::SetAndData;
-pub use set_data_dim0::FunSetAndDataD0;
-pub use set_data_dim1::FunSetAndDataD1;
+pub use set_data_collection::SetDataCollection;
 pub use set_gen::SetGen;

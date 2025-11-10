@@ -1,7 +1,7 @@
 use crate::symbols::sets::{Set, SetData, SetMeta};
 use crate::symbols::symbol_ref_core::SymbolRefCore;
 use crate::symbols::SymbolRef;
-use core::fmt::Debug;
+use core::fmt::{Debug, Display};
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub struct SetCore<'m> {
@@ -15,6 +15,12 @@ impl<'m> Debug for SetCore<'m> {
             .field("definition", &self.symbol.symbol.definition.value())
             .field("data", &self.symbol.symbol.data)
             .finish()
+    }
+}
+
+impl<'m> Display for SetCore<'m> {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(f, "{}", *self.symbol.symbol.key)
     }
 }
 
@@ -49,8 +55,18 @@ impl<'m> SetCore<'m> {
         &self.symbol.symbol.data
     }
 
+    pub(crate) fn dim(self) -> usize {
+        self.sym_data().depends_on_indices().len()
+    }
+
+    pub(crate) fn depending_set_core_at(self, idx: usize) -> Option<SetCore<'m>> {
+        let m = self.symbol().model;
+        let idx = self.sym_data().depends_on_indices().get(idx);
+        idx.map(|idx| m.set_at_unchecked(*idx))
+    }
+
     pub(crate) fn with_dim<const N: usize>(self) -> Set<'m, N> {
-        debug_assert_eq!(self.sym_data().depends_on_indices().len(), N);
+        debug_assert_eq!(self.dim(), N);
         self.symbol.into()
     }
 

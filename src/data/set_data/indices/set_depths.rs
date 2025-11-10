@@ -1,5 +1,5 @@
 use super::Depth;
-use crate::symbols::sets::{Set, SetCore, SetMeta};
+use crate::symbols::sets::{SetCore, SetMeta};
 use crate::symbols::SymbolMap;
 
 pub struct SetDepths<'m> {
@@ -17,7 +17,7 @@ impl<'m> SetDepths<'m> {
         Self { map }
     }
 
-    pub fn depth_of(&self, set: Set<'m>) -> Depth {
-        *self.map.get(set.into()).expect("must exist")
+    pub fn depth_of(&self, set: SetCore<'m>) -> Depth {
+        *self.map.get(set).expect("must exist")
     }
 }

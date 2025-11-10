@@ -12,6 +12,8 @@ impl Knapsack {
         let w = par(i).key("w").def("weight of item i");
         let u = par(i).key("u").def("utilization of item i");
 
+        let c = model.scalar().key("C").def("knapsack capacity");
+
         Self(model)
     }
 

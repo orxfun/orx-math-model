@@ -1,3 +1,9 @@
+#[allow(clippy::module_inception)]
+mod data;
+mod data_builder;
+mod number;
+mod par_data;
 mod set_data;
 
-pub use set_data::{FunSetAndDataD0, FunSetAndDataD1, SetAndData, SetGen};
+pub use data_builder::DataBuilder;
+pub use set_data::{FunSetAndData, IndexValuesIter, SetAndData, SetGen};
