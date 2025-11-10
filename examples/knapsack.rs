@@ -31,12 +31,9 @@ struct KnapsackData1 {
 }
 
 impl KnapsackData1 {
-    fn num_items(&self) -> usize {
-        self.costs.len()
-    }
-
     fn data<'m>(&'m self, knapsack: &'m Knapsack) -> Data<'m> {
-        let di = knapsack.i().data(self, |d| 0..d.num_items());
+        let num_items = self.costs.len();
+        let di = knapsack.i().data(self, move |_| 0..num_items);
         knapsack.0.data_builder().sets(di).finish().unwrap()
     }
 }
