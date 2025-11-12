@@ -1,10 +1,12 @@
 use crate::no_std_types::Map;
+use crate::symbols::pars::{ParCore, ParMeta};
 use crate::symbols::sets::{SetCore, SetMeta};
 use crate::symbols::Symbol;
 use crate::symbols::{symbol_meta::SymbolMeta, symbol_ref_core::SymbolRefCore};
 use core::marker::PhantomData;
 
 pub type SetCoreMap<'m, V> = SymbolMap<'m, SetMeta, SetCore<'m>, V>;
+pub type ParCoreMap<'m, V> = SymbolMap<'m, ParMeta, ParCore<'m>, V>;
 
 pub struct SymbolMap<'m, S, K, V>
 where

@@ -58,6 +58,28 @@ impl<'m> DataBuilder<'m> {
             return Err(format!("missing data for set with key {}", *set.key));
         }
 
+        // pars
+        // let mut pars = SetCoreMap::new();
+        // for par_and_data in self.pars {
+        //     let set = par_and_data.set();
+        //     let inserted = sets.try_insert(set, par_and_data);
+        //     if !inserted {
+        //         return Err(format!(
+        //             "double data definition for set with key {}",
+        //             *set.symbol().symbol.key
+        //         ));
+        //     }
+        // }
+
+        // let symbols = m.data.sets.iter();
+        // let keys = symbols.map(|s| (Symbol::addr(s), s));
+        // let missing = keys.filter(|(key, _)| !sets.contains_key(*key));
+        // // TODO: report all missing elements at once
+        // #[allow(clippy::never_loop)]
+        // for (_, set) in missing {
+        //     return Err(format!("missing data for set with key {}", *set.key));
+        // }
+
         let data = Data::new(self.model, sets);
         Ok(data)
     }
