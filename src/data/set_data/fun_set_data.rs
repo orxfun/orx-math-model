@@ -42,7 +42,9 @@ where
         depths: &SetDepths<'m>,
         index_values: &IndexValues,
     ) -> Box<dyn Iterator<Item = usize> + '_> {
-        let indices = IndexValuesIter::new(self.set, depths, index_values);
+        let model = self.set.symbol().model;
+        let depending_indices = self.set.sym_data().depends_on_indices();
+        let indices = IndexValuesIter::new(model, depending_indices, depths, index_values);
         let elements = (self.fun)(self.data, indices);
         let elements = elements.into_iter().map(|x| *x.get_ref());
         Box::new(elements)
