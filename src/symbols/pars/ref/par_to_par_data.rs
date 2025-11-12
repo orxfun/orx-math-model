@@ -70,3 +70,54 @@ impl<'m> Par<'m, 2> {
         FunParData::new(par, data, fun)
     }
 }
+
+impl<'m> Par<'m, 3> {
+    pub fn data<'d, Data, N, T, F>(
+        self,
+        data: &'d Data,
+        fun: F,
+    ) -> FunParData<'d, 'm, Data, N, T, impl Fn(&'d Data, &[usize]) -> T>
+    where
+        N: Number,
+        T: SoR<N>,
+        F: Fn(&'d Data, usize, usize, usize) -> T,
+    {
+        let par = ParCore::from(self);
+
+        let fun = move |data: &'d Data, indices: &[usize]| {
+            debug_assert_eq!(indices.len(), 3);
+            let i0 = indices[0];
+            let i1 = indices[1];
+            let i2 = indices[2];
+            fun(data, i0, i1, i2)
+        };
+
+        FunParData::new(par, data, fun)
+    }
+}
+
+impl<'m> Par<'m, 4> {
+    pub fn data<'d, Data, N, T, F>(
+        self,
+        data: &'d Data,
+        fun: F,
+    ) -> FunParData<'d, 'm, Data, N, T, impl Fn(&'d Data, &[usize]) -> T>
+    where
+        N: Number,
+        T: SoR<N>,
+        F: Fn(&'d Data, usize, usize, usize, usize) -> T,
+    {
+        let par = ParCore::from(self);
+
+        let fun = move |data: &'d Data, indices: &[usize]| {
+            debug_assert_eq!(indices.len(), 4);
+            let i0 = indices[0];
+            let i1 = indices[1];
+            let i2 = indices[2];
+            let i3 = indices[3];
+            fun(data, i0, i1, i2, i3)
+        };
+
+        FunParData::new(par, data, fun)
+    }
+}
