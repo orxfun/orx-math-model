@@ -16,6 +16,22 @@ where
     phantom: PhantomData<N>,
 }
 
+impl<'d, 'm, Data, N, T, F> FunParData<'d, 'm, Data, N, T, F>
+where
+    N: Number,
+    T: SoR<N>,
+    F: Fn(&'d Data, &[usize]) -> T,
+{
+    pub(crate) fn new(par: ParCore<'m>, data: &'d Data, fun: F) -> Self {
+        Self {
+            par,
+            data,
+            fun,
+            phantom: PhantomData,
+        }
+    }
+}
+
 impl<'d, 'm, Data, N, T, F> ParAndData<'m> for FunParData<'d, 'm, Data, N, T, F>
 where
     N: Number,
