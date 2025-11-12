@@ -1,5 +1,5 @@
 use crate::data::data::Data;
-use crate::data::par_data::ParAndData;
+use crate::data::par_data::{ParAndData, ParDataCollection};
 use crate::data::set_data::SetDataCollection;
 use crate::symbols::{SetCoreMap, Symbol};
 use crate::{Model, SetAndData};
@@ -24,6 +24,11 @@ impl<'m> DataBuilder<'m> {
 
     pub fn sets(mut self, sets: impl SetDataCollection<'m>) -> Self {
         self.sets.extend(sets.into_iter());
+        self
+    }
+
+    pub fn pars(mut self, pars: impl ParDataCollection<'m>) -> Self {
+        self.pars.extend(pars.into_iter());
         self
     }
 
