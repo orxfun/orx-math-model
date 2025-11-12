@@ -44,8 +44,14 @@ struct McfpData1 {
 }
 
 impl McfpData1 {
-    fn n(&self) -> usize {
-        self.in_nodes.len()
+    fn data<'m>(&'m self, mcfp: &'m Mcfp) -> Data<'m> {
+        let (i, j, k) = (mcfp.i(), mcfp.j(), mcfp.k());
+
+        let dj = j.data(self, move |d| 0..d.in_nodes.len());
+        let di = i.data(self, |d, j| &d.in_nodes[j]);
+        let dk = k.data(self, |d, k| d.out_nodes[k].iter().map(|(head, _)| *head));
+
+        mcfp.0.data_builder().sets((di, dj, dk)).finish().unwrap()
     }
 }
 
@@ -62,15 +68,21 @@ struct McfpData2 {
 }
 
 impl McfpData2 {
-    fn n(&self) -> usize {
-        self.nodes.len()
+    fn data<'m>(&'m self, mcfp: &'m Mcfp) -> Data<'m> {
+        let (i, j, k) = (mcfp.i(), mcfp.j(), mcfp.k());
+
+        let dj = j.data(self, |d| 0..d.nodes.len());
+        let di = i.data(self, |d, j| &d.nodes[j].in_nodes);
+        let dk = k.data(self, |d, k| &d.nodes[k].out_nodes);
+
+        mcfp.0.data_builder().sets((di, dj, dk)).finish().unwrap()
     }
 }
 
 fn main() {
     let mcfp = Mcfp::new();
 
-    let data = McfpData1 {
+    let data_source = McfpData1 {
         in_nodes: vec![vec![], vec![0], vec![0], vec![1, 2]],
         out_nodes: vec![
             vec![(1, Edge { cost: 1, cap: 3 }), (2, Edge { cost: 3, cap: 5 })],
@@ -79,14 +91,9 @@ fn main() {
             vec![],
         ],
     };
+    let data = data_source.data(&mcfp);
 
-    let dj = mcfp.j().data(&data, |d| 0..d.n());
-    let di = mcfp.i().data(&data, |d, j| &d.in_nodes[j]);
-    let dk = mcfp
-        .k()
-        .data(&data, |d, k| d.out_nodes[k].iter().map(|(head, _)| *head));
-
-    let data = McfpData2 {
+    let data_source = McfpData2 {
         nodes: vec![
             Node {
                 in_nodes: vec![],
@@ -110,8 +117,5 @@ fn main() {
             },
         ],
     };
-
-    let dj = mcfp.j().data(&data, |d| 0..d.n());
-    let di = mcfp.i().data(&data, |d, j| &d.nodes[j].in_nodes);
-    let dk = mcfp.k().data(&data, |d, k| &d.nodes[k].out_nodes);
+    let data = data_source.data(&mcfp);
 }

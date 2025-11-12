@@ -31,8 +31,9 @@ struct KnapsackData1 {
 }
 
 impl KnapsackData1 {
-    fn num_items(&self) -> usize {
-        self.costs.len()
+    fn data<'m>(&'m self, knapsack: &'m Knapsack) -> Data<'m> {
+        let di = knapsack.i().data(self, |d| 0..d.costs.len());
+        knapsack.0.data_builder().sets(di).finish().unwrap()
     }
 }
 
@@ -49,22 +50,23 @@ struct KnapsackData2 {
 }
 
 impl KnapsackData2 {
-    fn num_items(&self) -> usize {
-        self.items.len()
+    fn data<'m>(&'m self, knapsack: &'m Knapsack) -> Data<'m> {
+        let di = knapsack.i().data(self, move |d| 0..d.items.len());
+        knapsack.0.data_builder().sets(di).finish().unwrap()
     }
 }
 
 fn main() {
     let knapsack = Knapsack::new();
 
-    let data = KnapsackData1 {
+    let data_source = KnapsackData1 {
         costs: vec![3, 1, 7, 6],
         weights: vec![2, 5, 4, 6],
         knapsack_capacity: 11,
     };
-    let di = knapsack.i().data(&data, |d| 0..d.num_items());
+    let data = data_source.data(&knapsack);
 
-    let data = KnapsackData2 {
+    let data_source = KnapsackData2 {
         items: vec![
             Item { cost: 3, weight: 2 },
             Item { cost: 1, weight: 5 },
@@ -73,5 +75,5 @@ fn main() {
         ],
         knapsack_capacity: 11,
     };
-    let di = knapsack.i().data(&data, |d| 0..d.num_items());
+    let data = data_source.data(&knapsack);
 }

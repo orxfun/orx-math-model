@@ -25,6 +25,6 @@ mod model_data;
 mod no_std_types;
 mod symbols;
 
-pub use data::{SetAndData, SetGen};
+pub use data::{Data, DataBuilder, SetAndData, SetGen};
 pub use model::Model;
 pub use symbols::{par, set_of, Par, Set, SymbolRef};
