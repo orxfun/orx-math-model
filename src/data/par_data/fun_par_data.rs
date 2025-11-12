@@ -27,6 +27,9 @@ where
     }
 
     fn value(&self, index_values: &[usize]) -> f64 {
+        let number = (self.fun)(self.data, index_values);
+        let number = *number.get_ref();
+
         todo!()
     }
 }
