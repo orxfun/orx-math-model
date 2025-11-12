@@ -50,3 +50,31 @@ fn par_data_dim2_from_data() {
     let ds = s.data(&data, |d, i, j| *d.get(&(i, j)).unwrap());
     assert_eq!(ds.value(&[2, 1]), 6.0);
 }
+
+#[test]
+#[should_panic]
+fn par_data_dim2_panics_with_missing_index0() {
+    let m = Model::new();
+
+    let i = m.set();
+    let j = m.set_of(i);
+    let s = m.par_of((i, j));
+
+    let data = 42;
+    let ds = s.data(&data, |d, _, _| *d);
+    assert_eq!(ds.value(&[]), 42.0);
+}
+
+#[test]
+#[should_panic]
+fn par_data_dim2_panics_with_missing_index1() {
+    let m = Model::new();
+
+    let i = m.set();
+    let j = m.set_of(i);
+    let s = m.par_of((i, j));
+
+    let data = 42;
+    let ds = s.data(&data, |d, _, _| *d);
+    assert_eq!(ds.value(&[3]), 42.0);
+}
