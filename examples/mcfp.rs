@@ -45,10 +45,9 @@ struct McfpData1 {
 
 impl McfpData1 {
     fn data<'m>(&'m self, mcfp: &'m Mcfp) -> Data<'m> {
-        let n = self.in_nodes.len();
         let (i, j, k) = (mcfp.i(), mcfp.j(), mcfp.k());
 
-        let dj = j.data(self, move |d| 0..n);
+        let dj = j.data(self, move |d| 0..d.in_nodes.len());
         let di = i.data(self, |d, j| &d.in_nodes[j]);
         let dk = k.data(self, |d, k| d.out_nodes[k].iter().map(|(head, _)| *head));
 
@@ -72,7 +71,7 @@ impl McfpData2 {
     fn data<'m>(&'m self, mcfp: &'m Mcfp) -> Data<'m> {
         let (i, j, k) = (mcfp.i(), mcfp.j(), mcfp.k());
 
-        let dj = j.data(self, |_| 0..self.nodes.len());
+        let dj = j.data(self, |d| 0..d.nodes.len());
         let di = i.data(self, |d, j| &d.nodes[j].in_nodes);
         let dk = k.data(self, |d, k| &d.nodes[k].out_nodes);
 
