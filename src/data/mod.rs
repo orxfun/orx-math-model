@@ -7,4 +7,6 @@ mod set_data;
 
 pub use data::Data;
 pub use data_builder::DataBuilder;
+pub use number::Number;
+pub use par_data::FunParData;
 pub use set_data::{FunSetAndData, IndexValuesIter, SetAndData};
