@@ -47,7 +47,7 @@ impl Number for i32 {
 impl Number for f64 {
     #[inline(always)]
     fn to_f64(self) -> f64 {
-        self as f64
+        self
     }
 }
 
