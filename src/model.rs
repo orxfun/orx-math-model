@@ -1,6 +1,6 @@
 use crate::data::DataBuilder;
 use crate::model_data::ModelData;
-use crate::symbols::pars::ParData;
+use crate::symbols::pars::{ParCore, ParData};
 use crate::symbols::sets::{IndependentSetCollection, Set, SetCollection, SetCore, SetData};
 use crate::symbols::{DependentSetIndices, Symbol};
 use crate::Par;
@@ -43,6 +43,11 @@ impl Model {
         core.and_then(|x| x.with_dim_checked::<N>())
     }
 
+    pub fn par_by_key<const N: usize>(&self, key: &str) -> Option<Par<'_, N>> {
+        let core = self.data.pars.by_key(self, key).map(ParCore::from);
+        core.and_then(|x| x.with_dim_checked::<N>())
+    }
+
     #[inline(always)]
     pub(crate) fn set_at(&self, idx: usize) -> Option<SetCore<'_>> {
         self.data.sets.at(self, idx).map(SetCore::from)
@@ -55,13 +60,13 @@ impl Model {
 
     // pars
 
-    pub fn scalar(&self) -> Par<'_, 0> {
+    pub fn par(&self) -> Par<'_, 0> {
         let dep = DependentSetIndices::new(core::iter::empty());
         let data = ParData::new(dep);
         self.data.pars.push(self, Symbol::new(data)).with_dim()
     }
 
-    pub fn par<'m, S>(&'m self, sets: S) -> S::Par
+    pub fn par_of<'m, S>(&'m self, sets: S) -> S::Par
     where
         S: SetCollection<'m>,
     {

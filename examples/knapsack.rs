@@ -12,13 +12,25 @@ impl Knapsack {
         let w = par(i).key("w").def("weight of item i");
         let u = par(i).key("u").def("utilization of item i");
 
-        let c = model.scalar().key("C").def("knapsack capacity");
+        let c = model.par().key("C").def("knapsack capacity");
 
         Self(model)
     }
 
     fn i(&self) -> Set<'_> {
         self.0.set_by_key("i").unwrap()
+    }
+
+    fn w(&self) -> Par<'_, 1> {
+        self.0.par_by_key("w").unwrap()
+    }
+
+    fn u(&self) -> Par<'_, 1> {
+        self.0.par_by_key("u").unwrap()
+    }
+
+    fn c(&self) -> Par<'_, 0> {
+        self.0.par_by_key("C").unwrap()
     }
 }
 
@@ -33,7 +45,13 @@ struct KnapsackData1 {
 impl KnapsackData1 {
     fn data<'m>(&'m self, knapsack: &'m Knapsack) -> Data<'m> {
         let di = knapsack.i().data(self, |d| 0..d.costs.len());
-        knapsack.0.data_builder().sets(di).finish().unwrap()
+
+        let dw = knapsack.w().data(self, |d, i| d.weights[i]);
+        let du = knapsack.u().data(self, |d, i| -(d.costs[i] as i64));
+        let dc = knapsack.c().data(self, |d| d.knapsack_capacity);
+
+        let builder = knapsack.0.data_builder().sets(di).pars((dw, du, dc));
+        builder.finish().unwrap()
     }
 }
 
@@ -52,7 +70,13 @@ struct KnapsackData2 {
 impl KnapsackData2 {
     fn data<'m>(&'m self, knapsack: &'m Knapsack) -> Data<'m> {
         let di = knapsack.i().data(self, move |d| 0..d.items.len());
-        knapsack.0.data_builder().sets(di).finish().unwrap()
+
+        let dw = knapsack.w().data(self, |d, i| d.items[i].weight);
+        let du = knapsack.u().data(self, |d, i| -(d.items[i].cost as i64));
+        let dc = knapsack.c().data(self, |d| d.knapsack_capacity);
+
+        let builder = knapsack.0.data_builder().sets(di).pars((dw, du, dc));
+        builder.finish().unwrap()
     }
 }
 

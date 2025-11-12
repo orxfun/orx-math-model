@@ -1,6 +1,7 @@
 use crate::data::data::Data;
+use crate::data::par_data::{ParAndData, ParDataCollection};
 use crate::data::set_data::SetDataCollection;
-use crate::symbols::{SetCoreMap, Symbol};
+use crate::symbols::{ParCoreMap, SetCoreMap, Symbol};
 use crate::{Model, SetAndData};
 use alloc::boxed::Box;
 use alloc::format;
@@ -10,14 +11,15 @@ use orx_iterable::Collection;
 
 pub struct DataBuilder<'m> {
     model: &'m Model,
-    // sets: SetCoreMap<'m, Box<dyn SetAndData<'m> + 'm>>,
     sets: Vec<Box<dyn SetAndData<'m> + 'm>>,
+    pars: Vec<Box<dyn ParAndData<'m> + 'm>>,
 }
 
 impl<'m> DataBuilder<'m> {
     pub fn new(model: &'m Model) -> Self {
         let sets = Vec::new();
-        Self { model, sets }
+        let pars = Vec::new();
+        Self { model, sets, pars }
     }
 
     pub fn sets(mut self, sets: impl SetDataCollection<'m>) -> Self {
@@ -25,10 +27,16 @@ impl<'m> DataBuilder<'m> {
         self
     }
 
+    pub fn pars(mut self, pars: impl ParDataCollection<'m>) -> Self {
+        self.pars.extend(pars.into_iter());
+        self
+    }
+
     pub fn finish(self) -> Result<Data<'m>, String> {
         // TODO: proper error type
         let m = self.model;
 
+        // TODO: avoid code duplication for sets and pars
         // sets
         let mut sets = SetCoreMap::new();
         for set_and_data in self.sets {
@@ -51,7 +59,29 @@ impl<'m> DataBuilder<'m> {
             return Err(format!("missing data for set with key {}", *set.key));
         }
 
-        let data = Data::new(self.model, sets);
+        // pars
+        let mut pars = ParCoreMap::new();
+        for par_and_data in self.pars {
+            let par = par_and_data.par();
+            let inserted = pars.try_insert(par, par_and_data);
+            if !inserted {
+                return Err(format!(
+                    "double data definition for par with key {}",
+                    *par.symbol().symbol.key
+                ));
+            }
+        }
+
+        let symbols = m.data.pars.iter();
+        let keys = symbols.map(|s| (Symbol::addr(s), s));
+        let missing = keys.filter(|(key, _)| !pars.contains_key(*key));
+        // TODO: report all missing elements at once
+        #[allow(clippy::never_loop)]
+        for (_, par) in missing {
+            return Err(format!("missing data for par with key {}", *par.key));
+        }
+
+        let data = Data::new(self.model, sets, pars);
         Ok(data)
     }
 }
