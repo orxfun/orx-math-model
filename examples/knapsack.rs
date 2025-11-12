@@ -32,8 +32,7 @@ struct KnapsackData1 {
 
 impl KnapsackData1 {
     fn data<'m>(&'m self, knapsack: &'m Knapsack) -> Data<'m> {
-        let num_items = self.costs.len();
-        let di = knapsack.i().data(self, move |_| 0..num_items);
+        let di = knapsack.i().data(self, |d| 0..d.costs.len());
         knapsack.0.data_builder().sets(di).finish().unwrap()
     }
 }
@@ -52,8 +51,7 @@ struct KnapsackData2 {
 
 impl KnapsackData2 {
     fn data<'m>(&'m self, knapsack: &'m Knapsack) -> Data<'m> {
-        let num_items = self.items.len();
-        let di = knapsack.i().data(self, move |_| 0..num_items);
+        let di = knapsack.i().data(self, move |d| 0..d.items.len());
         knapsack.0.data_builder().sets(di).finish().unwrap()
     }
 }
