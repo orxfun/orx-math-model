@@ -1,14 +1,7 @@
-use crate::Par;
+use crate::{data::IndexValuesIter, symbols::pars::ParCore};
 
-pub trait ParAndData<'m, const N: usize> {
-    fn par(&self) -> Par<'m, N>;
+pub trait ParAndData<'m> {
+    fn par(&self) -> ParCore<'m>;
 
-    // fn elements(
-    //     &'m self,
-    //     set_depths: &SetDepths<'m>,
-    //     index_values: &IndexValues,
-    // ) -> Box<dyn Iterator<Item = usize> + '_> {
-    //     self.set_gen()
-    //         .elements(self.set(), set_depths, index_values)
-    // }
+    fn value(&self, index_values: &IndexValuesIter) -> f64;
 }
