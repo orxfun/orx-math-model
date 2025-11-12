@@ -80,7 +80,7 @@ impl<'m> DataBuilder<'m> {
             return Err(format!("missing data for par with key {}", *par.key));
         }
 
-        let data = Data::new(self.model, sets);
+        let data = Data::new(self.model, sets, pars);
         Ok(data)
     }
 }
