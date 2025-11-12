@@ -1,4 +1,5 @@
 use crate::data::data::Data;
+use crate::data::par_data::ParAndData;
 use crate::data::set_data::SetDataCollection;
 use crate::symbols::{SetCoreMap, Symbol};
 use crate::{Model, SetAndData};
@@ -10,14 +11,15 @@ use orx_iterable::Collection;
 
 pub struct DataBuilder<'m> {
     model: &'m Model,
-    // sets: SetCoreMap<'m, Box<dyn SetAndData<'m> + 'm>>,
     sets: Vec<Box<dyn SetAndData<'m> + 'm>>,
+    pars: Vec<Box<dyn ParAndData<'m> + 'm>>,
 }
 
 impl<'m> DataBuilder<'m> {
     pub fn new(model: &'m Model) -> Self {
         let sets = Vec::new();
-        Self { model, sets }
+        let pars = Vec::new();
+        Self { model, sets, pars }
     }
 
     pub fn sets(mut self, sets: impl SetDataCollection<'m>) -> Self {
