@@ -1,4 +1,5 @@
 use crate::data::par_data::par_and_data::ParAndData;
+use crate::data::set_data::SetDepths;
 use crate::data::{number::Number, IndexValuesIter};
 use crate::symbols::pars::ParCore;
 use core::marker::PhantomData;
@@ -26,7 +27,7 @@ where
         self.par
     }
 
-    fn value(&self, index_values: &IndexValuesIter) -> f64 {
+    fn value(&self, depths: &SetDepths<'m>, index_values: &IndexValuesIter) -> f64 {
         todo!()
     }
 }
