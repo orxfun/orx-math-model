@@ -5,9 +5,9 @@ pub trait SetDataCollection<'m> {
     fn into_iter(self) -> impl IntoIterator<Item = Box<dyn SetAndData<'m> + 'm>>;
 }
 
-impl<'m, S1> SetDataCollection<'m> for S1
+impl<'m, S0> SetDataCollection<'m> for S0
 where
-    S1: SetAndData<'m> + 'm,
+    S0: SetAndData<'m> + 'm,
 {
     fn into_iter(self) -> impl IntoIterator<Item = Box<dyn SetAndData<'m> + 'm>> {
         let s0: Box<dyn SetAndData<'m> + 'm> = Box::new(self);
@@ -15,10 +15,10 @@ where
     }
 }
 
-impl<'m, S1, S2> SetDataCollection<'m> for (S1, S2)
+impl<'m, S0, S1> SetDataCollection<'m> for (S0, S1)
 where
+    S0: SetAndData<'m> + 'm,
     S1: SetAndData<'m> + 'm,
-    S2: SetAndData<'m> + 'm,
 {
     fn into_iter(self) -> impl IntoIterator<Item = Box<dyn SetAndData<'m> + 'm>> {
         let s0: Box<dyn SetAndData<'m> + 'm> = Box::new(self.0);
@@ -27,11 +27,11 @@ where
     }
 }
 
-impl<'m, S1, S2, S3> SetDataCollection<'m> for (S1, S2, S3)
+impl<'m, S0, S1, S2> SetDataCollection<'m> for (S0, S1, S2)
 where
+    S0: SetAndData<'m> + 'm,
     S1: SetAndData<'m> + 'm,
     S2: SetAndData<'m> + 'm,
-    S3: SetAndData<'m> + 'm,
 {
     fn into_iter(self) -> impl IntoIterator<Item = Box<dyn SetAndData<'m> + 'm>> {
         let s0: Box<dyn SetAndData<'m> + 'm> = Box::new(self.0);
@@ -41,12 +41,12 @@ where
     }
 }
 
-impl<'m, S1, S2, S3, S4> SetDataCollection<'m> for (S1, S2, S3, S4)
+impl<'m, S0, S1, S2, S3> SetDataCollection<'m> for (S0, S1, S2, S3)
 where
+    S0: SetAndData<'m> + 'm,
     S1: SetAndData<'m> + 'm,
     S2: SetAndData<'m> + 'm,
     S3: SetAndData<'m> + 'm,
-    S4: SetAndData<'m> + 'm,
 {
     fn into_iter(self) -> impl IntoIterator<Item = Box<dyn SetAndData<'m> + 'm>> {
         let s0: Box<dyn SetAndData<'m> + 'm> = Box::new(self.0);
