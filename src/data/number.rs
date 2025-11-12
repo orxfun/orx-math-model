@@ -1,5 +1,3 @@
-// TODO: temporary allow
-#[allow(dead_code)]
 pub trait Number: Clone + Copy {}
 
 impl Number for usize {}
