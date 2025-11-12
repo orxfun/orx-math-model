@@ -36,6 +36,7 @@ impl<'m> DataBuilder<'m> {
         // TODO: proper error type
         let m = self.model;
 
+        // TODO: avoid code duplication for sets and pars
         // sets
         let mut sets = SetCoreMap::new();
         for set_and_data in self.sets {
