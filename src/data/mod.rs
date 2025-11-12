@@ -1,8 +1,8 @@
 #[allow(clippy::module_inception)]
 mod data;
 mod data_builder;
-// mod number;
-// mod par_data;
+mod number;
+mod par_data;
 mod set_data;
 
 pub use data::Data;
