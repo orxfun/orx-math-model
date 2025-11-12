@@ -5,8 +5,6 @@ use core::{cell::UnsafeCell, fmt::Display, ops::Deref};
 pub struct Symbol<S: SymbolMeta> {
     pub key: Key,
     pub definition: Definition,
-    // TODO: temporary clippy fix until we use the data
-    #[allow(dead_code)]
     pub data: S::Data,
 }
 
