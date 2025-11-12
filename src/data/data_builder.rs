@@ -1,7 +1,7 @@
 use crate::data::data::Data;
 use crate::data::par_data::{ParAndData, ParDataCollection};
 use crate::data::set_data::SetDataCollection;
-use crate::symbols::{SetCoreMap, Symbol};
+use crate::symbols::{ParCoreMap, SetCoreMap, Symbol};
 use crate::{Model, SetAndData};
 use alloc::boxed::Box;
 use alloc::format;
@@ -59,26 +59,26 @@ impl<'m> DataBuilder<'m> {
         }
 
         // pars
-        // let mut pars = SetCoreMap::new();
-        // for par_and_data in self.pars {
-        //     let set = par_and_data.set();
-        //     let inserted = sets.try_insert(set, par_and_data);
-        //     if !inserted {
-        //         return Err(format!(
-        //             "double data definition for set with key {}",
-        //             *set.symbol().symbol.key
-        //         ));
-        //     }
-        // }
+        let mut pars = ParCoreMap::new();
+        for par_and_data in self.pars {
+            let par = par_and_data.par();
+            let inserted = pars.try_insert(par, par_and_data);
+            if !inserted {
+                return Err(format!(
+                    "double data definition for par with key {}",
+                    *par.symbol().symbol.key
+                ));
+            }
+        }
 
-        // let symbols = m.data.sets.iter();
-        // let keys = symbols.map(|s| (Symbol::addr(s), s));
-        // let missing = keys.filter(|(key, _)| !sets.contains_key(*key));
-        // // TODO: report all missing elements at once
-        // #[allow(clippy::never_loop)]
-        // for (_, set) in missing {
-        //     return Err(format!("missing data for set with key {}", *set.key));
-        // }
+        let symbols = m.data.pars.iter();
+        let keys = symbols.map(|s| (Symbol::addr(s), s));
+        let missing = keys.filter(|(key, _)| !pars.contains_key(*key));
+        // TODO: report all missing elements at once
+        #[allow(clippy::never_loop)]
+        for (_, par) in missing {
+            return Err(format!("missing data for par with key {}", *par.key));
+        }
 
         let data = Data::new(self.model, sets);
         Ok(data)
