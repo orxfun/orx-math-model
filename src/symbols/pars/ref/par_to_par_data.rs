@@ -1,17 +1,15 @@
 use crate::data::{FunParData, Number};
 use crate::symbols::pars::{Par, ParCore};
-use orx_self_or::SoR;
 
 impl<'m> Par<'m, 0> {
-    pub fn data<'d, Data, N, T, F>(
+    pub fn data<'d, Data, N, F>(
         self,
         data: &'d Data,
         fun: F,
-    ) -> FunParData<'d, 'm, Data, N, T, impl Fn(&'d Data, &[usize]) -> T>
+    ) -> FunParData<'d, 'm, Data, N, impl Fn(&'d Data, &[usize]) -> N>
     where
         N: Number,
-        T: SoR<N>,
-        F: Fn(&'d Data) -> T,
+        F: Fn(&'d Data) -> N,
     {
         let par = ParCore::from(self);
 
@@ -25,15 +23,14 @@ impl<'m> Par<'m, 0> {
 }
 
 impl<'m> Par<'m, 1> {
-    pub fn data<'d, Data, N, T, F>(
+    pub fn data<'d, Data, N, F>(
         self,
         data: &'d Data,
         fun: F,
-    ) -> FunParData<'d, 'm, Data, N, T, impl Fn(&'d Data, &[usize]) -> T>
+    ) -> FunParData<'d, 'm, Data, N, impl Fn(&'d Data, &[usize]) -> N>
     where
         N: Number,
-        T: SoR<N>,
-        F: Fn(&'d Data, usize) -> T,
+        F: Fn(&'d Data, usize) -> N,
     {
         let par = ParCore::from(self);
 
@@ -48,15 +45,14 @@ impl<'m> Par<'m, 1> {
 }
 
 impl<'m> Par<'m, 2> {
-    pub fn data<'d, Data, N, T, F>(
+    pub fn data<'d, Data, N, F>(
         self,
         data: &'d Data,
         fun: F,
-    ) -> FunParData<'d, 'm, Data, N, T, impl Fn(&'d Data, &[usize]) -> T>
+    ) -> FunParData<'d, 'm, Data, N, impl Fn(&'d Data, &[usize]) -> N>
     where
         N: Number,
-        T: SoR<N>,
-        F: Fn(&'d Data, usize, usize) -> T,
+        F: Fn(&'d Data, usize, usize) -> N,
     {
         let par = ParCore::from(self);
 
@@ -72,15 +68,14 @@ impl<'m> Par<'m, 2> {
 }
 
 impl<'m> Par<'m, 3> {
-    pub fn data<'d, Data, N, T, F>(
+    pub fn data<'d, Data, N, F>(
         self,
         data: &'d Data,
         fun: F,
-    ) -> FunParData<'d, 'm, Data, N, T, impl Fn(&'d Data, &[usize]) -> T>
+    ) -> FunParData<'d, 'm, Data, N, impl Fn(&'d Data, &[usize]) -> N>
     where
         N: Number,
-        T: SoR<N>,
-        F: Fn(&'d Data, usize, usize, usize) -> T,
+        F: Fn(&'d Data, usize, usize, usize) -> N,
     {
         let par = ParCore::from(self);
 
@@ -97,15 +92,14 @@ impl<'m> Par<'m, 3> {
 }
 
 impl<'m> Par<'m, 4> {
-    pub fn data<'d, Data, N, T, F>(
+    pub fn data<'d, Data, N, F>(
         self,
         data: &'d Data,
         fun: F,
-    ) -> FunParData<'d, 'm, Data, N, T, impl Fn(&'d Data, &[usize]) -> T>
+    ) -> FunParData<'d, 'm, Data, N, impl Fn(&'d Data, &[usize]) -> N>
     where
         N: Number,
-        T: SoR<N>,
-        F: Fn(&'d Data, usize, usize, usize, usize) -> T,
+        F: Fn(&'d Data, usize, usize, usize, usize) -> N,
     {
         let par = ParCore::from(self);
 
