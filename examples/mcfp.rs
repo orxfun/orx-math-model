@@ -70,10 +70,9 @@ struct McfpData2 {
 
 impl McfpData2 {
     fn data<'m>(&'m self, mcfp: &'m Mcfp) -> Data<'m> {
-        let n = self.nodes.len();
         let (i, j, k) = (mcfp.i(), mcfp.j(), mcfp.k());
 
-        let dj = j.data(self, |d| 0..d.n());
+        let dj = j.data(self, |_| 0..self.nodes.len());
         let di = i.data(self, |d, j| &d.nodes[j].in_nodes);
         let dk = k.data(self, |d, k| &d.nodes[k].out_nodes);
 
