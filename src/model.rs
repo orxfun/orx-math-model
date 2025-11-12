@@ -1,6 +1,6 @@
 use crate::data::DataBuilder;
 use crate::model_data::ModelData;
-use crate::symbols::pars::ParData;
+use crate::symbols::pars::{ParCore, ParData};
 use crate::symbols::sets::{IndependentSetCollection, Set, SetCollection, SetCore, SetData};
 use crate::symbols::{DependentSetIndices, Symbol};
 use crate::Par;
@@ -40,6 +40,11 @@ impl Model {
 
     pub fn set_by_key<const N: usize>(&self, key: &str) -> Option<Set<'_, N>> {
         let core = self.data.sets.by_key(self, key).map(SetCore::from);
+        core.and_then(|x| x.with_dim_checked::<N>())
+    }
+
+    pub fn par_by_key<const N: usize>(&self, key: &str) -> Option<Par<'_, N>> {
+        let core = self.data.pars.by_key(self, key).map(ParCore::from);
         core.and_then(|x| x.with_dim_checked::<N>())
     }
 

@@ -33,6 +33,7 @@ struct KnapsackData1 {
 impl KnapsackData1 {
     fn data<'m>(&'m self, knapsack: &'m Knapsack) -> Data<'m> {
         let di = knapsack.i().data(self, |d| 0..d.costs.len());
+
         knapsack.0.data_builder().sets(di).finish().unwrap()
     }
 }
