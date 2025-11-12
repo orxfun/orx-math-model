@@ -54,10 +54,6 @@ impl McfpData1 {
 
         mcfp.0.data_builder().sets((di, dj, dk)).finish().unwrap()
     }
-
-    fn n(&self) -> usize {
-        self.in_nodes.len()
-    }
 }
 
 // data
@@ -82,10 +78,6 @@ impl McfpData2 {
         let dk = k.data(self, |d, k| &d.nodes[k].out_nodes);
 
         mcfp.0.data_builder().sets((di, dj, dk)).finish().unwrap()
-    }
-
-    fn n(&self) -> usize {
-        self.nodes.len()
     }
 }
 
