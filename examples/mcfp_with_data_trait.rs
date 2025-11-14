@@ -60,16 +60,21 @@ impl Mcfp {
 trait McfpData {
     // sets
 
+    /// Set of all nodes
     fn j(&self) -> impl IntoIterator<Item = impl SoR<usize>>;
 
+    /// Set of nodes which are heads of the edges emanating from node `j`.
     fn k(&self, j: usize) -> impl IntoIterator<Item = impl SoR<usize>>;
 
+    /// Set of nodes which are tails of the edges incoming into node `j`.
     fn i(&self, j: usize) -> impl IntoIterator<Item = impl SoR<usize>>;
 
     // pars
 
+    /// Cost of transporting one unit on edge `(j, k)`.
     fn c(&self, j: usize, k: usize) -> impl Number;
 
+    /// Capacity of edge `(j, k)`.
     fn b(&self, j: usize, k: usize) -> impl Number;
 }
 
