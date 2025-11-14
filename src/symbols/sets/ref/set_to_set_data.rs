@@ -1,4 +1,4 @@
-use crate::data::{FunSetAndData, IndexValuesIter};
+use crate::data::{EmptySet, FunSetAndData, IndexValuesIter};
 use crate::symbols::sets::SetCore;
 use crate::Set;
 use orx_self_or::SoR;
@@ -23,6 +23,10 @@ impl<'m> Set<'m, 0> {
 
         FunSetAndData::new(set, data, fun)
     }
+
+    pub fn data_empty(self) -> EmptySet<'m, 0> {
+        EmptySet::new(self)
+    }
 }
 
 impl<'m> Set<'m, 1> {
@@ -46,5 +50,9 @@ impl<'m> Set<'m, 1> {
         };
 
         FunSetAndData::new(set, data, fun)
+    }
+
+    pub fn data_empty(self) -> EmptySet<'m, 1> {
+        EmptySet::new(self)
     }
 }

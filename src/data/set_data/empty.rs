@@ -6,8 +6,10 @@ pub struct EmptySet<'m, const N: usize> {
     set: Set<'m, N>,
 }
 
-pub fn empty<'m, const N: usize>(set: Set<'m, N>) -> EmptySet<'m, N> {
-    todo!()
+impl<'m, const N: usize> EmptySet<'m, N> {
+    pub fn new(set: Set<'m, N>) -> Self {
+        Self { set }
+    }
 }
 
 impl<'m, const N: usize> SetDataCore<'m> for EmptySet<'m, N> {
