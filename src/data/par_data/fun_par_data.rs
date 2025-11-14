@@ -1,6 +1,7 @@
 use crate::data::number::Number;
 use crate::data::par_data::par_and_data::ParDataCore;
 use crate::symbols::pars::ParCore;
+use crate::{Par, ParData};
 use core::marker::PhantomData;
 
 pub struct FunParData<'d, 'm, const N: usize, Data, T, F>
@@ -42,5 +43,15 @@ where
     fn value(&self, index_values: &[usize]) -> f64 {
         let number = (self.fun)(self.data, index_values);
         number.to_f64()
+    }
+}
+
+impl<'d, 'm, const N: usize, Data, T, F> ParData<'m, N> for FunParData<'d, 'm, N, Data, T, F>
+where
+    T: Number,
+    F: Fn(&'d Data, &[usize]) -> T,
+{
+    fn par(&self) -> Par<'m, N> {
+        self.par.into()
     }
 }
