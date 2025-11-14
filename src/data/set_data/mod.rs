@@ -1,6 +1,7 @@
 #[cfg(test)]
 mod tests;
 
+mod empty;
 mod fun_set_data;
 mod indices;
 mod set_and_data;
