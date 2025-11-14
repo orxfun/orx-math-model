@@ -9,4 +9,4 @@ pub use data::Data;
 pub use data_builder::DataBuilder;
 pub use number::Number;
 pub use par_data::{FunParData, ParData};
-pub use set_data::{FunSetAndData, IndexValuesIter, SetData};
+pub use set_data::{FunSetAndData, IndexValuesIter, SetDataCore};

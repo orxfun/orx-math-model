@@ -8,7 +8,7 @@ impl<'m> Set<'m, 0> {
         self,
         data: &'d Data,
         fun: impl Fn(&'d Data) -> I,
-    ) -> FunSetAndData<'d, 'm, Data, I, T, impl Fn(&'d Data, IndexValuesIter<'_>) -> I>
+    ) -> FunSetAndData<'d, 'm, 0, Data, I, T, impl Fn(&'d Data, IndexValuesIter<'_>) -> I>
     where
         I: IntoIterator<Item = T>,
         T: SoR<usize>,
@@ -30,7 +30,7 @@ impl<'m> Set<'m, 1> {
         self,
         data: &'d Data,
         fun: impl Fn(&'d Data, usize) -> I,
-    ) -> FunSetAndData<'d, 'm, Data, I, T, impl Fn(&'d Data, IndexValuesIter<'_>) -> I>
+    ) -> FunSetAndData<'d, 'm, 1, Data, I, T, impl Fn(&'d Data, IndexValuesIter<'_>) -> I>
     where
         I: IntoIterator<Item = T>,
         T: SoR<usize>,
