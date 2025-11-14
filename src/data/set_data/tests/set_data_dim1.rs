@@ -5,6 +5,24 @@ use alloc::vec;
 use alloc::vec::Vec;
 
 #[test]
+fn set_data_dim1_empty() {
+    let m = Model::new();
+
+    let i = m.set();
+    let j = set_of(i);
+
+    let dj = j.data_empty();
+
+    let set_depths = SetDepths::new([i.core(), j.core(), m.set().core()]);
+    let depth_i = Depth::zero();
+    let mut index_values = IndexValues::new(Depth::zero().next().next().next());
+
+    index_values[depth_i] = 0;
+    let values: Vec<_> = dj.elements(&set_depths, &index_values).collect();
+    assert_eq!(values, vec![]);
+}
+
+#[test]
 fn set_data_dim1_jagged() {
     let m = Model::new();
 
