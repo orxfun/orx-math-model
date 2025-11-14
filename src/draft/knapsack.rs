@@ -41,6 +41,10 @@ impl Par1 for Value {
 
 fn model() {
     let i = Items;
-    let weight = Weight;
-    let value = Value;
+    let weight = ParRef::<Weight>::new();
+    let value = ParRef::<Value>::new();
+
+    let w = weight;
+
+    let x = weight[i];
 }

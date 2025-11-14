@@ -1,4 +1,4 @@
-pub trait Set {
+pub trait Set: Clone + Copy {
     type Key;
     type Elem;
 }
