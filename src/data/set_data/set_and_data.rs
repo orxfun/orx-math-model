@@ -4,7 +4,7 @@ use crate::{
 };
 use alloc::boxed::Box;
 
-pub trait SetAndData<'m> {
+pub trait SetData<'m> {
     fn set(&self) -> SetCore<'m>;
 
     fn elements(

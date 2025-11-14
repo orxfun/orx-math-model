@@ -1,21 +1,21 @@
-use crate::data::par_data::ParAndData;
+use crate::data::par_data::ParData;
 use crate::symbols::{ParCoreMap, SetCoreMap};
-use crate::{Model, SetAndData};
+use crate::{Model, SetData};
 use alloc::boxed::Box;
 
 // TODO: temporary allow
 #[allow(dead_code)]
 pub struct Data<'m> {
     model: &'m Model,
-    sets: SetCoreMap<'m, Box<dyn SetAndData<'m> + 'm>>,
-    pars: ParCoreMap<'m, Box<dyn ParAndData<'m> + 'm>>,
+    sets: SetCoreMap<'m, Box<dyn SetData<'m> + 'm>>,
+    pars: ParCoreMap<'m, Box<dyn ParData<'m> + 'm>>,
 }
 
 impl<'m> Data<'m> {
     pub(crate) fn new(
         model: &'m Model,
-        sets: SetCoreMap<'m, Box<dyn SetAndData<'m> + 'm>>,
-        pars: ParCoreMap<'m, Box<dyn ParAndData<'m> + 'm>>,
+        sets: SetCoreMap<'m, Box<dyn SetData<'m> + 'm>>,
+        pars: ParCoreMap<'m, Box<dyn ParData<'m> + 'm>>,
     ) -> Self {
         Self { model, sets, pars }
     }

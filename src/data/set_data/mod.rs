@@ -8,5 +8,5 @@ mod set_data_collection;
 
 pub use fun_set_data::FunSetAndData;
 pub use indices::IndexValuesIter;
-pub use set_and_data::SetAndData;
+pub use set_and_data::SetData;
 pub use set_data_collection::SetDataCollection;

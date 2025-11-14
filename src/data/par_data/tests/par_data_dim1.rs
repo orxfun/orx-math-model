@@ -1,4 +1,4 @@
-use crate::data::par_data::par_and_data::ParAndData;
+use crate::data::par_data::par_and_data::ParData;
 use crate::Model;
 use alloc::vec;
 use std::collections::HashMap;

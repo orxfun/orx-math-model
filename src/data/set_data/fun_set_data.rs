@@ -1,6 +1,6 @@
 use crate::data::set_data::indices::{IndexValues, IndexValuesIter, SetDepths};
 use crate::symbols::sets::SetCore;
-use crate::SetAndData;
+use crate::SetData;
 use alloc::boxed::Box;
 use orx_self_or::SoR;
 
@@ -27,7 +27,7 @@ where
     }
 }
 
-impl<'d, 'm, Data, I, T, F> SetAndData<'m> for FunSetAndData<'d, 'm, Data, I, T, F>
+impl<'d, 'm, Data, I, T, F> SetData<'m> for FunSetAndData<'d, 'm, Data, I, T, F>
 where
     I: IntoIterator<Item = T>,
     T: SoR<usize>,
