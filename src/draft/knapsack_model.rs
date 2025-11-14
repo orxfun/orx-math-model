@@ -1,14 +1,14 @@
 use crate::draft::par::*;
 use crate::draft::set::*;
 
-struct Item {
-    name: &'static str,
-    weight: u64,
-    value: f32,
+pub struct Item {
+    pub name: &'static str,
+    pub weight: u64,
+    pub value: f32,
 }
 
 #[derive(Clone, Copy)]
-struct Items;
+pub struct Items;
 impl Set for Items {
     type Key = &'static str;
     type Elem = Item;
@@ -16,7 +16,7 @@ impl Set for Items {
 impl Set0 for Items {}
 
 #[derive(Clone, Copy)]
-struct Weight;
+pub struct Weight;
 impl Par for Weight {
     type Value = u64;
 }
@@ -28,7 +28,7 @@ impl Par1 for Weight {
 }
 
 #[derive(Clone, Copy)]
-struct Value;
+pub struct Value;
 impl Par for Value {
     type Value = f32;
 }
@@ -47,4 +47,5 @@ fn model() {
     let w = weight;
 
     let x = weight[i];
+    let y = value[i];
 }
