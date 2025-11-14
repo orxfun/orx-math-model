@@ -1,4 +1,5 @@
 use orx_math_model::*;
+use orx_self_or::SoR;
 use std::collections::HashMap;
 
 // model
@@ -40,7 +41,7 @@ impl Mcfp {
     }
 
     pub fn build_data<'m>(&'m self, data: &'m impl McfpData) -> Data<'m> {
-        let (i, j, k) = (data.i(self.i()), data.j(self.j()), data.k(self.k()));
+        let (i, j, k) = (data.ii(self.i()), data.jj(self.j()), data.kk(self.k()));
         let (c, b) = (data.c(self), data.b(self));
         let builder = self.0.data_builder().sets((i, j, k)).pars((c, b));
         builder.finish().unwrap()
@@ -51,11 +52,18 @@ impl Mcfp {
 
 trait McfpData {
     // sets
-    fn j<'m>(&'m self, j: Set<'m, 0>) -> impl SetData<'m, 0>;
 
-    fn k<'m>(&'m self, k: Set<'m, 1>) -> impl SetData<'m, 1>;
+    fn j<'m>(&'m self) -> impl IntoIterator<Item = impl SoR<usize>>;
 
-    fn i<'m>(&'m self, i: Set<'m, 1>) -> impl SetData<'m, 1>;
+    fn k<'m>(&'m self, j: usize) -> impl IntoIterator<Item = impl SoR<usize>>;
+
+    fn i<'m>(&'m self, j: usize) -> impl IntoIterator<Item = impl SoR<usize>>;
+
+    fn jj<'m>(&'m self, j: Set<'m, 0>) -> impl SetData<'m, 0>;
+
+    fn kk<'m>(&'m self, k: Set<'m, 1>) -> impl SetData<'m, 1>;
+
+    fn ii<'m>(&'m self, i: Set<'m, 1>) -> impl SetData<'m, 1>;
 
     // pars
 
@@ -77,15 +85,27 @@ struct McfpData1 {
 }
 
 impl McfpData for McfpData1 {
-    fn j<'m>(&'m self, j: Set<'m, 0>) -> impl SetData<'m, 0> {
+    fn j<'m>(&'m self) -> impl IntoIterator<Item = impl SoR<usize>> {
+        0..self.in_nodes.len()
+    }
+
+    fn k<'m>(&'m self, j: usize) -> impl IntoIterator<Item = impl SoR<usize>> {
+        self.out_nodes[j].iter().map(|(head, _)| *head)
+    }
+
+    fn i<'m>(&'m self, j: usize) -> impl IntoIterator<Item = impl SoR<usize>> {
+        &self.in_nodes[j]
+    }
+
+    fn jj<'m>(&'m self, j: Set<'m, 0>) -> impl SetData<'m, 0> {
         j.data(self, |d| 0..d.in_nodes.len())
     }
 
-    fn k<'m>(&'m self, k: Set<'m, 1>) -> impl SetData<'m, 1> {
-        k.data(self, |d, k| d.out_nodes[k].iter().map(|(head, _)| *head))
+    fn kk<'m>(&'m self, k: Set<'m, 1>) -> impl SetData<'m, 1> {
+        k.data(self, |d, j| d.out_nodes[j].iter().map(|(head, _)| *head))
     }
 
-    fn i<'m>(&'m self, i: Set<'m, 1>) -> impl SetData<'m, 1> {
+    fn ii<'m>(&'m self, i: Set<'m, 1>) -> impl SetData<'m, 1> {
         i.data(self, |d, j| &d.in_nodes[j])
     }
 
@@ -111,15 +131,27 @@ struct McfpData2 {
 }
 
 impl McfpData for McfpData2 {
-    fn j<'m>(&'m self, j: Set<'m, 0>) -> impl SetData<'m, 0> {
+    fn j<'m>(&'m self) -> impl IntoIterator<Item = impl SoR<usize>> {
+        0..self.nodes.len()
+    }
+
+    fn k<'m>(&'m self, j: usize) -> impl IntoIterator<Item = impl SoR<usize>> {
+        &self.nodes[j].out_nodes
+    }
+
+    fn i<'m>(&'m self, j: usize) -> impl IntoIterator<Item = impl SoR<usize>> {
+        &self.nodes[j].in_nodes
+    }
+
+    fn jj<'m>(&'m self, j: Set<'m, 0>) -> impl SetData<'m, 0> {
         j.data(self, |d| 0..d.nodes.len())
     }
 
-    fn k<'m>(&'m self, k: Set<'m, 1>) -> impl SetData<'m, 1> {
-        k.data(self, |d, k| &d.nodes[k].out_nodes)
+    fn kk<'m>(&'m self, k: Set<'m, 1>) -> impl SetData<'m, 1> {
+        k.data(self, |d, j| &d.nodes[j].out_nodes)
     }
 
-    fn i<'m>(&'m self, i: Set<'m, 1>) -> impl SetData<'m, 1> {
+    fn ii<'m>(&'m self, i: Set<'m, 1>) -> impl SetData<'m, 1> {
         i.data(self, |d, j| &d.nodes[j].in_nodes)
     }
 
