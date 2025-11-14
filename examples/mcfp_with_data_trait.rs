@@ -56,11 +56,11 @@ impl Mcfp {
 trait McfpData {
     // sets
 
-    fn j<'m>(&'m self) -> impl IntoIterator<Item = impl SoR<usize>>;
+    fn j(&self) -> impl IntoIterator<Item = impl SoR<usize>>;
 
-    fn k<'m>(&'m self, j: usize) -> impl IntoIterator<Item = impl SoR<usize>>;
+    fn k(&self, j: usize) -> impl IntoIterator<Item = impl SoR<usize>>;
 
-    fn i<'m>(&'m self, j: usize) -> impl IntoIterator<Item = impl SoR<usize>>;
+    fn i(&self, j: usize) -> impl IntoIterator<Item = impl SoR<usize>>;
 
     // pars
 
@@ -82,15 +82,15 @@ struct McfpData1 {
 }
 
 impl McfpData for McfpData1 {
-    fn j<'m>(&'m self) -> impl IntoIterator<Item = impl SoR<usize>> {
+    fn j(&self) -> impl IntoIterator<Item = impl SoR<usize>> {
         0..self.in_nodes.len()
     }
 
-    fn k<'m>(&'m self, j: usize) -> impl IntoIterator<Item = impl SoR<usize>> {
+    fn k(&self, j: usize) -> impl IntoIterator<Item = impl SoR<usize>> {
         self.out_nodes[j].iter().map(|(head, _)| *head)
     }
 
-    fn i<'m>(&'m self, j: usize) -> impl IntoIterator<Item = impl SoR<usize>> {
+    fn i(&self, j: usize) -> impl IntoIterator<Item = impl SoR<usize>> {
         &self.in_nodes[j]
     }
 
@@ -116,15 +116,15 @@ struct McfpData2 {
 }
 
 impl McfpData for McfpData2 {
-    fn j<'m>(&'m self) -> impl IntoIterator<Item = impl SoR<usize>> {
+    fn j(&self) -> impl IntoIterator<Item = impl SoR<usize>> {
         0..self.nodes.len()
     }
 
-    fn k<'m>(&'m self, j: usize) -> impl IntoIterator<Item = impl SoR<usize>> {
+    fn k(&self, j: usize) -> impl IntoIterator<Item = impl SoR<usize>> {
         &self.nodes[j].out_nodes
     }
 
-    fn i<'m>(&'m self, j: usize) -> impl IntoIterator<Item = impl SoR<usize>> {
+    fn i(&self, j: usize) -> impl IntoIterator<Item = impl SoR<usize>> {
         &self.nodes[j].in_nodes
     }
 
