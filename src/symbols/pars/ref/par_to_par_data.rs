@@ -6,7 +6,7 @@ impl<'m> Par<'m, 0> {
         self,
         data: &'d Data,
         fun: F,
-    ) -> FunParData<'d, 'm, Data, N, impl Fn(&'d Data, &[usize]) -> N>
+    ) -> FunParData<'d, 'm, 0, Data, N, impl Fn(&'d Data, &[usize]) -> N>
     where
         N: Number,
         F: Fn(&'d Data) -> N,
@@ -27,7 +27,7 @@ impl<'m> Par<'m, 1> {
         self,
         data: &'d Data,
         fun: F,
-    ) -> FunParData<'d, 'm, Data, N, impl Fn(&'d Data, &[usize]) -> N>
+    ) -> FunParData<'d, 'm, 1, Data, N, impl Fn(&'d Data, &[usize]) -> N>
     where
         N: Number,
         F: Fn(&'d Data, usize) -> N,
@@ -49,7 +49,7 @@ impl<'m> Par<'m, 2> {
         self,
         data: &'d Data,
         fun: F,
-    ) -> FunParData<'d, 'm, Data, N, impl Fn(&'d Data, &[usize]) -> N>
+    ) -> FunParData<'d, 'm, 2, Data, N, impl Fn(&'d Data, &[usize]) -> N>
     where
         N: Number,
         F: Fn(&'d Data, usize, usize) -> N,
@@ -72,7 +72,7 @@ impl<'m> Par<'m, 3> {
         self,
         data: &'d Data,
         fun: F,
-    ) -> FunParData<'d, 'm, Data, N, impl Fn(&'d Data, &[usize]) -> N>
+    ) -> FunParData<'d, 'm, 3, Data, N, impl Fn(&'d Data, &[usize]) -> N>
     where
         N: Number,
         F: Fn(&'d Data, usize, usize, usize) -> N,
@@ -96,7 +96,7 @@ impl<'m> Par<'m, 4> {
         self,
         data: &'d Data,
         fun: F,
-    ) -> FunParData<'d, 'm, Data, N, impl Fn(&'d Data, &[usize]) -> N>
+    ) -> FunParData<'d, 'm, 4, Data, N, impl Fn(&'d Data, &[usize]) -> N>
     where
         N: Number,
         F: Fn(&'d Data, usize, usize, usize, usize) -> N,
