@@ -66,6 +66,8 @@ trait McfpData {
 
     fn c(&self, j: usize, k: usize) -> impl Number;
 
+    fn b(&self, j: usize, k: usize) -> impl Number;
+
     fn cc<'m>(&'m self, m: &'m Mcfp) -> impl ParData<'m, 2>;
 
     fn bb<'m>(&'m self, m: &'m Mcfp) -> impl ParData<'m, 2>;
@@ -98,6 +100,10 @@ impl McfpData for McfpData1 {
 
     fn c(&self, j: usize, k: usize) -> impl Number {
         self.out_nodes[j][&k].cost
+    }
+
+    fn b(&self, j: usize, k: usize) -> impl Number {
+        self.out_nodes[j][&k].cap
     }
 
     fn cc<'m>(&'m self, m: &'m Mcfp) -> impl ParData<'m, 2> {
@@ -136,6 +142,10 @@ impl McfpData for McfpData2 {
 
     fn c(&self, j: usize, k: usize) -> impl Number {
         self.nodes[j].edges[k].cost
+    }
+
+    fn b(&self, j: usize, k: usize) -> impl Number {
+        self.nodes[j].edges[k].cap
     }
 
     fn cc<'m>(&'m self, m: &'m Mcfp) -> impl ParData<'m, 2> {
