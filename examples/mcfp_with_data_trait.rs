@@ -1,4 +1,5 @@
 use orx_math_model::*;
+use orx_self_or::SoR;
 use std::collections::HashMap;
 
 // model
@@ -23,7 +24,7 @@ impl Mcfp {
         self.0.set_by_key("i").unwrap()
     }
 
-    pub fn j(&self) -> Set<'_> {
+    pub fn j(&self) -> Set<'_, 0> {
         self.0.set_by_key("j").unwrap()
     }
 
@@ -38,9 +39,46 @@ impl Mcfp {
     pub fn b(&self) -> Par<'_, 2> {
         self.0.par_by_key("b").unwrap()
     }
+
+    pub fn build_data<'m, D: McfpData>(&'m self, data: &'m D) -> Data<'m> {
+        let dj = self.j().data(data, D::j);
+        let di = self.i().data(data, D::i);
+        let dk = self.k().data(data, D::k);
+
+        let dc = self.c().data(data, D::c);
+        let db = self.b().data(data, D::b);
+
+        let builder = self.0.data_builder();
+        let builder = builder.sets((di, dj, dk));
+        let builder = builder.pars((dc, db));
+        builder.finish().unwrap()
+    }
 }
 
-// data
+// data trait
+
+trait McfpData {
+    // sets
+
+    /// Set of all nodes
+    fn j(&self) -> impl IntoIterator<Item = impl SoR<usize>>;
+
+    /// Set of nodes which are heads of the edges emanating from node `j`.
+    fn k(&self, j: usize) -> impl IntoIterator<Item = impl SoR<usize>>;
+
+    /// Set of nodes which are tails of the edges incoming into node `j`.
+    fn i(&self, j: usize) -> impl IntoIterator<Item = impl SoR<usize>>;
+
+    // pars
+
+    /// Cost of transporting one unit on edge `(j, k)`.
+    fn c(&self, j: usize, k: usize) -> impl Number;
+
+    /// Capacity of edge `(j, k)`.
+    fn b(&self, j: usize, k: usize) -> impl Number;
+}
+
+// # 1: data implementation
 
 struct Edge {
     cost: u64,
@@ -52,19 +90,25 @@ struct McfpData1 {
     out_nodes: Vec<HashMap<usize, Edge>>,
 }
 
-impl McfpData1 {
-    fn data<'m>(&'m self, mcfp: &'m Mcfp) -> Data<'m> {
-        let (i, j, k) = (mcfp.i(), mcfp.j(), mcfp.k());
-        let dj = j.data(self, |d| 0..d.in_nodes.len());
-        let di = i.data(self, |d, j| &d.in_nodes[j]);
-        let dk = k.data(self, |d, k| d.out_nodes[k].iter().map(|(head, _)| *head));
+impl McfpData for McfpData1 {
+    fn j(&self) -> impl IntoIterator<Item = impl SoR<usize>> {
+        0..self.in_nodes.len()
+    }
 
-        let (c, b) = (mcfp.c(), mcfp.b());
-        let dc = c.data(self, |d, j, k| d.out_nodes[j][&k].cost);
-        let db = b.data(self, |d, j, k| d.out_nodes[j][&k].cap);
+    fn k(&self, j: usize) -> impl IntoIterator<Item = impl SoR<usize>> {
+        self.out_nodes[j].iter().map(|(head, _)| *head)
+    }
 
-        let builder = mcfp.0.data_builder().sets((di, dj, dk)).pars((dc, db));
-        builder.finish().unwrap()
+    fn i(&self, j: usize) -> impl IntoIterator<Item = impl SoR<usize>> {
+        &self.in_nodes[j]
+    }
+
+    fn c(&self, j: usize, k: usize) -> impl Number {
+        self.out_nodes[j][&k].cost
+    }
+
+    fn b(&self, j: usize, k: usize) -> impl Number {
+        self.out_nodes[j][&k].cap
     }
 }
 
@@ -80,19 +124,25 @@ struct McfpData2 {
     nodes: Vec<Node>,
 }
 
-impl McfpData2 {
-    fn data<'m>(&'m self, mcfp: &'m Mcfp) -> Data<'m> {
-        let (i, j, k) = (mcfp.i(), mcfp.j(), mcfp.k());
-        let dj = j.data(self, |d| 0..d.nodes.len());
-        let di = i.data(self, |d, j| &d.nodes[j].in_nodes);
-        let dk = k.data(self, |d, k| &d.nodes[k].out_nodes);
+impl McfpData for McfpData2 {
+    fn j(&self) -> impl IntoIterator<Item = impl SoR<usize>> {
+        0..self.nodes.len()
+    }
 
-        let (c, b) = (mcfp.c(), mcfp.b());
-        let dc = c.data(self, |d, j, k| d.nodes[j].edges[k].cost);
-        let db = b.data(self, |d, j, k| d.nodes[j].edges[k].cap);
+    fn k(&self, j: usize) -> impl IntoIterator<Item = impl SoR<usize>> {
+        &self.nodes[j].out_nodes
+    }
 
-        let builder = mcfp.0.data_builder().sets((di, dj, dk)).pars((dc, db));
-        builder.finish().unwrap()
+    fn i(&self, j: usize) -> impl IntoIterator<Item = impl SoR<usize>> {
+        &self.nodes[j].in_nodes
+    }
+
+    fn c(&self, j: usize, k: usize) -> impl Number {
+        self.nodes[j].edges[k].cost
+    }
+
+    fn b(&self, j: usize, k: usize) -> impl Number {
+        self.nodes[j].edges[k].cap
     }
 }
 
@@ -112,7 +162,7 @@ fn main() {
             [].into_iter().collect(),
         ],
     };
-    let data = data_source.data(&mcfp);
+    let data = mcfp.build_data(&data_source);
 
     let inf_edge = || Edge {
         cost: u64::MAX,
@@ -153,5 +203,5 @@ fn main() {
             },
         ],
     };
-    let data = data_source.data(&mcfp);
+    let data = mcfp.build_data(&data_source);
 }

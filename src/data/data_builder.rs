@@ -1,8 +1,9 @@
 use crate::data::data::Data;
-use crate::data::par_data::{ParAndData, ParDataCollection};
+use crate::data::par_data::{ParDataCollection, ParDataCore};
 use crate::data::set_data::SetDataCollection;
+use crate::data::SetDataCore;
 use crate::symbols::{ParCoreMap, SetCoreMap, Symbol};
-use crate::{Model, SetAndData};
+use crate::Model;
 use alloc::boxed::Box;
 use alloc::format;
 use alloc::string::String;
@@ -11,8 +12,8 @@ use orx_iterable::Collection;
 
 pub struct DataBuilder<'m> {
     model: &'m Model,
-    sets: Vec<Box<dyn SetAndData<'m> + 'm>>,
-    pars: Vec<Box<dyn ParAndData<'m> + 'm>>,
+    sets: Vec<Box<dyn SetDataCore<'m> + 'm>>,
+    pars: Vec<Box<dyn ParDataCore<'m> + 'm>>,
 }
 
 impl<'m> DataBuilder<'m> {

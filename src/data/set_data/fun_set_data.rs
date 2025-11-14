@@ -1,11 +1,13 @@
 use crate::data::set_data::indices::{IndexValues, IndexValuesIter, SetDepths};
+use crate::data::set_data::set_and_data::SetData;
+use crate::data::SetDataCore;
 use crate::symbols::sets::SetCore;
-use crate::SetAndData;
+use crate::Set;
 use alloc::boxed::Box;
 use orx_self_or::SoR;
 
 #[derive(Debug)]
-pub struct FunSetAndData<'d, 'm, Data, I, T, F>
+pub struct FunSetAndData<'d, 'm, const N: usize, Data, I, T, F>
 where
     I: IntoIterator<Item = T>,
     T: SoR<usize>,
@@ -16,7 +18,7 @@ where
     fun: F,
 }
 
-impl<'d, 'm, Data, I, T, F> FunSetAndData<'d, 'm, Data, I, T, F>
+impl<'d, 'm, const N: usize, Data, I, T, F> FunSetAndData<'d, 'm, N, Data, I, T, F>
 where
     I: IntoIterator<Item = T>,
     T: SoR<usize>,
@@ -27,7 +29,8 @@ where
     }
 }
 
-impl<'d, 'm, Data, I, T, F> SetAndData<'m> for FunSetAndData<'d, 'm, Data, I, T, F>
+impl<'d, 'm, const N: usize, Data, I, T, F> SetDataCore<'m>
+    for FunSetAndData<'d, 'm, N, Data, I, T, F>
 where
     I: IntoIterator<Item = T>,
     T: SoR<usize>,
@@ -48,5 +51,17 @@ where
         let elements = (self.fun)(self.data, indices);
         let elements = elements.into_iter().map(|x| *x.get_ref());
         Box::new(elements)
+    }
+}
+
+impl<'d, 'm, const N: usize, Data, I, T, F> SetData<'m, N>
+    for FunSetAndData<'d, 'm, N, Data, I, T, F>
+where
+    I: IntoIterator<Item = T>,
+    T: SoR<usize>,
+    F: Fn(&'d Data, IndexValuesIter<'_>) -> I,
+{
+    fn set(&self) -> Set<'m, N> {
+        self.set.into()
     }
 }
