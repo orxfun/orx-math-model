@@ -45,8 +45,10 @@ impl Mcfp {
         let di = self.i().data(data, D::i);
         let dk = self.k().data(data, D::k);
 
-        let (c, b) = (data.cc(self), data.bb(self));
-        let builder = self.0.data_builder().sets((di, dj, dk)).pars((c, b));
+        let dc = self.c().data(data, D::c);
+        let db = self.b().data(data, D::b);
+
+        let builder = self.0.data_builder().sets((di, dj, dk)).pars((dc, db));
         builder.finish().unwrap()
     }
 }
