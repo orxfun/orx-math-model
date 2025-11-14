@@ -1,5 +1,5 @@
 use crate::data::data::Data;
-use crate::data::par_data::{ParData, ParDataCollection};
+use crate::data::par_data::{ParDataCollection, ParDataCore};
 use crate::data::set_data::SetDataCollection;
 use crate::data::SetDataCore;
 use crate::symbols::{ParCoreMap, SetCoreMap, Symbol};
@@ -13,7 +13,7 @@ use orx_iterable::Collection;
 pub struct DataBuilder<'m> {
     model: &'m Model,
     sets: Vec<Box<dyn SetDataCore<'m> + 'm>>,
-    pars: Vec<Box<dyn ParData<'m> + 'm>>,
+    pars: Vec<Box<dyn ParDataCore<'m> + 'm>>,
 }
 
 impl<'m> DataBuilder<'m> {

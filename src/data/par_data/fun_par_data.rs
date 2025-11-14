@@ -1,5 +1,5 @@
 use crate::data::number::Number;
-use crate::data::par_data::par_and_data::ParData;
+use crate::data::par_data::par_and_data::ParDataCore;
 use crate::symbols::pars::ParCore;
 use core::marker::PhantomData;
 
@@ -29,7 +29,7 @@ where
     }
 }
 
-impl<'d, 'm, Data, N, F> ParData<'m> for FunParData<'d, 'm, Data, N, F>
+impl<'d, 'm, Data, N, F> ParDataCore<'m> for FunParData<'d, 'm, Data, N, F>
 where
     N: Number,
     F: Fn(&'d Data, &[usize]) -> N,
