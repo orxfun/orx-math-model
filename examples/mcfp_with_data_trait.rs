@@ -40,7 +40,7 @@ impl Mcfp {
     }
 
     pub fn build_data<'m>(&'m self, data: &'m impl McfpData) -> Data<'m> {
-        let (i, j, k) = (data.i(self), data.j(self), data.k(self));
+        let (i, j, k) = (data.i(self.i()), data.j(self.j()), data.k(self.k()));
         let (c, b) = (data.c(self), data.b(self));
         let builder = self.0.data_builder().sets((i, j, k)).pars((c, b));
         builder.finish().unwrap()
@@ -51,11 +51,11 @@ impl Mcfp {
 
 trait McfpData {
     // sets
-    fn j<'m>(&'m self, m: &'m Mcfp) -> impl SetData<'m, 0>;
+    fn j<'m>(&'m self, j: Set<'m, 0>) -> impl SetData<'m, 0>;
 
-    fn k<'m>(&'m self, m: &'m Mcfp) -> impl SetData<'m, 1>;
+    fn k<'m>(&'m self, k: Set<'m, 1>) -> impl SetData<'m, 1>;
 
-    fn i<'m>(&'m self, m: &'m Mcfp) -> impl SetData<'m, 1>;
+    fn i<'m>(&'m self, i: Set<'m, 1>) -> impl SetData<'m, 1>;
 
     // pars
 
@@ -77,17 +77,16 @@ struct McfpData1 {
 }
 
 impl McfpData for McfpData1 {
-    fn j<'m>(&'m self, m: &'m Mcfp) -> impl SetData<'m, 0> {
-        m.j().data(self, |d| 0..d.in_nodes.len())
+    fn j<'m>(&'m self, j: Set<'m, 0>) -> impl SetData<'m, 0> {
+        j.data(self, |d| 0..d.in_nodes.len())
     }
 
-    fn k<'m>(&'m self, m: &'m Mcfp) -> impl SetData<'m, 1> {
-        m.k()
-            .data(self, |d, k| d.out_nodes[k].iter().map(|(head, _)| *head))
+    fn k<'m>(&'m self, k: Set<'m, 1>) -> impl SetData<'m, 1> {
+        k.data(self, |d, k| d.out_nodes[k].iter().map(|(head, _)| *head))
     }
 
-    fn i<'m>(&'m self, m: &'m Mcfp) -> impl SetData<'m, 1> {
-        m.i().data(self, |d, j| &d.in_nodes[j])
+    fn i<'m>(&'m self, i: Set<'m, 1>) -> impl SetData<'m, 1> {
+        i.data(self, |d, j| &d.in_nodes[j])
     }
 
     fn c<'m>(&'m self, m: &'m Mcfp) -> impl ParData<'m> {
@@ -112,16 +111,16 @@ struct McfpData2 {
 }
 
 impl McfpData for McfpData2 {
-    fn j<'m>(&'m self, m: &'m Mcfp) -> impl SetData<'m, 0> {
-        m.j().data(self, |d| 0..d.nodes.len())
+    fn j<'m>(&'m self, j: Set<'m, 0>) -> impl SetData<'m, 0> {
+        j.data(self, |d| 0..d.nodes.len())
     }
 
-    fn k<'m>(&'m self, m: &'m Mcfp) -> impl SetData<'m, 1> {
-        m.k().data(self, |d, k| &d.nodes[k].out_nodes)
+    fn k<'m>(&'m self, k: Set<'m, 1>) -> impl SetData<'m, 1> {
+        k.data(self, |d, k| &d.nodes[k].out_nodes)
     }
 
-    fn i<'m>(&'m self, m: &'m Mcfp) -> impl SetData<'m, 1> {
-        m.i().data(self, |d, j| &d.nodes[j].in_nodes)
+    fn i<'m>(&'m self, i: Set<'m, 1>) -> impl SetData<'m, 1> {
+        i.data(self, |d, j| &d.nodes[j].in_nodes)
     }
 
     fn c<'m>(&'m self, m: &'m Mcfp) -> impl ParData<'m> {
