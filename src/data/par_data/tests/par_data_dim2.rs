@@ -4,6 +4,18 @@ use alloc::vec;
 use std::collections::HashMap;
 
 #[test]
+fn par_data_dim2_zero() {
+    let m = Model::new();
+
+    let i = m.set();
+    let j = m.set_of(i);
+    let s = m.par_of((i, j));
+
+    let ds = s.data_zero();
+    assert_eq!(ds.value(&[3, 1]), 0.0);
+}
+
+#[test]
 fn par_data_dim2_independent() {
     let m = Model::new();
 
