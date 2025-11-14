@@ -45,7 +45,7 @@ impl Mcfp {
         let di = self.i().data(data, D::i);
         let dk = self.k().data(data, D::k);
 
-        let (c, b) = (data.c(self), data.b(self));
+        let (c, b) = (data.cc(self), data.bb(self));
         let builder = self.0.data_builder().sets((di, dj, dk)).pars((c, b));
         builder.finish().unwrap()
     }
@@ -64,9 +64,9 @@ trait McfpData {
 
     // pars
 
-    fn c<'m>(&'m self, m: &'m Mcfp) -> impl ParData<'m, 2>;
+    fn cc<'m>(&'m self, m: &'m Mcfp) -> impl ParData<'m, 2>;
 
-    fn b<'m>(&'m self, m: &'m Mcfp) -> impl ParData<'m, 2>;
+    fn bb<'m>(&'m self, m: &'m Mcfp) -> impl ParData<'m, 2>;
 }
 
 // # 1: data implementation
@@ -94,11 +94,11 @@ impl McfpData for McfpData1 {
         &self.in_nodes[j]
     }
 
-    fn c<'m>(&'m self, m: &'m Mcfp) -> impl ParData<'m, 2> {
+    fn cc<'m>(&'m self, m: &'m Mcfp) -> impl ParData<'m, 2> {
         m.c().data(self, |d, j, k| d.out_nodes[j][&k].cost)
     }
 
-    fn b<'m>(&'m self, m: &'m Mcfp) -> impl ParData<'m, 2> {
+    fn bb<'m>(&'m self, m: &'m Mcfp) -> impl ParData<'m, 2> {
         m.b().data(self, |d, j, k| d.out_nodes[j][&k].cap)
     }
 }
@@ -128,11 +128,11 @@ impl McfpData for McfpData2 {
         &self.nodes[j].in_nodes
     }
 
-    fn c<'m>(&'m self, m: &'m Mcfp) -> impl ParData<'m, 2> {
+    fn cc<'m>(&'m self, m: &'m Mcfp) -> impl ParData<'m, 2> {
         m.c().data(self, |d, j, k| d.nodes[j].edges[k].cost)
     }
 
-    fn b<'m>(&'m self, m: &'m Mcfp) -> impl ParData<'m, 2> {
+    fn bb<'m>(&'m self, m: &'m Mcfp) -> impl ParData<'m, 2> {
         m.b().data(self, |d, j, k| d.nodes[j].edges[k].cap)
     }
 }
