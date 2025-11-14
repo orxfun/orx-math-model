@@ -1,8 +1,9 @@
 use crate::data::data::Data;
 use crate::data::par_data::{ParData, ParDataCollection};
 use crate::data::set_data::SetDataCollection;
+use crate::data::SetDataCore;
 use crate::symbols::{ParCoreMap, SetCoreMap, Symbol};
-use crate::{Model, SetDataCore};
+use crate::Model;
 use alloc::boxed::Box;
 use alloc::format;
 use alloc::string::String;

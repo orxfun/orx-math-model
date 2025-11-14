@@ -1,4 +1,4 @@
-use crate::SetDataCore;
+use crate::data::SetDataCore;
 use alloc::boxed::Box;
 
 pub trait SetDataCollection<'m> {

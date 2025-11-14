@@ -1,7 +1,8 @@
 use crate::data::set_data::indices::{IndexValues, IndexValuesIter, SetDepths};
 use crate::data::set_data::set_and_data::SetData;
+use crate::data::SetDataCore;
 use crate::symbols::sets::SetCore;
-use crate::{Set, SetDataCore};
+use crate::Set;
 use alloc::boxed::Box;
 use orx_self_or::SoR;
 

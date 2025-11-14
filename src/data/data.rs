@@ -1,6 +1,7 @@
 use crate::data::par_data::ParData;
+use crate::data::SetDataCore;
 use crate::symbols::{ParCoreMap, SetCoreMap};
-use crate::{Model, SetDataCore};
+use crate::Model;
 use alloc::boxed::Box;
 
 // TODO: temporary allow

@@ -51,11 +51,11 @@ impl Mcfp {
 
 trait McfpData {
     // sets
-    fn j<'m>(&'m self, m: &'m Mcfp) -> impl SetDataCore<'m>;
+    fn j<'m>(&'m self, m: &'m Mcfp) -> impl SetData<'m, 0>;
 
-    fn k<'m>(&'m self, m: &'m Mcfp) -> impl SetDataCore<'m>;
+    fn k<'m>(&'m self, m: &'m Mcfp) -> impl SetData<'m, 1>;
 
-    fn i<'m>(&'m self, m: &'m Mcfp) -> impl SetDataCore<'m>;
+    fn i<'m>(&'m self, m: &'m Mcfp) -> impl SetData<'m, 1>;
 
     // pars
 
@@ -77,16 +77,16 @@ struct McfpData1 {
 }
 
 impl McfpData for McfpData1 {
-    fn j<'m>(&'m self, m: &'m Mcfp) -> impl SetDataCore<'m> {
+    fn j<'m>(&'m self, m: &'m Mcfp) -> impl SetData<'m, 0> {
         m.j().data(self, |d| 0..d.in_nodes.len())
     }
 
-    fn k<'m>(&'m self, m: &'m Mcfp) -> impl SetDataCore<'m> {
+    fn k<'m>(&'m self, m: &'m Mcfp) -> impl SetData<'m, 1> {
         m.k()
             .data(self, |d, k| d.out_nodes[k].iter().map(|(head, _)| *head))
     }
 
-    fn i<'m>(&'m self, m: &'m Mcfp) -> impl SetDataCore<'m> {
+    fn i<'m>(&'m self, m: &'m Mcfp) -> impl SetData<'m, 1> {
         m.i().data(self, |d, j| &d.in_nodes[j])
     }
 
@@ -112,15 +112,15 @@ struct McfpData2 {
 }
 
 impl McfpData for McfpData2 {
-    fn j<'m>(&'m self, m: &'m Mcfp) -> impl SetDataCore<'m> {
+    fn j<'m>(&'m self, m: &'m Mcfp) -> impl SetData<'m, 0> {
         m.j().data(self, |d| 0..d.nodes.len())
     }
 
-    fn k<'m>(&'m self, m: &'m Mcfp) -> impl SetDataCore<'m> {
+    fn k<'m>(&'m self, m: &'m Mcfp) -> impl SetData<'m, 1> {
         m.k().data(self, |d, k| &d.nodes[k].out_nodes)
     }
 
-    fn i<'m>(&'m self, m: &'m Mcfp) -> impl SetDataCore<'m> {
+    fn i<'m>(&'m self, m: &'m Mcfp) -> impl SetData<'m, 1> {
         m.i().data(self, |d, j| &d.nodes[j].in_nodes)
     }
 
