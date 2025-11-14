@@ -48,7 +48,9 @@ impl Mcfp {
         let dc = self.c().data(data, D::c);
         let db = self.b().data(data, D::b);
 
-        let builder = self.0.data_builder().sets((di, dj, dk)).pars((dc, db));
+        let builder = self.0.data_builder();
+        let builder = builder.sets((di, dj, dk));
+        let builder = builder.pars((dc, db));
         builder.finish().unwrap()
     }
 }
@@ -69,10 +71,6 @@ trait McfpData {
     fn c(&self, j: usize, k: usize) -> impl Number;
 
     fn b(&self, j: usize, k: usize) -> impl Number;
-
-    fn cc<'m>(&'m self, m: &'m Mcfp) -> impl ParData<'m, 2>;
-
-    fn bb<'m>(&'m self, m: &'m Mcfp) -> impl ParData<'m, 2>;
 }
 
 // # 1: data implementation
@@ -107,14 +105,6 @@ impl McfpData for McfpData1 {
     fn b(&self, j: usize, k: usize) -> impl Number {
         self.out_nodes[j][&k].cap
     }
-
-    fn cc<'m>(&'m self, m: &'m Mcfp) -> impl ParData<'m, 2> {
-        m.c().data(self, |d, j, k| d.out_nodes[j][&k].cost)
-    }
-
-    fn bb<'m>(&'m self, m: &'m Mcfp) -> impl ParData<'m, 2> {
-        m.b().data(self, |d, j, k| d.out_nodes[j][&k].cap)
-    }
 }
 
 // data
@@ -148,14 +138,6 @@ impl McfpData for McfpData2 {
 
     fn b(&self, j: usize, k: usize) -> impl Number {
         self.nodes[j].edges[k].cap
-    }
-
-    fn cc<'m>(&'m self, m: &'m Mcfp) -> impl ParData<'m, 2> {
-        m.c().data(self, |d, j, k| d.nodes[j].edges[k].cost)
-    }
-
-    fn bb<'m>(&'m self, m: &'m Mcfp) -> impl ParData<'m, 2> {
-        m.b().data(self, |d, j, k| d.nodes[j].edges[k].cap)
     }
 }
 
