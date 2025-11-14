@@ -40,10 +40,13 @@ impl Mcfp {
         self.0.par_by_key("b").unwrap()
     }
 
-    pub fn build_data<'m>(&'m self, data: &'m impl McfpData) -> Data<'m> {
-        let (i, j, k) = (data.ii(self.i()), data.jj(self.j()), data.kk(self.k()));
+    pub fn build_data<'m, D: McfpData>(&'m self, data: &'m D) -> Data<'m> {
+        let dj = self.j().data(data, D::j);
+        let di = self.i().data(data, D::i);
+        let dk = self.k().data(data, D::k);
+
         let (c, b) = (data.c(self), data.b(self));
-        let builder = self.0.data_builder().sets((i, j, k)).pars((c, b));
+        let builder = self.0.data_builder().sets((di, dj, dk)).pars((c, b));
         builder.finish().unwrap()
     }
 }
