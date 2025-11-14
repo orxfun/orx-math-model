@@ -64,6 +64,8 @@ trait McfpData {
 
     // pars
 
+    fn c(&self, j: usize, k: usize) -> impl Number;
+
     fn cc<'m>(&'m self, m: &'m Mcfp) -> impl ParData<'m, 2>;
 
     fn bb<'m>(&'m self, m: &'m Mcfp) -> impl ParData<'m, 2>;
@@ -92,6 +94,10 @@ impl McfpData for McfpData1 {
 
     fn i(&self, j: usize) -> impl IntoIterator<Item = impl SoR<usize>> {
         &self.in_nodes[j]
+    }
+
+    fn c(&self, j: usize, k: usize) -> impl Number {
+        self.out_nodes[j][&k].cost
     }
 
     fn cc<'m>(&'m self, m: &'m Mcfp) -> impl ParData<'m, 2> {
@@ -126,6 +132,10 @@ impl McfpData for McfpData2 {
 
     fn i(&self, j: usize) -> impl IntoIterator<Item = impl SoR<usize>> {
         &self.nodes[j].in_nodes
+    }
+
+    fn c(&self, j: usize, k: usize) -> impl Number {
+        self.nodes[j].edges[k].cost
     }
 
     fn cc<'m>(&'m self, m: &'m Mcfp) -> impl ParData<'m, 2> {
