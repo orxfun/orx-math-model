@@ -4,6 +4,16 @@ use alloc::vec;
 use alloc::vec::Vec;
 
 #[test]
+fn par_data_dim0_zero() {
+    let m = Model::new();
+
+    let s = m.par();
+
+    let ds = s.data_zero();
+    assert_eq!(ds.value(&[]), 0.0);
+}
+
+#[test]
 fn par_data_dim0_independent() {
     let m = Model::new();
 

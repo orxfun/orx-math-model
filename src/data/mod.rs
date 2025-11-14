@@ -8,5 +8,5 @@ mod set_data;
 pub use data::Data;
 pub use data_builder::DataBuilder;
 pub use number::Number;
-pub use par_data::{FunParData, ParData};
+pub use par_data::{FunParData, ParData, ZeroPar};
 pub use set_data::{EmptySet, FunSetAndData, IndexValuesIter, SetData, SetDataCore};

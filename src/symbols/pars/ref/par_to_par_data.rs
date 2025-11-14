@@ -1,5 +1,11 @@
-use crate::data::{FunParData, Number};
+use crate::data::{FunParData, Number, ZeroPar};
 use crate::symbols::pars::{Par, ParCore};
+
+impl<'m, const N: usize> Par<'m, N> {
+    pub fn data_zero(self) -> ZeroPar<'m, N> {
+        ZeroPar::new(self)
+    }
+}
 
 impl<'m> Par<'m, 0> {
     pub fn data<'d, Data, N, F>(

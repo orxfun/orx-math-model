@@ -3,6 +3,12 @@ use crate::symbols::sets::SetCore;
 use crate::Set;
 use orx_self_or::SoR;
 
+impl<'m, const N: usize> Set<'m, N> {
+    pub fn data_empty(self) -> EmptySet<'m, N> {
+        EmptySet::new(self)
+    }
+}
+
 impl<'m> Set<'m, 0> {
     pub fn data<'d, Data, I, T>(
         self,
@@ -22,10 +28,6 @@ impl<'m> Set<'m, 0> {
         };
 
         FunSetAndData::new(set, data, fun)
-    }
-
-    pub fn data_empty(self) -> EmptySet<'m, 0> {
-        EmptySet::new(self)
     }
 }
 
@@ -50,9 +52,5 @@ impl<'m> Set<'m, 1> {
         };
 
         FunSetAndData::new(set, data, fun)
-    }
-
-    pub fn data_empty(self) -> EmptySet<'m, 1> {
-        EmptySet::new(self)
     }
 }

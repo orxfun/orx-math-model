@@ -5,6 +5,20 @@ use alloc::vec;
 use alloc::vec::Vec;
 
 #[test]
+fn set_data_dim0_empty() {
+    let m = Model::new();
+
+    let i = m.set();
+    let di = i.data_empty();
+
+    let set_depths = SetDepths::new([m.set(), i, m.set()]);
+    let index_values = IndexValues::new(Depth::zero().next().next().next());
+
+    let values: Vec<_> = di.elements(&set_depths, &index_values).collect();
+    assert_eq!(values, vec![]);
+}
+
+#[test]
 fn set_data_dim0_range() {
     let m = Model::new();
 
