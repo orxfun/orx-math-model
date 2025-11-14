@@ -4,6 +4,11 @@ use alloc::vec;
 use alloc::vec::Vec;
 
 #[test]
+fn par_data_dim0_zero() {
+    //
+}
+
+#[test]
 fn par_data_dim0_independent() {
     let m = Model::new();
 
