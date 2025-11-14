@@ -62,12 +62,6 @@ trait McfpData {
 
     fn i<'m>(&'m self, j: usize) -> impl IntoIterator<Item = impl SoR<usize>>;
 
-    fn jj<'m>(&'m self, j: Set<'m, 0>) -> impl SetData<'m, 0>;
-
-    fn kk<'m>(&'m self, k: Set<'m, 1>) -> impl SetData<'m, 1>;
-
-    fn ii<'m>(&'m self, i: Set<'m, 1>) -> impl SetData<'m, 1>;
-
     // pars
 
     fn c<'m>(&'m self, m: &'m Mcfp) -> impl ParData<'m>;
@@ -98,18 +92,6 @@ impl McfpData for McfpData1 {
 
     fn i<'m>(&'m self, j: usize) -> impl IntoIterator<Item = impl SoR<usize>> {
         &self.in_nodes[j]
-    }
-
-    fn jj<'m>(&'m self, j: Set<'m, 0>) -> impl SetData<'m, 0> {
-        j.data(self, |d| 0..d.in_nodes.len())
-    }
-
-    fn kk<'m>(&'m self, k: Set<'m, 1>) -> impl SetData<'m, 1> {
-        k.data(self, |d, j| d.out_nodes[j].iter().map(|(head, _)| *head))
-    }
-
-    fn ii<'m>(&'m self, i: Set<'m, 1>) -> impl SetData<'m, 1> {
-        i.data(self, |d, j| &d.in_nodes[j])
     }
 
     fn c<'m>(&'m self, m: &'m Mcfp) -> impl ParData<'m> {
@@ -144,18 +126,6 @@ impl McfpData for McfpData2 {
 
     fn i<'m>(&'m self, j: usize) -> impl IntoIterator<Item = impl SoR<usize>> {
         &self.nodes[j].in_nodes
-    }
-
-    fn jj<'m>(&'m self, j: Set<'m, 0>) -> impl SetData<'m, 0> {
-        j.data(self, |d| 0..d.nodes.len())
-    }
-
-    fn kk<'m>(&'m self, k: Set<'m, 1>) -> impl SetData<'m, 1> {
-        k.data(self, |d, j| &d.nodes[j].out_nodes)
-    }
-
-    fn ii<'m>(&'m self, i: Set<'m, 1>) -> impl SetData<'m, 1> {
-        i.data(self, |d, j| &d.nodes[j].in_nodes)
     }
 
     fn c<'m>(&'m self, m: &'m Mcfp) -> impl ParData<'m> {
