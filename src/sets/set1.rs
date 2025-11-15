@@ -54,6 +54,7 @@ where
     where
         F: Fn(&T1) -> bool,
     {
+        // TODO: we must add the subset1 to model and return a reference to it instead
         Subset1::new(self, filter)
     }
 }
