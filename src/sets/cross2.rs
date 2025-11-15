@@ -1,4 +1,5 @@
 use crate::sets::{set1_data::Set1Data, subset2::Subset2, Element, Set1};
+use core::ops::BitOr;
 
 pub struct CrossProdSet2<'m, T1, T2>
 where
@@ -42,5 +43,20 @@ where
     {
         // TODO: we must add the subset1 to model and return a reference to it instead
         Subset2::new(self.set1, self.set2, filter)
+    }
+}
+
+// ops
+
+impl<'m, T1, T2, F> BitOr<F> for CrossProdSet2<'m, T1, T2>
+where
+    T1: Element,
+    T2: Element,
+    F: Fn(&T1, &T2) -> bool,
+{
+    type Output = Subset2<'m, T1, T2, F>;
+
+    fn bitor(self, rhs: F) -> Self::Output {
+        self.st(rhs)
     }
 }
