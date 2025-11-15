@@ -3,6 +3,7 @@ mod tests;
 
 mod element;
 mod set1;
+mod set1_data;
 mod set2;
 mod set_sym_data;
 
