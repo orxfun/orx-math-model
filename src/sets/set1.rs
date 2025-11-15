@@ -1,8 +1,9 @@
+use crate::sets::subset1::Subset1;
 use crate::sets::Set2;
 use crate::sets::{element::Element, SetSymData};
 use crate::symbols::SymbolRef;
 use alloc::string::{String, ToString};
-use core::ops::Mul;
+use core::ops::{BitOr, Mul};
 use core::{fmt::Display, marker::PhantomData};
 
 pub struct Set1<'m, T1>
@@ -66,6 +67,18 @@ where
 }
 
 // ops
+
+impl<'m, T1, F> BitOr<F> for Set1<'m, T1>
+where
+    T1: Element,
+    F: Fn(&T1) -> bool,
+{
+    type Output = Subset1<'m, T1, F>;
+
+    fn bitor(self, rhs: F) -> Self::Output {
+        Subset1::new(self, rhs)
+    }
+}
 
 // TODO!
 
