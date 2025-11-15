@@ -1,5 +1,4 @@
 use alloc::string::String;
-use core::{cell::UnsafeCell, fmt::Display, ops::Deref};
 use orx_concurrent_option::ConcurrentOption;
 
 #[derive(Default)]
@@ -8,52 +7,12 @@ pub struct SetSymData {
     pub definition: ConcurrentOption<String>,
 }
 
-// #[derive(Default)]
-// pub struct Key(UnsafeString);
+impl SetSymData {
+    pub fn set_key(&self, value: impl Into<String>) {
+        self.key.set_some(value.into());
+    }
 
-// impl Deref for Key {
-//     type Target = UnsafeString;
-//     fn deref(&self) -> &Self::Target {
-//         &self.0
-//     }
-// }
-
-// #[derive(Default)]
-// pub struct Definition(UnsafeString);
-
-// impl Deref for Definition {
-//     type Target = UnsafeString;
-//     fn deref(&self) -> &Self::Target {
-//         &self.0
-//     }
-// }
-
-// #[derive(Default)]
-// pub struct UnsafeString(UnsafeCell<String>);
-
-// impl UnsafeString {
-//     pub fn set(&self, value: impl Into<String>) {
-//         // SAFETY: Definition does not implement Send or Sync.
-//         // This can only be called from a sequential program without a race condition.
-//         // Each time we update, we entirely set the value of the field to a valid string.
-//         let x = unsafe { &mut *self.0.get() };
-//         *x = value.into();
-//     }
-
-//     pub fn value(&self) -> &str {
-//         let x = unsafe { &*self.0.get() };
-//         x.as_str()
-//     }
-// }
-
-// impl PartialEq<str> for UnsafeString {
-//     fn eq(&self, other: &str) -> bool {
-//         self.value().eq(other)
-//     }
-// }
-
-// impl Display for UnsafeString {
-//     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-//         write!(f, "{}", self.value())
-//     }
-// }
+    pub fn set_definition(&self, value: impl Into<String>) {
+        self.definition.set_some(value.into());
+    }
+}
