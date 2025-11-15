@@ -1,5 +1,5 @@
 use crate::{sets::SetSymData, symbols::SymbolRef};
-use alloc::string::ToString;
+use alloc::string::{String, ToString};
 use core::{fmt::Display, marker::PhantomData};
 
 pub struct Set2<'m, T1, T2> {
@@ -32,5 +32,15 @@ impl<'m, T1, T2> Display for Set2<'m, T1, T2> {
         let key = &self.symbol.data_ref.key;
         let key = key.map_or_else(|| "UNNAMED_SET".to_string(), |x| x.clone());
         writeln!(f, "{}", key)
+    }
+}
+
+impl<'m, T1, T2> Set2<'m, T1, T2> {
+    pub fn key(&self, value: impl Into<String>) {
+        self.symbol.data_ref.set_key(value);
+    }
+
+    pub fn definition(&self, value: impl Into<String>) {
+        self.symbol.data_ref.set_definition(value);
     }
 }
