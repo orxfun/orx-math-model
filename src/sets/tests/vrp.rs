@@ -7,8 +7,8 @@ struct Node {
 }
 
 impl Element for Node {
-    type Idx = usize;
-    fn idx(&self) -> Self::Idx {
+    type Idx<'a> = usize;
+    fn idx(&self) -> Self::Idx<'_> {
         self.id
     }
 }

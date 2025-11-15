@@ -7,8 +7,8 @@ struct Item {
     weight: u32,
 }
 impl Element for Item {
-    type Idx = &'static str;
-    fn idx(&self) -> Self::Idx {
+    type Idx<'a> = &'static str;
+    fn idx(&self) -> Self::Idx<'_> {
         self.name
     }
 }
