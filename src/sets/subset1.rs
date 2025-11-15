@@ -28,6 +28,7 @@ where
         I: IntoIterator<Item = &'m T1>,
         G: Fn(&'m D) -> I,
     {
+        // TODO: assert that set_data.set is same as self.set
         set_data.values().into_iter().filter(|x| (self.filter)(x))
     }
 }

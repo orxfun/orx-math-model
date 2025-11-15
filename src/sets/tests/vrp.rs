@@ -1,4 +1,5 @@
 use crate::model::Model;
+use crate::sets::subset2::Subset2;
 use crate::sets::{set1_data::Set1Data, Element};
 use alloc::vec;
 use alloc::vec::Vec;
@@ -48,6 +49,7 @@ fn vrp_sets() {
     let nodes = model.set1::<Node>().key("N");
     let nodes0_a = nodes.st(|x| !x.is_depot);
     let nodes0_b = nodes | |x| !x.is_depot;
+    let edges = Subset2::new(nodes, nodes, |a, b| a.id != b.id);
 
     // data
 
@@ -63,5 +65,14 @@ fn vrp_sets() {
     assert_eq!(
         VrpData::new().nodes.iter().skip(1).collect::<Vec<_>>(),
         nodes0_b.values(&nodes_data).collect::<Vec<_>>()
+    );
+
+    let edge_indices: Vec<_> = edges
+        .values(&nodes_data, &nodes_data)
+        .map(|(a, b)| (a.id, b.id))
+        .collect();
+    assert_eq!(
+        vec![(0, 1), (0, 2), (1, 0), (1, 2), (2, 0), (2, 1)],
+        edge_indices
     );
 }
