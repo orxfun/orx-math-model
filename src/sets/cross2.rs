@@ -1,4 +1,4 @@
-use crate::sets::{set1_data::Set1Data, Element, Set1};
+use crate::sets::{set1_data::Set1Data, subset2::Subset2, Element, Set1};
 
 pub struct CrossProdSet2<'m, T1, T2>
 where
@@ -34,5 +34,13 @@ where
             .values()
             .into_iter()
             .flat_map(|x1| set_data2.values().into_iter().map(move |x2| (x1, x2)))
+    }
+
+    pub fn st<F>(&self, filter: F) -> Subset2<'m, T1, T2, F>
+    where
+        F: Fn(&T1, &T2) -> bool,
+    {
+        // TODO: we must add the subset1 to model and return a reference to it instead
+        Subset2::new(self.set1, self.set2, filter)
     }
 }
