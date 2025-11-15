@@ -1,157 +1,159 @@
-use orx_math_model::*;
-use std::collections::HashMap;
+// use orx_math_model::*;
+// use std::collections::HashMap;
 
-// model
+// // model
 
-struct Mcfp(Model);
+// struct Mcfp(Model);
 
-impl Mcfp {
-    pub fn new() -> Self {
-        let model = Model::new();
+// impl Mcfp {
+//     pub fn new() -> Self {
+//         let model = Model::new();
 
-        let j = model.set().key("j").def("nodes");
-        let i = set_of(j).key("i").def("nodes into i");
-        let k = set_of(j).key("k").def("nodes from i");
+//         let j = model.set().key("j").def("nodes");
+//         let i = set_of(j).key("i").def("nodes into i");
+//         let k = set_of(j).key("k").def("nodes from i");
 
-        let c = par((j, k)).key("c").def("unit cost of using arc (j, k)");
-        let b = par((j, k)).key("b").def("capacity of arc (j, k)");
+//         let c = par((j, k)).key("c").def("unit cost of using arc (j, k)");
+//         let b = par((j, k)).key("b").def("capacity of arc (j, k)");
 
-        Self(model)
-    }
+//         Self(model)
+//     }
 
-    pub fn i(&self) -> Set<'_, 1> {
-        self.0.set_by_key("i").unwrap()
-    }
+//     pub fn i(&self) -> Set<'_, 1> {
+//         self.0.set_by_key("i").unwrap()
+//     }
 
-    pub fn j(&self) -> Set<'_> {
-        self.0.set_by_key("j").unwrap()
-    }
+//     pub fn j(&self) -> Set<'_> {
+//         self.0.set_by_key("j").unwrap()
+//     }
 
-    pub fn k(&self) -> Set<'_, 1> {
-        self.0.set_by_key("k").unwrap()
-    }
+//     pub fn k(&self) -> Set<'_, 1> {
+//         self.0.set_by_key("k").unwrap()
+//     }
 
-    pub fn c(&self) -> Par<'_, 2> {
-        self.0.par_by_key("c").unwrap()
-    }
+//     pub fn c(&self) -> Par<'_, 2> {
+//         self.0.par_by_key("c").unwrap()
+//     }
 
-    pub fn b(&self) -> Par<'_, 2> {
-        self.0.par_by_key("b").unwrap()
-    }
-}
+//     pub fn b(&self) -> Par<'_, 2> {
+//         self.0.par_by_key("b").unwrap()
+//     }
+// }
 
-// data
+// // data
 
-struct Edge {
-    cost: u64,
-    cap: u64,
-}
+// struct Edge {
+//     cost: u64,
+//     cap: u64,
+// }
 
-struct McfpData1 {
-    in_nodes: Vec<Vec<usize>>,
-    out_nodes: Vec<HashMap<usize, Edge>>,
-}
+// struct McfpData1 {
+//     in_nodes: Vec<Vec<usize>>,
+//     out_nodes: Vec<HashMap<usize, Edge>>,
+// }
 
-impl McfpData1 {
-    fn data<'m>(&'m self, mcfp: &'m Mcfp) -> Data<'m> {
-        let (i, j, k) = (mcfp.i(), mcfp.j(), mcfp.k());
-        let dj = j.data(self, |d| 0..d.in_nodes.len());
-        let di = i.data(self, |d, j| &d.in_nodes[j]);
-        let dk = k.data(self, |d, k| d.out_nodes[k].iter().map(|(head, _)| *head));
+// impl McfpData1 {
+//     fn data<'m>(&'m self, mcfp: &'m Mcfp) -> Data<'m> {
+//         let (i, j, k) = (mcfp.i(), mcfp.j(), mcfp.k());
+//         let dj = j.data(self, |d| 0..d.in_nodes.len());
+//         let di = i.data(self, |d, j| &d.in_nodes[j]);
+//         let dk = k.data(self, |d, k| d.out_nodes[k].iter().map(|(head, _)| *head));
 
-        let (c, b) = (mcfp.c(), mcfp.b());
-        let dc = c.data(self, |d, j, k| d.out_nodes[j][&k].cost);
-        let db = b.data(self, |d, j, k| d.out_nodes[j][&k].cap);
+//         let (c, b) = (mcfp.c(), mcfp.b());
+//         let dc = c.data(self, |d, j, k| d.out_nodes[j][&k].cost);
+//         let db = b.data(self, |d, j, k| d.out_nodes[j][&k].cap);
 
-        let builder = mcfp.0.data_builder().sets((di, dj, dk)).pars((dc, db));
-        builder.finish().unwrap()
-    }
-}
+//         let builder = mcfp.0.data_builder().sets((di, dj, dk)).pars((dc, db));
+//         builder.finish().unwrap()
+//     }
+// }
 
-// data
+// // data
 
-struct Node {
-    in_nodes: Vec<usize>,
-    out_nodes: Vec<usize>,
-    edges: Vec<Edge>,
-}
+// struct Node {
+//     in_nodes: Vec<usize>,
+//     out_nodes: Vec<usize>,
+//     edges: Vec<Edge>,
+// }
 
-struct McfpData2 {
-    nodes: Vec<Node>,
-}
+// struct McfpData2 {
+//     nodes: Vec<Node>,
+// }
 
-impl McfpData2 {
-    fn data<'m>(&'m self, mcfp: &'m Mcfp) -> Data<'m> {
-        let (i, j, k) = (mcfp.i(), mcfp.j(), mcfp.k());
-        let dj = j.data(self, |d| 0..d.nodes.len());
-        let di = i.data(self, |d, j| &d.nodes[j].in_nodes);
-        let dk = k.data(self, |d, k| &d.nodes[k].out_nodes);
+// impl McfpData2 {
+//     fn data<'m>(&'m self, mcfp: &'m Mcfp) -> Data<'m> {
+//         let (i, j, k) = (mcfp.i(), mcfp.j(), mcfp.k());
+//         let dj = j.data(self, |d| 0..d.nodes.len());
+//         let di = i.data(self, |d, j| &d.nodes[j].in_nodes);
+//         let dk = k.data(self, |d, k| &d.nodes[k].out_nodes);
 
-        let (c, b) = (mcfp.c(), mcfp.b());
-        let dc = c.data(self, |d, j, k| d.nodes[j].edges[k].cost);
-        let db = b.data(self, |d, j, k| d.nodes[j].edges[k].cap);
+//         let (c, b) = (mcfp.c(), mcfp.b());
+//         let dc = c.data(self, |d, j, k| d.nodes[j].edges[k].cost);
+//         let db = b.data(self, |d, j, k| d.nodes[j].edges[k].cap);
 
-        let builder = mcfp.0.data_builder().sets((di, dj, dk)).pars((dc, db));
-        builder.finish().unwrap()
-    }
-}
+//         let builder = mcfp.0.data_builder().sets((di, dj, dk)).pars((dc, db));
+//         builder.finish().unwrap()
+//     }
+// }
 
-fn main() {
-    let mcfp = Mcfp::new();
+// fn main() {
+//     let mcfp = Mcfp::new();
 
-    let data_source = McfpData1 {
-        in_nodes: vec![vec![], vec![0], vec![0], vec![1, 2]],
-        out_nodes: vec![
-            [(1, Edge { cost: 1, cap: 3 }), (2, Edge { cost: 3, cap: 5 })]
-                .into_iter()
-                .collect(),
-            [(2, Edge { cost: 7, cap: 5 }), (3, Edge { cost: 4, cap: 4 })]
-                .into_iter()
-                .collect(),
-            [(3, Edge { cost: 2, cap: 9 })].into_iter().collect(),
-            [].into_iter().collect(),
-        ],
-    };
-    let data = data_source.data(&mcfp);
+//     let data_source = McfpData1 {
+//         in_nodes: vec![vec![], vec![0], vec![0], vec![1, 2]],
+//         out_nodes: vec![
+//             [(1, Edge { cost: 1, cap: 3 }), (2, Edge { cost: 3, cap: 5 })]
+//                 .into_iter()
+//                 .collect(),
+//             [(2, Edge { cost: 7, cap: 5 }), (3, Edge { cost: 4, cap: 4 })]
+//                 .into_iter()
+//                 .collect(),
+//             [(3, Edge { cost: 2, cap: 9 })].into_iter().collect(),
+//             [].into_iter().collect(),
+//         ],
+//     };
+//     let data = data_source.data(&mcfp);
 
-    let inf_edge = || Edge {
-        cost: u64::MAX,
-        cap: 0,
-    };
+//     let inf_edge = || Edge {
+//         cost: u64::MAX,
+//         cap: 0,
+//     };
 
-    let data_source = McfpData2 {
-        nodes: vec![
-            Node {
-                in_nodes: vec![],
-                out_nodes: vec![1, 2],
-                edges: vec![
-                    inf_edge(),
-                    Edge { cost: 1, cap: 3 },
-                    Edge { cost: 3, cap: 5 },
-                    inf_edge(),
-                ],
-            },
-            Node {
-                in_nodes: vec![0],
-                out_nodes: vec![2, 3],
-                edges: vec![
-                    inf_edge(),
-                    inf_edge(),
-                    Edge { cost: 7, cap: 5 },
-                    Edge { cost: 4, cap: 4 },
-                ],
-            },
-            Node {
-                in_nodes: vec![0],
-                out_nodes: vec![3],
-                edges: vec![inf_edge(), inf_edge(), inf_edge(), Edge { cost: 2, cap: 9 }],
-            },
-            Node {
-                in_nodes: vec![1, 2],
-                out_nodes: vec![],
-                edges: vec![inf_edge(), inf_edge(), inf_edge(), inf_edge()],
-            },
-        ],
-    };
-    let data = data_source.data(&mcfp);
-}
+//     let data_source = McfpData2 {
+//         nodes: vec![
+//             Node {
+//                 in_nodes: vec![],
+//                 out_nodes: vec![1, 2],
+//                 edges: vec![
+//                     inf_edge(),
+//                     Edge { cost: 1, cap: 3 },
+//                     Edge { cost: 3, cap: 5 },
+//                     inf_edge(),
+//                 ],
+//             },
+//             Node {
+//                 in_nodes: vec![0],
+//                 out_nodes: vec![2, 3],
+//                 edges: vec![
+//                     inf_edge(),
+//                     inf_edge(),
+//                     Edge { cost: 7, cap: 5 },
+//                     Edge { cost: 4, cap: 4 },
+//                 ],
+//             },
+//             Node {
+//                 in_nodes: vec![0],
+//                 out_nodes: vec![3],
+//                 edges: vec![inf_edge(), inf_edge(), inf_edge(), Edge { cost: 2, cap: 9 }],
+//             },
+//             Node {
+//                 in_nodes: vec![1, 2],
+//                 out_nodes: vec![],
+//                 edges: vec![inf_edge(), inf_edge(), inf_edge(), inf_edge()],
+//             },
+//         ],
+//     };
+//     let data = data_source.data(&mcfp);
+// }
+
+fn main() {}
