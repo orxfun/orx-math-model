@@ -1,4 +1,5 @@
 use crate::model::Model;
+use crate::sets::cross2::CrossProdSet2;
 use crate::sets::subset2::Subset2;
 use crate::sets::{set1_data::Set1Data, Element};
 use alloc::vec;
@@ -49,7 +50,7 @@ fn vrp_sets() {
     let n = model.set1::<Node>().key("N");
     let n0 = n.st(|x| !x.is_depot);
     let n0_b = n | |x| !x.is_depot;
-    let e_c = Subset2::new(n, n, |_, _| true);
+    let e_c = CrossProdSet2::new(n, n);
     let e = Subset2::new(n, n, |a, b| a.id != b.id);
 
     // data
