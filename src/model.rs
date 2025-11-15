@@ -1,4 +1,4 @@
-use crate::sets::{Set1, Set2, SetSymData};
+use crate::sets::{Element, Set1, Set2, SetSymData};
 use crate::symbols::SymbolRef;
 use orx_imp_vec::ImpVec;
 
@@ -8,7 +8,10 @@ pub struct Model {
 }
 
 impl Model {
-    pub fn set1<'m, T1>(&'m self) -> Set1<'m, T1> {
+    pub fn set1<'m, T1>(&'m self) -> Set1<'m, T1>
+    where
+        T1: Element,
+    {
         let data_ref = self.sets.imp_push_get_ref(Default::default());
         let symbol_ref = SymbolRef {
             data_ref,
@@ -17,7 +20,11 @@ impl Model {
         Set1::new(symbol_ref)
     }
 
-    pub fn set2<'m, T1, T2>(&'m self) -> Set2<'m, T1, T2> {
+    pub fn set2<'m, T1, T2>(&'m self) -> Set2<'m, T1, T2>
+    where
+        T1: Element,
+        T2: Element,
+    {
         let data_ref = self.sets.imp_push_get_ref(Default::default());
         let symbol_ref = SymbolRef {
             data_ref,
