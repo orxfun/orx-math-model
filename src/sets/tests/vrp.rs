@@ -50,7 +50,8 @@ fn vrp_sets() {
     let nodes = model.set1::<Node>().key("N");
     assert_eq!(nodes.to_string(), "N".to_string());
 
-    let nodes0 = Subset1::new(nodes, |x| !x.is_depot);
+    let nodes0_a = nodes.st(|x| !x.is_depot);
+    let nodes0_b = nodes | |x| !x.is_depot;
 
     // data
 
@@ -61,6 +62,10 @@ fn vrp_sets() {
 
     assert_eq!(
         VrpData::new().nodes.iter().skip(1).collect::<Vec<_>>(),
-        nodes0.values(&nodes_data).collect::<Vec<_>>()
+        nodes0_a.values(&nodes_data).collect::<Vec<_>>()
+    );
+    assert_eq!(
+        VrpData::new().nodes.iter().skip(1).collect::<Vec<_>>(),
+        nodes0_b.values(&nodes_data).collect::<Vec<_>>()
     );
 }

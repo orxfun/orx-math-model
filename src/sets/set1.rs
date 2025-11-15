@@ -14,18 +14,6 @@ where
     p: PhantomData<T1>,
 }
 
-impl<'m, T1> Set1<'m, T1>
-where
-    T1: Element,
-{
-    pub(crate) fn new(symbol: SymbolRef<'m, SetSymData>) -> Self {
-        Self {
-            symbol,
-            p: PhantomData,
-        }
-    }
-}
-
 impl<'m, T1> Clone for Set1<'m, T1>
 where
     T1: Element,
@@ -55,6 +43,25 @@ impl<'m, T1> Set1<'m, T1>
 where
     T1: Element,
 {
+    pub(crate) fn new(symbol: SymbolRef<'m, SetSymData>) -> Self {
+        Self {
+            symbol,
+            p: PhantomData,
+        }
+    }
+
+    pub fn st<F>(self, filter: F) -> Subset1<'m, T1, F>
+    where
+        F: Fn(&T1) -> bool,
+    {
+        Subset1::new(self, filter)
+    }
+}
+
+impl<'m, T1> Set1<'m, T1>
+where
+    T1: Element,
+{
     pub fn key(self, value: impl Into<String>) -> Self {
         self.symbol.data_ref.set_key(value);
         self
@@ -76,7 +83,7 @@ where
     type Output = Subset1<'m, T1, F>;
 
     fn bitor(self, rhs: F) -> Self::Output {
-        Subset1::new(self, rhs)
+        self.st(rhs)
     }
 }
 
