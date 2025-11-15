@@ -1,3 +1,4 @@
+use crate::sets::cross2::CrossProdSet2;
 use crate::sets::subset1::Subset1;
 use crate::sets::subset2::Subset2;
 use crate::sets::Set2;
@@ -89,14 +90,14 @@ where
     }
 }
 
-// impl<'m, T1, T2> Mul<Set1<'m, T2>> for Set1<'m, T1>
-// where
-//     T1: Element,
-//     T2: Element,
-// {
-//     type Output = Subset2<'m, T1, T2>;
+impl<'m, T1, T2> Mul<Set1<'m, T2>> for Set1<'m, T1>
+where
+    T1: Element,
+    T2: Element,
+{
+    type Output = CrossProdSet2<'m, T1, T2>;
 
-//     fn mul(self, rhs: Set1<'m, T2>) -> Self::Output {
-//         todo!()
-//     }
-// }
+    fn mul(self, rhs: Set1<'m, T2>) -> Self::Output {
+        CrossProdSet2::new(self, rhs)
+    }
+}
