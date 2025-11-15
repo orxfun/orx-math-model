@@ -1,4 +1,5 @@
 use crate::model::Model;
+use crate::sets::subset1::Subset1;
 use crate::sets::{set1_data::Set1Data, Element};
 use alloc::string::ToString;
 use alloc::vec;
@@ -49,10 +50,17 @@ fn vrp_sets() {
     let nodes = model.set1::<Node>().key("N");
     assert_eq!(nodes.to_string(), "N".to_string());
 
+    let nodes0 = Subset1::new(nodes, |x| !x.is_depot);
+
     // data
 
     let data = VrpData::new();
 
     let nodes_data = Set1Data::new(&data, nodes, |d| &d.nodes);
-    assert_eq!(nodes_data.values(), &VrpData::new().nodes);
+    assert_eq!(&VrpData::new().nodes, nodes_data.values());
+
+    assert_eq!(
+        VrpData::new().nodes.iter().skip(1).collect::<Vec<_>>(),
+        nodes0.values(&nodes_data).collect::<Vec<_>>()
+    );
 }
