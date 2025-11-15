@@ -53,7 +53,7 @@ where
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         let key = &self.symbol.data_ref.key;
         let key = key.map_or_else(|| "UNNAMED_SET".to_string(), |x| x.clone());
-        writeln!(f, "{}", key)
+        write!(f, "{}", key)
     }
 }
 
