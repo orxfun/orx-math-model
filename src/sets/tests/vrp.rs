@@ -1,14 +1,18 @@
 use crate::model::Model;
-use crate::sets::cross2::CrossProdSet2;
-use crate::sets::subset2::Subset2;
 use crate::sets::{set1_data::Set1Data, Element};
 use alloc::vec;
 use alloc::vec::Vec;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug)]
 struct Node {
     id: usize,
     is_depot: bool,
+}
+
+impl PartialEq for Node {
+    fn eq(&self, other: &Self) -> bool {
+        self.id == other.id
+    }
 }
 
 impl Element for Node {
@@ -51,7 +55,8 @@ fn vrp_sets() {
     let n0 = n.st(|x| !x.is_depot);
     let n0_b = n | |x| !x.is_depot;
     let e_c = n * n;
-    let e = (n * n).st(|a, b| a.id != b.id);
+    let e = (n * n).st(|a, b| a != b);
+    let e_b = n * n | |a, b| a != b;
 
     // data
 
@@ -89,6 +94,15 @@ fn vrp_sets() {
     );
 
     let edge_indices: Vec<_> = e
+        .values(&nodes_data, &nodes_data)
+        .map(|(a, b)| (a.id, b.id))
+        .collect();
+    assert_eq!(
+        vec![(0, 1), (0, 2), (1, 0), (1, 2), (2, 0), (2, 1)],
+        edge_indices
+    );
+
+    let edge_indices: Vec<_> = e_b
         .values(&nodes_data, &nodes_data)
         .map(|(a, b)| (a.id, b.id))
         .collect();
