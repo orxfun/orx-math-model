@@ -6,6 +6,7 @@ mod set1;
 mod set1_data;
 mod set2;
 mod set_sym_data;
+mod subset1;
 
 pub use element::Element;
 pub use set1::Set1;
