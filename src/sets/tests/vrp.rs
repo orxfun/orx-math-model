@@ -1,10 +1,16 @@
-use crate::model::Model;
+use crate::{model::Model, sets::Element};
 use std::string::ToString;
 
-#[derive(PartialEq, Eq, Hash)]
 struct Node {
     id: usize,
     is_depot: bool,
+}
+
+impl Element for Node {
+    type Idx = usize;
+    fn idx(&self) -> Self::Idx {
+        self.id
+    }
 }
 
 #[test]
