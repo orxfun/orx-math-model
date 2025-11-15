@@ -1,13 +1,13 @@
-use crate::{model::SetData, symbols::SymbolRef};
+use crate::{sets::SetSymData, symbols::SymbolRef};
 use core::marker::PhantomData;
 
 pub struct Set1<'m, T1> {
-    symbol: SymbolRef<'m, SetData>,
+    symbol: SymbolRef<'m, SetSymData>,
     p: PhantomData<T1>,
 }
 
 impl<'m, T1> Set1<'m, T1> {
-    pub(crate) fn new(symbol: SymbolRef<'m, SetData>) -> Self {
+    pub(crate) fn new(symbol: SymbolRef<'m, SetSymData>) -> Self {
         Self {
             symbol,
             p: PhantomData,
