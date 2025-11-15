@@ -46,29 +46,29 @@ impl VrpData {
 fn vrp_sets() {
     let model = Model::default();
 
-    let nodes = model.set1::<Node>().key("N");
-    let nodes0_a = nodes.st(|x| !x.is_depot);
-    let nodes0_b = nodes | |x| !x.is_depot;
-    let edges_cyclic = Subset2::new(nodes, nodes, |_, _| true);
-    let edges = Subset2::new(nodes, nodes, |a, b| a.id != b.id);
+    let n = model.set1::<Node>().key("N");
+    let n0 = n.st(|x| !x.is_depot);
+    let n0_b = n | |x| !x.is_depot;
+    let e_c = Subset2::new(n, n, |_, _| true);
+    let e = Subset2::new(n, n, |a, b| a.id != b.id);
 
     // data
 
     let data = VrpData::new();
 
-    let nodes_data = Set1Data::new(&data, nodes, |d| &d.nodes);
+    let nodes_data = Set1Data::new(&data, n, |d| &d.nodes);
     assert_eq!(&VrpData::new().nodes, nodes_data.values());
 
     assert_eq!(
         VrpData::new().nodes.iter().skip(1).collect::<Vec<_>>(),
-        nodes0_a.values(&nodes_data).collect::<Vec<_>>()
+        n0.values(&nodes_data).collect::<Vec<_>>()
     );
     assert_eq!(
         VrpData::new().nodes.iter().skip(1).collect::<Vec<_>>(),
-        nodes0_b.values(&nodes_data).collect::<Vec<_>>()
+        n0_b.values(&nodes_data).collect::<Vec<_>>()
     );
 
-    let edge_indices: Vec<_> = edges_cyclic
+    let edge_indices: Vec<_> = e_c
         .values(&nodes_data, &nodes_data)
         .map(|(a, b)| (a.id, b.id))
         .collect();
@@ -87,7 +87,7 @@ fn vrp_sets() {
         edge_indices
     );
 
-    let edge_indices: Vec<_> = edges
+    let edge_indices: Vec<_> = e
         .values(&nodes_data, &nodes_data)
         .map(|(a, b)| (a.id, b.id))
         .collect();
