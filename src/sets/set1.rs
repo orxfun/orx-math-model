@@ -1,5 +1,6 @@
 use crate::{sets::SetSymData, symbols::SymbolRef};
-use core::marker::PhantomData;
+use alloc::string::ToString;
+use core::{fmt::Display, marker::PhantomData};
 
 pub struct Set1<'m, T1> {
     symbol: SymbolRef<'m, SetSymData>,
@@ -25,3 +26,11 @@ impl<'m, T1> Clone for Set1<'m, T1> {
 }
 
 impl<'m, T1> Copy for Set1<'m, T1> {}
+
+impl<'m, T1> Display for Set1<'m, T1> {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        let key = &self.symbol.data_ref.key;
+        let key = key.map_or_else(|| "UNNAMED_SET".to_string(), |x| x.clone());
+        writeln!(f, "{}", key)
+    }
+}
