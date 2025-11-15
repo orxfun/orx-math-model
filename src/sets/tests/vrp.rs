@@ -52,9 +52,12 @@ fn vrp_sets() {
     let model = Model::default();
 
     let n = model.set1::<Node>().key("N");
+
     let n0 = n.st(|x| !x.is_depot);
     let n0_b = n | |x| !x.is_depot;
+
     let e_c = n * n;
+
     let e = (n * n).st(|a, b| a != b);
     let e_b = n * n | |a, b| a != b;
 

@@ -2,6 +2,7 @@
 mod tests;
 
 mod cross2;
+mod depset1;
 mod element;
 mod set1;
 mod set1_data;

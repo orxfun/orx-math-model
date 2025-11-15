@@ -1,7 +1,5 @@
 use crate::sets::cross2::CrossProdSet2;
 use crate::sets::subset1::Subset1;
-use crate::sets::subset2::Subset2;
-use crate::sets::Set2;
 use crate::sets::{element::Element, SetSymData};
 use crate::symbols::SymbolRef;
 use alloc::string::{String, ToString};
