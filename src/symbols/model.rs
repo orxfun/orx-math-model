@@ -1,4 +1,4 @@
-use crate::symbols::parameters::{AllPars, Count};
+use crate::symbols::parameters::{AllPars, Count, Par1};
 use crate::symbols::sets::{AllSets, IndexedSet, Set};
 use alloc::string::String;
 
@@ -31,5 +31,9 @@ impl Model {
 
     pub fn count(&self) -> Count<'_> {
         self.pars.count(self)
+    }
+
+    pub fn par1<'a>(&'a self, i: Set<'a>) -> Par1<'a> {
+        self.pars.par1(self, i)
     }
 }

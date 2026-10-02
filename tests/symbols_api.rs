@@ -1,5 +1,4 @@
 #![allow(non_snake_case, unused_variables)]
-
 use orx_math_model::symbols::*;
 
 #[test]
