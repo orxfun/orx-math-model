@@ -1,12 +1,12 @@
 use crate::symbols::parameters::{Count, IntPar1, Par1};
 use crate::symbols::sets::Set;
-use crate::symbols::symbol_data::SymbolData;
+use crate::symbols::symbol_defn::SymbolDefinition;
 use crate::symbols::Model;
 use orx_imp_vec::ImpVec;
 
 #[derive(Default, Debug)]
 pub struct AllPars {
-    counts: ImpVec<SymbolData>,
+    counts: ImpVec<SymbolDefinition>,
 }
 
 impl AllPars {

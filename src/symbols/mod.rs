@@ -1,7 +1,8 @@
 mod model;
 mod parameters;
 mod sets;
-mod symbol_data;
+mod symbol;
+mod symbol_defn;
 
 pub use model::Model;
-pub use symbol_data::SymbolData;
+pub use symbol_defn::SymbolDefinition;

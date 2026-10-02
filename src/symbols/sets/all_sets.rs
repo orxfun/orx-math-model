@@ -1,14 +1,14 @@
 use crate::symbols::parameters::Count;
 use crate::symbols::sets::{IndexedSet, Set};
-use crate::symbols::symbol_data::SymbolData;
+use crate::symbols::symbol_defn::SymbolDefinition;
 use crate::symbols::Model;
 use orx_imp_vec::ImpVec;
 
 #[derive(Default, Debug)]
 pub struct AllSets {
-    sets: ImpVec<SymbolData>,
-    index_sets: ImpVec<SymbolData>,
-    range_sets: ImpVec<SymbolData>,
+    sets: ImpVec<SymbolDefinition>,
+    index_sets: ImpVec<SymbolDefinition>,
+    range_sets: ImpVec<SymbolDefinition>,
 }
 
 impl AllSets {
