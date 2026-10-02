@@ -1,4 +1,4 @@
-use crate::symbols::parameters::{Count, Par1};
+use crate::symbols::parameters::{Count, IntPar1, Par1};
 use crate::symbols::sets::Set;
 use crate::symbols::symbol_data::SymbolData;
 use crate::symbols::Model;
@@ -16,5 +16,9 @@ impl AllPars {
 
     pub fn par1<'a>(&'a self, m: &'a Model, i: Set<'a>) -> Par1<'a> {
         Par1::new(m, self.counts.imp_push_get_ref(Default::default()), i)
+    }
+
+    pub fn int_par1<'a>(&'a self, m: &'a Model, i: Set<'a>) -> IntPar1<'a> {
+        IntPar1::new(m, self.counts.imp_push_get_ref(Default::default()), i)
     }
 }

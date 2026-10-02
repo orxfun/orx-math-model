@@ -1,4 +1,4 @@
-use crate::symbols::parameters::{AllPars, Count, Par1};
+use crate::symbols::parameters::{AllPars, Count, IntPar1, Par1};
 use crate::symbols::sets::{AllSets, IndexedSet, Set};
 use alloc::string::String;
 
@@ -35,5 +35,9 @@ impl Model {
 
     pub fn par1<'a>(&'a self, i: Set<'a>) -> Par1<'a> {
         self.pars.par1(self, i)
+    }
+
+    pub fn int_par1<'a>(&'a self, i: Set<'a>) -> IntPar1<'a> {
+        self.pars.int_par1(self, i)
     }
 }
