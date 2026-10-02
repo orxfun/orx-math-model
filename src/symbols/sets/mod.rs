@@ -1,5 +1,7 @@
-mod cat_set;
-mod num_set;
+mod index_set;
+mod range_set;
+mod set;
 
-pub use cat_set::CatSet;
-pub use num_set::NumSet;
+pub use index_set::IndexSet;
+pub use range_set::RangeSet;
+pub use set::Set;

@@ -1,4 +1,5 @@
 mod model;
+mod parameters;
 mod sets;
 mod symbol_data;
 
