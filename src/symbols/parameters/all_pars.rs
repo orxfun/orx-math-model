@@ -14,7 +14,7 @@ pub struct AllPars {
 impl AllPars {
     pub fn count<'a>(&'a self, m: &'a Model) -> Count<'a> {
         let s = Symbol::new(m, self.count.imp_push_get_ref(Default::default()));
-        Count::new(s)
+        Count::Sym(s)
     }
 
     pub fn par1<'a>(&'a self, m: &'a Model, i: Set<'a>) -> Par1<'a> {

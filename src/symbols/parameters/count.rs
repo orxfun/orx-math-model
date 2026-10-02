@@ -1,6 +1,7 @@
 use crate::symbols::Symbol;
 
-#[derive(derive_new::new, Clone, Copy)]
-pub struct Count<'a> {
-    s: Symbol<'a>,
+#[derive(Clone, Copy)]
+pub enum Count<'a> {
+    Sym(Symbol<'a>),
+    Const(usize),
 }
