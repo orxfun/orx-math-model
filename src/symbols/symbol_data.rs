@@ -1,7 +1,7 @@
 use alloc::string::String;
 
-#[derive(derive_new::new, Debug)]
+#[derive(derive_new::new, Default, Debug)]
 pub struct SymbolData {
-    key: String,
+    key: Option<String>,
     description: Option<String>,
 }
