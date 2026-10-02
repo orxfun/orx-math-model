@@ -1,7 +1,7 @@
 use crate::symbols::parameters::Count;
 use crate::symbols::sets::{IndexedSet, Set};
 use crate::symbols::symbol_defn::SymbolDefinition;
-use crate::symbols::Model;
+use crate::symbols::{Model, Symbol};
 use orx_imp_vec::ImpVec;
 
 #[derive(Default, Debug)]
@@ -13,11 +13,12 @@ pub struct AllSets {
 
 impl AllSets {
     pub fn set<'a>(&'a self, m: &'a Model) -> Set<'a> {
-        Set::new(m, self.sets.imp_push_get_ref(Default::default()))
+        let s = Symbol::new(m, self.sets.imp_push_get_ref(Default::default()));
+        Set::new(s)
     }
 
     pub fn indexed_set<'a>(&'a self, m: &'a Model, count: Count<'a>) -> IndexedSet<'a> {
-        let d = self.index_sets.imp_push_get_ref(Default::default());
-        IndexedSet::new(m, d, count)
+        let s = Symbol::new(m, self.index_sets.imp_push_get_ref(Default::default()));
+        IndexedSet::new(s, count)
     }
 }

@@ -1,15 +1,13 @@
-use crate::symbols::{sets::Set, Model, SymbolDefinition};
+use crate::symbols::{sets::Set, Symbol};
 
 #[derive(derive_new::new, Clone, Copy)]
 pub struct Par1<'a> {
-    m: &'a Model,
-    d: &'a SymbolDefinition,
+    s: Symbol<'a>,
     i: Set<'a>,
 }
 
 #[derive(derive_new::new, Clone, Copy)]
 pub struct IntPar1<'a> {
-    m: &'a Model,
-    d: &'a SymbolDefinition,
+    s: Symbol<'a>,
     i: Set<'a>,
 }

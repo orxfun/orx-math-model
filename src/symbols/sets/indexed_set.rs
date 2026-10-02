@@ -1,8 +1,7 @@
-use crate::symbols::{parameters::Count, Model, SymbolDefinition};
+use crate::symbols::{parameters::Count, Symbol};
 
 #[derive(derive_new::new, Clone, Copy)]
 pub struct IndexedSet<'a> {
-    m: &'a Model,
-    d: &'a SymbolDefinition,
+    s: Symbol<'a>,
     count: Count<'a>,
 }

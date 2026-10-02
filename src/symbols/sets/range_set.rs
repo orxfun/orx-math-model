@@ -1,7 +1,6 @@
-use crate::symbols::{Model, SymbolDefinition};
+use crate::symbols::Symbol;
 
 #[derive(derive_new::new, Clone, Copy)]
 pub struct RangeSet<'a> {
-    m: &'a Model,
-    d: &'a SymbolDefinition,
+    s: Symbol<'a>,
 }
