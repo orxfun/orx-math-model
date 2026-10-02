@@ -1,5 +1,5 @@
 use crate::symbols::parameters::{AllPars, Count};
-use crate::symbols::sets::{AllSets, IndexSet, Set};
+use crate::symbols::sets::{AllSets, IndexedSet, Set};
 use alloc::string::String;
 
 #[derive(Default, Debug)]
@@ -23,8 +23,8 @@ impl Model {
         self.sets.set(self, key)
     }
 
-    pub fn indices(&self, key: impl Into<String>) -> IndexSet<'_> {
-        self.sets.indices(self, key)
+    pub fn indexed_set<'a>(&'a self, key: impl Into<String>, count: Count<'a>) -> IndexedSet<'a> {
+        self.sets.indexed_set(self, key, count)
     }
 
     // pars

@@ -1,4 +1,5 @@
-use crate::symbols::sets::{IndexSet, Set};
+use crate::symbols::parameters::Count;
+use crate::symbols::sets::{IndexedSet, Set};
 use crate::symbols::symbol_data::SymbolData;
 use crate::symbols::Model;
 use alloc::string::String;
@@ -18,9 +19,14 @@ impl AllSets {
         Set::new(m, d)
     }
 
-    pub fn indices<'a>(&'a self, m: &'a Model, key: impl Into<String>) -> IndexSet<'a> {
+    pub fn indexed_set<'a>(
+        &'a self,
+        m: &'a Model,
+        key: impl Into<String>,
+        count: Count<'a>,
+    ) -> IndexedSet<'a> {
         let data = SymbolData::new(key.into(), None);
         let d = self.index_sets.imp_push_get_ref(data);
-        IndexSet::new(m, d)
+        IndexedSet::new(m, d, count)
     }
 }

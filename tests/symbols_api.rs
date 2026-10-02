@@ -22,8 +22,10 @@ fn mcfp() {
 fn machine_scheduling() {
     let model = Model::new("machine_scheduling");
 
+    let T = model.count("T");
+
     let jobs = model.set("jobs");
-    let time = model.indices("time");
+    let time = model.indexed_set("time", T);
 
     println!("{model:?}");
 }
