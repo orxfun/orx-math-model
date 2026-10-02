@@ -1,14 +1,12 @@
-use crate::symbols::sets::{IndexSet, Set};
-use crate::symbols::symbol_data::SymbolData;
+use crate::symbols::parameters::{AllPars, Count};
+use crate::symbols::sets::{AllSets, IndexSet, Set};
 use alloc::string::String;
-use orx_imp_vec::ImpVec;
 
 #[derive(Default, Debug)]
 pub struct Model {
     name: String,
-    sets: ImpVec<SymbolData>,
-    index_sets: ImpVec<SymbolData>,
-    range_sets: ImpVec<SymbolData>,
+    sets: AllSets,
+    pars: AllPars,
 }
 
 impl Model {
@@ -19,15 +17,19 @@ impl Model {
         }
     }
 
+    // sets
+
     pub fn set(&self, key: impl Into<String>) -> Set<'_> {
-        let data = SymbolData::new(key.into(), None);
-        let d = self.sets.imp_push_get_ref(data);
-        Set::new(self, d)
+        self.sets.set(self, key)
     }
 
     pub fn indices(&self, key: impl Into<String>) -> IndexSet<'_> {
-        let data = SymbolData::new(key.into(), None);
-        let d = self.index_sets.imp_push_get_ref(data);
-        IndexSet::new(self, d)
+        self.sets.indices(self, key)
+    }
+
+    // pars
+
+    pub fn count(&self, key: impl Into<String>) -> Count<'_> {
+        self.pars.count(self, key)
     }
 }
