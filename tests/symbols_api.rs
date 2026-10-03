@@ -23,7 +23,7 @@ fn mcfp() {
 fn machine_scheduling() {
     let m = Model::new("machine_scheduling");
 
-    let T = m.count();
+    let t = m.count();
 
     let job = m.cat_set();
 
