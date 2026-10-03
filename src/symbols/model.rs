@@ -1,12 +1,16 @@
-use crate::symbols::parameters::{AllPars, Count, IntPar1, Par1};
-use crate::symbols::sets::{AllSets, CatSet, IndexedSet};
+use crate::symbols::parameters::AllPars;
+use crate::symbols::sets::{AllSets, CatSet};
 use alloc::string::String;
+use alloc::vec::Vec;
 
 #[derive(Default, Debug)]
 pub struct Model {
     name: String,
     sets: AllSets,
     pars: AllPars,
+
+    // build
+    elements: Vec<usize>,
 }
 
 impl Model {
@@ -20,22 +24,10 @@ impl Model {
     // sets
 
     pub fn cat_set(&self) -> CatSet<'_> {
-        self.sets.set(self)
+        self.sets.add_cat(self)
     }
 
     // pars
-
-    pub fn count(&self) -> Count<'_> {
-        self.pars.count(self)
-    }
-
-    pub fn par1<'a>(&'a self, i: CatSet<'a>) -> Par1<'a> {
-        self.pars.par1(self, i)
-    }
-
-    pub fn int_par1<'a>(&'a self, i: CatSet<'a>) -> IntPar1<'a> {
-        self.pars.int_par1(self, i)
-    }
 }
 
 // internal

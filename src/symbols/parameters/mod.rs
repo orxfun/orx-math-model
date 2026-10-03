@@ -1,7 +1,4 @@
 mod all_pars;
-mod count;
-mod par1;
+mod int_par0;
 
 pub use all_pars::AllPars;
-pub use count::Count;
-pub use par1::{IntPar1, Par1};

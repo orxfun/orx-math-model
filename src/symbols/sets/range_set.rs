@@ -1,4 +1,4 @@
-use crate::symbols::{parameters::Count, Symbol};
+use crate::symbols::Symbol;
 use core::ops::{Range, RangeBounds};
 
 #[derive(derive_new::new, Clone, Copy)]
