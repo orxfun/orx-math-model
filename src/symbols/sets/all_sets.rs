@@ -7,19 +7,12 @@ use orx_imp_vec::ImpVec;
 pub struct Sets {
     cat: ImpVec<CatSetData>,
     range: ImpVec<RangeSetData>,
-
-    // run data
-    cat_run_idx: ImpVec<usize>,
-    range_run_idx: ImpVec<usize>,
 }
 
 impl Sets {
     pub fn add_cat<'a>(&'a self, m: &'a Model) -> CatSet<'a> {
-        self.cat_run_idx.imp_push(0);
-
-        let data = CatSetData::new(Default::default());
+        let data = CatSetData::new(Default::default(), 0);
         let d = self.cat.imp_push_get_ref(data);
-
         CatSet::new(m, d)
     }
 

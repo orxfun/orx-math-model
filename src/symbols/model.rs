@@ -1,16 +1,16 @@
-use crate::symbols::parameters::Pars;
+use crate::symbols::parameters::{IntPar0, Pars};
+use crate::symbols::scalars::Scalars;
 use crate::symbols::sets::{CatSet, Sets};
 use alloc::string::String;
 use alloc::vec::Vec;
 
 #[derive(Default)]
 pub struct Model {
-    name: String,
-    sets: Sets,
-    pars: Pars,
+    pub(crate) name: String,
 
-    // build
-    elements: Vec<usize>,
+    pub(crate) sets: Sets,
+    pub(crate) pars: Pars,
+    pub(crate) scalars: Scalars,
 }
 
 impl Model {
@@ -28,6 +28,10 @@ impl Model {
     }
 
     // pars
+
+    pub fn int_par0(&self) -> IntPar0<'_> {
+        todo!()
+    }
 }
 
 // internal

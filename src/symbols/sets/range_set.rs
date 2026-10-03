@@ -7,6 +7,7 @@ pub struct RangeSet<'a>(Symbol<'a>);
 
 #[derive(derive_new::new)]
 pub struct RangeSetData {
-    d: SymbolDefinition,
-    create: Box<dyn Fn(&Model) -> Range<isize>>,
+    pub def: SymbolDefinition,
+    pub create: Box<dyn Fn(&Model) -> Range<i64>>,
+    pub elem_pos: usize,
 }

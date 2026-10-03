@@ -8,5 +8,6 @@ pub struct CatSet<'a> {
 
 #[derive(derive_new::new)]
 pub struct CatSetData {
-    d: SymbolDefinition,
+    pub def: SymbolDefinition,
+    pub elem_pos: usize,
 }
