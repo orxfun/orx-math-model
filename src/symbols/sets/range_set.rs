@@ -1,13 +1,12 @@
-use crate::symbols::Symbol;
+use crate::symbols::{Model, Symbol, SymbolDefinition};
+use alloc::boxed::Box;
 use core::ops::{Range, RangeBounds};
 
 #[derive(derive_new::new, Clone, Copy)]
-pub struct RangeSet<'a> {
-    s: Symbol<'a>,
-}
+pub struct RangeSet<'a>(Symbol<'a>);
 
-impl<'a> RangeSet<'a> {
-    pub(crate) fn symbol(self) -> Symbol<'a> {
-        self.s
-    }
+#[derive(derive_new::new)]
+pub struct RangeSetData {
+    d: SymbolDefinition,
+    create: Box<dyn Fn(&Model) -> Range<isize>>,
 }

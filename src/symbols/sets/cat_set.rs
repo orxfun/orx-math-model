@@ -1,12 +1,12 @@
-use crate::symbols::Symbol;
+use crate::symbols::{Model, Symbol, SymbolDefinition};
 
 #[derive(derive_new::new, Clone, Copy)]
 pub struct CatSet<'a> {
-    s: Symbol<'a>,
+    m: &'a Model,
+    d: &'a CatSetData,
 }
 
-impl<'a> CatSet<'a> {
-    pub(crate) fn symbol(self) -> Symbol<'a> {
-        self.s
-    }
+#[derive(derive_new::new)]
+pub struct CatSetData {
+    d: SymbolDefinition,
 }

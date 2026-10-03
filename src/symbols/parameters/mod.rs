@@ -1,4 +1,5 @@
 mod all_pars;
 mod int_par0;
 
-pub use all_pars::AllPars;
+pub use all_pars::Pars;
+pub use int_par0::IntPar0;

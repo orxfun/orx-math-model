@@ -1,13 +1,13 @@
-use crate::symbols::parameters::AllPars;
-use crate::symbols::sets::{AllSets, CatSet};
+use crate::symbols::parameters::Pars;
+use crate::symbols::sets::{CatSet, Sets};
 use alloc::string::String;
 use alloc::vec::Vec;
 
-#[derive(Default, Debug)]
+#[derive(Default)]
 pub struct Model {
     name: String,
-    sets: AllSets,
-    pars: AllPars,
+    sets: Sets,
+    pars: Pars,
 
     // build
     elements: Vec<usize>,
