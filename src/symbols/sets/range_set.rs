@@ -6,12 +6,8 @@ pub struct RangeSet<'a> {
     s: Symbol<'a>,
 }
 
-fn abc(a: Count<'_>) {
-    let x = a..a;
-    let b = x.start;
-    let c = x.end;
-
-    let x = a..=a;
-    let b = x.start();
-    let c = x.end();
+impl<'a> RangeSet<'a> {
+    pub(crate) fn symbol(self) -> Symbol<'a> {
+        self.s
+    }
 }

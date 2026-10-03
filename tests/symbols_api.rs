@@ -5,7 +5,7 @@ use orx_math_model::symbols::*;
 fn knapsack() {
     let m = Model::new("knapsack");
 
-    let item = m.set();
+    let item = m.cat_set();
 
     println!("{m:?}");
 }
@@ -14,7 +14,7 @@ fn knapsack() {
 fn mcfp() {
     let m = Model::new("mcfp");
 
-    let node = m.set();
+    let node = m.cat_set();
 
     println!("{m:?}");
 }
@@ -25,7 +25,7 @@ fn machine_scheduling() {
 
     let T = m.count();
 
-    let job = m.set();
+    let job = m.cat_set();
 
     let processing_time = m.int_par1(job);
 

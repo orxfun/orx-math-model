@@ -1,5 +1,5 @@
 use crate::symbols::parameters::{AllPars, Count, IntPar1, Par1};
-use crate::symbols::sets::{AllSets, IndexedSet, Set};
+use crate::symbols::sets::{AllSets, CatSet, IndexedSet};
 use alloc::string::String;
 
 #[derive(Default, Debug)]
@@ -17,13 +17,9 @@ impl Model {
         }
     }
 
-    // internal
-
-    fn index_of_set(&self) {}
-
     // sets
 
-    pub fn set(&self) -> Set<'_> {
+    pub fn cat_set(&self) -> CatSet<'_> {
         self.sets.set(self)
     }
 
@@ -33,11 +29,15 @@ impl Model {
         self.pars.count(self)
     }
 
-    pub fn par1<'a>(&'a self, i: Set<'a>) -> Par1<'a> {
+    pub fn par1<'a>(&'a self, i: CatSet<'a>) -> Par1<'a> {
         self.pars.par1(self, i)
     }
 
-    pub fn int_par1<'a>(&'a self, i: Set<'a>) -> IntPar1<'a> {
+    pub fn int_par1<'a>(&'a self, i: CatSet<'a>) -> IntPar1<'a> {
         self.pars.int_par1(self, i)
     }
 }
+
+// internal
+
+impl Model {}
