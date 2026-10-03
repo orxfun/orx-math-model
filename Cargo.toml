@@ -11,6 +11,8 @@ categories = ["mathematics", "algorithms", "science", "no-std"]
 
 [dependencies]
 derive-new = { version = "0.7.0" }
+orx-col-dim = { path = "../orx-col-dim" }
+orx-col-at = { path = "../orx-col-at" }
 orx-concurrent-option = { version = "1.5.0", default-features = false }
 orx-imp-vec = "2.17"
 orx-iterable = { version = "1.3.0", default-features = false }

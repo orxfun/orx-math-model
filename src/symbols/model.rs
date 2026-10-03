@@ -23,10 +23,6 @@ impl Model {
         self.sets.set(self)
     }
 
-    pub fn indexed_set<'a>(&'a self, count: Count<'a>) -> IndexedSet<'a> {
-        self.sets.indexed_set(self, count)
-    }
-
     // pars
 
     pub fn count(&self) -> Count<'_> {

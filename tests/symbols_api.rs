@@ -26,7 +26,6 @@ fn machine_scheduling() {
     let T = m.count();
 
     let job = m.set();
-    let time = m.indexed_set(T);
 
     let processing_time = m.int_par1(job);
 

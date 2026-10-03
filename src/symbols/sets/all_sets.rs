@@ -7,7 +7,6 @@ use orx_imp_vec::ImpVec;
 #[derive(Default, Debug)]
 pub struct AllSets {
     sets: ImpVec<SymbolDefinition>,
-    index_sets: ImpVec<SymbolDefinition>,
     range_sets: ImpVec<SymbolDefinition>,
 }
 
@@ -15,10 +14,5 @@ impl AllSets {
     pub fn set<'a>(&'a self, m: &'a Model) -> Set<'a> {
         let s = Symbol::new(m, self.sets.imp_push_get_ref(Default::default()));
         Set::new(s)
-    }
-
-    pub fn indexed_set<'a>(&'a self, m: &'a Model, count: Count<'a>) -> IndexedSet<'a> {
-        let s = Symbol::new(m, self.index_sets.imp_push_get_ref(Default::default()));
-        IndexedSet::new(s, count)
     }
 }
