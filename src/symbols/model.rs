@@ -17,6 +17,10 @@ impl Model {
         }
     }
 
+    // internal
+
+    fn index_of_set(&self) {}
+
     // sets
 
     pub fn set(&self) -> Set<'_> {
