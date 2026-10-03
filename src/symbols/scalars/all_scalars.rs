@@ -16,7 +16,8 @@ impl Scalars {
         def: SymbolDefinition,
         create: Box<dyn Fn(&Model) -> i64>,
     ) -> Int<'a> {
-        let data = IntData::new(def, create);
+        let pos = self.int.len();
+        let data = IntData::new(pos, def, create);
         let d = self.int.imp_push_get_ref(data);
         Int::new(m, d)
     }

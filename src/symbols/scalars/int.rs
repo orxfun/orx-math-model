@@ -9,6 +9,7 @@ pub struct Int<'a> {
 
 #[derive(derive_new::new)]
 pub struct IntData {
+    pos: usize,
     def: SymbolDefinition,
     create: Box<dyn Fn(&Model) -> i64>,
 }

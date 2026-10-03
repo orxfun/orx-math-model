@@ -1,4 +1,4 @@
-use crate::symbols::{Model, Symbol, SymbolDefinition};
+use crate::symbols::{scalars::Int, Model, Symbol, SymbolDefinition};
 use alloc::boxed::Box;
 use core::ops::{Range, RangeBounds};
 
@@ -10,4 +10,9 @@ pub struct RangeSetData {
     pub def: SymbolDefinition,
     pub create: Box<dyn Fn(&Model) -> Range<i64>>,
     pub elem_pos: usize,
+}
+
+pub enum Bound<'a> {
+    Dep(Int<'a>),
+    Const(i64),
 }
