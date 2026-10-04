@@ -2,8 +2,8 @@ use crate::model::Model;
 
 #[derive(derive_new::new)]
 pub struct Symbol<'a, D> {
-    pub(crate) m: &'a Model,
-    pub(crate) d: &'a D,
+    pub m: &'a Model<'a>,
+    pub d: &'a D,
 }
 
 impl<'a, D> Clone for Symbol<'a, D> {
@@ -13,3 +13,9 @@ impl<'a, D> Clone for Symbol<'a, D> {
 }
 
 impl<'a, D> Copy for Symbol<'a, D> {}
+
+impl<'a, D> Symbol<'a, D> {
+    pub fn destruct(self) -> (&'a Model<'a>, &'a D) {
+        (self.m, self.d)
+    }
+}
