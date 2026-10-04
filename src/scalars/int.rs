@@ -15,7 +15,7 @@ pub struct IntData<'a> {
 impl<'a> From<IntPar0<'a>> for Int<'a> {
     fn from(value: IntPar0<'a>) -> Self {
         let (m, d) = value.0.destruct();
-        let value = Box::new(move || d.value);
+        let value = Box::new(|| d.value);
         m.int(value)
     }
 }

@@ -20,4 +20,5 @@ extern crate std;
 mod model;
 mod pars;
 mod scalars;
+mod sets;
 mod symbol;
