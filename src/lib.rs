@@ -22,3 +22,5 @@ mod pars;
 mod scalars;
 mod sets;
 mod symbol;
+
+pub use model::Model;

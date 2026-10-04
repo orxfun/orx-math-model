@@ -1,5 +1,5 @@
-// #![allow(non_snake_case, unused_variables)]
-// use orx_math_model::symbols::*;
+#![allow(non_snake_case, unused_variables)]
+use orx_math_model::*;
 
 // #[test]
 // fn knapsack() {
@@ -19,15 +19,13 @@
 //     println!("{m:?}");
 // }
 
-// #[test]
-// fn machine_scheduling() {
-//     let m = Model::new("machine_scheduling");
+#[test]
+fn machine_scheduling() {
+    let m = Model::default();
 
-//     let t = m.count();
+    let T = m.int_par0();
+    // let N = m.int_par0();
 
-//     let job = m.cat_set();
-
-//     let processing_time = m.int_par1(job);
-
-//     println!("{m:?}");
-// }
+    // let t = m.range(1, T);
+    // let j = m.range(1, N);
+}

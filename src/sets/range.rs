@@ -1,3 +1,4 @@
+use crate::pars::IntPar0;
 use crate::scalars::Int;
 use crate::symbol::Symbol;
 
@@ -10,9 +11,17 @@ pub struct RangeData<'a> {
     pub upper: Bound<'a>,
 }
 
+// bound
+
 pub enum Bound<'a> {
     Dep(Int<'a>),
     Const(i64),
+}
+
+impl<'a> From<IntPar0<'a>> for Bound<'a> {
+    fn from(value: IntPar0<'a>) -> Self {
+        Self::Dep(value.into())
+    }
 }
 
 impl<'a> From<Int<'a>> for Bound<'a> {
