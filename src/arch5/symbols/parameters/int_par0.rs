@@ -10,5 +10,7 @@ pub struct IntPar0<'a> {
 #[derive(derive_new::new)]
 pub struct IntPar0Data {
     pub def: SymbolDefinition,
+
+    // resolved
     pub value: i64,
 }
