@@ -2,10 +2,10 @@ use crate::scalars::Int;
 use crate::symbol::Symbol;
 
 #[derive(derive_new::new, Clone, Copy)]
-pub struct RangeSet<'a>(pub(crate) Symbol<'a, RangeSetData<'a>>);
+pub struct Range<'a>(pub(crate) Symbol<'a, RangeData<'a>>);
 
 #[derive(derive_new::new)]
-pub struct RangeSetData<'a> {
+pub struct RangeData<'a> {
     pub lower: Bound<'a>,
     pub upper: Bound<'a>,
 }

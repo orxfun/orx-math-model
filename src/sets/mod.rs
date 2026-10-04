@@ -1,1 +1,3 @@
-mod range_set;
+mod range;
+
+pub use range::{Bound, Range, RangeData};
