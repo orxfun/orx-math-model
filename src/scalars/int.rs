@@ -1,4 +1,4 @@
-use crate::{model::Model, symbol::Symbol};
+use crate::{model::Model, pars::IntPar0, symbol::Symbol};
 use alloc::boxed::Box;
 
 #[derive(derive_new::new, Clone, Copy)]
@@ -6,10 +6,16 @@ pub struct Int<'a>(pub(crate) Symbol<'a, IntData>);
 
 #[derive(derive_new::new)]
 pub struct IntData {
-    create: Box<dyn Fn(&Model) -> i64>,
+    value: Box<dyn Fn(&Model) -> i64>,
 }
 
 // from
+
+impl<'a> From<IntPar0<'a>> for Int<'a> {
+    fn from(value: IntPar0<'a>) -> Self {
+        todo!()
+    }
+}
 
 // impl<'a> From<IntPar0<'a>> for Int<'a> {
 //     fn from(value: IntPar0<'a>) -> Self {
