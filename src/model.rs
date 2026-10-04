@@ -22,9 +22,10 @@ impl Model {
     }
 
     // scalars
-    pub(crate) fn int(&self, value: Box<dyn Fn(&Model) -> i64>) -> Int<'_> {
-        let data = IntData::new(value);
-        let d = self.int.imp_push_get_ref(data);
-        Int(Symbol::new(self, d))
+    pub(crate) fn int(&self, value: Box<dyn Fn() -> i64>) -> Int<'_> {
+        // let data = IntData::new(value);
+        // let d = self.int.imp_push_get_ref(data);
+        // Int(Symbol::new(self, d))
+        todo!()
     }
 }
