@@ -1,15 +1,22 @@
-use crate::pars::{IntPar0, IntPar0Data};
+use crate::pars::IntPar0;
 use crate::pos::Pos;
 use crate::scalars::Int;
 use crate::symbol::Symbol;
+use crate::Model;
 
 #[derive(derive_new::new, Clone, Copy)]
 pub struct Range<'a>(pub(crate) Symbol<'a, RangeData>);
 
 #[derive(derive_new::new)]
 pub struct RangeData {
-    pub lower: Bound,
-    pub upper: Bound,
+    lower: Bound,
+    upper: Bound,
+}
+
+impl RangeData {
+    pub fn range(&self, m: &Model) -> core::ops::Range<i64> {
+        self.lower.value(m)..self.upper.value(m)
+    }
 }
 
 // bound
@@ -17,6 +24,15 @@ pub struct RangeData {
 pub enum Bound {
     Const(i64),
     Int(Pos),
+}
+
+impl Bound {
+    fn value(&self, m: &Model) -> i64 {
+        match *self {
+            Self::Const(x) => x,
+            Self::Int(pos) => m.int[pos].value(m),
+        }
+    }
 }
 
 impl From<i64> for Bound {

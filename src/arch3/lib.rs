@@ -28,5 +28,5 @@ mod symbols;
 // mod draft;
 
 pub use data::{Data, DataBuilder, Number, ParData, SetData};
-pub use model::Model;
+pub use Model;
 pub use symbols::{par, set_of, Par, Set, SymbolRef};

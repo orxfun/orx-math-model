@@ -1,5 +1,5 @@
 use crate::{
-    model::Model,
+    Model,
     symbols::{symbol::Symbol, symbol_meta::SymbolMeta},
 };
 use alloc::string::String;

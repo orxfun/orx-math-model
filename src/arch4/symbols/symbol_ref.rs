@@ -1,4 +1,4 @@
-use crate::model::Model;
+use crate::Model;
 
 pub struct SymbolRef<'m, S> {
     pub model_ref: &'m Model,

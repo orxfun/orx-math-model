@@ -1,4 +1,4 @@
-use crate::model::Model;
+use crate::Model;
 
 #[derive(derive_new::new)]
 pub struct Symbol<'a, D> {

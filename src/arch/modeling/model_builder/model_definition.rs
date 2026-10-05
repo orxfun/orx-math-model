@@ -4,7 +4,7 @@ use super::{
     validation::{validate_model_references_of_constraint, validate_model_references_of_objective},
 };
 use crate::modeling::{
-    model::Model,
+    Model,
     model_data::ModelData,
     model_data_ref::ModelDataRef,
     reference::HasRef,

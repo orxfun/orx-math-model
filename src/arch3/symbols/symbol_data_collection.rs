@@ -1,4 +1,4 @@
-use crate::model::Model;
+use crate::Model;
 use crate::symbols::{symbol::Symbol, symbol_meta::SymbolMeta, symbol_ref_core::SymbolRefCore};
 use orx_imp_vec::*;
 

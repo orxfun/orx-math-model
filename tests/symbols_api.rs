@@ -1,24 +1,6 @@
 #![allow(non_snake_case, unused_variables)]
 use orx_math_model::*;
 
-// // #[test]
-// // fn knapsack() {
-// //     let m = Model::new("knapsack");
-
-// //     let item = m.cat_set();
-
-// //     println!("{m:?}");
-// // }
-
-// // #[test]
-// // fn mcfp() {
-// //     let m = Model::new("mcfp");
-
-// //     let node = m.cat_set();
-
-// //     println!("{m:?}");
-// // }
-
 #[test]
 fn machine_scheduling() {
     let m = Model::default();

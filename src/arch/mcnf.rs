@@ -1,6 +1,6 @@
 use crate::modeling::{
     functions::{forall, sum},
-    model::Model,
+    Model,
     model_builder::model_error::ModelError,
     modeler::Modeler,
     stages::Built,

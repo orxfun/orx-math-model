@@ -1,9 +1,4 @@
-use crate::{
-    model::Model,
-    pars::IntPar0Data,
-    pos::Pos,
-    scalars::{Int, IntData},
-};
+use crate::{pars::IntPar0Data, pos::Pos, scalars::IntData, Model};
 use orx_imp_vec::{ImpVec, PinnedVec};
 
 #[derive(derive_new::new)]

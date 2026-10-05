@@ -1,4 +1,4 @@
-use crate::{model::Model, sets::Element};
+use crate::{Model, sets::Element};
 use std::string::ToString;
 
 struct Item {

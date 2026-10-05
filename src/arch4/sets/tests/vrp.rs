@@ -1,4 +1,4 @@
-use crate::model::Model;
+use crate::Model;
 use crate::sets::{set1_data::Set1Data, Element};
 use alloc::vec;
 use alloc::vec::Vec;
