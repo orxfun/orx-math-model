@@ -1,10 +1,15 @@
 use crate::symbol::Symbol;
 
-#[derive(derive_new::new, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct IntPar0<'a>(pub(crate) Symbol<'a, IntPar0Data>);
 
-#[derive(derive_new::new)]
 pub struct IntPar0Data {
-    // resolved
+    // resolve
     pub value: i64,
+}
+
+impl IntPar0Data {
+    pub fn new() -> Self {
+        Self { value: 0 }
+    }
 }
