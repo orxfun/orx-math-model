@@ -7,6 +7,12 @@ use crate::Model;
 #[derive(derive_new::new, Clone, Copy)]
 pub struct Range<'a>(Symbol<'a, RangeData>);
 
+impl<'a> Range<'a> {
+    pub fn element(self) -> Int<'a> {
+        todo!()
+    }
+}
+
 #[derive(derive_new::new)]
 pub struct RangeData {
     lower: Bound,

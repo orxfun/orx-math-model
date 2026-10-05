@@ -17,7 +17,7 @@ pub struct Model {
     range: ImpVec<RangeData>,
 
     // resolves
-    elements: ImpVec<usize>,
+    int_elements: ImpVec<i64>,
 }
 
 impl Model {
