@@ -1,3 +1,3 @@
 mod range;
 
-// pub use range::{Bound, Range, RangeData};
+pub use range::{Bound, Range, RangeData};

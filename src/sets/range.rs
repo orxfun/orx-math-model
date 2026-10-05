@@ -6,6 +6,7 @@ use crate::symbol::Symbol;
 #[derive(derive_new::new, Clone, Copy)]
 pub struct Range<'a>(pub(crate) Symbol<'a, RangeData>);
 
+#[derive(derive_new::new)]
 pub struct RangeData {
     pub lower: Bound,
     pub upper: Bound,
