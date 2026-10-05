@@ -39,6 +39,6 @@ impl Model {
     pub fn range(&self, lower: impl Into<Bound>, upper: impl Into<Bound>) -> Range<'_> {
         let data = RangeData::new(lower.into(), upper.into());
         let d = self.range.imp_push_get_ref(data);
-        Range(Symbol::new(self, d))
+        Range::new(Symbol::new(self, d))
     }
 }

@@ -5,7 +5,7 @@ use crate::symbol::Symbol;
 use crate::Model;
 
 #[derive(derive_new::new, Clone, Copy)]
-pub struct Range<'a>(pub(crate) Symbol<'a, RangeData>);
+pub struct Range<'a>(Symbol<'a, RangeData>);
 
 #[derive(derive_new::new)]
 pub struct RangeData {
