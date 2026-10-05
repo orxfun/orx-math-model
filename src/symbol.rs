@@ -1,4 +1,9 @@
-use crate::{model::Model, pars::IntPar0Data, pos::Pos};
+use crate::{
+    model::Model,
+    pars::IntPar0Data,
+    pos::Pos,
+    scalars::{Int, IntData},
+};
 use orx_imp_vec::{ImpVec, PinnedVec};
 
 #[derive(derive_new::new)]
@@ -25,9 +30,16 @@ impl<'a, D> Symbol<'a, D> {
     }
 }
 
+// pos
+
 impl Symbol<'_, IntPar0Data> {
     pub fn pos(self) -> Pos {
-        let pos = self.pos_in(&self.m.int_par0).expect("TODO-REF-ERR");
-        Pos::new(pos)
+        Pos::new(self.pos_in(&self.m.int_par0).expect("TODO"))
+    }
+}
+
+impl Symbol<'_, IntData> {
+    pub fn pos(self) -> Pos {
+        Pos::new(self.pos_in(&self.m.int).expect("TODO"))
     }
 }
