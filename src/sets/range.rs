@@ -1,4 +1,15 @@
-use crate::{pars::IntPar0, pos::Pos, scalars::Int};
+use crate::pars::{IntPar0, IntPar0Data};
+use crate::pos::Pos;
+use crate::scalars::Int;
+use crate::symbol::Symbol;
+
+#[derive(derive_new::new, Clone, Copy)]
+pub struct Range<'a>(pub(crate) Symbol<'a, RangeData>);
+
+pub struct RangeData {
+    pub lower: Bound,
+    pub upper: Bound,
+}
 
 // bound
 
