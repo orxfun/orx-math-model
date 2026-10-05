@@ -1,4 +1,5 @@
 use crate::pars::{IntPar0, IntPar0Data};
+use crate::pos::Pos;
 use crate::scalars::{Int, IntData};
 // use crate::sets::{Bound, Range, RangeData};
 use crate::symbol::Symbol;
