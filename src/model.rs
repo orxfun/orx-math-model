@@ -1,8 +1,9 @@
 use crate::pars::IntPar0Data;
 use crate::pos::Pos;
-use crate::scalar_int::{Int, IntData, RangeElemData};
+use crate::scalar_int::{FunIntData, Int, IntData, RangeElemData};
 use crate::sets::{Bound, Range, RangeData};
 use crate::symbol::Symbol;
+use alloc::boxed::Box;
 use orx_imp_vec::{ImpVec, PinnedVec};
 
 #[derive(Default)]
@@ -12,6 +13,7 @@ pub struct Model {
 
     // int
     pub(crate) int: ImpVec<IntData>,
+    pub(crate) fun_int: ImpVec<FunIntData>,
 
     // sets
     pub(crate) range: ImpVec<RangeData>,
@@ -35,6 +37,12 @@ impl Model {
     fn int(&self, data: IntData) -> Int<'_> {
         let d = self.int.imp_push_get_ref(data);
         Int(Symbol::new(self, d))
+    }
+
+    pub(crate) fn fun_int(&self, fun: Box<dyn Fn(&Model) -> i64>) -> Int<'_> {
+        let data = FunIntData::new(fun);
+        let d = self.fun_int.imp_push_get_ref(data);
+        self.int(IntData::from((self, d)))
     }
 
     // sets

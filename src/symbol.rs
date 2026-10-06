@@ -19,6 +19,10 @@ impl<'a, D> Symbol<'a, D> {
     fn pos_in(self, list: &ImpVec<D>) -> Option<usize> {
         list.index_of(self.d)
     }
+
+    pub fn assert_same_model(&self, other: Self) {
+        assert_eq!(self.m as *const Model, other.m as *const Model, "TODO");
+    }
 }
 
 // pos
