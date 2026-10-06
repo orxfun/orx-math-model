@@ -1,4 +1,5 @@
 use crate::pars::{IntPar0, IntPar0Data};
+use crate::pos::Pos;
 use crate::scalars::{Int, IntData};
 use crate::sets::{Bound, Range, RangeData};
 use crate::symbol::Symbol;
@@ -30,7 +31,7 @@ impl Model {
 
     // scalars
     pub(crate) fn int(&self, value: Box<dyn Fn(&Model) -> i64>) -> Int<'_> {
-        let data = IntData::new(value);
+        let data = IntData::new(Pos::new_for(&self.int), value);
         let d = self.int.imp_push_get_ref(data);
         Int(Symbol::new(self, d))
     }

@@ -13,6 +13,7 @@ impl IntPar0Data {
         Self { value: 0 }
     }
 
+    #[inline(always)]
     pub fn value(&self) -> i64 {
         self.value
     }
