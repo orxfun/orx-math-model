@@ -28,6 +28,7 @@ pub struct Model {
 
 impl Model {
     // pars
+    // TODO: might make some declarations mutable?
     pub fn int_par0(&self) -> Int<'_> {
         let data = IntPar0Data::new();
         let d = self.int_par0.imp_push_get_ref(data);

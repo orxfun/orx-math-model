@@ -1,4 +1,5 @@
 #![allow(non_snake_case, unused_variables)]
+
 use orx_math_model::*;
 
 #[test]
@@ -26,4 +27,40 @@ fn machine_scheduling() {
     let tp = m.range(t, num_periods);
 
     let N = m.set();
+}
+
+#[test]
+fn cat() {
+    let m = Model::default();
+    let J = m.set();
+
+    trait PossiblyResolvedSet {}
+
+    struct ResolvedSet<C, T, I> {
+        elements: C,
+        get: Box<dyn Fn(&Self, I) -> &T>,
+        collect: Box<dyn Fn(&Self, &mut Vec<I>)>,
+    }
+
+    impl<C, T, I> PossiblyResolvedSet for ResolvedSet<C, T, I> {}
+
+    type Jobs = ResolvedSet<Vec<Job>, Job, usize>;
+    struct Job {
+        time: i64,
+    }
+    let jobs = vec![Job { time: 3 }];
+    fn get<'a>(x: &'a Jobs, i: usize) -> &'a Job {
+        &x.elements[i]
+    }
+    let collect = |x: &Jobs, dst: &mut Vec<usize>| {
+        dst.clear();
+        dst.extend(0..x.elements.len());
+    };
+    let jobs = Jobs {
+        elements: jobs,
+        get: Box::new(get),
+        collect: Box::new(collect),
+    };
+
+    let jobs: Box<dyn PossiblyResolvedSet> = Box::new(jobs);
 }
