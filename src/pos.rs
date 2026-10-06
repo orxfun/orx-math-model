@@ -8,6 +8,10 @@ impl Pos {
     pub fn new_for<D, P: PinnedVec<D>>(vec: &ImpVec<D, P>) -> Self {
         Self(vec.len())
     }
+
+    pub fn pos_of<D, P: PinnedVec<D>>(vec: &ImpVec<D, P>, data: &D) -> Self {
+        Self(vec.index_of(data).expect("TODO"))
+    }
 }
 
 impl<D, P: PinnedVec<D>> Index<Pos> for ImpVec<D, P> {
