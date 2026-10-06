@@ -16,10 +16,6 @@ impl<'a, D> Clone for Symbol<'a, D> {
 impl<'a, D> Copy for Symbol<'a, D> {}
 
 impl<'a, D> Symbol<'a, D> {
-    pub fn destruct(self) -> (&'a Model, &'a D) {
-        (self.m, self.d)
-    }
-
     fn pos_in(self, list: &ImpVec<D>) -> Option<usize> {
         list.index_of(self.d)
     }
