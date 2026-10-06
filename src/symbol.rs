@@ -1,4 +1,4 @@
-use crate::Model;
+use crate::{pos::Pos, scalars::IntData, Model};
 use orx_imp_vec::{ImpVec, PinnedVec};
 
 #[derive(derive_new::new)]
@@ -18,5 +18,13 @@ impl<'a, D> Copy for Symbol<'a, D> {}
 impl<'a, D> Symbol<'a, D> {
     fn pos_in(self, list: &ImpVec<D>) -> Option<usize> {
         list.index_of(self.d)
+    }
+}
+
+// pos
+
+impl Symbol<'_, IntData> {
+    pub fn pos(self) -> Pos {
+        Pos::new(self.pos_in(&self.m.int).expect("TODO"))
     }
 }

@@ -10,7 +10,7 @@ pub enum IntData {
 }
 
 impl IntData {
-    pub fn int_value(&self, m: &Model) -> i64 {
+    pub fn value(&self, m: &Model) -> i64 {
         match *self {
             Self::IntPar0(p) => m.int_par0[p].value(),
         }
