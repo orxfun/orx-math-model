@@ -21,4 +21,7 @@ fn machine_scheduling() {
     let tp = 1 + t;
     let tp = t + t;
     let tj = t + j;
+
+    let tp = m.range(1, num_periods + 1);
+    let tp = m.range(t, num_periods);
 }
