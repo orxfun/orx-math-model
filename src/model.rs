@@ -1,7 +1,7 @@
 use crate::pars::IntPar0Data;
 use crate::pos::Pos;
 use crate::scalar_int::{FunIntData, Int, IntData, RangeElemData};
-use crate::sets::{Bound, Range, RangeData};
+use crate::sets::{Bound, Range, RangeData, Set, SetData};
 use crate::symbol::Symbol;
 use alloc::boxed::Box;
 use orx_imp_vec::{ImpVec, PinnedVec};
@@ -17,6 +17,7 @@ pub struct Model {
 
     // sets
     pub(crate) range: ImpVec<RangeData>,
+    pub(crate) set: ImpVec<SetData>,
 
     // elements
     pub(crate) range_elem: ImpVec<RangeElemData>,
@@ -50,6 +51,12 @@ impl Model {
         let data = RangeData::new(lower.into(), upper.into());
         let d = self.range.imp_push_get_ref(data);
         Range::new(Symbol::new(self, d))
+    }
+
+    pub fn set(&self) -> Set<'_> {
+        let data = SetData;
+        let d = self.set.imp_push_get_ref(data);
+        Set::new(Symbol::new(self, d))
     }
 
     // elements
