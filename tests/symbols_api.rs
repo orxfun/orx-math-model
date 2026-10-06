@@ -5,9 +5,15 @@ use orx_math_model::*;
 fn machine_scheduling() {
     let m = Model::default();
 
-    let T = m.int_par0();
-    let N = m.int_par0();
+    let num_periods = m.int_par0();
+    let num_jobs = m.int_par0();
 
-    let t = m.range(1, T);
-    let j = m.range(1, N);
+    let T = m.range(1, num_periods);
+    let J = m.range(1, num_jobs);
+
+    let t = T.element();
+    let j = J.element();
+
+    let t = m.range(1, num_periods).element();
+    let j = m.range(1, num_jobs).element();
 }
