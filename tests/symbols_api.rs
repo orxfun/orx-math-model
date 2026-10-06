@@ -16,4 +16,9 @@ fn machine_scheduling() {
 
     let t = m.range(1, num_periods).element();
     let j = m.range(1, num_jobs).element();
+
+    let tp = t + 1;
+    let tp = 1 + t;
+    let tp = t + t;
+    let tj = t + j;
 }
