@@ -8,7 +8,3 @@ pub struct RangeElemData {
     pub range_pos: Pos,
     pub value_pos: Pos,
 }
-
-impl RangeElemData {
-    // pub fn new(m)
-}

@@ -5,7 +5,7 @@ pub struct Range<'a>(pub(crate) Symbol<'a, RangeData>);
 
 impl<'a> Range<'a> {
     pub fn element(self) -> Int<'a> {
-        todo!()
+        self.0.m.range_elem(self)
     }
 }
 
