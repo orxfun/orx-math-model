@@ -9,6 +9,8 @@ impl<'a> Range<'a> {
     }
 }
 
+// data
+
 #[derive(derive_new::new)]
 pub struct RangeData {
     lower: Bound,

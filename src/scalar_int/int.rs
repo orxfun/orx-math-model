@@ -6,6 +6,8 @@ use crate::{pos::Pos, Model};
 #[derive(Clone, Copy)]
 pub struct Int<'a>(pub(crate) Symbol<'a, IntData>);
 
+// data
+
 pub enum IntData {
     IntPar0(Pos),
     RangeElem(Pos),
