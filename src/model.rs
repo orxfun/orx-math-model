@@ -1,8 +1,9 @@
 use crate::pars::IntPar0Data;
-use crate::scalars::{Int, IntData};
+use crate::pos::Pos;
+use crate::scalar_int::{Int, IntData, RangeElemData};
 use crate::sets::{Bound, Range, RangeData};
 use crate::symbol::Symbol;
-use orx_imp_vec::ImpVec;
+use orx_imp_vec::{ImpVec, PinnedVec};
 
 #[derive(Default)]
 pub struct Model {
@@ -13,7 +14,13 @@ pub struct Model {
     pub(crate) int: ImpVec<IntData>,
 
     // sets
-    range: ImpVec<RangeData>,
+    pub(crate) range: ImpVec<RangeData>,
+
+    // elements
+    pub(crate) range_elem: ImpVec<RangeElemData>,
+
+    // resolve
+    pub(crate) range_elem_value: ImpVec<i64>,
 }
 
 impl Model {
@@ -21,10 +28,12 @@ impl Model {
     pub fn int_par0(&self) -> Int<'_> {
         let data = IntPar0Data::new();
         let d = self.int_par0.imp_push_get_ref(data);
+        self.int(IntData::from((self, d)))
+    }
 
-        let data = IntData::from((self, d));
+    // int
+    fn int(&self, data: IntData) -> Int<'_> {
         let d = self.int.imp_push_get_ref(data);
-
         Int(Symbol::new(self, d))
     }
 
@@ -33,5 +42,15 @@ impl Model {
         let data = RangeData::new(lower.into(), upper.into());
         let d = self.range.imp_push_get_ref(data);
         Range::new(Symbol::new(self, d))
+    }
+
+    // elements
+    pub(crate) fn range_elem(&self, range: Range<'_>) -> Int<'_> {
+        let range_pos = range.0.pos();
+        let value_pos = Pos::new_for(&self.range_elem);
+        let data = RangeElemData::new(range_pos, value_pos);
+        let d = self.range_elem.imp_push_get_ref(data);
+        self.range_elem_value.imp_push(0);
+        self.int(IntData::from(d))
     }
 }

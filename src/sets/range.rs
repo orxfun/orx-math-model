@@ -1,7 +1,7 @@
-use crate::{pos::Pos, scalars::Int, symbol::Symbol, Model};
+use crate::{pos::Pos, scalar_int::Int, symbol::Symbol, Model};
 
 #[derive(derive_new::new, Clone, Copy)]
-pub struct Range<'a>(Symbol<'a, RangeData>);
+pub struct Range<'a>(pub(crate) Symbol<'a, RangeData>);
 
 impl<'a> Range<'a> {
     pub fn element(self) -> Int<'a> {

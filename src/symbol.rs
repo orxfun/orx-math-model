@@ -1,4 +1,4 @@
-use crate::{pos::Pos, scalars::IntData, Model};
+use crate::{pos::Pos, scalar_int::IntData, sets::RangeData, Model};
 use orx_imp_vec::{ImpVec, PinnedVec};
 
 #[derive(derive_new::new)]
@@ -26,5 +26,11 @@ impl<'a, D> Symbol<'a, D> {
 impl Symbol<'_, IntData> {
     pub fn pos(self) -> Pos {
         Pos::new(self.pos_in(&self.m.int).expect("TODO"))
+    }
+}
+
+impl Symbol<'_, RangeData> {
+    pub fn pos(self) -> Pos {
+        Pos::new(self.pos_in(&self.m.range).expect("TODO"))
     }
 }
