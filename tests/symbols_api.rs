@@ -34,7 +34,9 @@ fn cat() {
     let m = Model::default();
     let J = m.set();
 
-    trait PossiblyResolvedSet {}
+    trait PossiblyResolvedSet {
+        type Idx;
+    }
 
     struct ResolvedSet<C, T, I> {
         elements: C,
@@ -42,7 +44,9 @@ fn cat() {
         collect: Box<dyn Fn(&Self, &mut Vec<I>)>,
     }
 
-    impl<C, T, I> PossiblyResolvedSet for ResolvedSet<C, T, I> {}
+    impl<C, T, I> PossiblyResolvedSet for ResolvedSet<C, T, I> {
+        type Idx = I;
+    }
 
     type Jobs = ResolvedSet<Vec<Job>, Job, usize>;
     struct Job {
@@ -62,5 +66,7 @@ fn cat() {
         collect: Box::new(collect),
     };
 
-    let jobs: Box<dyn PossiblyResolvedSet> = Box::new(jobs);
+    let jobs: Box<dyn PossiblyResolvedSet<Idx = usize>> = Box::new(jobs);
+
+    // parameters
 }
