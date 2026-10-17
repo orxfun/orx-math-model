@@ -1,11 +1,11 @@
 use crate::model::Slot;
 
 #[derive(derive_new::new)]
-pub struct ParD0<'a> {
+pub struct Par<'a> {
     slot: Slot<'a, i64>,
 }
 
-impl ParD0<'_> {
+impl Par<'_> {
     pub(crate) fn value(&self) -> i64 {
         *self.slot.value()
     }

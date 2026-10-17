@@ -1,8 +1,8 @@
 #[cfg(test)]
 mod tests;
 
-mod par_d0;
+mod par;
 mod set;
 
-pub use par_d0::ParD0;
+pub use par::Par;
 pub use set::Set;
