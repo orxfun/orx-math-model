@@ -1,20 +1,30 @@
-// use crate::Model;
+use crate::{model::Set0Gen, Model};
+use alloc::{rc::Rc, vec, vec::Vec};
 
-// #[test]
-// fn read_write_set_d0() {
-//     let m = Model::new();
+#[test]
+fn read_write_set_d0() {
+    let m = Model::new();
 
-//     for _ in 0..3 {
-//         let _ = m.set();
-//     }
+    for _ in 0..3 {
+        let _ = m.set();
+    }
 
-//     let p = m.set();
-//     assert_eq!(p.value(), 0);
+    let p = m.set();
+    assert_eq!(p.value().generate().collect::<Vec<_>>(), vec![]);
 
-//     for _ in 0..3 {
-//         let _ = m.set();
-//     }
+    for _ in 0..3 {
+        let _ = m.set();
+    }
 
-//     p.set(42);
-//     assert_eq!(p.value(), 42);
-// }
+    p.set(Set0Gen::new(|| vec![1, 2, 3]));
+    assert_eq!(p.value().generate().collect::<Vec<_>>(), vec![1, 2, 3]);
+
+    p.set(Set0Gen::new(|| 1..4));
+    assert_eq!(p.value().generate().collect::<Vec<_>>(), vec![1, 2, 3]);
+
+    let data = vec![1, 2, 3];
+    let data = Rc::new(data);
+    let data2 = data.clone();
+    p.set(Set0Gen::new(move || data2.iter().copied()));
+    assert_eq!(p.value().generate().collect::<Vec<_>>(), vec![1, 2, 3]);
+}
