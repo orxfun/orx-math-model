@@ -1,11 +1,17 @@
 use alloc::vec::Vec;
 
+#[derive(Default)]
 pub struct Elements {
     data: Vec<usize>,
 }
 
 impl Elements {
-    pub fn clear(&mut self) {
+    pub fn fill_with(&mut self, values: impl IntoIterator<Item = usize>) {
         self.data.clear();
+        self.data.extend(values);
+    }
+
+    pub fn as_slice(&self) -> &[usize] {
+        &self.data
     }
 }

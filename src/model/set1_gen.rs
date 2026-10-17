@@ -6,8 +6,8 @@ pub struct Set1Gen {
 }
 
 impl Set1Gen {
-    pub fn fill_elements(&self, i1: usize, elements: &mut Elements) {
-        elements.clear();
-        (self.f)(i1, elements)
-    }
+    // pub fn fill_elements(&self, i1: usize, elements: &mut Elements) {
+    //     elements.clear();
+    //     (self.f)(i1, elements)
+    // }
 }
