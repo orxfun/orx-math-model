@@ -2,7 +2,9 @@ mod elements;
 mod model;
 mod set0_gen;
 mod set1_gen;
+mod slot;
 mod slots;
+mod symbols;
 
 pub use elements::Elements;
 pub use model::Model;

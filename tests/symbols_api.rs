@@ -1,6 +1,13 @@
-// #![allow(non_snake_case, unused_variables)]
+#![allow(non_snake_case, unused_variables)]
 
-// use orx_math_model::*;
+use orx_math_model::*;
+
+#[test]
+fn abc() {
+    let m = Model::new();
+
+    let T = m.par_d0();
+}
 
 // #[test]
 // fn machine_scheduling() {
