@@ -6,7 +6,11 @@ pub struct ParD0<'a> {
 }
 
 impl ParD0<'_> {
-    pub fn value(&self) -> i64 {
+    pub(crate) fn value(&self) -> i64 {
         *self.slot.value()
+    }
+
+    pub(crate) fn set(&self, value: i64) {
+        self.slot.set(value);
     }
 }

@@ -4,7 +4,7 @@ use orx_math_model::*;
 
 #[test]
 fn abc() {
-    let m = Model::new();
+    let mut m = Model::new();
 
     let T = m.par_d0();
 }
