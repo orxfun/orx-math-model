@@ -10,4 +10,5 @@ pub use elements::Elements;
 pub use model::Model;
 pub use set0_gen::Set0Gen;
 pub use set1_gen::Set1Gen;
+pub use slot::Slot;
 pub use slots::Slots;

@@ -1,5 +1,7 @@
 use orx_imp_vec::{ImpVec, PinnedVec, SplitVec};
 
+use crate::model::Slot;
+
 // TODO: to be decided later
 type PV<T> = SplitVec<T>;
 
@@ -18,14 +20,10 @@ impl<T> Slots<T> {
         self.slots.imp_push_get_ref(value)
     }
 
-    pub fn push_default(&self) -> &T
+    pub fn push_default(&self) -> Slot<'_, T>
     where
         T: Default,
     {
-        self.slots.imp_push_get_ref(Default::default())
-    }
-
-    pub unsafe fn set(&self, element: &T, new_value: T) {
-        debug_assert!(self.slots.index_of(element).is_some());
+        Slot::new(self, Default::default())
     }
 }
