@@ -7,9 +7,9 @@ pub struct Slot<'a, T> {
 
 impl<'a, T> Slot<'a, T> {
     pub fn new(slots: &'a Slots<T>, value: T) -> Self {
-        let rf = slots.imp_push_get_ptr(value);
+        let ptr = slots.imp_push_get_ptr(value);
         Self {
-            value: rf,
+            value: ptr,
             slots: &(),
         }
     }
