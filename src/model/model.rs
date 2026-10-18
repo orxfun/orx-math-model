@@ -1,4 +1,4 @@
-use crate::model::symbols::{Par, Set2};
+use crate::model::symbols::{Par, Set};
 use crate::model::{Set0Gen, Slots};
 
 pub struct Model<'d> {
@@ -22,7 +22,7 @@ impl<'d> Model<'d> {
 
     // sets
 
-    pub fn set(&self) -> Set2<'_, 'd> {
-        Set2::new(self.set0b.push_default())
+    pub fn set(&self) -> Set<'_, 'd> {
+        Set::new(self.set0b.push_default())
     }
 }

@@ -1,11 +1,11 @@
 use crate::model::{Set0Gen, Slot};
 
 #[derive(derive_new::new)]
-pub struct Set2<'m, 'd> {
+pub struct Set<'m, 'd> {
     slot: Slot<'m, Set0Gen<'d>>,
 }
 
-impl<'d> Set2<'_, 'd> {
+impl<'d> Set<'_, 'd> {
     pub(crate) fn value(&self) -> &Set0Gen<'d> {
         self.slot.value()
     }

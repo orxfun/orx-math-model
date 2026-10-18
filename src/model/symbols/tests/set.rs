@@ -1,9 +1,9 @@
-use crate::model::symbols::Set2;
+use crate::model::symbols::Set;
 use crate::model::{Elements, Set0Gen};
 use crate::Model;
 use alloc::vec;
 
-fn assert(e: &mut Elements, p: &Set2<'_, '_>) {
+fn assert(e: &mut Elements, p: &Set<'_, '_>) {
     for _ in 0..3 {
         p.value().fill(e);
         assert_eq!(e.as_slice(), &vec![1, 2, 3]);
