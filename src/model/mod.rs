@@ -1,5 +1,6 @@
 mod elements;
 mod model;
+mod model_with_data;
 mod set0_gen;
 mod set1_gen;
 mod slot;

@@ -1,17 +1,15 @@
 use crate::model::symbols::{Par, Set};
-use crate::model::{Set0Gen, Set1Gen, Slots};
+use crate::model::{Set0Gen, Slots};
 
 pub struct Model {
     int: Slots<i64>,
     set0: Slots<Set0Gen>,
-    set1: Slots<Set1Gen>,
 }
 
 impl Model {
     pub fn new() -> Self {
         Self {
             set0: Slots::new(),
-            set1: Slots::new(),
             int: Slots::new(),
         }
     }
