@@ -23,6 +23,6 @@ impl<'a, T> Slot<'a, T> {
         let p = self.value as *mut T;
         // SAFETY: Slots holding `value` is still alive and Slots is grow only
         // and Slots is not Sync preventing any race condition
-        unsafe { p.write(value) };
+        let _ = unsafe { p.replace(value) };
     }
 }

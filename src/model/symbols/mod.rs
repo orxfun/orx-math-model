@@ -5,4 +5,4 @@ mod par;
 mod set;
 
 pub use par::Par;
-pub use set::{Set, Set2};
+pub use set::Set2;

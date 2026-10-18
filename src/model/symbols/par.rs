@@ -1,8 +1,8 @@
 use crate::model::Slot;
 
 #[derive(derive_new::new)]
-pub struct Par<'a> {
-    slot: Slot<'a, i64>,
+pub struct Par<'m> {
+    slot: Slot<'m, i64>,
 }
 
 impl Par<'_> {

@@ -1,33 +1,11 @@
 use crate::model::Elements;
 use alloc::boxed::Box;
 
-pub struct Set0Gen {
-    f: Box<dyn Fn(&mut Elements)>,
-}
-
-impl Default for Set0Gen {
-    fn default() -> Self {
-        Self {
-            f: Box::new(|_| {}),
-        }
-    }
-}
-
-impl Set0Gen {
-    pub fn new(f: Box<dyn Fn(&mut Elements)>) -> Self {
-        Self { f }
-    }
-
-    pub fn fill(&self, elements: &mut Elements) {
-        (self.f)(elements)
-    }
-}
-
-pub struct Set0Gen2<'d> {
+pub struct Set0Gen<'d> {
     f: Box<dyn Fn(&mut Elements) + 'd>,
 }
 
-impl Default for Set0Gen2<'_> {
+impl Default for Set0Gen<'_> {
     fn default() -> Self {
         Self {
             f: Box::new(|_| {}),
@@ -35,9 +13,13 @@ impl Default for Set0Gen2<'_> {
     }
 }
 
-impl<'d> Set0Gen2<'d> {
-    pub fn new(f: Box<dyn Fn(&mut Elements) + 'd>) -> Self {
-        Self { f }
+impl<'d> Set0Gen<'d> {
+    pub fn new<I>(f: impl Fn() -> I + 'd) -> Self
+    where
+        I: IntoIterator<Item = usize>,
+    {
+        let g = move |e: &mut Elements| e.fill_with(f());
+        Self { f: Box::new(g) }
     }
 
     pub fn fill(&self, elements: &mut Elements) {
