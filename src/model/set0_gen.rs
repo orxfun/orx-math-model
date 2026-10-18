@@ -14,14 +14,7 @@ impl Default for Set0Gen {
 }
 
 impl Set0Gen {
-    pub fn new<I: IntoIterator<Item = usize> + 'static>(
-        generator: impl Fn() -> I + 'static,
-    ) -> Self {
-        let f = Box::new(move |e: &mut Elements| e.fill_with(generator()));
-        Self { f }
-    }
-
-    pub fn new2(f: Box<dyn Fn(&mut Elements)>) -> Self {
+    pub fn new(f: Box<dyn Fn(&mut Elements)>) -> Self {
         Self { f }
     }
 
