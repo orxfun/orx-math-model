@@ -11,11 +11,10 @@ categories = ["mathematics", "algorithms", "science", "no-std"]
 
 [dependencies]
 derive-new = { version = "0.7.0" }
-orx-col-dim = { path = "../orx-col-dim" }
-orx-col-at = { path = "../orx-col-at" }
+orx-col-dim = { version = "0.2.0" }
+orx-col-at = { version = "0.1.1" }
 orx-concurrent-option = { version = "1.5.0", default-features = false }
-# orx-imp-vec = "2.17"
-orx-imp-vec = { path = "../orx-imp-vec" }
+orx-imp-vec = { git = "https://github.com/orxfun/orx-imp-vec/", branch = "feat--pinned-element-access" }
 orx-iterable = { version = "1.3.0", default-features = false }
 orx-pinned-vec = "3.21"
 orx-self-or = { version = "1.2.0", default-features = false }
