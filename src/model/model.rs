@@ -1,17 +1,17 @@
 use crate::model::symbols::{Par, Set};
-use crate::model::{Set0Gen, Slots};
+use crate::model::Set0Gen;
 use orx_imp_vec::ImpVec;
 
 pub struct Model<'d> {
     int: ImpVec<i64>,
-    set0b: Slots<Set0Gen<'d>>,
+    set0b: ImpVec<Set0Gen<'d>>,
 }
 
 impl<'d> Model<'d> {
     pub fn new() -> Self {
         Self {
             int: ImpVec::new(),
-            set0b: Slots::new(),
+            set0b: ImpVec::new(),
         }
     }
 
@@ -24,6 +24,6 @@ impl<'d> Model<'d> {
     // sets
 
     pub fn set(&self) -> Set<'_, 'd> {
-        Set::new(self.set0b.push_default())
+        Set::new(self.set0b.push(Default::default()))
     }
 }
