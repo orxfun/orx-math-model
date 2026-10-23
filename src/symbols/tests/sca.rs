@@ -1,4 +1,4 @@
-use crate::symbols::{ParData, Sca};
+use crate::symbols::{ParData, Num};
 use crate::Model;
 
 #[test]
@@ -11,10 +11,10 @@ fn sca_get_add() {
     let p1 = m.par();
     p1.el.set(ParData::new(42.0));
 
-    let s0 = Sca::from(p0);
+    let s0 = Num::from(p0);
     assert_eq!(unsafe { s0.el.get() }.eval(), 7.0);
 
-    let s1 = Sca::from(p1);
+    let s1 = Num::from(p1);
     assert_eq!(unsafe { s1.el.get() }.eval(), 42.0);
 
     let s2 = s0 + s1;

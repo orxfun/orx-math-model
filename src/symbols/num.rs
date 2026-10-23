@@ -4,9 +4,9 @@ use core::ops::Add;
 use orx_imp_vec::Elem;
 
 #[derive(derive_new::new)]
-pub struct ScaFun<'d>(Box<dyn Fn() -> f64 + 'd>);
+pub struct NumFun<'d>(Box<dyn Fn() -> f64 + 'd>);
 
-impl ScaFun<'_> {
+impl NumFun<'_> {
     pub fn eval(&self) -> f64 {
         self.0()
     }
@@ -15,69 +15,69 @@ impl ScaFun<'_> {
 // symbol
 
 #[derive(derive_new::new, Clone, Copy)]
-pub struct Sca<'m, 'd> {
+pub struct Num<'m, 'd> {
     pub(crate) m: &'m Model<'d>,
-    pub(crate) el: Elem<'m, ScaFun<'d>>,
+    pub(crate) el: Elem<'m, NumFun<'d>>,
 }
 
-impl<'m, 'd> From<Par<'m, 'd>> for Sca<'m, 'd> {
+impl<'m, 'd> From<Par<'m, 'd>> for Num<'m, 'd> {
     fn from(value: Par<'m, 'd>) -> Self {
         let p = unsafe { value.el.get() }.value() as *const f64;
-        let fun = ScaFun(Box::new(move || unsafe { *p }));
-        value.m.add_sca(fun)
+        let fun = NumFun(Box::new(move || unsafe { *p }));
+        value.m.add_num(fun)
     }
 }
 
 // ref
 
-struct RefScaFun<'d>(*const ScaFun<'d>);
+struct RefNumFun<'d>(*const NumFun<'d>);
 
-impl<'d> RefScaFun<'d> {
+impl<'d> RefNumFun<'d> {
     /// # SAFETY
     ///
     /// * Created value must not outlive `'m` or `'d`.
-    unsafe fn new<'m>(set: Sca<'m, 'd>) -> Self {
+    unsafe fn new<'m>(set: Num<'m, 'd>) -> Self {
         Self(unsafe { set.el.get() })
     }
 
-    fn fun(&self) -> &ScaFun<'d> {
+    fn fun(&self) -> &NumFun<'d> {
         unsafe { &*self.0 }
     }
 }
 
 // ops
 
-impl<'m, 'd> Add<f64> for Sca<'m, 'd> {
-    type Output = Sca<'m, 'd>;
+impl<'m, 'd> Add<f64> for Num<'m, 'd> {
+    type Output = Num<'m, 'd>;
 
     fn add(self, b: f64) -> Self::Output {
         // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let [a] = unsafe { [RefScaFun::new(self)] };
+        let [a] = unsafe { [RefNumFun::new(self)] };
         let f = move || a.fun().eval() + b;
-        self.m.add_sca(ScaFun(Box::new(f)))
+        self.m.add_num(NumFun(Box::new(f)))
     }
 }
 
-impl<'m, 'd> Add<Sca<'m, 'd>> for f64 {
-    type Output = Sca<'m, 'd>;
+impl<'m, 'd> Add<Num<'m, 'd>> for f64 {
+    type Output = Num<'m, 'd>;
 
-    fn add(self, rhs: Sca<'m, 'd>) -> Self::Output {
+    fn add(self, rhs: Num<'m, 'd>) -> Self::Output {
         // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let [b] = unsafe { [RefScaFun::new(rhs)] };
+        let [b] = unsafe { [RefNumFun::new(rhs)] };
         let f = move || self + b.fun().eval();
-        rhs.m.add_sca(ScaFun(Box::new(f)))
+        rhs.m.add_num(NumFun(Box::new(f)))
     }
 }
 
-impl<'m, 'd> Add<Sca<'m, 'd>> for Sca<'m, 'd> {
-    type Output = Sca<'m, 'd>;
+impl<'m, 'd> Add<Num<'m, 'd>> for Num<'m, 'd> {
+    type Output = Num<'m, 'd>;
 
-    fn add(self, rhs: Sca<'m, 'd>) -> Self::Output {
+    fn add(self, rhs: Num<'m, 'd>) -> Self::Output {
         assert!(core::ptr::eq(self.m, rhs.m), "TODO: err-msg");
 
         // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let [a, b] = unsafe { [RefScaFun::new(self), RefScaFun::new(rhs)] };
+        let [a, b] = unsafe { [RefNumFun::new(self), RefNumFun::new(rhs)] };
         let f = move || a.fun().eval() + b.fun().eval();
-        self.m.add_sca(ScaFun(Box::new(f)))
+        self.m.add_num(NumFun(Box::new(f)))
     }
 }

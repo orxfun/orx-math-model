@@ -1,4 +1,4 @@
-use crate::symbols::{Sca, Set};
+use crate::symbols::{Num, Set};
 use crate::symbols_d1::{ParD1, ParD1Fun, SetD1};
 use crate::Model;
 use alloc::boxed::Box;
@@ -47,7 +47,7 @@ fn par_d1_get_set() {
 
 #[test]
 fn sca_from_par_d1() {
-    fn assert_value(sca: Sca<'_, '_>, expected: f64) {
+    fn assert_value(sca: Num<'_, '_>, expected: f64) {
         assert_eq!(unsafe { sca.el.get() }.eval(), expected);
     }
 

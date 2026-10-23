@@ -1,4 +1,4 @@
-use crate::symbols::{Idx, RefIdxValue, Sca, ScaFun, SetRef};
+use crate::symbols::{Idx, Num, NumFun, RefIdxValue, SetRef};
 use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -45,7 +45,7 @@ pub struct ParD1<'m, 'd> {
 }
 
 impl<'m, 'd> ParD1<'m, 'd> {
-    pub(crate) fn sca_at(self, i: Idx<'m, 'd>) -> Sca<'m, 'd> {
+    pub(crate) fn sca_at(self, i: Idx<'m, 'd>) -> Num<'m, 'd> {
         struct PtrParD1Fun<'d>(*const ParD1Fun<'d>);
 
         impl<'d> PtrParD1Fun<'d> {
@@ -75,6 +75,6 @@ impl<'m, 'd> ParD1<'m, 'd> {
             fun.0(i0)
         };
 
-        self.m.add_sca(ScaFun::new(Box::new(f)))
+        self.m.add_num(NumFun::new(Box::new(f)))
     }
 }
