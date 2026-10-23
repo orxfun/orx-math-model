@@ -29,7 +29,6 @@ fn set_get_set() {
     let set = m.set();
     let s = set;
 
-    unsafe { s.0.get() }.fill(&mut elements);
     assert_elements(&mut elements, &[s, set], &[]);
 
     add_some_more_sets(&m);
