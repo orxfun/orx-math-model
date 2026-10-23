@@ -1,6 +1,6 @@
 use crate::{symbols::Set, Model};
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq, Debug)]
 pub struct SetRef {
     i: usize,
 }

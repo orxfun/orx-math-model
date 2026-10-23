@@ -14,6 +14,10 @@ impl IdxData {
         Self { s0, value: 0 }
     }
 
+    pub fn s0(&self) -> SetRef {
+        self.s0
+    }
+
     pub fn value(&self) -> usize {
         self.value
     }

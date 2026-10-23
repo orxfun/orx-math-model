@@ -31,6 +31,10 @@ impl<'d> Model<'d> {
         Set::new(self, self.set.push(SetData::default()))
     }
 
+    pub(crate) fn set_from_set_d1<'m>(&'m self, data: SetData<'d>) -> Set<'m, 'd> {
+        Set::new(self, self.set.push(data))
+    }
+
     pub fn set_d1<'m>(&'m self, set: Set<'m, 'd>) -> SetD1<'m, 'd> {
         SetD1::new(self, self.set_d1.push(SetD1Data::default(set)))
     }

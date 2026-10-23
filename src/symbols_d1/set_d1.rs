@@ -1,5 +1,5 @@
 use crate::model_references::SetRef;
-use crate::symbols::{Elements, Set};
+use crate::symbols::{Elements, Idx, Set, SetData};
 use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -35,4 +35,24 @@ impl<'d> SetD1Data<'d> {
 pub struct SetD1<'m, 'd> {
     pub(crate) m: &'m Model<'d>,
     pub(crate) el: Elem<'m, SetD1Data<'d>>,
+}
+
+impl<'m, 'd> SetD1<'m, 'd> {
+    pub(crate) fn set(self, i: Idx<'m, 'd>) -> Set<'m, 'd> {
+        assert!(core::ptr::eq(self.m, i.m), "TODO: error msg");
+
+        let s1 = unsafe { self.el.get() };
+        let i = unsafe { i.el.get() };
+
+        assert_eq!(s1.s0, i.s0(), "TODO: err-msg");
+
+        let f = |e: &mut Elements| {
+            s1.fill(12, e);
+        };
+
+        let x = SetData::new(Box::new(f));
+        let set = self.m.set_from_set_d1(x);
+
+        set
+    }
 }

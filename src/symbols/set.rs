@@ -20,6 +20,7 @@ impl Elements {
     }
 }
 
+#[derive(derive_new::new)]
 pub struct SetData<'d> {
     f: Box<dyn Fn(&mut Elements) + 'd>,
 }
@@ -33,12 +34,12 @@ impl Default for SetData<'_> {
 }
 
 impl<'d> SetData<'d> {
-    pub fn new<I>(f: impl Fn() -> I + 'd) -> Self
+    pub fn new_from_generator<I>(f: impl Fn() -> I + 'd) -> Self
     where
         I: IntoIterator<Item = usize>,
     {
-        let g = move |e: &mut Elements| e.fill_with(f());
-        Self { f: Box::new(g) }
+        let f = move |e: &mut Elements| e.fill_with(f());
+        Self::new(Box::new(f))
     }
 
     pub fn fill(&self, elements: &mut Elements) {

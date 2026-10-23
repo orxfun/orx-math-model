@@ -33,12 +33,12 @@ fn set_get_set() {
 
     add_some_more_sets(&m);
 
-    s.el.set(SetData::new(|| data.iter().copied()));
+    s.el.set(SetData::new_from_generator(|| data.iter().copied()));
     assert_elements(&mut elements, &[s, set], &[1, 2, 3]);
 
-    s.el.set(SetData::new(|| 0..data.len()));
+    s.el.set(SetData::new_from_generator(|| 0..data.len()));
     assert_elements(&mut elements, &[s, set], &[0, 1, 2]);
 
-    s.el.set(SetData::new(|| vec![1, 3, 5]));
+    s.el.set(SetData::new_from_generator(|| vec![1, 3, 5]));
     assert_elements(&mut elements, &[s, set], &[1, 3, 5]);
 }
