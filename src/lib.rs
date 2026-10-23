@@ -19,5 +19,6 @@ extern crate std;
 
 mod model;
 mod symbols;
+mod symbols_d1;
 
 pub use model::Model;
