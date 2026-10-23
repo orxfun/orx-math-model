@@ -2,6 +2,8 @@ use crate::symbols::SetRef;
 use crate::Model;
 use orx_imp_vec::Elem;
 
+// ref
+
 #[derive(Clone, Copy)]
 pub struct RefIdxValue {
     p: *mut usize,
@@ -25,6 +27,8 @@ impl RefIdxValue {
     }
 }
 
+// data
+
 #[derive(derive_new::new)]
 pub struct IdxData {
     s0: SetRef,
@@ -44,6 +48,8 @@ impl IdxData {
         unsafe { self.value_ptr.write(value) };
     }
 }
+
+// symbol
 
 #[derive(derive_new::new, Clone, Copy)]
 pub struct Idx<'m, 'd> {

@@ -1,4 +1,4 @@
-use crate::symbols::{Idx, IdxData, Sca, ScaFun, Set, SetData, SetFun, SetRef};
+use crate::symbols::{Idx, IdxData, Par, ParData, Sca, ScaFun, Set, SetData, SetFun, SetRef};
 use crate::symbols_d1::{SetD1, SetD1Data, SetD1Fun};
 use orx_imp_vec::{Doubling, ImpVec, SplitVec};
 
@@ -11,6 +11,8 @@ fn new_bag<T>() -> Bag<T> {
 pub struct Model<'d> {
     set: Bag<SetData<'d>>,
     set_d1: Bag<SetD1Data<'d>>,
+
+    par: Bag<ParData>,
 
     idx: Bag<IdxData>,
 
@@ -26,6 +28,8 @@ impl<'d> Model<'d> {
         Self {
             set: new_bag(),
             set_d1: new_bag(),
+
+            par: new_bag(),
 
             idx: new_bag(),
 
@@ -52,6 +56,13 @@ impl<'d> Model<'d> {
         let fun_ptr = self.set_d1_gen.push(SetD1Fun::empty()).as_mut_ptr();
         let data = SetD1Data::new(self.set_ref(set), fun_ptr);
         SetD1::new(self, self.set_d1.push(data))
+    }
+
+    // pars
+
+    pub fn par(&self) -> Par<'_, 'd> {
+        let data = ParData::new(0.0);
+        Par::new(self, self.par.push(data))
     }
 
     // idx
