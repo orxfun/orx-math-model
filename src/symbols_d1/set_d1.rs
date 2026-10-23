@@ -49,8 +49,15 @@ impl<'m, 'd> SetD1<'m, 'd> {
         // TODO: safety explanation
         let p = unsafe { IdxValRef::new(i) };
 
-        let f = s1.f.clone();
-        let f = move |e: &mut Elements| f(p.value(), e);
+        let f0 = s1.f.clone();
+        let f = move |e: &mut Elements| {
+            let i0 = p.value();
+            println!("i0 = {i0}");
+            println!("e-bef = {e:?}");
+            f0(i0, e);
+            println!("e-aft = {e:?}");
+            assert_eq!(i0, 7);
+        };
 
         self.m.add_set(SetData::new(Box::new(f)))
     }

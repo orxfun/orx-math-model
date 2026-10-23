@@ -1,16 +1,7 @@
-use crate::symbols::Elements;
+use crate::symbols::{Elements, Set};
 use crate::symbols_d1::{SetD1, SetD1Data};
 use crate::Model;
 use alloc::vec;
-
-fn assert_elements(e: &mut Elements, set_symbols: &[SetD1<'_, '_>], i0: usize, expected: &[usize]) {
-    for s in set_symbols {
-        for _ in 0..3 {
-            unsafe { s.el.get() }.fill(i0, e);
-            assert_eq!(e.as_slice(), expected);
-        }
-    }
-}
 
 fn add_some_more_sets(m: &Model<'_>) {
     for _ in 0..3 {
@@ -21,6 +12,20 @@ fn add_some_more_sets(m: &Model<'_>) {
 
 #[test]
 fn set_get_set_d1() {
+    fn assert_elements(
+        e: &mut Elements,
+        set_symbols: &[SetD1<'_, '_>],
+        i0: usize,
+        expected: &[usize],
+    ) {
+        for s in set_symbols {
+            for _ in 0..3 {
+                unsafe { s.el.get() }.fill(i0, e);
+                assert_eq!(e.as_slice(), expected);
+            }
+        }
+    }
+
     let data = vec![vec![0], vec![1, 2, 3], vec![4, 5], vec![6, 7, 8, 9]];
 
     let m = Model::new();
@@ -54,4 +59,41 @@ fn set_get_set_d1() {
         unsafe { generated.el.get() }.fill(&mut elements);
         assert_eq!(elements.as_slice(), expected);
     }
+}
+
+#[test]
+fn set_from_set_d1() {
+    fn assert_elements(e: &mut Elements, set_symbols: &[Set<'_, '_>], expected: &[usize]) {
+        for s in set_symbols {
+            for _ in 0..1 {
+                unsafe { s.el.get() }.fill(e);
+                assert_eq!(e.as_slice(), expected);
+            }
+        }
+    }
+
+    let data = vec![vec![0], vec![1, 2, 3], vec![4, 5], vec![6, 7, 8, 9]];
+
+    let m = Model::new();
+    let mut elements = Elements::default();
+
+    add_some_more_sets(&m);
+
+    let s0 = m.set();
+    let s1 = m.set_d1(s0);
+
+    let i0 = s0.idx();
+
+    let set = s1.set(i0);
+
+    // assert_elements(&mut elements, &[set], &[]);
+
+    // i0.el.update(|x| x.set_value(1));
+    // assert_elements(&mut elements, &[set], &[]);
+
+    // wire up set-d1 data
+    s1.el.set(SetD1Data::new(s0, |i| data[i].iter().copied()));
+
+    i0.el.update(|x| x.set_value(0));
+    assert_elements(&mut elements, &[set], &[]);
 }

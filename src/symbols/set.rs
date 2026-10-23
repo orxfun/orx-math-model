@@ -4,7 +4,7 @@ use alloc::boxed::Box;
 use alloc::vec::Vec;
 use orx_imp_vec::Elem;
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct Elements {
     data: Vec<usize>,
 }
