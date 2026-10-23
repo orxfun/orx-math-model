@@ -7,7 +7,7 @@ pub struct SetRef {
 
 impl SetRef {
     pub fn new<'m, 'd>(set: Set<'m, 'd>) -> Self {
-        let i = set.1.position_in(set.0.sets()).expect("TODO: error msg");
+        let i = set.el.position_in(set.m.sets()).expect("TODO: error msg");
         Self { i }
     }
 

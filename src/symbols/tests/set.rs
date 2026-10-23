@@ -5,7 +5,7 @@ use alloc::vec;
 fn assert_elements(e: &mut Elements, set_symbols: &[Set<'_, '_>], expected: &[usize]) {
     for s in set_symbols {
         for _ in 0..3 {
-            unsafe { s.1.get() }.fill(e);
+            unsafe { s.el.get() }.fill(e);
             assert_eq!(e.as_slice(), expected);
         }
     }
@@ -33,12 +33,12 @@ fn set_get_set() {
 
     add_some_more_sets(&m);
 
-    s.1.set(SetData::new(|| data.iter().copied()));
+    s.el.set(SetData::new(|| data.iter().copied()));
     assert_elements(&mut elements, &[s, set], &[1, 2, 3]);
 
-    s.1.set(SetData::new(|| 0..data.len()));
+    s.el.set(SetData::new(|| 0..data.len()));
     assert_elements(&mut elements, &[s, set], &[0, 1, 2]);
 
-    s.1.set(SetData::new(|| vec![1, 3, 5]));
+    s.el.set(SetData::new(|| vec![1, 3, 5]));
     assert_elements(&mut elements, &[s, set], &[1, 3, 5]);
 }
