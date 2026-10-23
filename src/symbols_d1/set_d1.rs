@@ -13,25 +13,6 @@ impl SetD1Fun<'_> {
     }
 }
 
-#[derive(Clone, Copy)]
-pub struct RefSetD1Fun<'d> {
-    p: *const SetD1Fun<'d>,
-}
-
-impl<'d> RefSetD1Fun<'d> {
-    /// # SAFETY
-    ///
-    /// * Created value must not outlive `'m` or `'d`.
-    pub unsafe fn new<'m>(set: SetD1<'m, 'd>) -> Self {
-        let el = unsafe { set.el.get() };
-        Self { p: el.fun_ptr }
-    }
-
-    pub fn value(&self) -> &SetD1Fun<'d> {
-        unsafe { &*self.p }
-    }
-}
-
 #[derive(derive_new::new)]
 pub struct SetD1Data<'d> {
     s0: SetRef,
@@ -65,6 +46,25 @@ pub struct SetD1<'m, 'd> {
 
 impl<'m, 'd> SetD1<'m, 'd> {
     pub(crate) fn set(self, i: Idx<'m, 'd>) -> Set<'m, 'd> {
+        #[derive(Clone, Copy)]
+        struct RefSetD1Fun<'d> {
+            p: *const SetD1Fun<'d>,
+        }
+
+        impl<'d> RefSetD1Fun<'d> {
+            /// # SAFETY
+            ///
+            /// * Created value must not outlive `'m` or `'d`.
+            unsafe fn new<'m>(set: SetD1<'m, 'd>) -> Self {
+                let el = unsafe { set.el.get() };
+                Self { p: el.fun_ptr }
+            }
+
+            fn value(&self) -> &SetD1Fun<'d> {
+                unsafe { &*self.p }
+            }
+        }
+
         assert!(core::ptr::eq(self.m, i.m), "TODO: error msg");
 
         let s1 = unsafe { self.el.get() };
