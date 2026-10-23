@@ -8,8 +8,12 @@ use orx_imp_vec::Elem;
 pub struct SetD1Fun<'d>(Box<dyn Fn(usize, &mut Elements) + 'd>);
 
 impl SetD1Fun<'_> {
-    pub fn dummy() -> Self {
+    pub fn empty() -> Self {
         Self(Box::new(|_, _| {}))
+    }
+
+    pub fn fill(&self, i0: usize, elements: &mut Elements) {
+        self.0(i0, elements)
     }
 }
 
@@ -21,8 +25,7 @@ pub struct SetD1Data<'d> {
 
 impl<'d> SetD1Data<'d> {
     pub fn fill(&self, i0: usize, elements: &mut Elements) {
-        let fun = unsafe { &*self.fun_ptr };
-        fun.0(i0, elements);
+        unsafe { &*self.fun_ptr }.fill(i0, elements);
     }
 
     pub fn update_fun(&mut self, fun: SetD1Fun<'d>) {

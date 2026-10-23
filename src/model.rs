@@ -39,7 +39,7 @@ impl<'d> Model<'d> {
     // sets
 
     pub fn set(&self) -> Set<'_, 'd> {
-        self.add_set(SetFun::dummy())
+        self.add_set(SetFun::empty())
     }
 
     pub(crate) fn add_set(&self, fun: SetFun<'d>) -> Set<'_, 'd> {
@@ -49,7 +49,7 @@ impl<'d> Model<'d> {
     }
 
     pub fn set_d1<'m>(&'m self, set: Set<'m, 'd>) -> SetD1<'m, 'd> {
-        let fun_ptr = self.set_d1_gen.push(SetD1Fun::dummy()).as_mut_ptr();
+        let fun_ptr = self.set_d1_gen.push(SetD1Fun::empty()).as_mut_ptr();
         let data = SetD1Data::new(self.set_ref(set), fun_ptr);
         SetD1::new(self, self.set_d1.push(data))
     }
