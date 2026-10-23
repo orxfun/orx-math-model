@@ -1,4 +1,4 @@
-use crate::Model;
+use crate::{symbols::Par, Model};
 use alloc::boxed::Box;
 use core::ops::Add;
 use orx_imp_vec::Elem;
@@ -15,6 +15,13 @@ impl ScaFun<'_> {
 impl From<f64> for ScaFun<'_> {
     fn from(value: f64) -> Self {
         Self(Box::new(move || value))
+    }
+}
+
+impl<'m, 'd> From<Par<'m, 'd>> for ScaFun<'d> {
+    fn from(value: Par<'m, 'd>) -> Self {
+        let p = unsafe { value.el.get() }.value() as *const f64;
+        Self(Box::new(move || unsafe { *p }))
     }
 }
 

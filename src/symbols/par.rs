@@ -7,8 +7,8 @@ use orx_imp_vec::Elem;
 pub struct ParData(f64);
 
 impl ParData {
-    pub fn value(self) -> f64 {
-        self.0
+    pub fn value(&self) -> &f64 {
+        &self.0
     }
 }
 
