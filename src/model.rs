@@ -17,8 +17,6 @@ pub struct Model<'d> {
 
     idx: Bag<IdxData>,
 
-    // data
-    indices: Bag<usize>,
     sca: Bag<ScaFun<'d>>,
 }
 
@@ -33,7 +31,6 @@ impl<'d> Model<'d> {
 
             idx: new_bag(),
 
-            indices: new_bag(),
             sca: new_bag(),
         }
     }
@@ -68,8 +65,7 @@ impl<'d> Model<'d> {
     // idx
 
     pub(crate) fn idx<'m>(&'m self, set: Set<'m, 'd>) -> Idx<'m, 'd> {
-        let value_ptr = self.indices.push(0).as_mut_ptr();
-        let data = IdxData::new(self.set_ref(set), value_ptr);
+        let data = IdxData::new(self.set_ref(set), 0);
         Idx::new(self, self.idx.push(data))
     }
 

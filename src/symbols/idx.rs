@@ -5,17 +5,14 @@ use orx_imp_vec::Elem;
 // ref
 
 #[derive(Clone, Copy)]
-pub struct RefIdxValue {
-    p: *mut usize,
-}
+pub struct RefIdxValue(*const usize);
 
 impl RefIdxValue {
     /// # SAFETY
     ///
     /// * Created value must not outlive `'m` or `'d`.
     pub unsafe fn new<'m, 'd>(idx: Idx<'m, 'd>) -> Self {
-        let el = unsafe { idx.el.get() };
-        Self { p: el.value_ptr }
+        Self(core::ptr::addr_of!((*idx.el.as_ptr()).value))
     }
 
     /// # SAFETY
@@ -23,7 +20,7 @@ impl RefIdxValue {
     /// This method is safe as long is it is created with the `new` method
     /// satisfying its safety requirements.
     pub fn value(self) -> usize {
-        unsafe { *self.p }
+        unsafe { *self.0 }
     }
 }
 
@@ -32,7 +29,7 @@ impl RefIdxValue {
 #[derive(derive_new::new)]
 pub struct IdxData {
     s0: SetRef,
-    value_ptr: *mut usize,
+    value: usize,
 }
 
 impl IdxData {
@@ -41,11 +38,11 @@ impl IdxData {
     }
 
     pub fn read_value(&self) -> usize {
-        unsafe { *self.value_ptr }
+        self.value
     }
 
     pub fn set_value(&mut self, value: usize) {
-        unsafe { self.value_ptr.write(value) };
+        self.value = value;
     }
 }
 
