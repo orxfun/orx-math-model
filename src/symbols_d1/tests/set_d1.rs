@@ -12,7 +12,7 @@ fn add_some_more_sets(m: &Model<'_>) {
 }
 
 #[test]
-fn set_get_set_d1() {
+fn set_d1_get_set() {
     fn assert_elements(
         e: &mut Elements,
         set_symbols: &[SetD1<'_, '_>],
