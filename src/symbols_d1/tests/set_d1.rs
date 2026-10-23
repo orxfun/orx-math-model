@@ -108,3 +108,16 @@ fn set_from_set_d1() {
     i0.el.update(|x| x.set_value(3));
     assert_elements(&mut elements, &[set], &[6, 7, 8, 9]);
 }
+
+#[test]
+#[should_panic]
+fn set_from_set_d1_wrong_idx() {
+    let m = Model::new();
+    let s0 = m.set();
+    let s1 = m.set_d1(s0);
+
+    let wrong_set = m.set();
+    let wrong_idx = wrong_set.idx();
+
+    let _ = s1.set(wrong_idx);
+}
