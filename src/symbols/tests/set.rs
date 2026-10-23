@@ -20,6 +20,7 @@ fn add_some_more_sets(m: &Model<'_>) {
 #[test]
 fn set_get_set() {
     let data = vec![1, 2, 3];
+
     let m = Model::new();
     let mut elements = Elements::default();
 
