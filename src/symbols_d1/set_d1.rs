@@ -2,17 +2,18 @@ use crate::model_references::SetRef;
 use crate::symbols::{Elements, Idx, Set, SetData};
 use crate::Model;
 use alloc::boxed::Box;
+use alloc::rc::Rc;
 use orx_imp_vec::Elem;
 
 pub struct SetD1Data<'d> {
-    f: Box<dyn Fn(usize, &mut Elements) + 'd>,
+    f: Rc<dyn Fn(usize, &mut Elements) + 'd>,
     s0: SetRef,
 }
 
 impl<'d> SetD1Data<'d> {
     pub fn default(s0: Set<'_, 'd>) -> Self {
         let s0 = SetRef::new(s0);
-        let f = Box::new(|_, _: &mut Elements| {});
+        let f = Rc::new(|_, _: &mut Elements| {});
         Self { f, s0 }
     }
 
@@ -22,7 +23,7 @@ impl<'d> SetD1Data<'d> {
     {
         let s0 = SetRef::new(s0);
         let f = move |i1: usize, e: &mut Elements| e.fill_with(f(i1));
-        let f = Box::new(f);
+        let f = Rc::new(f);
         Self { f, s0 }
     }
 
@@ -46,9 +47,9 @@ impl<'m, 'd> SetD1<'m, 'd> {
 
         assert_eq!(s1.s0, i.s0(), "TODO: err-msg");
 
-        let f = |e: &mut Elements| {
-            s1.fill(12, e);
-        };
+        let f = s1.f.clone();
+        let i = i.value();
+        let f = move |e: &mut Elements| f(i, e);
 
         let x = SetData::new(Box::new(f));
         let set = self.m.set_from_set_d1(x);

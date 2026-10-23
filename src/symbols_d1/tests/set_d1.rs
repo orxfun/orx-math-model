@@ -1,4 +1,4 @@
-use crate::symbols::{Elements, Set, SetData};
+use crate::symbols::Elements;
 use crate::symbols_d1::{SetD1, SetD1Data};
 use crate::Model;
 use alloc::vec;
@@ -46,4 +46,12 @@ fn set_get_set_d1() {
     assert_elements(&mut elements, &[s, set], 1, &[1, 2, 3]);
     assert_elements(&mut elements, &[s, set], 2, &[4, 5]);
     assert_elements(&mut elements, &[s, set], 3, &[6, 7, 8, 9]);
+
+    let idx = s0.idx();
+    for (i, expected) in data.iter().enumerate() {
+        idx.el.update(|x| x.set_value(i));
+        let generated = set.set(idx);
+        unsafe { generated.el.get() }.fill(&mut elements);
+        assert_eq!(elements.as_slice(), expected);
+    }
 }
