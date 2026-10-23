@@ -19,7 +19,6 @@ pub struct Model<'d> {
 
     // data
     indices: Bag<usize>,
-    set_d0_gen: Bag<SetFun<'d>>,
     sca_gen: Bag<ScaFun<'d>>,
 }
 
@@ -35,7 +34,6 @@ impl<'d> Model<'d> {
             idx: new_bag(),
 
             indices: new_bag(),
-            set_d0_gen: new_bag(),
             sca_gen: new_bag(),
         }
     }
@@ -43,12 +41,10 @@ impl<'d> Model<'d> {
     // sets
 
     pub fn set(&self) -> Set<'_, 'd> {
-        self.add_set(SetFun::empty())
+        self.add_set(SetData::new(SetFun::empty()))
     }
 
-    pub(crate) fn add_set(&self, fun: SetFun<'d>) -> Set<'_, 'd> {
-        let fun_ptr = self.set_d0_gen.push(fun).as_mut_ptr();
-        let data = SetData::new(fun_ptr);
+    pub(crate) fn add_set(&self, data: SetData<'d>) -> Set<'_, 'd> {
         Set::new(self, self.set.push(data))
     }
 

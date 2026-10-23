@@ -24,16 +24,16 @@ pub struct SetRef {
 
 #[derive(derive_new::new)]
 pub struct SetData<'d> {
-    fun_ptr: *mut SetFun<'d>,
+    fun: SetFun<'d>,
 }
 
 impl<'d> SetData<'d> {
     pub fn fill(&self, elements: &mut Elements) {
-        unsafe { &*self.fun_ptr }.fill(elements);
+        self.fun.fill(elements);
     }
 
     pub fn update_fun(&mut self, fun: SetFun<'d>) {
-        let _ = unsafe { self.fun_ptr.replace(fun) };
+        self.fun = fun;
     }
 
     pub fn update_fun_from_gen<I>(&mut self, fun: impl Fn() -> I + 'd)

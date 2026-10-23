@@ -1,5 +1,5 @@
 use crate::elements::Elements;
-use crate::symbols::{Idx, RefIdxValue, Set, SetFun, SetRef};
+use crate::symbols::{Idx, RefIdxValue, Set, SetData, SetFun, SetRef};
 use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -84,6 +84,6 @@ impl<'m, 'd> SetD1<'m, 'd> {
             fun.0(i0, e);
         };
 
-        self.m.add_set(SetFun::new(Box::new(f)))
+        self.m.add_set(SetData::new(SetFun::new(Box::new(f))))
     }
 }
