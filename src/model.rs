@@ -10,7 +10,7 @@ fn new_bag<T>() -> Bag<T> {
 
 pub struct Model<'d> {
     pub(crate) set: Bag<SetData<'d>>,
-    set_d1: Bag<SetD1Data<'d>>,
+    pub(crate) set_d1: Bag<SetD1Data<'d>>,
 
     pub(crate) idx: Bag<IdxData>,
 }

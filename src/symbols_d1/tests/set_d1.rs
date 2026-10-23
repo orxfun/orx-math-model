@@ -86,14 +86,25 @@ fn set_from_set_d1() {
 
     let set = s1.set(i0);
 
-    // assert_elements(&mut elements, &[set], &[]);
+    // before wire up set-d1 data
 
-    // i0.el.update(|x| x.set_value(1));
-    // assert_elements(&mut elements, &[set], &[]);
+    assert_elements(&mut elements, &[set], &[]);
 
-    // wire up set-d1 data
+    i0.el.update(|x| x.set_value(1));
+    assert_elements(&mut elements, &[set], &[]);
+
+    // after wire up set-d1 data
     s1.el.set(SetD1Data::new(s0, |i| data[i].iter().copied()));
 
     i0.el.update(|x| x.set_value(0));
-    assert_elements(&mut elements, &[set], &[]);
+    assert_elements(&mut elements, &[set], &[0]);
+
+    i0.el.update(|x| x.set_value(1));
+    assert_elements(&mut elements, &[set], &[1, 2, 3]);
+
+    i0.el.update(|x| x.set_value(2));
+    assert_elements(&mut elements, &[set], &[4, 5]);
+
+    i0.el.update(|x| x.set_value(3));
+    assert_elements(&mut elements, &[set], &[6, 7, 8, 9]);
 }
