@@ -28,10 +28,10 @@ impl<'d> Model<'d> {
     // sets
 
     pub fn set(&self) -> Set<'_, 'd> {
-        Set::new(self, self.set.push(SetData::default()))
+        self.add_set(SetData::default())
     }
 
-    pub(crate) fn set_from_set_d1<'m>(&'m self, data: SetData<'d>) -> Set<'m, 'd> {
+    pub(crate) fn add_set<'m>(&'m self, data: SetData<'d>) -> Set<'m, 'd> {
         Set::new(self, self.set.push(data))
     }
 

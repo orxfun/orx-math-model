@@ -52,9 +52,6 @@ impl<'m, 'd> SetD1<'m, 'd> {
         let f = s1.f.clone();
         let f = move |e: &mut Elements| f(p.value(), e);
 
-        let x = SetData::new(Box::new(f));
-        let set = self.m.set_from_set_d1(x);
-
-        set
+        self.m.add_set(SetData::new(Box::new(f)))
     }
 }
