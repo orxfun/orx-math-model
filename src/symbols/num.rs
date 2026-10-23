@@ -68,7 +68,7 @@ impl<'m, 'd> Add<f64> for Num<'m, 'd> {
 
     fn add(self, b: f64) -> Self::Output {
         // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let [a] = unsafe { [PtrNumFun::new(self)] };
+        let a = unsafe { PtrNumFun::new(self) };
         let f = move || a.fun().eval() + b;
         self.m.add_num(NumFun(Box::new(f)))
     }
@@ -79,7 +79,7 @@ impl<'m, 'd> Add<Num<'m, 'd>> for f64 {
 
     fn add(self, rhs: Num<'m, 'd>) -> Self::Output {
         // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let [b] = unsafe { [PtrNumFun::new(rhs)] };
+        let b = unsafe { PtrNumFun::new(rhs) };
         let f = move || self + b.fun().eval();
         rhs.m.add_num(NumFun(Box::new(f)))
     }
@@ -92,7 +92,7 @@ impl<'m, 'd> Add<usize> for Num<'m, 'd> {
 
     fn add(self, b: usize) -> Self::Output {
         // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let [a] = unsafe { [PtrNumFun::new(self)] };
+        let a = unsafe { PtrNumFun::new(self) };
         let f = move || a.fun().eval() + b as f64;
         self.m.add_num(NumFun(Box::new(f)))
     }
@@ -103,7 +103,7 @@ impl<'m, 'd> Add<Num<'m, 'd>> for usize {
 
     fn add(self, rhs: Num<'m, 'd>) -> Self::Output {
         // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let [b] = unsafe { [PtrNumFun::new(rhs)] };
+        let b = unsafe { PtrNumFun::new(rhs) };
         let f = move || self as f64 + b.fun().eval();
         rhs.m.add_num(NumFun(Box::new(f)))
     }

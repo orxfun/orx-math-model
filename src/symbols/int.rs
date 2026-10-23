@@ -45,29 +45,7 @@ impl<'d> PtrIntFun<'d> {
     }
 }
 
-// ops
-
-impl<'m, 'd> Add<usize> for Int<'m, 'd> {
-    type Output = Int<'m, 'd>;
-
-    fn add(self, b: usize) -> Self::Output {
-        // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let [a] = unsafe { [PtrIntFun::new(self)] };
-        let f = move || a.fun().eval() + b;
-        self.m.add_int(IntFun(Box::new(f)))
-    }
-}
-
-impl<'m, 'd> Add<Int<'m, 'd>> for usize {
-    type Output = Int<'m, 'd>;
-
-    fn add(self, rhs: Int<'m, 'd>) -> Self::Output {
-        // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let [b] = unsafe { [PtrIntFun::new(rhs)] };
-        let f = move || self + b.fun().eval();
-        rhs.m.add_int(IntFun(Box::new(f)))
-    }
-}
+// ops - Int
 
 impl<'m, 'd> Add<Int<'m, 'd>> for Int<'m, 'd> {
     type Output = Int<'m, 'd>;
@@ -79,5 +57,29 @@ impl<'m, 'd> Add<Int<'m, 'd>> for Int<'m, 'd> {
         let [a, b] = unsafe { [PtrIntFun::new(self), PtrIntFun::new(rhs)] };
         let f = move || a.fun().eval() + b.fun().eval();
         self.m.add_int(IntFun(Box::new(f)))
+    }
+}
+
+// ops - usize
+
+impl<'m, 'd> Add<usize> for Int<'m, 'd> {
+    type Output = Int<'m, 'd>;
+
+    fn add(self, b: usize) -> Self::Output {
+        // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
+        let a = unsafe { PtrIntFun::new(self) };
+        let f = move || a.fun().eval() + b;
+        self.m.add_int(IntFun(Box::new(f)))
+    }
+}
+
+impl<'m, 'd> Add<Int<'m, 'd>> for usize {
+    type Output = Int<'m, 'd>;
+
+    fn add(self, rhs: Int<'m, 'd>) -> Self::Output {
+        // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
+        let b = unsafe { PtrIntFun::new(rhs) };
+        let f = move || self + b.fun().eval();
+        rhs.m.add_int(IntFun(Box::new(f)))
     }
 }
