@@ -52,19 +52,22 @@ impl<'d> Model<'d> {
 
     pub fn set_d1<'m>(&'m self, set: Set<'m, 'd>) -> SetD1<'m, 'd> {
         let fun_ptr = self.set_d1_gen.push(Box::new(|_, _| {})).as_mut_ptr();
-        let set_pos = set.el.position_in(&self.set).expect("TODO: error msg");
-        let set_ref = SetRef::new(set_pos);
-        let data = SetD1Data::new(set_ref, fun_ptr);
+        let data = SetD1Data::new(self.set_ref(set), fun_ptr);
         SetD1::new(self, self.set_d1.push(data))
     }
 
     // idx
 
     pub(crate) fn idx<'m>(&'m self, set: Set<'m, 'd>) -> Idx<'m, 'd> {
-        let set_pos = set.el.position_in(&self.set).expect("TODO: error msg");
-        let set = SetRef::new(set_pos);
         let value_ptr = self.indices.push(0).as_mut_ptr();
-        let data = IdxData::new(set, value_ptr);
+        let data = IdxData::new(self.set_ref(set), value_ptr);
         Idx::new(self, self.idx.push(data))
+    }
+
+    // helper
+
+    fn set_ref(&self, set: Set<'_, 'd>) -> SetRef {
+        let set_pos = set.el.position_in(&self.set).expect("TODO: error msg");
+        SetRef::new(set_pos)
     }
 }
