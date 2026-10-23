@@ -4,7 +4,7 @@ use crate::Model;
 
 #[derive(Clone, Copy)]
 pub struct IdxValRef {
-    p: *const usize,
+    p: *mut usize,
 }
 
 impl IdxValRef {

@@ -1,33 +1,28 @@
 use crate::model_references::SetRef;
-use crate::symbols::Set;
 use crate::Model;
 use orx_imp_vec::Elem;
 
+#[derive(derive_new::new)]
 pub struct IdxData {
     s0: SetRef,
-    value: usize,
+    value_ptr: *mut usize,
 }
 
 impl IdxData {
-    pub fn new<'m, 'd>(s0: Set<'m, 'd>) -> Self {
-        let s0 = SetRef::new(s0);
-        Self { s0, value: 0 }
-    }
-
     pub fn s0(&self) -> SetRef {
         self.s0
     }
 
-    pub fn value(&self) -> usize {
-        self.value
-    }
-
-    pub fn value_ptr(&self) -> *const usize {
-        &self.value as *const usize
+    pub fn read_value(&self) -> usize {
+        unsafe { *self.value_ptr }
     }
 
     pub fn set_value(&mut self, value: usize) {
-        self.value = value;
+        unsafe { self.value_ptr.write(value) };
+    }
+
+    pub fn value_ptr(&self) -> *mut usize {
+        self.value_ptr
     }
 }
 

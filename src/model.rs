@@ -1,3 +1,4 @@
+use crate::model_references::SetRef;
 use crate::symbols::{Idx, IdxData, Set, SetData};
 use crate::symbols_d1::{SetD1, SetD1Data};
 use orx_imp_vec::{Doubling, ImpVec, SplitVec};
@@ -13,6 +14,8 @@ pub struct Model<'d> {
     pub(crate) set_d1: Bag<SetD1Data<'d>>,
 
     pub(crate) idx: Bag<IdxData>,
+
+    indices: Bag<usize>,
 }
 
 impl<'d> Model<'d> {
@@ -22,6 +25,8 @@ impl<'d> Model<'d> {
             set_d1: new_bag(),
 
             idx: new_bag(),
+
+            indices: new_bag(),
         }
     }
 
@@ -42,6 +47,9 @@ impl<'d> Model<'d> {
     // idx
 
     pub(crate) fn idx<'m>(&'m self, set: Set<'m, 'd>) -> Idx<'m, 'd> {
-        Idx::new(self, self.idx.push(IdxData::new(set)))
+        let set = SetRef::new(set);
+        let value_ptr = self.indices.push(0).as_ptr() as *mut usize;
+        let data = IdxData::new(set, value_ptr);
+        Idx::new(self, self.idx.push(data))
     }
 }
