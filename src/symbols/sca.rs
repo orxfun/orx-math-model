@@ -12,25 +12,20 @@ impl ScaFun<'_> {
     }
 }
 
-impl From<f64> for ScaFun<'_> {
-    fn from(value: f64) -> Self {
-        Self(Box::new(move || value))
-    }
-}
-
-impl<'m, 'd> From<Par<'m, 'd>> for ScaFun<'d> {
-    fn from(value: Par<'m, 'd>) -> Self {
-        let p = unsafe { value.el.get() }.value() as *const f64;
-        Self(Box::new(move || unsafe { *p }))
-    }
-}
-
 // symbol
 
 #[derive(derive_new::new, Clone, Copy)]
 pub struct Sca<'m, 'd> {
     pub(crate) m: &'m Model<'d>,
     pub(crate) el: Elem<'m, ScaFun<'d>>,
+}
+
+impl<'m, 'd> From<Par<'m, 'd>> for Sca<'m, 'd> {
+    fn from(value: Par<'m, 'd>) -> Self {
+        let p = unsafe { value.el.get() }.value() as *const f64;
+        let fun = ScaFun(Box::new(move || unsafe { *p }));
+        value.m.add_sca(fun)
+    }
 }
 
 // ref
@@ -51,6 +46,28 @@ impl<'d> RefScaFun<'d> {
 }
 
 // ops
+
+impl<'m, 'd> Add<f64> for Sca<'m, 'd> {
+    type Output = Sca<'m, 'd>;
+
+    fn add(self, b: f64) -> Self::Output {
+        // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
+        let [a] = unsafe { [RefScaFun::new(self)] };
+        let f = move || a.fun().eval() + b;
+        self.m.add_sca(ScaFun(Box::new(f)))
+    }
+}
+
+impl<'m, 'd> Add<Sca<'m, 'd>> for f64 {
+    type Output = Sca<'m, 'd>;
+
+    fn add(self, rhs: Sca<'m, 'd>) -> Self::Output {
+        // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
+        let [b] = unsafe { [RefScaFun::new(rhs)] };
+        let f = move || self + b.fun().eval();
+        rhs.m.add_sca(ScaFun(Box::new(f)))
+    }
+}
 
 impl<'m, 'd> Add<Sca<'m, 'd>> for Sca<'m, 'd> {
     type Output = Sca<'m, 'd>;
