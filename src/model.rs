@@ -1,5 +1,5 @@
-use crate::model_references::SetRef;
-use crate::symbols::{Elements, Idx, IdxData, Set, SetData};
+use crate::elements::Elements;
+use crate::symbols::{Idx, IdxData, Set, SetData, SetRef};
 use crate::symbols_d1::{SetD1, SetD1Data};
 use alloc::boxed::Box;
 use orx_imp_vec::{Doubling, ImpVec, SplitVec};
@@ -17,6 +17,7 @@ pub struct Model<'d> {
     idx: Bag<IdxData>,
 
     indices: Bag<usize>,
+    set_d0_gen: Bag<Box<dyn Fn(&mut Elements) + 'd>>,
     set_d1_gen: Bag<Box<dyn Fn(usize, &mut Elements) + 'd>>,
 }
 
@@ -29,6 +30,7 @@ impl<'d> Model<'d> {
             idx: new_bag(),
 
             indices: new_bag(),
+            set_d0_gen: new_bag(),
             set_d1_gen: new_bag(),
         }
     }
@@ -36,10 +38,12 @@ impl<'d> Model<'d> {
     // sets
 
     pub fn set(&self) -> Set<'_, 'd> {
-        self.add_set(SetData::default())
+        self.add_set(Box::new(|_| {}))
     }
 
-    pub(crate) fn add_set<'m>(&'m self, data: SetData<'d>) -> Set<'m, 'd> {
+    pub(crate) fn add_set(&self, fun: Box<dyn Fn(&mut Elements) + 'd>) -> Set<'_, 'd> {
+        let fun_ptr = self.set_d0_gen.push(fun).as_mut_ptr();
+        let data = SetData::new(fun_ptr);
         Set::new(self, self.set.push(data))
     }
 

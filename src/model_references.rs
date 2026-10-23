@@ -1,22 +1,22 @@
-use crate::symbols::{Elements, Idx, Set};
+use crate::symbols::{Idx, Set};
 use crate::symbols_d1::{SetD1, SetD1Data};
 use crate::Model;
 
-#[derive(Clone, Copy, PartialEq, Debug)]
-pub struct SetRef {
-    i: usize,
-}
+// #[derive(Clone, Copy, PartialEq, Debug)]
+// pub struct SetRef {
+//     i: usize,
+// }
 
-impl SetRef {
-    pub fn new<'m, 'd>(set: Set<'m, 'd>) -> Self {
-        let i = set.el.position_in(&set.m.set).expect("TODO: error msg");
-        Self { i }
-    }
+// impl SetRef {
+//     pub fn new<'m, 'd>(set: Set<'m, 'd>) -> Self {
+//         let i = set.el.position_in(&set.m.set).expect("TODO: error msg");
+//         Self { i }
+//     }
 
-    pub fn set<'m, 'd>(self, m: &'m Model<'d>) -> Set<'m, 'd> {
-        Set::new(m, m.set.get(self.i).expect("TODO: error msg"))
-    }
-}
+//     pub fn set<'m, 'd>(self, m: &'m Model<'d>) -> Set<'m, 'd> {
+//         Set::new(m, m.set.get(self.i).expect("TODO: error msg"))
+//     }
+// }
 
 // #[derive(Clone, Copy, PartialEq, Debug)]
 // pub struct SetD1Ref {

@@ -1,49 +1,46 @@
+use crate::elements::Elements;
 use crate::symbols::Idx;
 use crate::Model;
 use alloc::boxed::Box;
-use alloc::vec::Vec;
 use orx_imp_vec::Elem;
 
-#[derive(Default, Debug)]
-pub struct Elements {
-    data: Vec<usize>,
+#[derive(Clone, Copy, PartialEq, Debug)]
+pub struct SetRef {
+    i: usize,
 }
 
-impl Elements {
-    pub fn fill_with(&mut self, values: impl IntoIterator<Item = usize>) {
-        self.data.clear();
-        self.data.extend(values);
+impl SetRef {
+    pub fn new<'m, 'd>(set: Set<'m, 'd>) -> Self {
+        let i = set.el.position_in(&set.m.set).expect("TODO: error msg");
+        Self { i }
     }
 
-    pub fn as_slice(&self) -> &[usize] {
-        &self.data
+    pub fn set<'m, 'd>(self, m: &'m Model<'d>) -> Set<'m, 'd> {
+        Set::new(m, m.set.get(self.i).expect("TODO: error msg"))
     }
 }
 
 #[derive(derive_new::new)]
 pub struct SetData<'d> {
-    f: Box<dyn Fn(&mut Elements) + 'd>,
-}
-
-impl Default for SetData<'_> {
-    fn default() -> Self {
-        Self {
-            f: Box::new(|_| {}),
-        }
-    }
+    fun_ptr: *mut Box<dyn Fn(&mut Elements) + 'd>,
 }
 
 impl<'d> SetData<'d> {
-    pub fn new_from_generator<I>(f: impl Fn() -> I + 'd) -> Self
+    pub fn fill(&self, elements: &mut Elements) {
+        let fun = unsafe { &*self.fun_ptr };
+        fun(elements)
+    }
+
+    pub fn update_fun(&mut self, fun: Box<dyn Fn(&mut Elements) + 'd>) {
+        let _ = unsafe { self.fun_ptr.replace(fun) };
+    }
+
+    pub fn update_fun_from_gen<I>(&mut self, fun: impl Fn() -> I + 'd)
     where
         I: IntoIterator<Item = usize>,
     {
-        let f = move |e: &mut Elements| e.fill_with(f());
-        Self::new(Box::new(f))
-    }
-
-    pub fn fill(&self, elements: &mut Elements) {
-        (self.f)(elements)
+        let fun = move |e: &mut Elements| e.fill_with(fun());
+        self.update_fun(Box::new(fun));
     }
 }
 

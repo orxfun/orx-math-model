@@ -1,4 +1,4 @@
-use crate::model_references::SetRef;
+use crate::symbols::SetRef;
 use crate::Model;
 use orx_imp_vec::Elem;
 

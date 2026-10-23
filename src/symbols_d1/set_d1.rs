@@ -1,5 +1,5 @@
-use crate::model_references::SetRef;
-use crate::symbols::{Elements, Idx, RefIdxValue, Set, SetData};
+use crate::elements::Elements;
+use crate::symbols::{Idx, RefIdxValue, Set, SetData, SetRef};
 use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -30,18 +30,6 @@ pub struct SetD1Data<'d> {
 }
 
 impl<'d> SetD1Data<'d> {
-    // pub fn new_from_generator<I>(s0: Set<'_, 'd>, f: impl Fn(usize) -> I + 'd) -> Self
-    // where
-    //     I: IntoIterator<Item = usize>,
-    // {
-    //     let m = s0.m;
-    //     let s0 = SetRef::new(s0);
-    //     let f = move |i1: usize, e: &mut Elements| e.fill_with(f(i1));
-    //     let f = Box::new(f);
-    //     let fun_ptr = m.set_d1_gen.push(f).as_mut_ptr();
-    //     Self { s0, fun_ptr }
-    // }
-
     pub fn fill(&self, i0: usize, elements: &mut Elements) {
         let fun = unsafe { &*self.fun_ptr };
         fun(i0, elements);
@@ -82,6 +70,6 @@ impl<'m, 'd> SetD1<'m, 'd> {
             fun(i0, e);
         };
 
-        self.m.add_set(SetData::new(Box::new(f)))
+        self.m.add_set(Box::new(f))
     }
 }

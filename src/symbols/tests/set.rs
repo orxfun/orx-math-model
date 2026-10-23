@@ -1,4 +1,5 @@
-use crate::symbols::{Elements, Set, SetData};
+use crate::elements::Elements;
+use crate::symbols::{Set, SetData};
 use crate::Model;
 use alloc::vec;
 
@@ -33,12 +34,12 @@ fn set_get_set() {
 
     add_some_more_sets(&m);
 
-    s.el.set(SetData::new_from_generator(|| data.iter().copied()));
+    s.el.update(|x| x.update_fun_from_gen(|| data.iter().copied()));
     assert_elements(&mut elements, &[s, set], &[1, 2, 3]);
 
-    s.el.set(SetData::new_from_generator(|| 0..data.len()));
+    s.el.update(|x| x.update_fun_from_gen(|| 0..data.len()));
     assert_elements(&mut elements, &[s, set], &[0, 1, 2]);
 
-    s.el.set(SetData::new_from_generator(|| vec![1, 3, 5]));
+    s.el.update(|x| x.update_fun_from_gen(|| vec![1, 3, 5]));
     assert_elements(&mut elements, &[s, set], &[1, 3, 5]);
 }
