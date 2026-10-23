@@ -4,6 +4,8 @@ use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 
+// fun
+
 #[derive(derive_new::new)]
 pub struct SetD1Fun<'d>(Box<dyn Fn(usize, &mut Elements) + 'd>);
 
@@ -16,6 +18,8 @@ impl SetD1Fun<'_> {
         self.0(i0, elements)
     }
 }
+
+// data
 
 #[derive(derive_new::new)]
 pub struct SetD1Data<'d> {
@@ -41,6 +45,8 @@ impl<'d> SetD1Data<'d> {
     }
 }
 
+// symbol
+
 #[derive(derive_new::new, Clone, Copy)]
 pub struct SetD1<'m, 'd> {
     pub(crate) m: &'m Model<'d>,
@@ -49,10 +55,7 @@ pub struct SetD1<'m, 'd> {
 
 impl<'m, 'd> SetD1<'m, 'd> {
     pub(crate) fn set(self, i: Idx<'m, 'd>) -> Set<'m, 'd> {
-        #[derive(Clone, Copy)]
-        struct RefSetD1Fun<'d> {
-            p: *const SetD1Fun<'d>,
-        }
+        struct RefSetD1Fun<'d>(*const SetD1Fun<'d>);
 
         impl<'d> RefSetD1Fun<'d> {
             /// # SAFETY
@@ -60,11 +63,11 @@ impl<'m, 'd> SetD1<'m, 'd> {
             /// * Created value must not outlive `'m` or `'d`.
             unsafe fn new<'m>(set: SetD1<'m, 'd>) -> Self {
                 let el = unsafe { set.el.get() };
-                Self { p: el.fun_ptr }
+                Self(el.fun_ptr)
             }
 
             fn value(&self) -> &SetD1Fun<'d> {
-                unsafe { &*self.p }
+                unsafe { &*self.0 }
             }
         }
 
