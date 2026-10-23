@@ -1,5 +1,5 @@
 use crate::symbols::{Idx, IdxData, Par, ParData, Sca, ScaFun, Set, SetData, SetFun, SetRef};
-use crate::symbols_d1::{SetD1, SetD1Data, SetD1Fun};
+use crate::symbols_d1::{ParD1, ParD1Data, ParD1Fun, SetD1, SetD1Data, SetD1Fun};
 use orx_imp_vec::{Doubling, ImpVec, SplitVec};
 
 type Pinned<T> = SplitVec<T, Doubling>;
@@ -13,6 +13,7 @@ pub struct Model<'d> {
     set_d1: Bag<SetD1Data<'d>>,
 
     par: Bag<ParData>,
+    par_d1: Bag<ParD1Data<'d>>,
 
     idx: Bag<IdxData>,
 
@@ -20,6 +21,7 @@ pub struct Model<'d> {
     indices: Bag<usize>,
     set_d0_gen: Bag<SetFun<'d>>,
     set_d1_gen: Bag<SetD1Fun<'d>>,
+    par_d1_gen: Bag<ParD1Fun<'d>>,
     sca_gen: Bag<ScaFun<'d>>,
 }
 
@@ -30,12 +32,14 @@ impl<'d> Model<'d> {
             set_d1: new_bag(),
 
             par: new_bag(),
+            par_d1: new_bag(),
 
             idx: new_bag(),
 
             indices: new_bag(),
             set_d0_gen: new_bag(),
             set_d1_gen: new_bag(),
+            par_d1_gen: new_bag(),
             sca_gen: new_bag(),
         }
     }
@@ -63,6 +67,12 @@ impl<'d> Model<'d> {
     pub fn par(&self) -> Par<'_, 'd> {
         let data = ParData::new(0.0);
         Par::new(self, self.par.push(data))
+    }
+
+    pub fn par_d1<'m>(&'m self, set: Set<'m, 'd>) -> ParD1<'m, 'd> {
+        let fun_ptr = self.par_d1_gen.push(ParD1Fun::empty()).as_mut_ptr();
+        let data = ParD1Data::new(self.set_ref(set), fun_ptr);
+        ParD1::new(self, self.par_d1.push(data))
     }
 
     // idx
