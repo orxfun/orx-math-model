@@ -1,5 +1,5 @@
 use crate::elements::Elements;
-use crate::symbols::{Idx, IdxData, Set, SetData, SetRef};
+use crate::symbols::{Idx, IdxData, Sca, ScaFun, Set, SetData, SetRef};
 use crate::symbols_d1::{SetD1, SetD1Data};
 use alloc::boxed::Box;
 use orx_imp_vec::{Doubling, ImpVec, SplitVec};
@@ -20,7 +20,7 @@ pub struct Model<'d> {
     indices: Bag<usize>,
     set_d0_gen: Bag<Box<dyn Fn(&mut Elements) + 'd>>,
     set_d1_gen: Bag<Box<dyn Fn(usize, &mut Elements) + 'd>>,
-    scalars: Bag<f64>,
+    sca_gen: Bag<ScaFun<'d>>,
 }
 
 impl<'d> Model<'d> {
@@ -34,7 +34,7 @@ impl<'d> Model<'d> {
             indices: new_bag(),
             set_d0_gen: new_bag(),
             set_d1_gen: new_bag(),
-            scalars: new_bag(),
+            sca_gen: new_bag(),
         }
     }
 
@@ -62,6 +62,12 @@ impl<'d> Model<'d> {
         let value_ptr = self.indices.push(0).as_mut_ptr();
         let data = IdxData::new(self.set_ref(set), value_ptr);
         Idx::new(self, self.idx.push(data))
+    }
+
+    // scalars
+
+    pub(crate) fn add_scalar<'m>(&'m self, fun: ScaFun<'d>) -> Sca<'m, 'd> {
+        Sca::new(self, self.sca_gen.push(fun))
     }
 
     // helper
