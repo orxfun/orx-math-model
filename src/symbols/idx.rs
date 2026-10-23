@@ -13,8 +13,7 @@ impl RefIdxValue {
     /// * Created value must not outlive `'m` or `'d`.
     pub unsafe fn new<'m, 'd>(idx: Idx<'m, 'd>) -> Self {
         let el = unsafe { idx.el.get() };
-        let p = el.value_ptr();
-        Self { p }
+        Self { p: el.value_ptr }
     }
 
     /// # SAFETY
@@ -43,10 +42,6 @@ impl IdxData {
 
     pub fn set_value(&mut self, value: usize) {
         unsafe { self.value_ptr.write(value) };
-    }
-
-    pub fn value_ptr(&self) -> *mut usize {
-        self.value_ptr
     }
 }
 
