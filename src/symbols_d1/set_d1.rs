@@ -2,19 +2,18 @@ use crate::model_references::{IdxRef, IdxValRef, SetRef};
 use crate::symbols::{Elements, Idx, Set, SetData};
 use crate::Model;
 use alloc::boxed::Box;
-use alloc::rc::Rc;
 use orx_imp_vec::Elem;
 
 pub struct SetD1Data<'d> {
-    f: Rc<dyn Fn(usize, &mut Elements) + 'd>,
+    f: Box<dyn Fn(usize, &mut Elements) + 'd>,
     s0: SetRef,
 }
 
 impl<'d> SetD1Data<'d> {
     pub fn default(s0: Set<'_, 'd>) -> Self {
         let s0 = SetRef::new(s0);
-        let f = Rc::new(|_, _: &mut Elements| {});
-        Self { f, s0 }
+        let f = |_, _: &mut Elements| {};
+        Self { f: Box::new(f), s0 }
     }
 
     pub fn new<I>(s0: Set<'_, 'd>, f: impl Fn(usize) -> I + 'd) -> Self
@@ -23,8 +22,7 @@ impl<'d> SetD1Data<'d> {
     {
         let s0 = SetRef::new(s0);
         let f = move |i1: usize, e: &mut Elements| e.fill_with(f(i1));
-        let f = Rc::new(f);
-        Self { f, s0 }
+        Self { f: Box::new(f), s0 }
     }
 
     pub fn fill(&self, i0: usize, elements: &mut Elements) {
@@ -49,16 +47,18 @@ impl<'m, 'd> SetD1<'m, 'd> {
         // TODO: safety explanation
         let p = unsafe { IdxValRef::new(i) };
 
-        let f0 = s1.f.clone();
-        let f = move |e: &mut Elements| {
-            let i0 = p.value();
-            println!("i0 = {i0}");
-            println!("e-bef = {e:?}");
-            f0(i0, e);
-            println!("e-aft = {e:?}");
-            assert_eq!(i0, 7);
-        };
+        todo!()
 
-        self.m.add_set(SetData::new(Box::new(f)))
+        // let f0 = s1.f.clone();
+        // let f = move |e: &mut Elements| {
+        //     let i0 = p.value();
+        //     println!("i0 = {i0}");
+        //     println!("e-bef = {e:?}");
+        //     f0(i0, e);
+        //     println!("e-aft = {e:?}");
+        //     assert_eq!(i0, 7);
+        // };
+
+        // self.m.add_set(SetData::new(Box::new(f)))
     }
 }
