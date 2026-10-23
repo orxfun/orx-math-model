@@ -94,6 +94,7 @@ fn set_from_set_d1() {
     assert_elements(&mut elements, &[set], &[]);
 
     // after wire up set-d1 data
+
     s1.el.set(SetD1Data::new(s0, |i| data[i].iter().copied()));
 
     i0.el.update(|x| x.set_value(0));

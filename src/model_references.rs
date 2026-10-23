@@ -1,5 +1,5 @@
-use crate::symbols::{Idx, Set};
-use crate::symbols_d1::SetD1;
+use crate::symbols::{Elements, Idx, Set};
+use crate::symbols_d1::{SetD1, SetD1Data};
 use crate::Model;
 
 #[derive(Clone, Copy)]
@@ -57,3 +57,25 @@ impl SetD1Ref {
         SetD1::new(m, m.set_d1.get(self.i).expect("TODO: error msg"))
     }
 }
+
+// pub struct SetD1Ref2<'d> {
+//     p: *const SetD1Data<'d>,
+// }
+
+// impl<'d> SetD1Ref2<'d> {
+//     /// # SAFETY
+//     ///
+//     /// * Created value must not outlive `'m`.
+//     pub unsafe fn new<'m>(idx: SetD1<'m, 'd>) -> Self {
+//         let p = unsafe { idx.el.get() };
+//         Self { p }
+//     }
+
+//     /// # SAFETY
+//     ///
+//     /// This method is safe as long is it is created with the `new` method
+//     /// satisfying its safety requirements.
+//     pub fn value(&self) -> &SetD1Data<'d> {
+//         unsafe { &*self.p }
+//     }
+// }
