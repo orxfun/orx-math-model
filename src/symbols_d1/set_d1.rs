@@ -1,5 +1,5 @@
 use crate::elements::Elements;
-use crate::symbols::{Idx, PtrIdxValue, Set, SetData, SetFun, SetRef};
+use crate::symbols::{Idx, PseudoInt, PtrIdxValue, PtrIntFun, Set, SetData, SetFun, SetRef};
 use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -58,7 +58,7 @@ pub struct SetD1<'m, 'd> {
 }
 
 impl<'m, 'd> SetD1<'m, 'd> {
-    pub(crate) fn set_at(self, i: Idx<'m, 'd>) -> Set<'m, 'd> {
+    pub(crate) fn at(self, i: impl Into<PseudoInt<'m, 'd>>) -> Set<'m, 'd> {
         struct PtrSetD1Fun<'d>(*const SetD1Fun<'d>);
 
         impl<'d> PtrSetD1Fun<'d> {
@@ -69,25 +69,24 @@ impl<'m, 'd> SetD1<'m, 'd> {
                 Self(SetD1Data::ptr_fun(set.el.as_ptr()))
             }
 
-            fn value(&self) -> &SetD1Fun<'d> {
+            fn val(&self) -> &SetD1Fun<'d> {
                 unsafe { &*self.0 }
             }
         }
 
-        assert!(core::ptr::eq(self.m, i.m), "TODO: error msg");
+        // SAFETY: fun_d1 is tied to lifetime of 'm and 'd due to return type Num<'m, 'd>.
+        let fun_d1 = unsafe { PtrSetD1Fun::new(self) };
 
-        let s1 = unsafe { self.el.get() };
-        let idx = unsafe { i.el.get() };
-        assert_eq!(s1.s0, idx.s0(), "TODO: err-msg");
-
-        // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Set<'m, 'd>.
-        let (p, fun_d1) = unsafe { (PtrIdxValue::new(i), PtrSetD1Fun::new(self)) };
-        let f = move |e: &mut Elements| {
-            let i0 = p.value();
-            let fun = fun_d1.value();
-            fun.0(i0, e);
+        let f = match i.into() {
+            PseudoInt::Int(i) => {
+                assert!(core::ptr::eq(self.m, i.m), "TODO: error msg");
+                // SAFETY: p is tied to lifetime of 'm and 'd due to return type Num<'m, 'd>.
+                let p = unsafe { PtrIntFun::new(i) };
+                SetFun::new(Box::new(move |e| fun_d1.val().0(p.fun().eval(), e)))
+            }
+            PseudoInt::Raw(i0) => SetFun::new(Box::new(move |e| fun_d1.val().0(i0, e))),
         };
 
-        self.m.add_set(SetData::new(SetFun::new(Box::new(f))))
+        self.m.add_set(SetData::new(f))
     }
 }

@@ -60,7 +60,7 @@ fn sca_from_par_d1() {
     let p1 = m.par_d1(s0);
 
     let i0 = s0.idx();
-    let p = p1.sca_at(i0);
+    let p = p1.at(i0);
 
     // before wire up par-d1 data
 
@@ -88,7 +88,7 @@ fn sca_from_par_d1() {
 
     // int expression as index
 
-    let p = p1.sca_at(i0 + 1);
+    let p = p1.at(i0 + 1);
 
     i0.el.update(|x| x.set_value(0));
     assert_value(p, 11.0);
@@ -101,6 +101,6 @@ fn sca_from_par_d1() {
 
     // constant int as index
 
-    let p = p1.sca_at(2);
+    let p = p1.at(2);
     assert_value(p, 12.0);
 }

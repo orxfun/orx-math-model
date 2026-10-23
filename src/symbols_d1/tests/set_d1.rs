@@ -56,7 +56,7 @@ fn set_d1_get_set() {
     let idx = s0.idx();
     for (i, expected) in data.iter().enumerate() {
         idx.el.update(|x| x.set_value(i));
-        let generated = set.set_at(idx);
+        let generated = set.at(idx);
         unsafe { generated.el.get() }.fill(&mut elements);
         assert_eq!(elements.as_slice(), expected);
     }
@@ -64,12 +64,10 @@ fn set_d1_get_set() {
 
 #[test]
 fn set_from_set_d1() {
-    fn assert_elements(e: &mut Elements, set_symbols: &[Set<'_, '_>], expected: &[usize]) {
-        for s in set_symbols {
-            for _ in 0..1 {
-                unsafe { s.el.get() }.fill(e);
-                assert_eq!(e.as_slice(), expected);
-            }
+    fn assert_elements(e: &mut Elements, set: Set<'_, '_>, expected: &[usize]) {
+        for _ in 0..1 {
+            unsafe { set.el.get() }.fill(e);
+            assert_eq!(e.as_slice(), expected);
         }
     }
 
@@ -85,14 +83,14 @@ fn set_from_set_d1() {
 
     let i0 = s0.idx();
 
-    let set = s1.set_at(i0);
+    let s = s1.at(i0);
 
     // before wire up set-d1 data
 
-    assert_elements(&mut elements, &[set], &[]);
+    assert_elements(&mut elements, s, &[]);
 
     i0.el.update(|x| x.set_value(1));
-    assert_elements(&mut elements, &[set], &[]);
+    assert_elements(&mut elements, s, &[]);
 
     // after wire up set-d1 data
 
@@ -100,27 +98,32 @@ fn set_from_set_d1() {
         .update(|x| x.update_fun_from_gen(|i| data[i].iter().copied()));
 
     i0.el.update(|x| x.set_value(0));
-    assert_elements(&mut elements, &[set], &[0]);
+    assert_elements(&mut elements, s, &[0]);
 
     i0.el.update(|x| x.set_value(1));
-    assert_elements(&mut elements, &[set], &[1, 2, 3]);
+    assert_elements(&mut elements, s, &[1, 2, 3]);
 
     i0.el.update(|x| x.set_value(2));
-    assert_elements(&mut elements, &[set], &[4, 5]);
+    assert_elements(&mut elements, s, &[4, 5]);
 
     i0.el.update(|x| x.set_value(3));
-    assert_elements(&mut elements, &[set], &[6, 7, 8, 9]);
-}
+    assert_elements(&mut elements, s, &[6, 7, 8, 9]);
 
-#[test]
-#[should_panic]
-fn set_from_set_d1_wrong_idx() {
-    let m = Model::new();
-    let s0 = m.set();
-    let s1 = m.set_d1(s0);
+    // int expression as index
 
-    let wrong_set = m.set();
-    let wrong_idx = wrong_set.idx();
+    let s = s1.at(i0 + 1);
 
-    let _ = s1.set_at(wrong_idx);
+    i0.el.update(|x| x.set_value(0));
+    assert_elements(&mut elements, s, &[1, 2, 3]);
+
+    i0.el.update(|x| x.set_value(1));
+    assert_elements(&mut elements, s, &[4, 5]);
+
+    i0.el.update(|x| x.set_value(2));
+    assert_elements(&mut elements, s, &[6, 7, 8, 9]);
+
+    // constant int as index
+
+    let s = s1.at(2);
+    assert_elements(&mut elements, s, &[4, 5]);
 }

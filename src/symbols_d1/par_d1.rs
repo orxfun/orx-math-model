@@ -49,7 +49,7 @@ pub struct ParD1<'m, 'd> {
 }
 
 impl<'m, 'd> ParD1<'m, 'd> {
-    pub(crate) fn sca_at(self, i: impl Into<PseudoInt<'m, 'd>>) -> Num<'m, 'd> {
+    pub(crate) fn at(self, i: impl Into<PseudoInt<'m, 'd>>) -> Num<'m, 'd> {
         struct PtrParD1Fun<'d>(*const ParD1Fun<'d>);
 
         impl<'d> PtrParD1Fun<'d> {
@@ -71,7 +71,6 @@ impl<'m, 'd> ParD1<'m, 'd> {
         let f = match i.into() {
             PseudoInt::Int(i) => {
                 assert!(core::ptr::eq(self.m, i.m), "TODO: error msg");
-
                 // SAFETY: p is tied to lifetime of 'm and 'd due to return type Num<'m, 'd>.
                 let p = unsafe { PtrIntFun::new(i) };
                 NumFun::new(Box::new(move || fun_d1.val().0(p.fun().eval())))
