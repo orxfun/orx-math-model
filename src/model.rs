@@ -1,6 +1,7 @@
 use crate::model_references::SetRef;
-use crate::symbols::{Idx, IdxData, Set, SetData};
+use crate::symbols::{Elements, Idx, IdxData, Set, SetData};
 use crate::symbols_d1::{SetD1, SetD1Data};
+use alloc::boxed::Box;
 use orx_imp_vec::{Doubling, ImpVec, SplitVec};
 
 type Pinned<T> = SplitVec<T, Doubling>;
@@ -16,6 +17,7 @@ pub struct Model<'d> {
     pub(crate) idx: Bag<IdxData>,
 
     indices: Bag<usize>,
+    set_d1_gen: Bag<Box<dyn Fn(usize, &mut Elements) + 'd>>,
 }
 
 impl<'d> Model<'d> {
@@ -27,6 +29,7 @@ impl<'d> Model<'d> {
             idx: new_bag(),
 
             indices: new_bag(),
+            set_d1_gen: new_bag(),
         }
     }
 
@@ -41,14 +44,17 @@ impl<'d> Model<'d> {
     }
 
     pub fn set_d1<'m>(&'m self, set: Set<'m, 'd>) -> SetD1<'m, 'd> {
-        SetD1::new(self, self.set_d1.push(SetD1Data::default(set)))
+        let fun_ptr = self.set_d1_gen.push(Box::new(|_, _| {})).as_mut_ptr();
+        let set_ref = SetRef::new(set);
+        let data = SetD1Data::new(set_ref, fun_ptr);
+        SetD1::new(self, self.set_d1.push(data))
     }
 
     // idx
 
     pub(crate) fn idx<'m>(&'m self, set: Set<'m, 'd>) -> Idx<'m, 'd> {
         let set = SetRef::new(set);
-        let value_ptr = self.indices.push(0).as_ptr() as *mut usize;
+        let value_ptr = self.indices.push(0).as_mut_ptr();
         let data = IdxData::new(set, value_ptr);
         Idx::new(self, self.idx.push(data))
     }

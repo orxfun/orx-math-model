@@ -1,32 +1,62 @@
-use crate::model_references::{SetD1Ref, SetRef};
+use crate::model_references::SetRef;
 use crate::symbols::{Elements, Idx, RefIdxValue, Set, SetData};
 use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 
+#[derive(Clone, Copy)]
+pub struct RefSetD1Fun<'d> {
+    p: *const Box<dyn Fn(usize, &mut Elements) + 'd>,
+}
+
+impl<'d> RefSetD1Fun<'d> {
+    /// # SAFETY
+    ///
+    /// * Created value must not outlive `'m` or `'d`.
+    pub unsafe fn new<'m>(set: SetD1<'m, 'd>) -> Self {
+        let el = unsafe { set.el.get() };
+        Self { p: el.fun_ptr }
+    }
+
+    pub fn value(&self) -> &Box<dyn Fn(usize, &mut Elements) + 'd> {
+        unsafe { &*self.p }
+    }
+}
+
+#[derive(derive_new::new)]
 pub struct SetD1Data<'d> {
-    f: Box<dyn Fn(usize, &mut Elements) + 'd>,
     s0: SetRef,
+    fun_ptr: *mut Box<dyn Fn(usize, &mut Elements) + 'd>,
 }
 
 impl<'d> SetD1Data<'d> {
-    pub fn default(s0: Set<'_, 'd>) -> Self {
-        let s0 = SetRef::new(s0);
-        let f = |_, _: &mut Elements| {};
-        Self { f: Box::new(f), s0 }
+    // pub fn new_from_generator<I>(s0: Set<'_, 'd>, f: impl Fn(usize) -> I + 'd) -> Self
+    // where
+    //     I: IntoIterator<Item = usize>,
+    // {
+    //     let m = s0.m;
+    //     let s0 = SetRef::new(s0);
+    //     let f = move |i1: usize, e: &mut Elements| e.fill_with(f(i1));
+    //     let f = Box::new(f);
+    //     let fun_ptr = m.set_d1_gen.push(f).as_mut_ptr();
+    //     Self { s0, fun_ptr }
+    // }
+
+    pub fn fill(&self, i0: usize, elements: &mut Elements) {
+        let fun = unsafe { &*self.fun_ptr };
+        fun(i0, elements);
     }
 
-    pub fn new<I>(s0: Set<'_, 'd>, f: impl Fn(usize) -> I + 'd) -> Self
+    pub fn update_fun(&mut self, fun: Box<dyn Fn(usize, &mut Elements) + 'd>) {
+        let _ = unsafe { self.fun_ptr.replace(fun) };
+    }
+
+    pub fn update_fun_from_gen<I>(&mut self, fun: impl Fn(usize) -> I + 'd)
     where
         I: IntoIterator<Item = usize>,
     {
-        let s0 = SetRef::new(s0);
-        let f = move |i1: usize, e: &mut Elements| e.fill_with(f(i1));
-        Self { f: Box::new(f), s0 }
-    }
-
-    pub fn fill(&self, i0: usize, elements: &mut Elements) {
-        (self.f)(i0, elements)
+        let fun = move |i1: usize, e: &mut Elements| e.fill_with(fun(i1));
+        self.update_fun(Box::new(fun));
     }
 }
 
@@ -44,18 +74,11 @@ impl<'m, 'd> SetD1<'m, 'd> {
         let idx = unsafe { i.el.get() };
         assert_eq!(s1.s0, idx.s0(), "TODO: err-msg");
 
-        // TODO: safety explanation
-        let p = unsafe { RefIdxValue::new(i) };
-        let s1 = SetD1Ref::new(self);
-
-        let m = self.m as *const Model;
+        // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Set<'m, 'd>.
+        let (p, fun_d1) = unsafe { (RefIdxValue::new(i), RefSetD1Fun::new(self)) };
         let f = move |e: &mut Elements| {
             let i0 = p.value();
-            // SAFETY: set_d1 is tied to lifetime of `m`
-            let fun = unsafe {
-                let set_d1 = s1.set(&*m);
-                &set_d1.el.get().f
-            };
+            let fun = fun_d1.value();
             fun(i0, e);
         };
 
