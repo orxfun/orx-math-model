@@ -1,20 +1,14 @@
 #[cfg(test)]
 mod tests;
 
-mod dep_set_indices;
-pub(crate) mod pars;
-pub(crate) mod sets;
-mod symbol;
-mod symbol_data_collection;
-mod symbol_map;
-mod symbol_meta;
-mod symbol_ref;
-mod symbol_ref_core;
+mod idx;
+mod int;
+mod num;
+mod par;
+mod set;
 
-pub use dep_set_indices::DependentSetIndices;
-pub use pars::{par, Par};
-pub use sets::{set_of, Set};
-pub use symbol::Symbol;
-pub use symbol_data_collection::SymbolDataCollection;
-pub use symbol_map::{ParCoreMap, SetCoreMap, SymbolMap};
-pub use symbol_ref::SymbolRef;
+pub use idx::{Idx, IdxData, PtrIdxValue};
+pub use int::{Int, IntFun, PtrIntFun};
+pub use num::{Num, NumFun};
+pub use par::{Par, ParData};
+pub use set::{Set, SetData, SetFun, SetRef};

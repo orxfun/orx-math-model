@@ -1,79 +1,92 @@
-use crate::data::DataBuilder;
-use crate::model_data::ModelData;
-use crate::symbols::pars::{ParCore, ParData};
-use crate::symbols::sets::{IndependentSetCollection, Set, SetCollection, SetCore, SetData};
-use crate::symbols::{DependentSetIndices, Symbol};
-use crate::Par;
+use crate::symbols::{
+    Idx, IdxData, Int, IntFun, Num, NumFun, Par, ParData, Set, SetData, SetFun, SetRef,
+};
+use crate::symbols_d1::{ParD1, ParD1Data, ParD1Fun, SetD1, SetD1Data, SetD1Fun};
+use orx_imp_vec::{Doubling, ImpVec, SplitVec};
 
-#[derive(Default)]
-pub struct Model {
-    pub(crate) data: ModelData,
+type Pinned<T> = SplitVec<T, Doubling>;
+type Bag<T> = ImpVec<T, Pinned<T>>;
+fn new_bag<T>() -> Bag<T> {
+    Bag::new()
 }
 
-impl Model {
-    pub fn new() -> Self {
-        Self::default()
-    }
+pub struct Model<'d> {
+    set: Bag<SetData<'d>>,
+    set_d1: Bag<SetD1Data<'d>>,
 
-    pub fn data_builder(&self) -> DataBuilder<'_> {
-        DataBuilder::new(self)
+    par: Bag<ParData>,
+    par_d1: Bag<ParD1Data<'d>>,
+
+    idx: Bag<IdxData>,
+
+    num: Bag<NumFun<'d>>,
+    int: Bag<IntFun<'d>>,
+}
+
+impl<'d> Model<'d> {
+    pub fn new() -> Self {
+        Self {
+            set: new_bag(),
+            set_d1: new_bag(),
+
+            par: new_bag(),
+            par_d1: new_bag(),
+
+            idx: new_bag(),
+
+            num: new_bag(),
+            int: new_bag(),
+        }
     }
 
     // sets
 
-    pub fn set(&self) -> Set<'_, 0> {
-        let dep = DependentSetIndices::new(core::iter::empty());
-        let data = SetData::new(dep);
-        self.data.sets.push(self, Symbol::new(data)).with_dim()
+    pub fn set(&self) -> Set<'_, 'd> {
+        self.add_set(SetData::new(SetFun::empty()))
     }
 
-    pub fn set_of<'m, S>(&'m self, sets: S) -> S::Set
-    where
-        S: IndependentSetCollection<'m>,
-    {
-        let sets = sets.to_sets_array();
-        let dep = DependentSetIndices::new(sets.into_iter());
-        let data = SetData::new(dep);
-        let core = self.data.sets.push(self, Symbol::new(data));
-        S::set_from_core(core)
+    pub(crate) fn add_set(&self, data: SetData<'d>) -> Set<'_, 'd> {
+        Set::new(self, self.set.push(data))
     }
 
-    pub fn set_by_key<const N: usize>(&self, key: &str) -> Option<Set<'_, N>> {
-        let core = self.data.sets.by_key(self, key).map(SetCore::from);
-        core.and_then(|x| x.with_dim_checked::<N>())
-    }
-
-    pub fn par_by_key<const N: usize>(&self, key: &str) -> Option<Par<'_, N>> {
-        let core = self.data.pars.by_key(self, key).map(ParCore::from);
-        core.and_then(|x| x.with_dim_checked::<N>())
-    }
-
-    #[inline(always)]
-    pub(crate) fn set_at(&self, idx: usize) -> Option<SetCore<'_>> {
-        self.data.sets.at(self, idx).map(SetCore::from)
-    }
-
-    #[inline(always)]
-    pub(crate) fn set_at_unchecked(&self, idx: usize) -> SetCore<'_> {
-        self.set_at(idx).expect("must exist")
+    pub fn set_d1<'m>(&'m self, set: Set<'m, 'd>) -> SetD1<'m, 'd> {
+        let data = SetD1Data::new(self.set_ref(set), SetD1Fun::empty());
+        SetD1::new(self, self.set_d1.push(data))
     }
 
     // pars
 
-    pub fn par(&self) -> Par<'_, 0> {
-        let dep = DependentSetIndices::new(core::iter::empty());
-        let data = ParData::new(dep);
-        self.data.pars.push(self, Symbol::new(data)).with_dim()
+    pub fn par(&self) -> Par<'_, 'd> {
+        let data = ParData::new(0.0);
+        Par::new(self, self.par.push(data))
     }
 
-    pub fn par_of<'m, S>(&'m self, sets: S) -> S::Par
-    where
-        S: SetCollection<'m>,
-    {
-        let sets = sets.to_sets_array();
-        let dep = DependentSetIndices::new(sets.into_iter());
-        let data = ParData::new(dep);
-        let core = self.data.pars.push(self, Symbol::new(data));
-        S::par_from_core(core)
+    pub fn par_d1<'m>(&'m self, set: Set<'m, 'd>) -> ParD1<'m, 'd> {
+        let data = ParD1Data::new(self.set_ref(set), ParD1Fun::empty());
+        ParD1::new(self, self.par_d1.push(data))
+    }
+
+    // idx
+
+    pub(crate) fn idx<'m>(&'m self, set: Set<'m, 'd>) -> Idx<'m, 'd> {
+        let data = IdxData::new(self.set_ref(set), 0);
+        Idx::new(self, self.idx.push(data))
+    }
+
+    // scalars
+
+    pub(crate) fn add_num<'m>(&'m self, fun: NumFun<'d>) -> Num<'m, 'd> {
+        Num::new(self, self.num.push(fun))
+    }
+
+    pub(crate) fn add_int<'m>(&'m self, fun: IntFun<'d>) -> Int<'m, 'd> {
+        Int::new(self, self.int.push(fun))
+    }
+
+    // helper
+
+    fn set_ref(&self, set: Set<'_, 'd>) -> SetRef {
+        let set_pos = set.el.position_in(&self.set).expect("TODO: error msg");
+        SetRef::new(set_pos)
     }
 }
