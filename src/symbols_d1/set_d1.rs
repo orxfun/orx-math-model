@@ -24,16 +24,16 @@ impl SetD1Fun<'_> {
 #[derive(derive_new::new)]
 pub struct SetD1Data<'d> {
     s0: SetRef,
-    fun_ptr: *mut SetD1Fun<'d>,
+    fun: SetD1Fun<'d>,
 }
 
 impl<'d> SetD1Data<'d> {
     pub fn fill(&self, i0: usize, elements: &mut Elements) {
-        unsafe { &*self.fun_ptr }.fill(i0, elements);
+        self.fun.fill(i0, elements);
     }
 
     pub fn update_fun(&mut self, fun: SetD1Fun<'d>) {
-        let _ = unsafe { self.fun_ptr.replace(fun) };
+        self.fun = fun;
     }
 
     pub fn update_fun_from_gen<I>(&mut self, fun: impl Fn(usize) -> I + 'd)
@@ -55,15 +55,14 @@ pub struct SetD1<'m, 'd> {
 
 impl<'m, 'd> SetD1<'m, 'd> {
     pub(crate) fn set_at(self, i: Idx<'m, 'd>) -> Set<'m, 'd> {
-        struct RefSetD1Fun<'d>(*const SetD1Fun<'d>);
+        struct PtrSetD1Fun<'d>(*const SetD1Fun<'d>);
 
-        impl<'d> RefSetD1Fun<'d> {
+        impl<'d> PtrSetD1Fun<'d> {
             /// # SAFETY
             ///
             /// * Created value must not outlive `'m` or `'d`.
             unsafe fn new<'m>(set: SetD1<'m, 'd>) -> Self {
-                let el = unsafe { set.el.get() };
-                Self(el.fun_ptr)
+                Self(core::ptr::addr_of!((*set.el.as_ptr()).fun))
             }
 
             fn value(&self) -> &SetD1Fun<'d> {
@@ -78,7 +77,7 @@ impl<'m, 'd> SetD1<'m, 'd> {
         assert_eq!(s1.s0, idx.s0(), "TODO: err-msg");
 
         // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Set<'m, 'd>.
-        let (p, fun_d1) = unsafe { (RefIdxValue::new(i), RefSetD1Fun::new(self)) };
+        let (p, fun_d1) = unsafe { (RefIdxValue::new(i), PtrSetD1Fun::new(self)) };
         let f = move |e: &mut Elements| {
             let i0 = p.value();
             let fun = fun_d1.value();
