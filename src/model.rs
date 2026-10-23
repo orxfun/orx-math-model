@@ -19,7 +19,7 @@ pub struct Model<'d> {
 
     // data
     indices: Bag<usize>,
-    sca_gen: Bag<ScaFun<'d>>,
+    sca: Bag<ScaFun<'d>>,
 }
 
 impl<'d> Model<'d> {
@@ -34,7 +34,7 @@ impl<'d> Model<'d> {
             idx: new_bag(),
 
             indices: new_bag(),
-            sca_gen: new_bag(),
+            sca: new_bag(),
         }
     }
 
@@ -76,7 +76,7 @@ impl<'d> Model<'d> {
     // scalars
 
     pub(crate) fn add_sca<'m>(&'m self, fun: ScaFun<'d>) -> Sca<'m, 'd> {
-        Sca::new(self, self.sca_gen.push(fun))
+        Sca::new(self, self.sca.push(fun))
     }
 
     // helper
