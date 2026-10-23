@@ -1,5 +1,6 @@
 use crate::model_references::SetRef;
 use crate::symbols::{Elements, Set};
+use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 
@@ -8,23 +9,21 @@ pub struct SetD1Data<'d> {
     s1: SetRef,
 }
 
-impl Default for SetD1Data<'_> {
-    fn default() -> Self {
-        // Self {
-        //     f: Box::new(|_, _| {}),
-        // }
-        todo!()
-    }
-}
-
 impl<'d> SetD1Data<'d> {
-    pub fn new<I>(s1: Set<'_, 'd>, f: impl Fn(usize) -> I + 'd) -> Self
+    pub fn default<'m>(m: &'m Model<'d>, s1: Set<'m, 'd>) -> Self {
+        let s1 = SetRef::new(m, s1);
+        let f = Box::new(|_, _: &mut Elements| {});
+        Self { f, s1 }
+    }
+
+    pub fn new<'m, I>(m: &'m Model<'d>, s1: Set<'m, 'd>, f: impl Fn(usize) -> I + 'd) -> Self
     where
         I: IntoIterator<Item = usize>,
     {
-        let g = move |i1: usize, e: &mut Elements| e.fill_with(f(i1));
-        todo!()
-        // Self { s1, f: Box::new(g) }
+        let s1 = SetRef::new(m, s1);
+        let f = move |i1: usize, e: &mut Elements| e.fill_with(f(i1));
+        let f = Box::new(f);
+        Self { f, s1 }
     }
 
     pub fn fill(&self, i1: usize, elements: &mut Elements) {

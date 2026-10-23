@@ -24,11 +24,11 @@ impl<'d> Model<'d> {
     // sets
 
     pub fn set(&self) -> Set<'_, 'd> {
-        Set::new(self.set.push(Default::default()))
+        Set::new(self.set.push(SetData::default()))
     }
 
     pub fn set_d1<'m>(&'m self, set: Set<'m, 'd>) -> SetD1<'m, 'd> {
-        SetD1::new(self.set_d1.push(Default::default()))
+        SetD1::new(self.set_d1.push(SetD1Data::default(self, set)))
     }
 
     pub(crate) fn sets(&self) -> &Bag<SetData<'d>> {

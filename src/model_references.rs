@@ -5,8 +5,8 @@ pub struct SetRef {
 }
 
 impl SetRef {
-    pub fn new<'m>(m: &'m Model, set: Set<'m, '_>) -> Self {
-        let i = set.0.position_in(m.sets()).unwrap();
+    pub fn new<'m, 'd>(m: &'m Model<'d>, set: Set<'m, 'd>) -> Self {
+        let i = set.0.position_in(m.sets()).expect("TODO: error msg");
         Self { i }
     }
 }
