@@ -38,7 +38,7 @@ impl<'d> RefScaFun<'d> {
         Self(unsafe { set.el.get() })
     }
 
-    fn value(&self) -> &ScaFun<'d> {
+    fn fun(&self) -> &ScaFun<'d> {
         unsafe { &*self.0 }
     }
 }
@@ -53,11 +53,7 @@ impl<'m, 'd> Add<Sca<'m, 'd>> for Sca<'m, 'd> {
 
         // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
         let [a, b] = unsafe { [RefScaFun::new(self), RefScaFun::new(rhs)] };
-        let f = move || {
-            let a = a.value();
-            let b = b.value();
-            a.eval() + b.eval()
-        };
+        let f = move || a.fun().eval() + b.fun().eval();
         self.m.add_sca(ScaFun(Box::new(f)))
     }
 }
