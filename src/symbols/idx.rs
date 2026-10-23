@@ -13,6 +13,14 @@ impl IdxData {
         let s0 = SetRef::new(s0);
         Self { s0, value: 0 }
     }
+
+    pub fn value(&self) -> usize {
+        self.value
+    }
+
+    pub fn set_value(&mut self, value: usize) {
+        self.value = value;
+    }
 }
 
 #[derive(derive_new::new, Clone, Copy)]
