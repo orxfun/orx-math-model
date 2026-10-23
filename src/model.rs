@@ -16,9 +16,11 @@ pub struct Model<'d> {
 
     idx: Bag<IdxData>,
 
+    // data
     indices: Bag<usize>,
     set_d0_gen: Bag<Box<dyn Fn(&mut Elements) + 'd>>,
     set_d1_gen: Bag<Box<dyn Fn(usize, &mut Elements) + 'd>>,
+    scalars: Bag<f64>,
 }
 
 impl<'d> Model<'d> {
@@ -32,6 +34,7 @@ impl<'d> Model<'d> {
             indices: new_bag(),
             set_d0_gen: new_bag(),
             set_d1_gen: new_bag(),
+            scalars: new_bag(),
         }
     }
 
