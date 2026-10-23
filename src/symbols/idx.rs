@@ -37,7 +37,7 @@ impl IdxData {
         self.s0
     }
 
-    pub fn read_value(&self) -> usize {
+    pub fn value(&self) -> usize {
         self.value
     }
 

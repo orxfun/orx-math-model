@@ -1,4 +1,6 @@
-use crate::symbols::{Idx, IdxData, Num, NumFun, Par, ParData, Set, SetData, SetFun, SetRef};
+use crate::symbols::{
+    Idx, IdxData, Int, IntFun, Num, NumFun, Par, ParData, Set, SetData, SetFun, SetRef,
+};
 use crate::symbols_d1::{ParD1, ParD1Data, ParD1Fun, SetD1, SetD1Data, SetD1Fun};
 use orx_imp_vec::{Doubling, ImpVec, SplitVec};
 
@@ -18,6 +20,7 @@ pub struct Model<'d> {
     idx: Bag<IdxData>,
 
     num: Bag<NumFun<'d>>,
+    int: Bag<IntFun<'d>>,
 }
 
 impl<'d> Model<'d> {
@@ -32,6 +35,7 @@ impl<'d> Model<'d> {
             idx: new_bag(),
 
             num: new_bag(),
+            int: new_bag(),
         }
     }
 
@@ -73,6 +77,10 @@ impl<'d> Model<'d> {
 
     pub(crate) fn add_num<'m>(&'m self, fun: NumFun<'d>) -> Num<'m, 'd> {
         Num::new(self, self.num.push(fun))
+    }
+
+    pub(crate) fn add_int<'m>(&'m self, fun: IntFun<'d>) -> Int<'m, 'd> {
+        Int::new(self, self.int.push(fun))
     }
 
     // helper

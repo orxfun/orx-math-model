@@ -3,7 +3,7 @@ use crate::Model;
 
 fn assert_idx_value(idx_symbols: &[Idx<'_, '_>], expected: usize) {
     for i in idx_symbols {
-        assert_eq!(unsafe { i.el.get() }.read_value(), expected);
+        assert_eq!(unsafe { i.el.get() }.value(), expected);
     }
 }
 
