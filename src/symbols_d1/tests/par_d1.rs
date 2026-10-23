@@ -86,3 +86,16 @@ fn sca_from_par_d1() {
     i0.el.update(|x| x.set_value(3));
     assert_value(p, 13.0);
 }
+
+#[test]
+#[should_panic]
+fn sca_from_par_d1_wrong_idx() {
+    let m = Model::new();
+    let s0 = m.set();
+    let p1 = m.par_d1(s0);
+
+    let wrong_set = m.set();
+    let wrong_idx = wrong_set.idx();
+
+    let _ = p1.sca_at(wrong_idx);
+}
