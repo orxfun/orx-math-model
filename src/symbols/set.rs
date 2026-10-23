@@ -4,6 +4,15 @@ use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 
+#[derive(derive_new::new)]
+pub struct SetFun<'d>(Box<dyn Fn(&mut Elements) + 'd>);
+
+impl SetFun<'_> {
+    pub fn dummy() -> Self {
+        Self(Box::new(|_| {}))
+    }
+}
+
 #[derive(derive_new::new, Clone, Copy, PartialEq, Debug)]
 pub struct SetRef {
     i: usize,
@@ -11,16 +20,16 @@ pub struct SetRef {
 
 #[derive(derive_new::new)]
 pub struct SetData<'d> {
-    fun_ptr: *mut Box<dyn Fn(&mut Elements) + 'd>,
+    fun_ptr: *mut SetFun<'d>,
 }
 
 impl<'d> SetData<'d> {
     pub fn fill(&self, elements: &mut Elements) {
         let fun = unsafe { &*self.fun_ptr };
-        fun(elements)
+        fun.0(elements)
     }
 
-    pub fn update_fun(&mut self, fun: Box<dyn Fn(&mut Elements) + 'd>) {
+    pub fn update_fun(&mut self, fun: SetFun<'d>) {
         let _ = unsafe { self.fun_ptr.replace(fun) };
     }
 
@@ -29,7 +38,7 @@ impl<'d> SetData<'d> {
         I: IntoIterator<Item = usize>,
     {
         let fun = move |e: &mut Elements| e.fill_with(fun());
-        self.update_fun(Box::new(fun));
+        self.update_fun(SetFun(Box::new(fun)));
     }
 }
 

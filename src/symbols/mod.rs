@@ -2,9 +2,9 @@
 mod tests;
 
 mod idx;
-mod sca_fun;
+mod sca;
 mod set;
 
 pub use idx::{Idx, IdxData, RefIdxValue};
-pub use sca_fun::{Sca, ScaFun};
-pub use set::{Set, SetData, SetRef};
+pub use sca::{Sca, ScaFun};
+pub use set::{Set, SetData, SetFun, SetRef};
