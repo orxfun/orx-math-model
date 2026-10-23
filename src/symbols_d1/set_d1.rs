@@ -1,5 +1,5 @@
 use crate::elements::Elements;
-use crate::symbols::{Idx, RefIdxValue, Set, SetData, SetFun, SetRef};
+use crate::symbols::{Idx, PtrIdxValue, Set, SetData, SetFun, SetRef};
 use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -77,7 +77,7 @@ impl<'m, 'd> SetD1<'m, 'd> {
         assert_eq!(s1.s0, idx.s0(), "TODO: err-msg");
 
         // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Set<'m, 'd>.
-        let (p, fun_d1) = unsafe { (RefIdxValue::new(i), PtrSetD1Fun::new(self)) };
+        let (p, fun_d1) = unsafe { (PtrIdxValue::new(i), PtrSetD1Fun::new(self)) };
         let f = move |e: &mut Elements| {
             let i0 = p.value();
             let fun = fun_d1.value();

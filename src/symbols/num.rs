@@ -1,4 +1,4 @@
-use crate::symbols::{Int, Par, PtrIntFun};
+use crate::symbols::{Int, Par, ParData, PtrIntFun};
 use crate::Model;
 use alloc::boxed::Box;
 use core::ops::Add;
@@ -23,7 +23,7 @@ pub struct Num<'m, 'd> {
 
 impl<'m, 'd> From<Par<'m, 'd>> for Num<'m, 'd> {
     fn from(value: Par<'m, 'd>) -> Self {
-        let p = unsafe { value.el.get() }.value() as *const f64;
+        let p = ParData::ptr_value(value.el.as_ptr());
         let fun = NumFun(Box::new(move || unsafe { *p }));
         value.m.add_num(fun)
     }

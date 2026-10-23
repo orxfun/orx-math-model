@@ -5,9 +5,9 @@ use orx_imp_vec::Elem;
 // ref
 
 #[derive(Clone, Copy)]
-pub struct RefIdxValue(*const usize);
+pub struct PtrIdxValue(*const usize);
 
-impl RefIdxValue {
+impl PtrIdxValue {
     /// # SAFETY
     ///
     /// * Created value must not outlive `'m` or `'d`.
@@ -43,6 +43,10 @@ impl IdxData {
 
     pub fn set_value(&mut self, value: usize) {
         self.value = value;
+    }
+
+    pub fn ptr_value(p: *const IdxData) -> *const usize {
+        unsafe { core::ptr::addr_of!((*p).value) }
     }
 }
 

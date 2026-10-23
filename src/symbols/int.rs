@@ -1,4 +1,7 @@
-use crate::{symbols::Idx, Model};
+use crate::{
+    symbols::{Idx, IdxData},
+    Model,
+};
 use alloc::boxed::Box;
 use core::ops::Add;
 use orx_imp_vec::Elem;
@@ -22,7 +25,7 @@ pub struct Int<'m, 'd> {
 
 impl<'m, 'd> From<Idx<'m, 'd>> for Int<'m, 'd> {
     fn from(value: Idx<'m, 'd>) -> Self {
-        let p = unsafe { value.el.get() }.value() as *const usize;
+        let p = IdxData::ptr_value(value.el.as_ptr());
         let fun = IntFun(Box::new(move || unsafe { *p }));
         value.m.add_int(fun)
     }

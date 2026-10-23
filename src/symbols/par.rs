@@ -10,6 +10,10 @@ impl ParData {
     pub fn value(&self) -> &f64 {
         &self.0
     }
+
+    pub fn ptr_value(p: *const ParData) -> *const f64 {
+        unsafe { core::ptr::addr_of!((*p).0) }
+    }
 }
 
 // symbol

@@ -7,7 +7,7 @@ mod num;
 mod par;
 mod set;
 
-pub use idx::{Idx, IdxData, RefIdxValue};
+pub use idx::{Idx, IdxData, PtrIdxValue};
 pub use int::{Int, IntFun, PtrIntFun};
 pub use num::{Num, NumFun};
 pub use par::{Par, ParData};

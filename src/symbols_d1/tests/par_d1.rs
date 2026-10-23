@@ -1,4 +1,4 @@
-use crate::symbols::{Num, Set};
+use crate::symbols::{Int, Num, Set};
 use crate::symbols_d1::{ParD1, ParD1Fun, SetD1};
 use crate::Model;
 use alloc::boxed::Box;
@@ -84,6 +84,45 @@ fn sca_from_par_d1() {
     assert_value(p, 12.0);
 
     i0.el.update(|x| x.set_value(3));
+    assert_value(p, 13.0);
+}
+
+#[test]
+fn sca_from_par_d1_alternative() {
+    fn assert_value(sca: Num<'_, '_>, expected: f64) {
+        assert_eq!(unsafe { sca.el.get() }.eval(), expected);
+    }
+
+    let data = vec![10.0, 11.0, 12.0, 13.0];
+
+    let m = Model::new();
+    add_some_more_pars(&m);
+
+    let s0 = m.set();
+    let p1 = m.par_d1(s0);
+
+    let i0 = s0.idx();
+    let p = p1.sca_at2(Int::from(i0) + 1);
+
+    // before wire up par-d1 data
+
+    assert_value(p, 0.0);
+
+    i0.el.update(|x| x.set_value(1));
+    assert_value(p, 0.0);
+
+    // after wire up par-d1 data
+
+    p1.el
+        .update(|x| x.update_fun(ParD1Fun::new(Box::new(|i| data[i]))));
+
+    i0.el.update(|x| x.set_value(0));
+    assert_value(p, 11.0);
+
+    i0.el.update(|x| x.set_value(1));
+    assert_value(p, 12.0);
+
+    i0.el.update(|x| x.set_value(2));
     assert_value(p, 13.0);
 }
 
