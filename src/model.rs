@@ -11,7 +11,7 @@ fn new_bag<T>() -> Bag<T> {
 }
 
 pub struct Model<'d> {
-    pub(crate) set: Bag<SetData<'d>>,
+    set: Bag<SetData<'d>>,
     set_d1: Bag<SetD1Data<'d>>,
 
     idx: Bag<IdxData>,
@@ -49,7 +49,8 @@ impl<'d> Model<'d> {
 
     pub fn set_d1<'m>(&'m self, set: Set<'m, 'd>) -> SetD1<'m, 'd> {
         let fun_ptr = self.set_d1_gen.push(Box::new(|_, _| {})).as_mut_ptr();
-        let set_ref = SetRef::new(set);
+        let set_pos = set.el.position_in(&self.set).expect("TODO: error msg");
+        let set_ref = SetRef::new(set_pos);
         let data = SetD1Data::new(set_ref, fun_ptr);
         SetD1::new(self, self.set_d1.push(data))
     }
@@ -57,7 +58,8 @@ impl<'d> Model<'d> {
     // idx
 
     pub(crate) fn idx<'m>(&'m self, set: Set<'m, 'd>) -> Idx<'m, 'd> {
-        let set = SetRef::new(set);
+        let set_pos = set.el.position_in(&self.set).expect("TODO: error msg");
+        let set = SetRef::new(set_pos);
         let value_ptr = self.indices.push(0).as_mut_ptr();
         let data = IdxData::new(set, value_ptr);
         Idx::new(self, self.idx.push(data))

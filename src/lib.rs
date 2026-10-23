@@ -19,7 +19,6 @@ extern crate std;
 
 mod elements;
 mod model;
-mod model_references;
 mod symbols;
 mod symbols_d1;
 
