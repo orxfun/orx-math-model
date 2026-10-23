@@ -23,7 +23,7 @@ impl IdxData {
     }
 
     pub fn value_ptr(&self) -> *const usize {
-        &self.value
+        &self.value as *const usize
     }
 
     pub fn set_value(&mut self, value: usize) {
