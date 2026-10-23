@@ -2,6 +2,7 @@
 mod tests;
 
 mod idx;
+mod par;
 mod sca;
 mod set;
 

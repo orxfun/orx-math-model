@@ -1,5 +1,5 @@
 use crate::elements::Elements;
-use crate::symbols::{Idx, RefIdxValue, Set, SetData, SetFun, SetRef};
+use crate::symbols::{Idx, RefIdxValue, Set, SetFun, SetRef};
 use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
