@@ -1,4 +1,4 @@
-use crate::symbols::{Idx, RefIdxValue, Sca, ScaFun, Set, SetFun, SetRef};
+use crate::symbols::{Idx, RefIdxValue, Sca, ScaFun, SetRef};
 use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -23,16 +23,16 @@ impl ParD1Fun<'_> {
 #[derive(derive_new::new)]
 pub struct ParD1Data<'d> {
     s0: SetRef,
-    fun_ptr: *mut ParD1Fun<'d>,
+    fun: ParD1Fun<'d>,
 }
 
 impl<'d> ParD1Data<'d> {
     pub fn eval(&self, i0: usize) -> f64 {
-        unsafe { &*self.fun_ptr }.eval(i0)
+        self.fun.eval(i0)
     }
 
     pub fn update_fun(&mut self, fun: ParD1Fun<'d>) {
-        let _ = unsafe { self.fun_ptr.replace(fun) };
+        self.fun = fun;
     }
 }
 
@@ -53,8 +53,7 @@ impl<'m, 'd> ParD1<'m, 'd> {
             ///
             /// * Created value must not outlive `'m` or `'d`.
             unsafe fn new<'m>(set: ParD1<'m, 'd>) -> Self {
-                let el = unsafe { set.el.get() };
-                Self(el.fun_ptr)
+                Self(core::ptr::addr_of!((*set.el.as_ptr()).fun))
             }
 
             fn value(&self) -> &ParD1Fun<'d> {

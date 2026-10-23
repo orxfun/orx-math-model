@@ -21,7 +21,6 @@ pub struct Model<'d> {
     indices: Bag<usize>,
     set_d0_gen: Bag<SetFun<'d>>,
     set_d1_gen: Bag<SetD1Fun<'d>>,
-    par_d1_gen: Bag<ParD1Fun<'d>>,
     sca_gen: Bag<ScaFun<'d>>,
 }
 
@@ -39,7 +38,6 @@ impl<'d> Model<'d> {
             indices: new_bag(),
             set_d0_gen: new_bag(),
             set_d1_gen: new_bag(),
-            par_d1_gen: new_bag(),
             sca_gen: new_bag(),
         }
     }
@@ -70,8 +68,7 @@ impl<'d> Model<'d> {
     }
 
     pub fn par_d1<'m>(&'m self, set: Set<'m, 'd>) -> ParD1<'m, 'd> {
-        let fun_ptr = self.par_d1_gen.push(ParD1Fun::empty()).as_mut_ptr();
-        let data = ParD1Data::new(self.set_ref(set), fun_ptr);
+        let data = ParD1Data::new(self.set_ref(set), ParD1Fun::empty());
         ParD1::new(self, self.par_d1.push(data))
     }
 
