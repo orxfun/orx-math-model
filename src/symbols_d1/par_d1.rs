@@ -60,35 +60,24 @@ impl<'m, 'd> ParD1<'m, 'd> {
                 Self(core::ptr::addr_of!((*set.el.as_ptr()).fun))
             }
 
-            fn value(&self) -> &ParD1Fun<'d> {
+            fn val(&self) -> &ParD1Fun<'d> {
                 unsafe { &*self.0 }
             }
         }
 
-        match i.into() {
+        // SAFETY: fun_d1 is tied to lifetime of 'm and 'd due to return type Num<'m, 'd>.
+        let fun_d1 = unsafe { PtrParD1Fun::new(self) };
+
+        let f = match i.into() {
             PseudoInt::Int(i) => {
                 assert!(core::ptr::eq(self.m, i.m), "TODO: error msg");
 
-                // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Set<'m, 'd>.
-                let (p, fun_d1) = unsafe { (PtrIntFun::new(i), PtrParD1Fun::new(self)) };
-                let f = move || {
-                    let i0 = p.fun();
-                    let fun = fun_d1.value();
-                    fun.0(i0.eval())
-                };
-
-                self.m.add_num(NumFun::new(Box::new(f)))
+                // SAFETY: p is tied to lifetime of 'm and 'd due to return type Num<'m, 'd>.
+                let p = unsafe { PtrIntFun::new(i) };
+                NumFun::new(Box::new(move || fun_d1.val().0(p.fun().eval())))
             }
-            PseudoInt::Raw(i0) => {
-                // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Set<'m, 'd>.
-                let fun_d1 = unsafe { PtrParD1Fun::new(self) };
-                let f = move || {
-                    let fun = fun_d1.value();
-                    fun.0(i0)
-                };
-
-                self.m.add_num(NumFun::new(Box::new(f)))
-            }
-        }
+            PseudoInt::Raw(i0) => NumFun::new(Box::new(move || fun_d1.val().0(i0))),
+        };
+        self.m.add_num(f)
     }
 }
