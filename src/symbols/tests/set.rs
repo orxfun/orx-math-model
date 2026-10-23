@@ -2,10 +2,10 @@ use crate::symbols::{Elements, Set, SetData};
 use crate::Model;
 use alloc::vec;
 
-fn assert_123(e: &mut Elements, p: &Set<'_, '_>) {
+fn assert_elements(e: &mut Elements, p: &Set<'_, '_>, expected: &[usize]) {
     for _ in 0..3 {
         p.value().fill(e);
-        assert_eq!(e.as_slice(), &vec![1, 2, 3]);
+        assert_eq!(e.as_slice(), expected);
     }
 }
 
@@ -26,10 +26,16 @@ fn set_get_set() {
     let s = m.set();
 
     s.value().fill(&mut elements);
-    assert_eq!(elements.as_slice(), &vec![]);
+    assert_elements(&mut elements, &s, &[]);
 
     add_some_more_sets(&m);
 
     s.set(SetData::new(|| data.iter().copied()));
-    assert_123(&mut elements, &s);
+    assert_elements(&mut elements, &s, &[1, 2, 3]);
+
+    s.set(SetData::new(|| 0..data.len()));
+    assert_elements(&mut elements, &s, &[0, 1, 2]);
+
+    s.set(SetData::new(|| vec![1, 3, 5]));
+    assert_elements(&mut elements, &s, &[1, 3, 5]);
 }

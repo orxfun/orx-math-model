@@ -2,13 +2,6 @@
 
 use orx_math_model::*;
 
-#[test]
-fn abc() {
-    let mut m = Model::new();
-
-    let T = m.par_d0();
-}
-
 // #[test]
 // fn machine_scheduling() {
 //     let m = Model::default();
