@@ -1,4 +1,4 @@
-use crate::symbols::{IdxData, Set, SetData};
+use crate::symbols::{Idx, IdxData, Set, SetData};
 use crate::symbols_d1::{SetD1, SetD1Data};
 use orx_imp_vec::{Doubling, ImpVec, SplitVec};
 
@@ -40,4 +40,8 @@ impl<'d> Model<'d> {
     }
 
     // idx
+
+    pub(crate) fn idx<'m>(&'m self, set: Set<'m, 'd>) -> Idx<'m, 'd> {
+        Idx::new(self, self.idx.push(IdxData::new(set)))
+    }
 }

@@ -1,6 +1,7 @@
 use crate::model_references::SetRef;
 use crate::symbols::Set;
 use crate::Model;
+use orx_imp_vec::Elem;
 
 pub struct IdxData {
     s0: SetRef,
@@ -8,10 +9,14 @@ pub struct IdxData {
 }
 
 impl IdxData {
-    pub fn default<'m, 'd>(m: &'m Model<'d>, s0: Set<'m, 'd>) -> Self {
+    pub fn new<'m, 'd>(s0: Set<'m, 'd>) -> Self {
         let s0 = SetRef::new(s0);
         Self { s0, value: 0 }
     }
 }
 
-pub struct Idx;
+#[derive(derive_new::new, Clone, Copy)]
+pub struct Idx<'m, 'd> {
+    pub(crate) m: &'m Model<'d>,
+    pub(crate) el: Elem<'m, IdxData>,
+}

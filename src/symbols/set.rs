@@ -1,8 +1,8 @@
+use crate::symbols::Idx;
+use crate::Model;
 use alloc::boxed::Box;
 use alloc::vec::Vec;
 use orx_imp_vec::Elem;
-
-use crate::Model;
 
 #[derive(Default)]
 pub struct Elements {
@@ -50,4 +50,10 @@ impl<'d> SetData<'d> {
 pub struct Set<'m, 'd> {
     pub(crate) m: &'m Model<'d>,
     pub(crate) el: Elem<'m, SetData<'d>>,
+}
+
+impl<'m, 'd> Set<'m, 'd> {
+    pub fn idx(self) -> Idx<'m, 'd> {
+        self.m.idx(self)
+    }
 }
