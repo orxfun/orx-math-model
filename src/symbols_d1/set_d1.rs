@@ -1,4 +1,4 @@
-use crate::model_references::SetRef;
+use crate::model_references::{IdxRef, IdxValRef, SetRef};
 use crate::symbols::{Elements, Idx, Set, SetData};
 use crate::Model;
 use alloc::boxed::Box;
@@ -43,13 +43,14 @@ impl<'m, 'd> SetD1<'m, 'd> {
         assert!(core::ptr::eq(self.m, i.m), "TODO: error msg");
 
         let s1 = unsafe { self.el.get() };
-        let i = unsafe { i.el.get() };
+        let idx = unsafe { i.el.get() };
+        assert_eq!(s1.s0, idx.s0(), "TODO: err-msg");
 
-        assert_eq!(s1.s0, i.s0(), "TODO: err-msg");
+        // TODO: safety explanation
+        let p = unsafe { IdxValRef::new(i) };
 
         let f = s1.f.clone();
-        let i = i.value();
-        let f = move |e: &mut Elements| f(i, e);
+        let f = move |e: &mut Elements| f(p.value(), e);
 
         let x = SetData::new(Box::new(f));
         let set = self.m.set_from_set_d1(x);

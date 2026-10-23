@@ -9,10 +9,10 @@ fn new_bag<T>() -> Bag<T> {
 }
 
 pub struct Model<'d> {
-    set: Bag<SetData<'d>>,
+    pub(crate) set: Bag<SetData<'d>>,
     set_d1: Bag<SetD1Data<'d>>,
 
-    idx: Bag<IdxData>,
+    pub(crate) idx: Bag<IdxData>,
 }
 
 impl<'d> Model<'d> {
@@ -37,10 +37,6 @@ impl<'d> Model<'d> {
 
     pub fn set_d1<'m>(&'m self, set: Set<'m, 'd>) -> SetD1<'m, 'd> {
         SetD1::new(self, self.set_d1.push(SetD1Data::default(set)))
-    }
-
-    pub(crate) fn sets(&self) -> &Bag<SetData<'d>> {
-        &self.set
     }
 
     // idx
