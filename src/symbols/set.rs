@@ -44,7 +44,7 @@ impl<'d> SetData<'d> {
     }
 }
 
-#[derive(derive_new::new)]
+#[derive(derive_new::new, Clone, Copy)]
 pub struct Set<'m, 'd>(Elem<'m, SetData<'d>>);
 
 impl<'m, 'd> Set<'m, 'd> {

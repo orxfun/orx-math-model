@@ -2,10 +2,12 @@ use crate::symbols::{Elements, Set, SetData};
 use crate::Model;
 use alloc::vec;
 
-fn assert_elements(e: &mut Elements, p: &Set<'_, '_>, expected: &[usize]) {
-    for _ in 0..3 {
-        p.value().fill(e);
-        assert_eq!(e.as_slice(), expected);
+fn assert_elements(e: &mut Elements, set_symbols: &[Set<'_, '_>], expected: &[usize]) {
+    for s in set_symbols {
+        for _ in 0..3 {
+            s.value().fill(e);
+            assert_eq!(e.as_slice(), expected);
+        }
     }
 }
 
@@ -23,19 +25,20 @@ fn set_get_set() {
 
     add_some_more_sets(&m);
 
-    let s = m.set();
+    let set = m.set();
+    let s = set;
 
     s.value().fill(&mut elements);
-    assert_elements(&mut elements, &s, &[]);
+    assert_elements(&mut elements, &[s, set], &[]);
 
     add_some_more_sets(&m);
 
     s.set(SetData::new(|| data.iter().copied()));
-    assert_elements(&mut elements, &s, &[1, 2, 3]);
+    assert_elements(&mut elements, &[s, set], &[1, 2, 3]);
 
     s.set(SetData::new(|| 0..data.len()));
-    assert_elements(&mut elements, &s, &[0, 1, 2]);
+    assert_elements(&mut elements, &[s, set], &[0, 1, 2]);
 
     s.set(SetData::new(|| vec![1, 3, 5]));
-    assert_elements(&mut elements, &s, &[1, 3, 5]);
+    assert_elements(&mut elements, &[s, set], &[1, 3, 5]);
 }
