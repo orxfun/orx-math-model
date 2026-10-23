@@ -32,4 +32,7 @@ impl<'d> SetD1Data<'d> {
 }
 
 #[derive(derive_new::new, Clone, Copy)]
-pub struct SetD1<'m, 'd>(pub(crate) Elem<'m, SetD1Data<'d>>);
+pub struct SetD1<'m, 'd> {
+    pub(crate) m: &'m Model<'d>,
+    pub(crate) el: Elem<'m, SetD1Data<'d>>,
+}

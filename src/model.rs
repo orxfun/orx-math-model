@@ -32,7 +32,7 @@ impl<'d> Model<'d> {
     }
 
     pub fn set_d1<'m>(&'m self, set: Set<'m, 'd>) -> SetD1<'m, 'd> {
-        SetD1::new(self.set_d1.push(SetD1Data::default(set)))
+        SetD1::new(self, self.set_d1.push(SetD1Data::default(set)))
     }
 
     pub(crate) fn sets(&self) -> &Bag<SetData<'d>> {
