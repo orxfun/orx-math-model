@@ -54,7 +54,7 @@ pub struct SetD1<'m, 'd> {
 }
 
 impl<'m, 'd> SetD1<'m, 'd> {
-    pub(crate) fn set(self, i: Idx<'m, 'd>) -> Set<'m, 'd> {
+    pub(crate) fn set_at(self, i: Idx<'m, 'd>) -> Set<'m, 'd> {
         struct RefSetD1Fun<'d>(*const SetD1Fun<'d>);
 
         impl<'d> RefSetD1Fun<'d> {

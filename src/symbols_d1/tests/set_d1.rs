@@ -56,7 +56,7 @@ fn set_get_set_d1() {
     let idx = s0.idx();
     for (i, expected) in data.iter().enumerate() {
         idx.el.update(|x| x.set_value(i));
-        let generated = set.set(idx);
+        let generated = set.set_at(idx);
         unsafe { generated.el.get() }.fill(&mut elements);
         assert_eq!(elements.as_slice(), expected);
     }
@@ -85,7 +85,7 @@ fn set_from_set_d1() {
 
     let i0 = s0.idx();
 
-    let set = s1.set(i0);
+    let set = s1.set_at(i0);
 
     // before wire up set-d1 data
 
@@ -122,5 +122,5 @@ fn set_from_set_d1_wrong_idx() {
     let wrong_set = m.set();
     let wrong_idx = wrong_set.idx();
 
-    let _ = s1.set(wrong_idx);
+    let _ = s1.set_at(wrong_idx);
 }
