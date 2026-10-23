@@ -1,5 +1,5 @@
 use crate::elements::Elements;
-use crate::symbols::{Set, SetData};
+use crate::symbols::Set;
 use crate::Model;
 use alloc::vec;
 

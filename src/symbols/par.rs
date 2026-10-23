@@ -3,8 +3,14 @@ use orx_imp_vec::Elem;
 
 //data
 
-#[derive(derive_new::new)]
+#[derive(derive_new::new, Clone, Copy)]
 pub struct ParData(f64);
+
+impl ParData {
+    pub fn value(self) -> f64 {
+        self.0
+    }
+}
 
 // symbol
 
