@@ -36,12 +36,12 @@ fn set_get_set_d1() {
 
     add_some_more_sets(&m);
 
-    s.0.set(SetD1Data::new(&m, s0, |i| 0..i));
+    s.0.set(SetD1Data::new(s0, |i| 0..i));
     assert_elements(&mut elements, &[s, set], 0, &[]);
     assert_elements(&mut elements, &[s, set], 1, &[0]);
     assert_elements(&mut elements, &[s, set], 3, &[0, 1, 2]);
 
-    s.0.set(SetD1Data::new(&m, s0, |i| data[i].iter().copied()));
+    s.0.set(SetD1Data::new(s0, |i| data[i].iter().copied()));
     assert_elements(&mut elements, &[s, set], 0, &[0]);
     assert_elements(&mut elements, &[s, set], 1, &[1, 2, 3]);
     assert_elements(&mut elements, &[s, set], 2, &[4, 5]);

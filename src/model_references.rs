@@ -6,12 +6,12 @@ pub struct SetRef {
 }
 
 impl SetRef {
-    pub fn new<'m, 'd>(m: &'m Model<'d>, set: Set<'m, 'd>) -> Self {
-        let i = set.0.position_in(m.sets()).expect("TODO: error msg");
+    pub fn new<'m, 'd>(set: Set<'m, 'd>) -> Self {
+        let i = set.1.position_in(set.0.sets()).expect("TODO: error msg");
         Self { i }
     }
 
     pub fn set<'m, 'd>(self, m: &'m Model<'d>) -> Set<'m, 'd> {
-        Set::new(m.sets().get(self.i).expect("TODO: error msg"))
+        Set::new(m, m.sets().get(self.i).expect("TODO: error msg"))
     }
 }

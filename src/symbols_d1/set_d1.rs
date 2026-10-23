@@ -10,17 +10,17 @@ pub struct SetD1Data<'d> {
 }
 
 impl<'d> SetD1Data<'d> {
-    pub fn default<'m>(m: &'m Model<'d>, s0: Set<'m, 'd>) -> Self {
-        let s0 = SetRef::new(m, s0);
+    pub fn default(s0: Set<'_, 'd>) -> Self {
+        let s0 = SetRef::new(s0);
         let f = Box::new(|_, _: &mut Elements| {});
         Self { f, s0 }
     }
 
-    pub fn new<'m, I>(m: &'m Model<'d>, s0: Set<'m, 'd>, f: impl Fn(usize) -> I + 'd) -> Self
+    pub fn new<I>(s0: Set<'_, 'd>, f: impl Fn(usize) -> I + 'd) -> Self
     where
         I: IntoIterator<Item = usize>,
     {
-        let s0 = SetRef::new(m, s0);
+        let s0 = SetRef::new(s0);
         let f = move |i1: usize, e: &mut Elements| e.fill_with(f(i1));
         let f = Box::new(f);
         Self { f, s0 }

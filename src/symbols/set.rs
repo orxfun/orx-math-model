@@ -2,6 +2,8 @@ use alloc::boxed::Box;
 use alloc::vec::Vec;
 use orx_imp_vec::Elem;
 
+use crate::Model;
+
 #[derive(Default)]
 pub struct Elements {
     data: Vec<usize>,
@@ -45,4 +47,4 @@ impl<'d> SetData<'d> {
 }
 
 #[derive(derive_new::new, Clone, Copy)]
-pub struct Set<'m, 'd>(pub(crate) Elem<'m, SetData<'d>>);
+pub struct Set<'m, 'd>(pub(crate) &'m Model<'d>, pub(crate) Elem<'m, SetData<'d>>);

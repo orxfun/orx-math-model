@@ -1,4 +1,4 @@
-use crate::symbols::{Set, SetData};
+use crate::symbols::{IdxData, Set, SetData};
 use crate::symbols_d1::{SetD1, SetD1Data};
 use orx_imp_vec::{Doubling, ImpVec, SplitVec};
 
@@ -9,8 +9,10 @@ fn new_bag<T>() -> Bag<T> {
 }
 
 pub struct Model<'d> {
-    pub set: Bag<SetData<'d>>,
+    set: Bag<SetData<'d>>,
     set_d1: Bag<SetD1Data<'d>>,
+
+    idx: Bag<IdxData>,
 }
 
 impl<'d> Model<'d> {
@@ -18,20 +20,24 @@ impl<'d> Model<'d> {
         Self {
             set: new_bag(),
             set_d1: new_bag(),
+
+            idx: new_bag(),
         }
     }
 
     // sets
 
     pub fn set(&self) -> Set<'_, 'd> {
-        Set::new(self.set.push(SetData::default()))
+        Set::new(self, self.set.push(SetData::default()))
     }
 
     pub fn set_d1<'m>(&'m self, set: Set<'m, 'd>) -> SetD1<'m, 'd> {
-        SetD1::new(self.set_d1.push(SetD1Data::default(self, set)))
+        SetD1::new(self.set_d1.push(SetD1Data::default(set)))
     }
 
     pub(crate) fn sets(&self) -> &Bag<SetData<'d>> {
         &self.set
     }
+
+    // idx
 }
