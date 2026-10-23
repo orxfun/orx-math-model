@@ -64,7 +64,7 @@ impl<'d> Model<'d> {
 
     // scalars
 
-    pub(crate) fn add_scalar<'m>(&'m self, fun: ScaFun<'d>) -> Sca<'m, 'd> {
+    pub(crate) fn add_sca<'m>(&'m self, fun: ScaFun<'d>) -> Sca<'m, 'd> {
         Sca::new(self, self.sca_gen.push(fun))
     }
 

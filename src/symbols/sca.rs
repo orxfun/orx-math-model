@@ -6,6 +6,12 @@ use orx_imp_vec::Elem;
 #[derive(derive_new::new)]
 pub struct ScaFun<'d>(Box<dyn Fn() -> f64 + 'd>);
 
+impl ScaFun<'_> {
+    pub fn eval(&self) -> f64 {
+        self.0()
+    }
+}
+
 impl From<f64> for ScaFun<'_> {
     fn from(value: f64) -> Self {
         Self(Box::new(move || value))
@@ -20,6 +26,23 @@ pub struct Sca<'m, 'd> {
     pub(crate) el: Elem<'m, ScaFun<'d>>,
 }
 
+// ref
+
+struct RefScaFun<'d>(*const ScaFun<'d>);
+
+impl<'d> RefScaFun<'d> {
+    /// # SAFETY
+    ///
+    /// * Created value must not outlive `'m` or `'d`.
+    unsafe fn new<'m>(set: Sca<'m, 'd>) -> Self {
+        Self(unsafe { set.el.get() })
+    }
+
+    fn value(&self) -> &ScaFun<'d> {
+        unsafe { &*self.0 }
+    }
+}
+
 // ops
 
 impl<'m, 'd> Add<Sca<'m, 'd>> for Sca<'m, 'd> {
@@ -28,6 +51,13 @@ impl<'m, 'd> Add<Sca<'m, 'd>> for Sca<'m, 'd> {
     fn add(self, rhs: Sca<'m, 'd>) -> Self::Output {
         assert!(core::ptr::eq(self.m, rhs.m), "TODO: err-msg");
 
-        todo!()
+        // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
+        let [a, b] = unsafe { [RefScaFun::new(self), RefScaFun::new(rhs)] };
+        let f = move || {
+            let a = a.value();
+            let b = b.value();
+            a.eval() + b.eval()
+        };
+        self.m.add_sca(ScaFun(Box::new(f)))
     }
 }
