@@ -6,7 +6,7 @@ pub struct SetRef {
 
 impl SetRef {
     pub fn new<'m>(m: &'m Model, set: Set<'m, '_>) -> Self {
-        let x = set.0.position_in(m.sets());
-        todo!()
+        let i = set.0.position_in(m.sets()).unwrap();
+        Self { i }
     }
 }
