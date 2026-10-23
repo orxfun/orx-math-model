@@ -30,6 +30,20 @@ impl Default for SetData<'_> {
     }
 }
 
+impl<'d> SetData<'d> {
+    pub fn new<I>(f: impl Fn() -> I + 'd) -> Self
+    where
+        I: IntoIterator<Item = usize>,
+    {
+        let g = move |e: &mut Elements| e.fill_with(f());
+        Self { f: Box::new(g) }
+    }
+
+    pub fn fill(&self, elements: &mut Elements) {
+        (self.f)(elements)
+    }
+}
+
 #[derive(derive_new::new)]
 pub struct Set<'m, 'd>(Elem<'m, SetData<'d>>);
 
