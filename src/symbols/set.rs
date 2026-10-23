@@ -45,15 +45,4 @@ impl<'d> SetData<'d> {
 }
 
 #[derive(derive_new::new, Clone, Copy)]
-pub struct Set<'m, 'd>(Elem<'m, SetData<'d>>);
-
-impl<'m, 'd> Set<'m, 'd> {
-    pub(crate) fn value(&self) -> &SetData<'d> {
-        // TODO: safety notes: we shouldn't send out the data ref to another thread
-        unsafe { self.0.get() }
-    }
-
-    pub(crate) fn set(&self, value: SetData<'d>) {
-        self.0.set(value);
-    }
-}
+pub struct Set<'m, 'd>(pub(crate) Elem<'m, SetData<'d>>);

@@ -18,6 +18,7 @@ extern crate alloc;
 extern crate std;
 
 mod model;
+mod model_references;
 mod symbols;
 mod symbols_d1;
 
