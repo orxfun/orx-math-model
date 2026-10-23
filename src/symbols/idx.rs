@@ -1,5 +1,7 @@
-use crate::symbols::SetRef;
+use crate::symbols::{Int, IntFun, SetRef};
 use crate::Model;
+use alloc::boxed::Box;
+use core::ops::Add;
 use orx_imp_vec::Elem;
 
 // ref
@@ -56,4 +58,43 @@ impl IdxData {
 pub struct Idx<'m, 'd> {
     pub(crate) m: &'m Model<'d>,
     pub(crate) el: Elem<'m, IdxData>,
+}
+
+// ops - Idx
+
+impl<'m, 'd> Add<Idx<'m, 'd>> for Idx<'m, 'd> {
+    type Output = Int<'m, 'd>;
+
+    fn add(self, rhs: Idx<'m, 'd>) -> Self::Output {
+        assert!(core::ptr::eq(self.m, rhs.m), "TODO: err-msg");
+
+        // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
+        let [a, b] = unsafe { [PtrIdxValue::new(self), PtrIdxValue::new(rhs)] };
+        let f = move || a.value() + b.value();
+        self.m.add_int(IntFun::new(Box::new(f)))
+    }
+}
+
+// ops - usize
+
+impl<'m, 'd> Add<usize> for Idx<'m, 'd> {
+    type Output = Int<'m, 'd>;
+
+    fn add(self, rhs: usize) -> Self::Output {
+        // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
+        let a = unsafe { PtrIdxValue::new(self) };
+        let f = move || a.value() + rhs;
+        self.m.add_int(IntFun::new(Box::new(f)))
+    }
+}
+
+impl<'m, 'd> Add<Idx<'m, 'd>> for usize {
+    type Output = Int<'m, 'd>;
+
+    fn add(self, rhs: Idx<'m, 'd>) -> Self::Output {
+        // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
+        let b = unsafe { PtrIdxValue::new(rhs) };
+        let f = move || self + b.value();
+        rhs.m.add_int(IntFun::new(Box::new(f)))
+    }
 }

@@ -1,5 +1,5 @@
-use crate::symbols::{Int, Num, Set};
-use crate::symbols_d1::{ParD1, ParD1Fun, SetD1};
+use crate::symbols::Num;
+use crate::symbols_d1::{ParD1, ParD1Fun};
 use crate::Model;
 use alloc::boxed::Box;
 use alloc::vec;
@@ -60,7 +60,7 @@ fn sca_from_par_d1() {
     let p1 = m.par_d1(s0);
 
     let i0 = s0.idx();
-    let p = p1.sca_at(i0);
+    let p = p1.at(i0);
 
     // before wire up par-d1 data
 
@@ -85,36 +85,10 @@ fn sca_from_par_d1() {
 
     i0.el.update(|x| x.set_value(3));
     assert_value(p, 13.0);
-}
 
-#[test]
-fn sca_from_par_d1_alternative() {
-    fn assert_value(sca: Num<'_, '_>, expected: f64) {
-        assert_eq!(unsafe { sca.el.get() }.eval(), expected);
-    }
+    // int expression as index
 
-    let data = vec![10.0, 11.0, 12.0, 13.0];
-
-    let m = Model::new();
-    add_some_more_pars(&m);
-
-    let s0 = m.set();
-    let p1 = m.par_d1(s0);
-
-    let i0 = s0.idx();
-    let p = p1.sca_at2(Int::from(i0) + 1);
-
-    // before wire up par-d1 data
-
-    assert_value(p, 0.0);
-
-    i0.el.update(|x| x.set_value(1));
-    assert_value(p, 0.0);
-
-    // after wire up par-d1 data
-
-    p1.el
-        .update(|x| x.update_fun(ParD1Fun::new(Box::new(|i| data[i]))));
+    let p = p1.at(i0 + 1);
 
     i0.el.update(|x| x.set_value(0));
     assert_value(p, 11.0);
@@ -124,17 +98,9 @@ fn sca_from_par_d1_alternative() {
 
     i0.el.update(|x| x.set_value(2));
     assert_value(p, 13.0);
-}
 
-#[test]
-#[should_panic]
-fn sca_from_par_d1_wrong_idx() {
-    let m = Model::new();
-    let s0 = m.set();
-    let p1 = m.par_d1(s0);
+    // constant int as index
 
-    let wrong_set = m.set();
-    let wrong_idx = wrong_set.idx();
-
-    let _ = p1.sca_at(wrong_idx);
+    let p = p1.at(2);
+    assert_value(p, 12.0);
 }
