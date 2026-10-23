@@ -12,9 +12,9 @@ fn new_bag<T>() -> Bag<T> {
 
 pub struct Model<'d> {
     pub(crate) set: Bag<SetData<'d>>,
-    pub(crate) set_d1: Bag<SetD1Data<'d>>,
+    set_d1: Bag<SetD1Data<'d>>,
 
-    pub(crate) idx: Bag<IdxData>,
+    idx: Bag<IdxData>,
 
     indices: Bag<usize>,
     set_d1_gen: Bag<Box<dyn Fn(usize, &mut Elements) + 'd>>,
