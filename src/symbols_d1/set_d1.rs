@@ -4,9 +4,18 @@ use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 
+#[derive(derive_new::new)]
+pub struct SetD1Fun<'d>(Box<dyn Fn(usize, &mut Elements) + 'd>);
+
+impl SetD1Fun<'_> {
+    pub fn dummy() -> Self {
+        Self(Box::new(|_, _| {}))
+    }
+}
+
 #[derive(Clone, Copy)]
 pub struct RefSetD1Fun<'d> {
-    p: *const Box<dyn Fn(usize, &mut Elements) + 'd>,
+    p: *const SetD1Fun<'d>,
 }
 
 impl<'d> RefSetD1Fun<'d> {
@@ -18,7 +27,7 @@ impl<'d> RefSetD1Fun<'d> {
         Self { p: el.fun_ptr }
     }
 
-    pub fn value(&self) -> &Box<dyn Fn(usize, &mut Elements) + 'd> {
+    pub fn value(&self) -> &SetD1Fun<'d> {
         unsafe { &*self.p }
     }
 }
@@ -26,16 +35,16 @@ impl<'d> RefSetD1Fun<'d> {
 #[derive(derive_new::new)]
 pub struct SetD1Data<'d> {
     s0: SetRef,
-    fun_ptr: *mut Box<dyn Fn(usize, &mut Elements) + 'd>,
+    fun_ptr: *mut SetD1Fun<'d>,
 }
 
 impl<'d> SetD1Data<'d> {
     pub fn fill(&self, i0: usize, elements: &mut Elements) {
         let fun = unsafe { &*self.fun_ptr };
-        fun(i0, elements);
+        fun.0(i0, elements);
     }
 
-    pub fn update_fun(&mut self, fun: Box<dyn Fn(usize, &mut Elements) + 'd>) {
+    pub fn update_fun(&mut self, fun: SetD1Fun<'d>) {
         let _ = unsafe { self.fun_ptr.replace(fun) };
     }
 
@@ -44,7 +53,7 @@ impl<'d> SetD1Data<'d> {
         I: IntoIterator<Item = usize>,
     {
         let fun = move |i1: usize, e: &mut Elements| e.fill_with(fun(i1));
-        self.update_fun(Box::new(fun));
+        self.update_fun(SetD1Fun(Box::new(fun)));
     }
 }
 
@@ -67,7 +76,7 @@ impl<'m, 'd> SetD1<'m, 'd> {
         let f = move |e: &mut Elements| {
             let i0 = p.value();
             let fun = fun_d1.value();
-            fun(i0, e);
+            fun.0(i0, e);
         };
 
         self.m.add_set(SetFun::new(Box::new(f)))
