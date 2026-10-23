@@ -1,4 +1,4 @@
-use crate::model_references::{IdxRef, IdxValRef, SetRef};
+use crate::model_references::{IdxValRef, SetRef};
 use crate::symbols::{Elements, Idx, Set, SetData};
 use crate::Model;
 use alloc::boxed::Box;

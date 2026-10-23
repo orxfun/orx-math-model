@@ -17,22 +17,6 @@ impl SetRef {
     }
 }
 
-#[derive(Clone, Copy, PartialEq, Debug)]
-pub struct IdxRef {
-    i: usize,
-}
-
-impl IdxRef {
-    pub fn new<'m, 'd>(set: Idx<'m, 'd>) -> Self {
-        let i = set.el.position_in(&set.m.idx).expect("TODO: error msg");
-        Self { i }
-    }
-
-    pub fn idx<'m, 'd>(self, m: &'m Model<'d>) -> Idx<'m, 'd> {
-        Idx::new(m, m.idx.get(self.i).expect("TODO: error msg"))
-    }
-}
-
 #[derive(Clone, Copy)]
 pub struct IdxValRef {
     p: *const usize,
