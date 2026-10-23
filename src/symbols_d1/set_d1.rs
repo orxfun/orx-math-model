@@ -43,6 +43,10 @@ impl<'d> SetD1Data<'d> {
         let fun = move |i1: usize, e: &mut Elements| e.fill_with(fun(i1));
         self.update_fun(SetD1Fun(Box::new(fun)));
     }
+
+    pub fn ptr_fun(p: *const SetD1Data<'d>) -> *const SetD1Fun<'d> {
+        unsafe { core::ptr::addr_of!((*p).fun) }
+    }
 }
 
 // symbol
@@ -62,7 +66,7 @@ impl<'m, 'd> SetD1<'m, 'd> {
             ///
             /// * Created value must not outlive `'m` or `'d`.
             unsafe fn new<'m>(set: SetD1<'m, 'd>) -> Self {
-                Self(core::ptr::addr_of!((*set.el.as_ptr()).fun))
+                Self(SetD1Data::ptr_fun(set.el.as_ptr()))
             }
 
             fn value(&self) -> &SetD1Fun<'d> {

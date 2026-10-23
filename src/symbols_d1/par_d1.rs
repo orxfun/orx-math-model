@@ -34,6 +34,10 @@ impl<'d> ParD1Data<'d> {
     pub fn update_fun(&mut self, fun: ParD1Fun<'d>) {
         self.fun = fun;
     }
+
+    pub fn ptr_fun(p: *const ParD1Data<'d>) -> *const ParD1Fun<'d> {
+        unsafe { core::ptr::addr_of!((*p).fun) }
+    }
 }
 
 // symbol
@@ -85,7 +89,7 @@ impl<'m, 'd> ParD1<'m, 'd> {
             ///
             /// * Created value must not outlive `'m` or `'d`.
             unsafe fn new<'m>(set: ParD1<'m, 'd>) -> Self {
-                Self(core::ptr::addr_of!((*set.el.as_ptr()).fun))
+                Self(ParD1Data::ptr_fun(set.el.as_ptr()))
             }
 
             fn value(&self) -> &ParD1Fun<'d> {
