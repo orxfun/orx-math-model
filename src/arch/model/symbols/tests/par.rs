@@ -18,3 +18,5 @@ fn read_write_par_d0() {
     p.set(42);
     assert_eq!(p.value(), 42);
 }
+
+sdf
