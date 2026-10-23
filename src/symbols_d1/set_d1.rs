@@ -1,5 +1,5 @@
-use crate::model_references::{IdxValRef, SetD1Ref, SetRef};
-use crate::symbols::{Elements, Idx, Set, SetData};
+use crate::model_references::{SetD1Ref, SetRef};
+use crate::symbols::{Elements, Idx, RefIdxValue, Set, SetData};
 use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -45,7 +45,7 @@ impl<'m, 'd> SetD1<'m, 'd> {
         assert_eq!(s1.s0, idx.s0(), "TODO: err-msg");
 
         // TODO: safety explanation
-        let p = unsafe { IdxValRef::new(i) };
+        let p = unsafe { RefIdxValue::new(i) };
         let s1 = SetD1Ref::new(self);
 
         let m = self.m as *const Model;

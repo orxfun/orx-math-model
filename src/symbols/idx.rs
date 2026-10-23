@@ -2,6 +2,30 @@ use crate::model_references::SetRef;
 use crate::Model;
 use orx_imp_vec::Elem;
 
+#[derive(Clone, Copy)]
+pub struct RefIdxValue {
+    p: *mut usize,
+}
+
+impl RefIdxValue {
+    /// # SAFETY
+    ///
+    /// * Created value must not outlive `'m` or `'d`.
+    pub unsafe fn new<'m, 'd>(idx: Idx<'m, 'd>) -> Self {
+        let el = unsafe { idx.el.get() };
+        let p = el.value_ptr();
+        Self { p }
+    }
+
+    /// # SAFETY
+    ///
+    /// This method is safe as long is it is created with the `new` method
+    /// satisfying its safety requirements.
+    pub fn value(self) -> usize {
+        unsafe { *self.p }
+    }
+}
+
 #[derive(derive_new::new)]
 pub struct IdxData {
     s0: SetRef,
