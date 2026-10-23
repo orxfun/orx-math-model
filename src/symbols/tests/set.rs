@@ -17,6 +17,7 @@ fn add_some_more_sets(m: &Model<'_>) {
 
 #[test]
 fn set_get_set() {
+    let data = vec![1, 2, 3];
     let m = Model::new();
     let mut elements = Elements::default();
 
@@ -29,6 +30,6 @@ fn set_get_set() {
 
     add_some_more_sets(&m);
 
-    let data = vec![1, 2, 3];
     s.set(SetData::new(|| data.iter().copied()));
+    assert_123(&mut elements, &s);
 }
