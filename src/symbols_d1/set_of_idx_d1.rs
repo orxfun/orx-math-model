@@ -80,13 +80,13 @@ impl<'m, 'd> SetOfIdxD1<'m, 'd> {
             }
         }
 
-        // SAFETY: fun_d1 is tied to lifetime of 'm and 'd due to return type Num<'m, 'd>.
+        // SAFETY: lifetime is tied to lifetime of 'm and 'd due to return type
         let fun_d1 = unsafe { PtrSetD1Fun::new(self) };
 
         let f = match i.into() {
             PseudoInt::Int(i) => {
                 assert!(core::ptr::eq(self.m, i.m), "TODO: error msg");
-                // SAFETY: p is tied to lifetime of 'm and 'd due to return type Num<'m, 'd>.
+                // SAFETY: lifetime is tied to lifetime of 'm and 'd due to return type
                 let p = unsafe { RefPtr::new(i.fun_ptr()) };
                 SetOfIdxFun::new(Box::new(move |e| fun_d1.val().0(p.val().eval(), e)))
             }
