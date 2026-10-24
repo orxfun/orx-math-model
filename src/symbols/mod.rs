@@ -8,6 +8,7 @@ mod num;
 mod ops;
 mod par;
 mod pseudo_numbers;
+mod set_cat;
 mod set_core;
 mod set_of_idx;
 
