@@ -10,10 +10,6 @@ impl<T: Copy> ParCoreData<T> {
     pub fn value(&self) -> T {
         self.0
     }
-
-    pub fn ptr_val(p: *const ParCoreData<T>) -> *const T {
-        unsafe { core::ptr::addr_of!((*p).0) }
-    }
 }
 
 // symbol
@@ -22,6 +18,12 @@ impl<T: Copy> ParCoreData<T> {
 pub struct ParCore<'m, 'd, T: Copy> {
     pub(crate) m: &'m Model<'d>,
     pub(crate) el: Elem<'m, ParCoreData<T>>,
+}
+
+impl<'m, 'd, T: Copy> ParCore<'m, 'd, T> {
+    pub(crate) fn val_ptr(&self) -> *const T {
+        unsafe { core::ptr::addr_of!((*self.el.as_ptr()).0) }
+    }
 }
 
 // number

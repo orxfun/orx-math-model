@@ -1,5 +1,5 @@
-use crate::ptr::RefPtr;
-use crate::symbols::{Int, Par, ParData};
+use crate::ptr::{RefPtr, ValPtr};
+use crate::symbols::{Int, Par};
 use crate::Model;
 use alloc::boxed::Box;
 use core::ops::Add;
@@ -32,8 +32,8 @@ impl<'d> Num<'_, 'd> {
 
 impl<'m, 'd> From<Par<'m, 'd>> for Num<'m, 'd> {
     fn from(value: Par<'m, 'd>) -> Self {
-        let p = ParData::ptr_val(value.el.as_ptr());
-        let fun = NumFun(Box::new(move || unsafe { *p }));
+        let p = unsafe { ValPtr::new(value.val_ptr()) };
+        let fun = NumFun(Box::new(move || p.val()));
         value.m.add_num(fun)
     }
 }
