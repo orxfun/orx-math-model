@@ -1,7 +1,8 @@
 use crate::symbols::{
-    Idx, IdxData, Int, IntFun, Num, NumFun, Par, ParData, Set, SetData, SetFun, SetRef,
+    Idx, IdxData, Int, IntFun, Num, NumFun, Par, ParData, ParInt, ParIntData, PseudoInt,
+    RefSetOfIdx, SetOfIdx, SetOfIdxData,
 };
-use crate::symbols_d1::{ParD1, ParD1Data, ParD1Fun, SetD1, SetD1Data, SetD1Fun};
+use crate::symbols_d1::{ParD1, ParD1Data, ParIntD1, ParIntD1Data, SetOfIdxD1, SetOfIdxD1Data};
 use orx_imp_vec::{Doubling, ImpVec, SplitVec};
 
 type Pinned<T> = SplitVec<T, Doubling>;
@@ -11,11 +12,13 @@ fn new_bag<T>() -> Bag<T> {
 }
 
 pub struct Model<'d> {
-    set: Bag<SetData<'d>>,
-    set_d1: Bag<SetD1Data<'d>>,
+    set_of_idx: Bag<SetOfIdxData<'d>>,
+    set_of_idx_d1: Bag<SetOfIdxD1Data<'d>>,
 
     par: Bag<ParData>,
     par_d1: Bag<ParD1Data<'d>>,
+    par_int: Bag<ParIntData>,
+    par_int_d1: Bag<ParIntD1Data<'d>>,
 
     idx: Bag<IdxData>,
 
@@ -26,11 +29,13 @@ pub struct Model<'d> {
 impl<'d> Model<'d> {
     pub fn new() -> Self {
         Self {
-            set: new_bag(),
-            set_d1: new_bag(),
+            set_of_idx: new_bag(),
+            set_of_idx_d1: new_bag(),
 
             par: new_bag(),
             par_d1: new_bag(),
+            par_int: new_bag(),
+            par_int_d1: new_bag(),
 
             idx: new_bag(),
 
@@ -41,17 +46,26 @@ impl<'d> Model<'d> {
 
     // sets
 
-    pub fn set(&self) -> Set<'_, 'd> {
-        self.add_set(SetData::new(SetFun::empty()))
+    pub fn set_of_idx(&self) -> SetOfIdx<'_, 'd> {
+        self.add_set_of_idx(SetOfIdxData::empty())
     }
 
-    pub(crate) fn add_set(&self, data: SetData<'d>) -> Set<'_, 'd> {
-        Set::new(self, self.set.push(data))
+    pub fn range<'m>(
+        &'m self,
+        begin: impl Into<PseudoInt<'m, 'd>>,
+        exclusive_end: impl Into<PseudoInt<'m, 'd>>,
+    ) -> SetOfIdx<'m, 'd> {
+        let data = SetOfIdxData::range(begin, exclusive_end);
+        SetOfIdx::new(self, self.set_of_idx.push(data))
     }
 
-    pub fn set_d1<'m>(&'m self, set: Set<'m, 'd>) -> SetD1<'m, 'd> {
-        let data = SetD1Data::new(self.set_ref(set), SetD1Fun::empty());
-        SetD1::new(self, self.set_d1.push(data))
+    pub(crate) fn add_set_of_idx(&self, data: SetOfIdxData<'d>) -> SetOfIdx<'_, 'd> {
+        SetOfIdx::new(self, self.set_of_idx.push(data))
+    }
+
+    pub fn set_of_idx_d1<'m>(&'m self, set: SetOfIdx<'m, 'd>) -> SetOfIdxD1<'m, 'd> {
+        let data = SetOfIdxD1Data::empty(self.set_ref(set));
+        SetOfIdxD1::new(self, self.set_of_idx_d1.push(data))
     }
 
     // pars
@@ -61,14 +75,24 @@ impl<'d> Model<'d> {
         Par::new(self, self.par.push(data))
     }
 
-    pub fn par_d1<'m>(&'m self, set: Set<'m, 'd>) -> ParD1<'m, 'd> {
-        let data = ParD1Data::new(self.set_ref(set), ParD1Fun::empty());
+    pub fn par_int(&self) -> ParInt<'_, 'd> {
+        let data = ParIntData::new(0);
+        ParInt::new(self, self.par_int.push(data))
+    }
+
+    pub fn par_d1<'m>(&'m self, set: SetOfIdx<'m, 'd>) -> ParD1<'m, 'd> {
+        let data = ParD1Data::empty(self.set_ref(set));
         ParD1::new(self, self.par_d1.push(data))
+    }
+
+    pub fn par_int_d1<'m>(&'m self, set: SetOfIdx<'m, 'd>) -> ParIntD1<'m, 'd> {
+        let data = ParIntD1Data::empty(self.set_ref(set));
+        ParIntD1::new(self, self.par_int_d1.push(data))
     }
 
     // idx
 
-    pub(crate) fn idx<'m>(&'m self, set: Set<'m, 'd>) -> Idx<'m, 'd> {
+    pub(crate) fn idx<'m>(&'m self, set: SetOfIdx<'m, 'd>) -> Idx<'m, 'd> {
         let data = IdxData::new(self.set_ref(set), 0);
         Idx::new(self, self.idx.push(data))
     }
@@ -85,8 +109,11 @@ impl<'d> Model<'d> {
 
     // helper
 
-    fn set_ref(&self, set: Set<'_, 'd>) -> SetRef {
-        let set_pos = set.el.position_in(&self.set).expect("TODO: error msg");
-        SetRef::new(set_pos)
+    fn set_ref(&self, set: SetOfIdx<'_, 'd>) -> RefSetOfIdx {
+        let set_pos = set
+            .el
+            .position_in(&self.set_of_idx)
+            .expect("TODO: error msg");
+        RefSetOfIdx::new(set_pos)
     }
 }

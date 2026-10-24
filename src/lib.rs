@@ -21,5 +21,6 @@ mod elements;
 mod model;
 mod symbols;
 mod symbols_d1;
+mod ptr;
 
 pub use model::Model;
