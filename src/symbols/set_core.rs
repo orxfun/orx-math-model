@@ -7,9 +7,9 @@ use orx_imp_vec::Elem;
 // fun
 
 #[derive(derive_new::new)]
-pub struct SetFun<'d, T>(Box<dyn Fn(&mut Elements<T>) + 'd>);
+pub struct SetCoreFun<'d, T>(Box<dyn Fn(&mut Elements<T>) + 'd>);
 
-impl<T> SetFun<'_, T> {
+impl<T> SetCoreFun<'_, T> {
     pub fn empty() -> Self {
         Self(Box::new(|_| {}))
     }
@@ -22,20 +22,20 @@ impl<T> SetFun<'_, T> {
 // data
 
 #[derive(derive_new::new)]
-pub struct SetData<'d, T> {
-    fun: SetFun<'d, T>,
+pub struct SetCoreData<'d, T> {
+    fun: SetCoreFun<'d, T>,
 }
 
-impl<'d, T> SetData<'d, T> {
+impl<'d, T> SetCoreData<'d, T> {
     pub fn empty() -> Self {
-        Self::new(SetFun::empty())
+        Self::new(SetCoreFun::empty())
     }
 
     pub fn fill(&self, elements: &mut Elements<T>) {
         self.fun.fill(elements);
     }
 
-    pub fn update_fun(&mut self, fun: SetFun<'d, T>) {
+    pub fn update_fun(&mut self, fun: SetCoreFun<'d, T>) {
         self.fun = fun;
     }
 
@@ -44,20 +44,20 @@ impl<'d, T> SetData<'d, T> {
         I: IntoIterator<Item = T>,
     {
         let fun = move |e: &mut Elements<T>| e.fill_with(fun());
-        self.update_fun(SetFun(Box::new(fun)));
+        self.update_fun(SetCoreFun(Box::new(fun)));
     }
 }
 
 // symbol
 
 #[derive(derive_new::new, Clone, Copy)]
-pub struct Set<'m, 'd, T> {
+pub struct SetCore<'m, 'd, T> {
     pub(crate) m: &'m Model<'d>,
-    pub(crate) el: Elem<'m, SetData<'d, T>>,
+    pub(crate) el: Elem<'m, SetCoreData<'d, T>>,
 }
 
-impl<'m, 'd, T> Set<'m, 'd, T> {
-    pub(crate) fn fun_ptr(&self) -> RefPtr<SetFun<'d, T>> {
+impl<'m, 'd, T> SetCore<'m, 'd, T> {
+    pub(crate) fn fun_ptr(&self) -> RefPtr<SetCoreFun<'d, T>> {
         // TODO: safety note
         unsafe { RefPtr::new(core::ptr::addr_of!((*self.el.as_ptr()).fun)) }
     }
