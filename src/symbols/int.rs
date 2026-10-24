@@ -1,7 +1,5 @@
-use crate::{
-    symbols::{Idx, IdxData, PtrIdxValue},
-    Model,
-};
+use crate::symbols::{Idx, IdxData, PtrIdxValue};
+use crate::Model;
 use alloc::boxed::Box;
 use core::ops::Add;
 use orx_imp_vec::Elem;
@@ -30,28 +28,6 @@ impl<'m, 'd> From<Idx<'m, 'd>> for Int<'m, 'd> {
         let p = IdxData::ptr_value(value.el.as_ptr());
         let fun = IntFun(Box::new(move || unsafe { *p }));
         value.m.add_int(fun)
-    }
-}
-
-// pseudo
-
-pub enum PseudoInt<'m, 'd> {
-    Raw(usize),
-    Int(Int<'m, 'd>),
-}
-
-impl<'m, 'd> From<usize> for PseudoInt<'m, 'd> {
-    fn from(value: usize) -> Self {
-        Self::Raw(value)
-    }
-}
-
-impl<'m, 'd, I> From<I> for PseudoInt<'m, 'd>
-where
-    I: Into<Int<'m, 'd>>,
-{
-    fn from(value: I) -> Self {
-        Self::Int(value.into())
     }
 }
 
