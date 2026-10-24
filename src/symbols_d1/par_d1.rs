@@ -1,4 +1,5 @@
-use crate::symbols::{Int, IntFun, Num, NumFun, PseudoInt, PtrIntFun, RefSetOfIdx};
+use crate::ptr::RefPtr;
+use crate::symbols::{Int, IntFun, Num, NumFun, PseudoInt, RefSetOfIdx};
 use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -84,8 +85,8 @@ impl<'m, 'd> ParD1<'m, 'd> {
             PseudoInt::Int(i) => {
                 assert!(core::ptr::eq(self.m, i.m), "TODO: error msg");
                 // SAFETY: p is tied to lifetime of 'm and 'd due to return type Num<'m, 'd>.
-                let p = unsafe { PtrIntFun::new(i) };
-                NumFun::new(Box::new(move || fun_d1.val().0(p.fun().eval())))
+                let p = unsafe { RefPtr::new(i.fun_ptr()) };
+                NumFun::new(Box::new(move || fun_d1.val().0(p.val().eval())))
             }
             PseudoInt::Raw(i0) => NumFun::new(Box::new(move || fun_d1.val().0(i0))),
         };
@@ -125,8 +126,8 @@ impl<'m, 'd> ParIntD1<'m, 'd> {
             PseudoInt::Int(i) => {
                 assert!(core::ptr::eq(self.m, i.m), "TODO: error msg");
                 // SAFETY: p is tied to lifetime of 'm and 'd due to return type Num<'m, 'd>.
-                let p = unsafe { PtrIntFun::new(i) };
-                IntFun::new(Box::new(move || fun_d1.val().0(p.fun().eval())))
+                let p = unsafe { RefPtr::new(i.fun_ptr()) };
+                IntFun::new(Box::new(move || fun_d1.val().0(p.val().eval())))
             }
             PseudoInt::Raw(i0) => IntFun::new(Box::new(move || fun_d1.val().0(i0))),
         };

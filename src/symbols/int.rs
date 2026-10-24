@@ -1,5 +1,5 @@
+use crate::ptr::{RefPtr, ValPtr};
 use crate::symbols::{Idx, IdxData};
-use crate::value_ptr::ValPtr;
 use crate::Model;
 use alloc::boxed::Box;
 use core::ops::Add;
@@ -24,28 +24,17 @@ pub struct Int<'m, 'd> {
     pub(crate) el: Elem<'m, IntFun<'d>>,
 }
 
+impl<'d> Int<'_, 'd> {
+    pub fn fun_ptr(&self) -> *const IntFun<'d> {
+        unsafe { self.el.get() }
+    }
+}
+
 impl<'m, 'd> From<Idx<'m, 'd>> for Int<'m, 'd> {
     fn from(value: Idx<'m, 'd>) -> Self {
         let p = IdxData::ptr_value(value.el.as_ptr());
         let fun = IntFun(Box::new(move || unsafe { *p }));
         value.m.add_int(fun)
-    }
-}
-
-// ref
-
-pub struct PtrIntFun<'d>(*const IntFun<'d>);
-
-impl<'d> PtrIntFun<'d> {
-    /// # SAFETY
-    ///
-    /// * Created value must not outlive `'m` or `'d`.
-    pub unsafe fn new<'m>(int: Int<'m, 'd>) -> Self {
-        Self(unsafe { int.el.get() })
-    }
-
-    pub fn fun(&self) -> &IntFun<'d> {
-        unsafe { &*self.0 }
     }
 }
 
@@ -58,8 +47,8 @@ impl<'m, 'd> Add<Int<'m, 'd>> for Int<'m, 'd> {
         assert!(core::ptr::eq(self.m, rhs.m), "TODO: err-msg");
 
         // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let [a, b] = unsafe { [PtrIntFun::new(self), PtrIntFun::new(rhs)] };
-        let f = move || a.fun().eval() + b.fun().eval();
+        let [a, b] = unsafe { [RefPtr::new(self.fun_ptr()), RefPtr::new(rhs.fun_ptr())] };
+        let f = move || a.val().eval() + b.val().eval();
         self.m.add_int(IntFun(Box::new(f)))
     }
 }
@@ -73,8 +62,8 @@ impl<'m, 'd> Add<Idx<'m, 'd>> for Int<'m, 'd> {
         assert!(core::ptr::eq(self.m, rhs.m), "TODO: err-msg");
 
         // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let (a, b) = unsafe { (PtrIntFun::new(self), ValPtr::new(rhs.val_ptr())) };
-        let f = move || a.fun().eval() + b.value();
+        let (a, b) = unsafe { (RefPtr::new(self.fun_ptr()), ValPtr::new(rhs.val_ptr())) };
+        let f = move || a.val().eval() + b.val();
         self.m.add_int(IntFun(Box::new(f)))
     }
 }
@@ -86,8 +75,8 @@ impl<'m, 'd> Add<Int<'m, 'd>> for Idx<'m, 'd> {
         assert!(core::ptr::eq(self.m, rhs.m), "TODO: err-msg");
 
         // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let (a, b) = unsafe { (ValPtr::new(self.val_ptr()), PtrIntFun::new(rhs)) };
-        let f = move || a.value() + b.fun().eval();
+        let (a, b) = unsafe { (ValPtr::new(self.val_ptr()), RefPtr::new(rhs.fun_ptr())) };
+        let f = move || a.val() + b.val().eval();
         self.m.add_int(IntFun(Box::new(f)))
     }
 }
@@ -99,8 +88,8 @@ impl<'m, 'd> Add<usize> for Int<'m, 'd> {
 
     fn add(self, b: usize) -> Self::Output {
         // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let a = unsafe { PtrIntFun::new(self) };
-        let f = move || a.fun().eval() + b;
+        let a = unsafe { RefPtr::new(self.fun_ptr()) };
+        let f = move || a.val().eval() + b;
         self.m.add_int(IntFun(Box::new(f)))
     }
 }
@@ -110,8 +99,8 @@ impl<'m, 'd> Add<Int<'m, 'd>> for usize {
 
     fn add(self, rhs: Int<'m, 'd>) -> Self::Output {
         // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let b = unsafe { PtrIntFun::new(rhs) };
-        let f = move || self + b.fun().eval();
+        let b = unsafe { RefPtr::new(rhs.fun_ptr()) };
+        let f = move || self + b.val().eval();
         rhs.m.add_int(IntFun(Box::new(f)))
     }
 }

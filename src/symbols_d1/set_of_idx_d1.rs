@@ -1,5 +1,6 @@
 use crate::elements::ElementsOfIdx;
-use crate::symbols::{PseudoInt, PtrIntFun, RefSetOfIdx, SetOfIdx, SetOfIdxData, SetOfIdxFun};
+use crate::ptr::RefPtr;
+use crate::symbols::{PseudoInt, RefSetOfIdx, SetOfIdx, SetOfIdxData, SetOfIdxFun};
 use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -85,8 +86,8 @@ impl<'m, 'd> SetOfIdxD1<'m, 'd> {
             PseudoInt::Int(i) => {
                 assert!(core::ptr::eq(self.m, i.m), "TODO: error msg");
                 // SAFETY: p is tied to lifetime of 'm and 'd due to return type Num<'m, 'd>.
-                let p = unsafe { PtrIntFun::new(i) };
-                SetOfIdxFun::new(Box::new(move |e| fun_d1.val().0(p.fun().eval(), e)))
+                let p = unsafe { RefPtr::new(i.fun_ptr()) };
+                SetOfIdxFun::new(Box::new(move |e| fun_d1.val().0(p.val().eval(), e)))
             }
             PseudoInt::Raw(i0) => SetOfIdxFun::new(Box::new(move |e| fun_d1.val().0(i0, e))),
         };

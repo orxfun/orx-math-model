@@ -1,5 +1,6 @@
 use crate::elements::ElementsOfIdx;
-use crate::symbols::{Idx, PseudoInt, PtrIntFun};
+use crate::ptr::RefPtr;
+use crate::symbols::{Idx, PseudoInt};
 use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -46,18 +47,18 @@ impl<'d> SetOfIdxData<'d> {
             }
             (PseudoInt::Raw(a), PseudoInt::Int(b)) => {
                 // SAFETY: b is tied to lifetime of 'm and 'd
-                let b = unsafe { PtrIntFun::new(b) };
-                let fill = move |e: &mut ElementsOfIdx| e.fill_with(a..b.fun().eval());
+                let b = unsafe { RefPtr::new(b.fun_ptr()) };
+                let fill = move |e: &mut ElementsOfIdx| e.fill_with(a..b.val().eval());
                 SetOfIdxFun(Box::new(fill))
             }
             (PseudoInt::Int(a), PseudoInt::Raw(b)) => {
-                let a = unsafe { PtrIntFun::new(a) };
-                let fill = move |e: &mut ElementsOfIdx| e.fill_with(a.fun().eval()..b);
+                let a = unsafe { RefPtr::new(a.fun_ptr()) };
+                let fill = move |e: &mut ElementsOfIdx| e.fill_with(a.val().eval()..b);
                 SetOfIdxFun(Box::new(fill))
             }
             (PseudoInt::Int(a), PseudoInt::Int(b)) => {
-                let [a, b] = unsafe { [a, b].map(|x| PtrIntFun::new(x)) };
-                let fill = move |e: &mut ElementsOfIdx| e.fill_with(a.fun().eval()..b.fun().eval());
+                let [a, b] = unsafe { [a, b].map(|x| RefPtr::new(x.fun_ptr())) };
+                let fill = move |e: &mut ElementsOfIdx| e.fill_with(a.val().eval()..b.val().eval());
                 SetOfIdxFun(Box::new(fill))
             }
         };

@@ -1,4 +1,5 @@
-use crate::symbols::{Int, Par, ParData, PtrIntFun};
+use crate::ptr::RefPtr;
+use crate::symbols::{Int, Par, ParData};
 use crate::Model;
 use alloc::boxed::Box;
 use core::ops::Add;
@@ -118,8 +119,8 @@ impl<'m, 'd> Add<Int<'m, 'd>> for Num<'m, 'd> {
         assert!(core::ptr::eq(self.m, rhs.m), "TODO: err-msg");
 
         // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let (a, b) = unsafe { (PtrNumFun::new(self), PtrIntFun::new(rhs)) };
-        let f = move || a.fun().eval() + b.fun().eval() as f64;
+        let (a, b) = unsafe { (PtrNumFun::new(self), RefPtr::new(rhs.fun_ptr())) };
+        let f = move || a.fun().eval() + b.val().eval() as f64;
         self.m.add_num(NumFun(Box::new(f)))
     }
 }
@@ -131,8 +132,8 @@ impl<'m, 'd> Add<Num<'m, 'd>> for Int<'m, 'd> {
         assert!(core::ptr::eq(self.m, rhs.m), "TODO: err-msg");
 
         // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let (a, b) = unsafe { (PtrIntFun::new(self), PtrNumFun::new(rhs)) };
-        let f = move || a.fun().eval() as f64 + b.fun().eval();
+        let (a, b) = unsafe { (RefPtr::new(self.fun_ptr()), PtrNumFun::new(rhs)) };
+        let f = move || a.val().eval() as f64 + b.fun().eval();
         self.m.add_num(NumFun(Box::new(f)))
     }
 }

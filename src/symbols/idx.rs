@@ -1,5 +1,5 @@
+use crate::ptr::ValPtr;
 use crate::symbols::{Int, IntFun, RefSetOfIdx};
-use crate::value_ptr::ValPtr;
 use crate::Model;
 use alloc::boxed::Box;
 use core::ops::Add;
@@ -55,7 +55,7 @@ impl<'m, 'd> Add<Idx<'m, 'd>> for Idx<'m, 'd> {
 
         // SAFETY: both are tied to lifetime of 'm and 'd due to return type
         let [a, b] = unsafe { [ValPtr::new(self.val_ptr()), ValPtr::new(rhs.val_ptr())] };
-        let f = move || a.value() + b.value();
+        let f = move || a.val() + b.val();
         self.m.add_int(IntFun::new(Box::new(f)))
     }
 }
@@ -68,7 +68,7 @@ impl<'m, 'd> Add<usize> for Idx<'m, 'd> {
     fn add(self, rhs: usize) -> Self::Output {
         // SAFETY: both are tied to lifetime of 'm and 'd due to return type
         let a = unsafe { ValPtr::new(self.val_ptr()) };
-        let f = move || a.value() + rhs;
+        let f = move || a.val() + rhs;
         self.m.add_int(IntFun::new(Box::new(f)))
     }
 }
@@ -79,7 +79,7 @@ impl<'m, 'd> Add<Idx<'m, 'd>> for usize {
     fn add(self, rhs: Idx<'m, 'd>) -> Self::Output {
         // SAFETY: both are tied to lifetime of 'm and 'd due to return type
         let b = unsafe { ValPtr::new(rhs.val_ptr()) };
-        let f = move || self + b.value();
+        let f = move || self + b.val();
         rhs.m.add_int(IntFun::new(Box::new(f)))
     }
 }
