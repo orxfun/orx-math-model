@@ -5,6 +5,12 @@ pub struct ElementContainer<T> {
     data: Vec<T>,
 }
 
+impl<T> From<Vec<T>> for ElementContainer<T> {
+    fn from(data: Vec<T>) -> Self {
+        Self { data }
+    }
+}
+
 impl<T> ElementContainer<T> {
     pub fn fill(&mut self, values: impl IntoIterator<Item = T>) {
         self.data.clear();
