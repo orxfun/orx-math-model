@@ -105,8 +105,13 @@ impl<'m, 'd> SetOfIdx<'m, 'd> {
         self.m.idx(self)
     }
 
-    pub fn subset(self, filter: impl Fn(usize) -> bool) -> SetOfIdx<'m, 'd> {
-        // let fun_ptr = RefPtr::new(self.)
-        todo!()
+    pub fn subset(self, filter: impl Fn(usize) -> bool + 'd) -> SetOfIdx<'m, 'd> {
+        let fun_ptr = unsafe { RefPtr::new(self.fun_ptr()) };
+        let f = move |e: &mut ElementsOfIdx| {
+            fun_ptr.val().fill(e);
+            e.retain(&filter);
+        };
+        let data = SetOfIdxData::new(SetOfIdxFun(Box::new(f)));
+        self.m.add_set_of_idx(data)
     }
 }
