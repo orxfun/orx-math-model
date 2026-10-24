@@ -1,4 +1,4 @@
-use crate::elements::Elements;
+use crate::elements::ElementsOfIdx;
 use crate::symbols::{PseudoInt, PtrIntFun, SetOfIdx, SetOfIdxData, SetOfIdxFun, SetOfIdxRef};
 use crate::Model;
 use alloc::boxed::Box;
@@ -7,14 +7,14 @@ use orx_imp_vec::Elem;
 // fun
 
 #[derive(derive_new::new)]
-pub struct SetOfIdxD1Fun<'d>(Box<dyn Fn(usize, &mut Elements) + 'd>);
+pub struct SetOfIdxD1Fun<'d>(Box<dyn Fn(usize, &mut ElementsOfIdx) + 'd>);
 
 impl SetOfIdxD1Fun<'_> {
     pub fn empty() -> Self {
         Self(Box::new(|_, _| {}))
     }
 
-    pub fn fill(&self, i0: usize, elements: &mut Elements) {
+    pub fn fill(&self, i0: usize, elements: &mut ElementsOfIdx) {
         self.0(i0, elements)
     }
 }
@@ -28,7 +28,7 @@ pub struct SetOfIdxD1Data<'d> {
 }
 
 impl<'d> SetOfIdxD1Data<'d> {
-    pub fn fill(&self, i0: usize, elements: &mut Elements) {
+    pub fn fill(&self, i0: usize, elements: &mut ElementsOfIdx) {
         self.fun.fill(i0, elements);
     }
 
@@ -40,7 +40,7 @@ impl<'d> SetOfIdxD1Data<'d> {
     where
         I: IntoIterator<Item = usize>,
     {
-        let fun = move |i1: usize, e: &mut Elements| e.fill_with(fun(i1));
+        let fun = move |i1: usize, e: &mut ElementsOfIdx| e.fill_with(fun(i1));
         self.update_fun(SetOfIdxD1Fun(Box::new(fun)));
     }
 

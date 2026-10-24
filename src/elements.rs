@@ -1,11 +1,11 @@
 use alloc::vec::Vec;
 
 #[derive(Default, Debug)]
-pub struct Elements {
+pub struct ElementsOfIdx {
     data: Vec<usize>,
 }
 
-impl Elements {
+impl ElementsOfIdx {
     pub fn fill_with(&mut self, values: impl IntoIterator<Item = usize>) {
         self.data.clear();
         self.data.extend(values);

@@ -1,9 +1,9 @@
-use crate::elements::Elements;
+use crate::elements::ElementsOfIdx;
 use crate::symbols::SetOfIdx;
 use crate::Model;
 use alloc::vec;
 
-fn assert_elements(e: &mut Elements, set_symbols: &[SetOfIdx<'_, '_>], expected: &[usize]) {
+fn assert_elements(e: &mut ElementsOfIdx, set_symbols: &[SetOfIdx<'_, '_>], expected: &[usize]) {
     for s in set_symbols {
         for _ in 0..3 {
             unsafe { s.el.get() }.fill(e);
@@ -23,7 +23,7 @@ fn set_get_set() {
     let data = vec![1, 2, 3];
 
     let m = Model::new();
-    let mut elements = Elements::default();
+    let mut elements = ElementsOfIdx::default();
 
     add_some_more_sets(&m);
 
