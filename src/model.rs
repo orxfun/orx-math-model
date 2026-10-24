@@ -50,7 +50,9 @@ impl<'d> Model<'d> {
 
     // sets
 
-    // pub fn set(&self) -> Set
+    pub fn set(&self) -> Set<'_, 'd> {
+        Set::new(self, self.set.push(SetFun::empty()))
+    }
 
     pub fn set_of_idx(&self) -> SetOfIdx<'_, 'd> {
         self.add_set_of_idx(SetOfIdxData::empty())
