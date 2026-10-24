@@ -22,10 +22,6 @@ impl IdxData {
     pub fn set_value(&mut self, value: usize) {
         self.value = value;
     }
-
-    pub fn ptr_value(p: *const IdxData) -> *const usize {
-        unsafe { core::ptr::addr_of!((*p).value) }
-    }
 }
 
 // symbol

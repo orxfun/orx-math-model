@@ -11,6 +11,10 @@ impl ElementsOfIdx {
         self.data.extend(values);
     }
 
+    pub fn retain(&mut self, filter: impl Fn(usize) -> bool) {
+        self.data.retain(|x| filter(*x));
+    }
+
     pub fn as_slice(&self) -> &[usize] {
         &self.data
     }

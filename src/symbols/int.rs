@@ -1,5 +1,5 @@
 use crate::ptr::ValPtr;
-use crate::symbols::{Idx, IdxData, ParInt};
+use crate::symbols::{Idx, ParInt};
 use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -24,7 +24,7 @@ pub struct Int<'m, 'd> {
 }
 
 impl<'d> Int<'_, 'd> {
-    pub fn fun_ptr(&self) -> *const IntFun<'d> {
+    pub(crate) fn fun_ptr(&self) -> *const IntFun<'d> {
         unsafe { self.el.get() }
     }
 }
@@ -33,8 +33,8 @@ impl<'d> Int<'_, 'd> {
 
 impl<'m, 'd> From<Idx<'m, 'd>> for Int<'m, 'd> {
     fn from(value: Idx<'m, 'd>) -> Self {
-        let p = IdxData::ptr_value(value.el.as_ptr());
-        let fun = IntFun(Box::new(move || unsafe { *p }));
+        let p = unsafe { ValPtr::new(value.val_ptr()) };
+        let fun = IntFun(Box::new(move || p.val()));
         value.m.add_int(fun)
     }
 }
