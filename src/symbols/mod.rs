@@ -4,6 +4,7 @@ mod tests;
 mod idx;
 mod int;
 mod num;
+mod ops;
 mod par;
 mod pseudo_numbers;
 mod set_of_idx;
