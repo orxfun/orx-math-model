@@ -22,28 +22,17 @@ pub struct Num<'m, 'd> {
     pub(crate) el: Elem<'m, NumFun<'d>>,
 }
 
+impl<'d> Num<'_, 'd> {
+    fn fun_ptr(&self) -> *const NumFun<'d> {
+        unsafe { self.el.get() }
+    }
+}
+
 impl<'m, 'd> From<Par<'m, 'd>> for Num<'m, 'd> {
     fn from(value: Par<'m, 'd>) -> Self {
         let p = ParData::ptr_value(value.el.as_ptr());
         let fun = NumFun(Box::new(move || unsafe { *p }));
         value.m.add_num(fun)
-    }
-}
-
-// ref
-
-struct PtrNumFun<'d>(*const NumFun<'d>);
-
-impl<'d> PtrNumFun<'d> {
-    /// # SAFETY
-    ///
-    /// * Created value must not outlive `'m` or `'d`.
-    unsafe fn new<'m>(set: Num<'m, 'd>) -> Self {
-        Self(unsafe { set.el.get() })
-    }
-
-    fn fun(&self) -> &NumFun<'d> {
-        unsafe { &*self.0 }
     }
 }
 
@@ -56,8 +45,8 @@ impl<'m, 'd> Add<Num<'m, 'd>> for Num<'m, 'd> {
         assert!(core::ptr::eq(self.m, rhs.m), "TODO: err-msg");
 
         // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let [a, b] = unsafe { [PtrNumFun::new(self), PtrNumFun::new(rhs)] };
-        let f = move || a.fun().eval() + b.fun().eval();
+        let [a, b] = unsafe { [RefPtr::new(self.fun_ptr()), RefPtr::new(rhs.fun_ptr())] };
+        let f = move || a.val().eval() + b.val().eval();
         self.m.add_num(NumFun(Box::new(f)))
     }
 }
@@ -69,8 +58,8 @@ impl<'m, 'd> Add<f64> for Num<'m, 'd> {
 
     fn add(self, b: f64) -> Self::Output {
         // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let a = unsafe { PtrNumFun::new(self) };
-        let f = move || a.fun().eval() + b;
+        let a = unsafe { RefPtr::new(self.fun_ptr()) };
+        let f = move || a.val().eval() + b;
         self.m.add_num(NumFun(Box::new(f)))
     }
 }
@@ -80,8 +69,8 @@ impl<'m, 'd> Add<Num<'m, 'd>> for f64 {
 
     fn add(self, rhs: Num<'m, 'd>) -> Self::Output {
         // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let b = unsafe { PtrNumFun::new(rhs) };
-        let f = move || self + b.fun().eval();
+        let b = unsafe { RefPtr::new(rhs.fun_ptr()) };
+        let f = move || self + b.val().eval();
         rhs.m.add_num(NumFun(Box::new(f)))
     }
 }
@@ -93,8 +82,8 @@ impl<'m, 'd> Add<usize> for Num<'m, 'd> {
 
     fn add(self, b: usize) -> Self::Output {
         // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let a = unsafe { PtrNumFun::new(self) };
-        let f = move || a.fun().eval() + b as f64;
+        let a = unsafe { RefPtr::new(self.fun_ptr()) };
+        let f = move || a.val().eval() + b as f64;
         self.m.add_num(NumFun(Box::new(f)))
     }
 }
@@ -104,8 +93,8 @@ impl<'m, 'd> Add<Num<'m, 'd>> for usize {
 
     fn add(self, rhs: Num<'m, 'd>) -> Self::Output {
         // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let b = unsafe { PtrNumFun::new(rhs) };
-        let f = move || self as f64 + b.fun().eval();
+        let b = unsafe { RefPtr::new(rhs.fun_ptr()) };
+        let f = move || self as f64 + b.val().eval();
         rhs.m.add_num(NumFun(Box::new(f)))
     }
 }
@@ -119,8 +108,8 @@ impl<'m, 'd> Add<Int<'m, 'd>> for Num<'m, 'd> {
         assert!(core::ptr::eq(self.m, rhs.m), "TODO: err-msg");
 
         // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let (a, b) = unsafe { (PtrNumFun::new(self), RefPtr::new(rhs.fun_ptr())) };
-        let f = move || a.fun().eval() + b.val().eval() as f64;
+        let (a, b) = unsafe { (RefPtr::new(self.fun_ptr()), RefPtr::new(rhs.fun_ptr())) };
+        let f = move || a.val().eval() + b.val().eval() as f64;
         self.m.add_num(NumFun(Box::new(f)))
     }
 }
@@ -132,8 +121,8 @@ impl<'m, 'd> Add<Num<'m, 'd>> for Int<'m, 'd> {
         assert!(core::ptr::eq(self.m, rhs.m), "TODO: err-msg");
 
         // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let (a, b) = unsafe { (RefPtr::new(self.fun_ptr()), PtrNumFun::new(rhs)) };
-        let f = move || a.val().eval() as f64 + b.fun().eval();
+        let (a, b) = unsafe { (RefPtr::new(self.fun_ptr()), RefPtr::new(rhs.fun_ptr())) };
+        let f = move || a.val().eval() as f64 + b.val().eval();
         self.m.add_num(NumFun(Box::new(f)))
     }
 }
