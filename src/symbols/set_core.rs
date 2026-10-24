@@ -1,4 +1,4 @@
-use crate::elements::ElementContainer;
+use crate::elements::ElemCont;
 use crate::ptr::RefPtr;
 use crate::Model;
 use alloc::boxed::Box;
@@ -7,14 +7,14 @@ use orx_imp_vec::Elem;
 // fun
 
 #[derive(derive_new::new)]
-pub struct SetCoreFun<'d, T>(Box<dyn Fn(&mut ElementContainer<T>) + 'd>);
+pub struct SetCoreFun<'d, T>(Box<dyn Fn(&mut ElemCont<T>) + 'd>);
 
 impl<T> SetCoreFun<'_, T> {
     pub fn empty() -> Self {
         Self(Box::new(|_| {}))
     }
 
-    pub fn fill(&self, elements: &mut ElementContainer<T>) {
+    pub fn fill(&self, elements: &mut ElemCont<T>) {
         self.0(elements)
     }
 }
@@ -31,7 +31,7 @@ impl<'d, T> SetCoreData<'d, T> {
         Self::new(SetCoreFun::empty())
     }
 
-    pub fn fill(&self, elements: &mut ElementContainer<T>) {
+    pub fn fill(&self, elements: &mut ElemCont<T>) {
         self.fun.fill(elements);
     }
 
@@ -43,7 +43,7 @@ impl<'d, T> SetCoreData<'d, T> {
     where
         I: IntoIterator<Item = T>,
     {
-        let fun = move |e: &mut ElementContainer<T>| e.fill(fun());
+        let fun = move |e: &mut ElemCont<T>| e.fill(fun());
         self.update_fun(SetCoreFun(Box::new(fun)));
     }
 }

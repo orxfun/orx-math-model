@@ -1,4 +1,4 @@
-use crate::elements::ElementContainer;
+use crate::elements::ElemCont;
 use crate::ptr::RefPtr;
 use crate::Model;
 use alloc::boxed::Box;
@@ -8,16 +8,16 @@ use orx_imp_vec::Elem;
 
 #[derive(Debug, PartialEq)]
 pub enum Elements<'d> {
-    Usize(ElementContainer<usize>),
-    Str(ElementContainer<&'d str>),
+    Usize(ElemCont<usize>),
+    Str(ElemCont<&'d str>),
 }
 
 // fun
 
 #[derive(derive_new::new)]
 pub enum SetFun<'d> {
-    Usize(Box<dyn Fn(&mut ElementContainer<usize>) + 'd>),
-    Str(Box<dyn Fn(&mut ElementContainer<&'d str>) + 'd>),
+    Usize(Box<dyn Fn(&mut ElemCont<usize>) + 'd>),
+    Str(Box<dyn Fn(&mut ElemCont<&'d str>) + 'd>),
 }
 
 impl<'d> SetFun<'d> {
