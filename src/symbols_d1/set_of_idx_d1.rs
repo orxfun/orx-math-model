@@ -104,6 +104,7 @@ impl<'m, 'd, I: Into<PseudoInt<'m, 'd>>> Index<I> for SetOfIdxD1<'m, 'd> {
     type Output = SetOfIdx<'m, 'd>;
 
     fn index(&self, index: I) -> &Self::Output {
+        // TODO: safety note: we are changing the lifetime from 'm,'d to 'd,'d
         self.m.add_sym_set(unsafe { self.at_unchecked(index) })
     }
 }
