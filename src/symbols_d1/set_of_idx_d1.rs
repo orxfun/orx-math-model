@@ -1,5 +1,5 @@
 use crate::elements::Elements;
-use crate::symbols::{Idx, PseudoInt, PtrIdxValue, PtrIntFun, Set, SetData, SetFun, SetRef};
+use crate::symbols::{PseudoInt, PtrIntFun, SetOfIdx, SetOfIdxData, SetOfIdxFun, SetOfIdxRef};
 use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -7,9 +7,9 @@ use orx_imp_vec::Elem;
 // fun
 
 #[derive(derive_new::new)]
-pub struct SetD1Fun<'d>(Box<dyn Fn(usize, &mut Elements) + 'd>);
+pub struct SetOfIdxD1Fun<'d>(Box<dyn Fn(usize, &mut Elements) + 'd>);
 
-impl SetD1Fun<'_> {
+impl SetOfIdxD1Fun<'_> {
     pub fn empty() -> Self {
         Self(Box::new(|_, _| {}))
     }
@@ -22,17 +22,17 @@ impl SetD1Fun<'_> {
 // data
 
 #[derive(derive_new::new)]
-pub struct SetD1Data<'d> {
-    s0: SetRef,
-    fun: SetD1Fun<'d>,
+pub struct SetOfIdxD1Data<'d> {
+    s0: SetOfIdxRef,
+    fun: SetOfIdxD1Fun<'d>,
 }
 
-impl<'d> SetD1Data<'d> {
+impl<'d> SetOfIdxD1Data<'d> {
     pub fn fill(&self, i0: usize, elements: &mut Elements) {
         self.fun.fill(i0, elements);
     }
 
-    pub fn update_fun(&mut self, fun: SetD1Fun<'d>) {
+    pub fn update_fun(&mut self, fun: SetOfIdxD1Fun<'d>) {
         self.fun = fun;
     }
 
@@ -41,10 +41,10 @@ impl<'d> SetD1Data<'d> {
         I: IntoIterator<Item = usize>,
     {
         let fun = move |i1: usize, e: &mut Elements| e.fill_with(fun(i1));
-        self.update_fun(SetD1Fun(Box::new(fun)));
+        self.update_fun(SetOfIdxD1Fun(Box::new(fun)));
     }
 
-    pub fn ptr_fun(p: *const SetD1Data<'d>) -> *const SetD1Fun<'d> {
+    pub fn ptr_fun(p: *const SetOfIdxD1Data<'d>) -> *const SetOfIdxD1Fun<'d> {
         unsafe { core::ptr::addr_of!((*p).fun) }
     }
 }
@@ -52,24 +52,24 @@ impl<'d> SetD1Data<'d> {
 // symbol
 
 #[derive(derive_new::new, Clone, Copy)]
-pub struct SetD1<'m, 'd> {
+pub struct SetOfIdxD1<'m, 'd> {
     pub(crate) m: &'m Model<'d>,
-    pub(crate) el: Elem<'m, SetD1Data<'d>>,
+    pub(crate) el: Elem<'m, SetOfIdxD1Data<'d>>,
 }
 
-impl<'m, 'd> SetD1<'m, 'd> {
-    pub(crate) fn at(self, i: impl Into<PseudoInt<'m, 'd>>) -> Set<'m, 'd> {
-        struct PtrSetD1Fun<'d>(*const SetD1Fun<'d>);
+impl<'m, 'd> SetOfIdxD1<'m, 'd> {
+    pub(crate) fn at(self, i: impl Into<PseudoInt<'m, 'd>>) -> SetOfIdx<'m, 'd> {
+        struct PtrSetD1Fun<'d>(*const SetOfIdxD1Fun<'d>);
 
         impl<'d> PtrSetD1Fun<'d> {
             /// # SAFETY
             ///
             /// * Created value must not outlive `'m` or `'d`.
-            unsafe fn new<'m>(set: SetD1<'m, 'd>) -> Self {
-                Self(SetD1Data::ptr_fun(set.el.as_ptr()))
+            unsafe fn new<'m>(set: SetOfIdxD1<'m, 'd>) -> Self {
+                Self(SetOfIdxD1Data::ptr_fun(set.el.as_ptr()))
             }
 
-            fn val(&self) -> &SetD1Fun<'d> {
+            fn val(&self) -> &SetOfIdxD1Fun<'d> {
                 unsafe { &*self.0 }
             }
         }
@@ -82,11 +82,11 @@ impl<'m, 'd> SetD1<'m, 'd> {
                 assert!(core::ptr::eq(self.m, i.m), "TODO: error msg");
                 // SAFETY: p is tied to lifetime of 'm and 'd due to return type Num<'m, 'd>.
                 let p = unsafe { PtrIntFun::new(i) };
-                SetFun::new(Box::new(move |e| fun_d1.val().0(p.fun().eval(), e)))
+                SetOfIdxFun::new(Box::new(move |e| fun_d1.val().0(p.fun().eval(), e)))
             }
-            PseudoInt::Raw(i0) => SetFun::new(Box::new(move |e| fun_d1.val().0(i0, e))),
+            PseudoInt::Raw(i0) => SetOfIdxFun::new(Box::new(move |e| fun_d1.val().0(i0, e))),
         };
 
-        self.m.add_set(SetData::new(f))
+        self.m.add_set_of_idx(SetOfIdxData::new(f))
     }
 }

@@ -5,9 +5,9 @@ use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 
 #[derive(derive_new::new)]
-pub struct SetFun<'d>(Box<dyn Fn(&mut Elements) + 'd>);
+pub struct SetOfIdxFun<'d>(Box<dyn Fn(&mut Elements) + 'd>);
 
-impl SetFun<'_> {
+impl SetOfIdxFun<'_> {
     pub fn empty() -> Self {
         Self(Box::new(|_| {}))
     }
@@ -18,21 +18,21 @@ impl SetFun<'_> {
 }
 
 #[derive(derive_new::new, Clone, Copy, PartialEq, Debug)]
-pub struct SetRef {
+pub struct SetOfIdxRef {
     i: usize,
 }
 
 #[derive(derive_new::new)]
-pub struct SetData<'d> {
-    fun: SetFun<'d>,
+pub struct SetOfIdxData<'d> {
+    fun: SetOfIdxFun<'d>,
 }
 
-impl<'d> SetData<'d> {
+impl<'d> SetOfIdxData<'d> {
     pub fn fill(&self, elements: &mut Elements) {
         self.fun.fill(elements);
     }
 
-    pub fn update_fun(&mut self, fun: SetFun<'d>) {
+    pub fn update_fun(&mut self, fun: SetOfIdxFun<'d>) {
         self.fun = fun;
     }
 
@@ -41,17 +41,17 @@ impl<'d> SetData<'d> {
         I: IntoIterator<Item = usize>,
     {
         let fun = move |e: &mut Elements| e.fill_with(fun());
-        self.update_fun(SetFun(Box::new(fun)));
+        self.update_fun(SetOfIdxFun(Box::new(fun)));
     }
 }
 
 #[derive(derive_new::new, Clone, Copy)]
-pub struct Set<'m, 'd> {
+pub struct SetOfIdx<'m, 'd> {
     pub(crate) m: &'m Model<'d>,
-    pub(crate) el: Elem<'m, SetData<'d>>,
+    pub(crate) el: Elem<'m, SetOfIdxData<'d>>,
 }
 
-impl<'m, 'd> Set<'m, 'd> {
+impl<'m, 'd> SetOfIdx<'m, 'd> {
     pub fn idx(self) -> Idx<'m, 'd> {
         self.m.idx(self)
     }

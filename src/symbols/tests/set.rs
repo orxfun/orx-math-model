@@ -1,9 +1,9 @@
 use crate::elements::Elements;
-use crate::symbols::Set;
+use crate::symbols::SetOfIdx;
 use crate::Model;
 use alloc::vec;
 
-fn assert_elements(e: &mut Elements, set_symbols: &[Set<'_, '_>], expected: &[usize]) {
+fn assert_elements(e: &mut Elements, set_symbols: &[SetOfIdx<'_, '_>], expected: &[usize]) {
     for s in set_symbols {
         for _ in 0..3 {
             unsafe { s.el.get() }.fill(e);
@@ -14,7 +14,7 @@ fn assert_elements(e: &mut Elements, set_symbols: &[Set<'_, '_>], expected: &[us
 
 fn add_some_more_sets(m: &Model<'_>) {
     for _ in 0..3 {
-        let _ = m.set();
+        let _ = m.set_of_idx();
     }
 }
 
@@ -27,7 +27,7 @@ fn set_get_set() {
 
     add_some_more_sets(&m);
 
-    let set = m.set();
+    let set = m.set_of_idx();
     let s = set;
 
     assert_elements(&mut elements, &[s, set], &[]);

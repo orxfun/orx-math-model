@@ -6,7 +6,7 @@ use alloc::vec;
 
 fn add_some_more_pars(m: &Model<'_>) {
     for _ in 0..3 {
-        let _ = m.par_d1(m.set());
+        let _ = m.par_d1(m.set_of_idx());
     }
 }
 
@@ -23,7 +23,7 @@ fn par_d1_get_set() {
     let m = Model::new();
     add_some_more_pars(&m);
 
-    let s0 = m.set();
+    let s0 = m.set_of_idx();
     let par = m.par_d1(s0);
     let p = par;
 
@@ -56,7 +56,7 @@ fn sca_from_par_d1() {
     let m = Model::new();
     add_some_more_pars(&m);
 
-    let s0 = m.set();
+    let s0 = m.set_of_idx();
     let p1 = m.par_d1(s0);
 
     let i0 = s0.idx();

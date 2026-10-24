@@ -1,7 +1,8 @@
 use crate::symbols::{
-    Idx, IdxData, Int, IntFun, Num, NumFun, Par, ParData, Set, SetData, SetFun, SetRef,
+    Idx, IdxData, Int, IntFun, Num, NumFun, Par, ParData, SetOfIdx, SetOfIdxData, SetOfIdxFun,
+    SetOfIdxRef,
 };
-use crate::symbols_d1::{ParD1, ParD1Data, ParD1Fun, SetD1, SetD1Data, SetD1Fun};
+use crate::symbols_d1::{ParD1, ParD1Data, ParD1Fun, SetOfIdxD1, SetOfIdxD1Data, SetOfIdxD1Fun};
 use orx_imp_vec::{Doubling, ImpVec, SplitVec};
 
 type Pinned<T> = SplitVec<T, Doubling>;
@@ -11,8 +12,8 @@ fn new_bag<T>() -> Bag<T> {
 }
 
 pub struct Model<'d> {
-    set: Bag<SetData<'d>>,
-    set_d1: Bag<SetD1Data<'d>>,
+    set: Bag<SetOfIdxData<'d>>,
+    set_d1: Bag<SetOfIdxD1Data<'d>>,
 
     par: Bag<ParData>,
     par_d1: Bag<ParD1Data<'d>>,
@@ -41,17 +42,17 @@ impl<'d> Model<'d> {
 
     // sets
 
-    pub fn set(&self) -> Set<'_, 'd> {
-        self.add_set(SetData::new(SetFun::empty()))
+    pub fn set_of_idx(&self) -> SetOfIdx<'_, 'd> {
+        self.add_set_of_idx(SetOfIdxData::new(SetOfIdxFun::empty()))
     }
 
-    pub(crate) fn add_set(&self, data: SetData<'d>) -> Set<'_, 'd> {
-        Set::new(self, self.set.push(data))
+    pub(crate) fn add_set_of_idx(&self, data: SetOfIdxData<'d>) -> SetOfIdx<'_, 'd> {
+        SetOfIdx::new(self, self.set.push(data))
     }
 
-    pub fn set_d1<'m>(&'m self, set: Set<'m, 'd>) -> SetD1<'m, 'd> {
-        let data = SetD1Data::new(self.set_ref(set), SetD1Fun::empty());
-        SetD1::new(self, self.set_d1.push(data))
+    pub fn set_of_idx_d1<'m>(&'m self, set: SetOfIdx<'m, 'd>) -> SetOfIdxD1<'m, 'd> {
+        let data = SetOfIdxD1Data::new(self.set_ref(set), SetOfIdxD1Fun::empty());
+        SetOfIdxD1::new(self, self.set_d1.push(data))
     }
 
     // pars
@@ -61,14 +62,14 @@ impl<'d> Model<'d> {
         Par::new(self, self.par.push(data))
     }
 
-    pub fn par_d1<'m>(&'m self, set: Set<'m, 'd>) -> ParD1<'m, 'd> {
+    pub fn par_d1<'m>(&'m self, set: SetOfIdx<'m, 'd>) -> ParD1<'m, 'd> {
         let data = ParD1Data::new(self.set_ref(set), ParD1Fun::empty());
         ParD1::new(self, self.par_d1.push(data))
     }
 
     // idx
 
-    pub(crate) fn idx<'m>(&'m self, set: Set<'m, 'd>) -> Idx<'m, 'd> {
+    pub(crate) fn idx<'m>(&'m self, set: SetOfIdx<'m, 'd>) -> Idx<'m, 'd> {
         let data = IdxData::new(self.set_ref(set), 0);
         Idx::new(self, self.idx.push(data))
     }
@@ -85,8 +86,8 @@ impl<'d> Model<'d> {
 
     // helper
 
-    fn set_ref(&self, set: Set<'_, 'd>) -> SetRef {
+    fn set_ref(&self, set: SetOfIdx<'_, 'd>) -> SetOfIdxRef {
         let set_pos = set.el.position_in(&self.set).expect("TODO: error msg");
-        SetRef::new(set_pos)
+        SetOfIdxRef::new(set_pos)
     }
 }
