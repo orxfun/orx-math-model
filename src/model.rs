@@ -1,6 +1,6 @@
 use crate::symbols::{
-    Idx, IdxData, Int, IntFun, Num, NumFun, Par, ParData, ParInt, ParIntData, PseudoInt,
-    RefSetOfIdx, SetOfIdx, SetOfIdxData,
+    Idx, IdxData, Int, IntFun, Num, NumFun, Par, ParData, ParInt, ParIntData, PseudoInt, SetOfIdx,
+    SetOfIdxData,
 };
 use crate::symbols_d1::{ParD1, ParD1Data, ParIntD1, ParIntD1Data, SetOfIdxD1, SetOfIdxD1Data};
 use orx_imp_vec::{Doubling, ImpVec, SplitVec};
@@ -20,7 +20,7 @@ pub struct Model<'d> {
     par_int: Bag<ParIntData>,
     par_int_d1: Bag<ParIntD1Data<'d>>,
 
-    idx: Bag<IdxData>,
+    idx: Bag<IdxData<'d>>,
 
     num: Bag<NumFun<'d>>,
     int: Bag<IntFun<'d>>,
@@ -64,7 +64,7 @@ impl<'d> Model<'d> {
     }
 
     pub fn set_of_idx_d1<'m>(&'m self, set: SetOfIdx<'m, 'd>) -> SetOfIdxD1<'m, 'd> {
-        let data = SetOfIdxD1Data::empty(self.set_ref(set));
+        let data = SetOfIdxD1Data::empty(set.fun_ptr());
         SetOfIdxD1::new(self, self.set_of_idx_d1.push(data))
     }
 
@@ -81,19 +81,19 @@ impl<'d> Model<'d> {
     }
 
     pub fn par_d1<'m>(&'m self, set: SetOfIdx<'m, 'd>) -> ParD1<'m, 'd> {
-        let data = ParD1Data::empty(self.set_ref(set));
+        let data = ParD1Data::empty(set.fun_ptr());
         ParD1::new(self, self.par_d1.push(data))
     }
 
     pub fn par_int_d1<'m>(&'m self, set: SetOfIdx<'m, 'd>) -> ParIntD1<'m, 'd> {
-        let data = ParIntD1Data::empty(self.set_ref(set));
+        let data = ParIntD1Data::empty(set.fun_ptr());
         ParIntD1::new(self, self.par_int_d1.push(data))
     }
 
     // idx
 
     pub(crate) fn idx<'m>(&'m self, set: SetOfIdx<'m, 'd>) -> Idx<'m, 'd> {
-        let data = IdxData::new(self.set_ref(set), 0);
+        let data = IdxData::new(set.fun_ptr(), 0);
         Idx::new(self, self.idx.push(data))
     }
 
@@ -105,15 +105,5 @@ impl<'d> Model<'d> {
 
     pub(crate) fn add_int<'m>(&'m self, fun: IntFun<'d>) -> Int<'m, 'd> {
         Int::new(self, self.int.push(fun))
-    }
-
-    // helper
-
-    fn set_ref(&self, set: SetOfIdx<'_, 'd>) -> RefSetOfIdx {
-        let set_pos = set
-            .el
-            .position_in(&self.set_of_idx)
-            .expect("TODO: error msg");
-        RefSetOfIdx::new(set_pos)
     }
 }

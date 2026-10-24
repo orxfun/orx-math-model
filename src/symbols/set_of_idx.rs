@@ -20,13 +20,6 @@ impl SetOfIdxFun<'_> {
     }
 }
 
-// ref
-
-#[derive(derive_new::new, Clone, Copy, PartialEq, Debug)]
-pub struct RefSetOfIdx {
-    i: usize,
-}
-
 // data
 
 #[derive(derive_new::new)]
@@ -97,8 +90,9 @@ pub struct SetOfIdx<'m, 'd> {
 }
 
 impl<'m, 'd> SetOfIdx<'m, 'd> {
-    pub(crate) fn fun_ptr(&self) -> *const SetOfIdxFun<'d> {
-        unsafe { core::ptr::addr_of!((*self.el.as_ptr()).fun) }
+    pub(crate) fn fun_ptr(&self) -> RefPtr<SetOfIdxFun<'d>> {
+        // TODO: safety note
+        unsafe { RefPtr::new(core::ptr::addr_of!((*self.el.as_ptr()).fun)) }
     }
 
     pub fn idx(self) -> Idx<'m, 'd> {

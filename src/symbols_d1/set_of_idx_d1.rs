@@ -1,6 +1,6 @@
 use crate::elements::ElementsOfIdx;
 use crate::ptr::RefPtr;
-use crate::symbols::{PseudoInt, RefSetOfIdx, SetOfIdx, SetOfIdxData, SetOfIdxFun};
+use crate::symbols::{PseudoInt, SetOfIdx, SetOfIdxData, SetOfIdxFun};
 use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -24,12 +24,12 @@ impl SetOfIdxD1Fun<'_> {
 
 #[derive(derive_new::new)]
 pub struct SetOfIdxD1Data<'d> {
-    s0: RefSetOfIdx,
+    s0: RefPtr<SetOfIdxFun<'d>>,
     fun: SetOfIdxD1Fun<'d>,
 }
 
 impl<'d> SetOfIdxD1Data<'d> {
-    pub fn empty(s0: RefSetOfIdx) -> Self {
+    pub fn empty(s0: RefPtr<SetOfIdxFun<'d>>) -> Self {
         Self::new(s0, SetOfIdxD1Fun::empty())
     }
 
