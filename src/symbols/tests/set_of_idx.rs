@@ -51,15 +51,21 @@ fn range_get_set() {
     let m = Model::new();
     let mut elements = ElementsOfIdx::default();
 
-    let p = m.par_int();
-    p.el.set(ParIntData::new(2));
+    let p2 = m.par_int();
+    p2.el.set(ParIntData::new(2));
 
-    let q = m.par_int();
-    q.el.set(ParIntData::new(6));
+    let p6 = m.par_int();
+    p6.el.set(ParIntData::new(6));
 
     let s = m.range(2, 6);
     assert_elements(&mut elements, &[s], &[2, 3, 4, 5]);
 
-    // let s = m.range(p, 6);
-    // assert_elements(&mut elements, &[s], &[2, 3, 4, 5]);
+    let s = m.range(p2, 6);
+    assert_elements(&mut elements, &[s], &[2, 3, 4, 5]);
+
+    let s = m.range(2, p6);
+    assert_elements(&mut elements, &[s], &[2, 3, 4, 5]);
+
+    let s = m.range(p2, p6);
+    assert_elements(&mut elements, &[s], &[2, 3, 4, 5]);
 }
