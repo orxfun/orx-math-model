@@ -23,7 +23,7 @@ pub struct Num<'m, 'd> {
 }
 
 impl<'d> Num<'_, 'd> {
-    fn fun_ptr(&self) -> *const NumFun<'d> {
+    pub(crate) fn fun_ptr(&self) -> *const NumFun<'d> {
         unsafe { self.el.get() }
     }
 }
@@ -35,96 +35,5 @@ impl<'m, 'd> From<Par<'m, 'd>> for Num<'m, 'd> {
         let p = unsafe { ValPtr::new(value.val_ptr()) };
         let fun = NumFun(Box::new(move || p.val()));
         value.m.add_num(fun)
-    }
-}
-
-// ops - Num
-
-impl<'m, 'd> Add<Num<'m, 'd>> for Num<'m, 'd> {
-    type Output = Num<'m, 'd>;
-
-    fn add(self, rhs: Num<'m, 'd>) -> Self::Output {
-        assert!(core::ptr::eq(self.m, rhs.m), "TODO: err-msg");
-
-        // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let [a, b] = unsafe { [RefPtr::new(self.fun_ptr()), RefPtr::new(rhs.fun_ptr())] };
-        let f = move || a.val().eval() + b.val().eval();
-        self.m.add_num(NumFun(Box::new(f)))
-    }
-}
-
-// ops - f64
-
-impl<'m, 'd> Add<f64> for Num<'m, 'd> {
-    type Output = Num<'m, 'd>;
-
-    fn add(self, b: f64) -> Self::Output {
-        // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let a = unsafe { RefPtr::new(self.fun_ptr()) };
-        let f = move || a.val().eval() + b;
-        self.m.add_num(NumFun(Box::new(f)))
-    }
-}
-
-impl<'m, 'd> Add<Num<'m, 'd>> for f64 {
-    type Output = Num<'m, 'd>;
-
-    fn add(self, rhs: Num<'m, 'd>) -> Self::Output {
-        // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let b = unsafe { RefPtr::new(rhs.fun_ptr()) };
-        let f = move || self + b.val().eval();
-        rhs.m.add_num(NumFun(Box::new(f)))
-    }
-}
-
-// ops - usize
-
-impl<'m, 'd> Add<usize> for Num<'m, 'd> {
-    type Output = Num<'m, 'd>;
-
-    fn add(self, b: usize) -> Self::Output {
-        // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let a = unsafe { RefPtr::new(self.fun_ptr()) };
-        let f = move || a.val().eval() + b as f64;
-        self.m.add_num(NumFun(Box::new(f)))
-    }
-}
-
-impl<'m, 'd> Add<Num<'m, 'd>> for usize {
-    type Output = Num<'m, 'd>;
-
-    fn add(self, rhs: Num<'m, 'd>) -> Self::Output {
-        // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let b = unsafe { RefPtr::new(rhs.fun_ptr()) };
-        let f = move || self as f64 + b.val().eval();
-        rhs.m.add_num(NumFun(Box::new(f)))
-    }
-}
-
-// ops - Int
-
-impl<'m, 'd> Add<Int<'m, 'd>> for Num<'m, 'd> {
-    type Output = Num<'m, 'd>;
-
-    fn add(self, rhs: Int<'m, 'd>) -> Self::Output {
-        assert!(core::ptr::eq(self.m, rhs.m), "TODO: err-msg");
-
-        // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let (a, b) = unsafe { (RefPtr::new(self.fun_ptr()), RefPtr::new(rhs.fun_ptr())) };
-        let f = move || a.val().eval() + b.val().eval() as f64;
-        self.m.add_num(NumFun(Box::new(f)))
-    }
-}
-
-impl<'m, 'd> Add<Num<'m, 'd>> for Int<'m, 'd> {
-    type Output = Num<'m, 'd>;
-
-    fn add(self, rhs: Num<'m, 'd>) -> Self::Output {
-        assert!(core::ptr::eq(self.m, rhs.m), "TODO: err-msg");
-
-        // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let (a, b) = unsafe { (RefPtr::new(self.fun_ptr()), RefPtr::new(rhs.fun_ptr())) };
-        let f = move || a.val().eval() as f64 + b.val().eval();
-        self.m.add_num(NumFun(Box::new(f)))
     }
 }

@@ -3,7 +3,7 @@ use crate::symbols::{Idx, Int, IntFun};
 use alloc::boxed::Box;
 use core::ops::Add;
 
-// Idx
+// Idx x Idx
 
 impl<'m, 'd> Add<Idx<'m, 'd>> for Idx<'m, 'd> {
     type Output = Int<'m, 'd>;
@@ -18,7 +18,7 @@ impl<'m, 'd> Add<Idx<'m, 'd>> for Idx<'m, 'd> {
     }
 }
 
-// usize
+// Idx x usize
 
 impl<'m, 'd> Add<usize> for Idx<'m, 'd> {
     type Output = Int<'m, 'd>;
