@@ -1,4 +1,4 @@
-use crate::symbols::{Idx, Int, Num, NumFun, PseudoInt, PtrIdxValue, PtrIntFun, SetOfIdxRef};
+use crate::symbols::{Num, NumFun, PseudoInt, PtrIntFun, SetOfIdxRef};
 use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
