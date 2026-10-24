@@ -1,5 +1,5 @@
 use crate::elements::ElementsOfIdx;
-use crate::symbols::Idx;
+use crate::symbols::{Idx, PseudoInt, PtrIntFun};
 use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -28,6 +28,38 @@ pub struct SetOfIdxData<'d> {
 }
 
 impl<'d> SetOfIdxData<'d> {
+    pub fn range<'m>(
+        begin: impl Into<PseudoInt<'m, 'd>>,
+        exclusive_end: impl Into<PseudoInt<'m, 'd>>,
+    ) -> Self
+    where
+        'd: 'm,
+    {
+        let fun = match (begin.into(), exclusive_end.into()) {
+            (PseudoInt::Raw(a), PseudoInt::Raw(b)) => {
+                let fill = move |e: &mut ElementsOfIdx| e.fill_with(a..b);
+                SetOfIdxFun(Box::new(fill))
+            }
+            (PseudoInt::Raw(a), PseudoInt::Int(b)) => {
+                // SAFETY: b is tied to lifetime of 'm and 'd
+                let b = unsafe { PtrIntFun::new(b) };
+                let fill = move |e: &mut ElementsOfIdx| e.fill_with(a..b.fun().eval());
+                SetOfIdxFun(Box::new(fill))
+            }
+            (PseudoInt::Int(a), PseudoInt::Raw(b)) => {
+                let a = unsafe { PtrIntFun::new(a) };
+                let fill = move |e: &mut ElementsOfIdx| e.fill_with(a.fun().eval()..b);
+                SetOfIdxFun(Box::new(fill))
+            }
+            (PseudoInt::Int(a), PseudoInt::Int(b)) => {
+                let [a, b] = unsafe { [a, b].map(|x| PtrIntFun::new(x)) };
+                let fill = move |e: &mut ElementsOfIdx| e.fill_with(a.fun().eval()..b.fun().eval());
+                SetOfIdxFun(Box::new(fill))
+            }
+        };
+        Self::new(fun)
+    }
+
     pub fn fill(&self, elements: &mut ElementsOfIdx) {
         self.fun.fill(elements);
     }

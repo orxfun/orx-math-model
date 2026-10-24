@@ -1,6 +1,6 @@
 use crate::symbols::{
-    Idx, IdxData, Int, IntFun, Num, NumFun, Par, ParData, SetOfIdx, SetOfIdxData, SetOfIdxFun,
-    SetOfIdxRef,
+    Idx, IdxData, Int, IntFun, Num, NumFun, Par, ParData, PseudoInt, SetOfIdx, SetOfIdxData,
+    SetOfIdxFun, SetOfIdxRef,
 };
 use crate::symbols_d1::{ParD1, ParD1Data, ParD1Fun, SetOfIdxD1, SetOfIdxD1Data, SetOfIdxD1Fun};
 use orx_imp_vec::{Doubling, ImpVec, SplitVec};
@@ -44,6 +44,14 @@ impl<'d> Model<'d> {
 
     pub fn set_of_idx(&self) -> SetOfIdx<'_, 'd> {
         self.add_set_of_idx(SetOfIdxData::new(SetOfIdxFun::empty()))
+    }
+
+    pub fn range<'m>(
+        &self,
+        begin: impl Into<PseudoInt<'m, 'd>>,
+        exclusive_end: impl Into<PseudoInt<'m, 'd>>,
+    ) -> SetOfIdx<'m, 'd> {
+        todo!()
     }
 
     pub(crate) fn add_set_of_idx(&self, data: SetOfIdxData<'d>) -> SetOfIdx<'_, 'd> {
