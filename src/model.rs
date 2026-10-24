@@ -1,6 +1,6 @@
 use crate::symbols::{
-    Element, ElementData, IdxDataDepr, IdxDepr, Int, IntFun, Num, NumFun, Par, ParData, ParInt,
-    ParIntData, PseudoInt, Set, SetFun, SetOfIdx, SetOfIdxData,
+    Element, ElementData, Idx, IdxData, Int, IntFun, Num, NumFun, Par, ParData, ParInt, ParIntData,
+    PseudoInt, Set, SetFun, SetOfIdx, SetOfIdxData,
 };
 use crate::symbols_d1::{ParD1, ParD1Data, ParIntD1, ParIntD1Data, SetOfIdxD1, SetOfIdxD1Data};
 use orx_imp_vec::{Doubling, ImpVec, SplitVec};
@@ -13,17 +13,16 @@ fn new_bag<T>() -> Bag<T> {
 
 pub struct Model<'d> {
     set: Bag<SetFun<'d>>,
-    idx: Bag<ElementData<'d>>,
+    element: Bag<ElementData<'d>>,
 
     set_of_idx: Bag<SetOfIdxData<'d>>,
     set_of_idx_d1: Bag<SetOfIdxD1Data<'d>>,
+    idx: Bag<IdxData<'d>>,
 
     par: Bag<ParData>,
     par_d1: Bag<ParD1Data<'d>>,
     par_int: Bag<ParIntData>,
     par_int_d1: Bag<ParIntD1Data<'d>>,
-
-    idx_depr: Bag<IdxDataDepr<'d>>,
 
     num: Bag<NumFun<'d>>,
     int: Bag<IntFun<'d>>,
@@ -33,17 +32,16 @@ impl<'d> Model<'d> {
     pub fn new() -> Self {
         Self {
             set: new_bag(),
-            idx: new_bag(),
+            element: new_bag(),
 
             set_of_idx: new_bag(),
             set_of_idx_d1: new_bag(),
+            idx: new_bag(),
 
             par: new_bag(),
             par_d1: new_bag(),
             par_int: new_bag(),
             par_int_d1: new_bag(),
-
-            idx_depr: new_bag(),
 
             num: new_bag(),
             int: new_bag(),
@@ -104,12 +102,12 @@ impl<'d> Model<'d> {
 
     pub(crate) fn element<'m>(&'m self, set: Set<'m, 'd>) -> Element<'m, 'd> {
         let data = ElementData::new(set.fun_ptr(), 0);
-        Element::new(self, self.idx.push(data))
+        Element::new(self, self.element.push(data))
     }
 
-    pub(crate) fn idx_depr<'m>(&'m self, set: SetOfIdx<'m, 'd>) -> IdxDepr<'m, 'd> {
-        let data = IdxDataDepr::new(set.fun_ptr(), 0);
-        IdxDepr::new(self, self.idx_depr.push(data))
+    pub(crate) fn idx<'m>(&'m self, set: SetOfIdx<'m, 'd>) -> Idx<'m, 'd> {
+        let data = IdxData::new(set.fun_ptr(), 0);
+        Idx::new(self, self.idx.push(data))
     }
 
     // scalars

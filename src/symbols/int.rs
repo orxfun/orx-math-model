@@ -1,5 +1,5 @@
 use crate::ptr::ValPtr;
-use crate::symbols::{IdxDepr, ParInt};
+use crate::symbols::{Idx, ParInt};
 use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -31,8 +31,8 @@ impl<'d> Int<'_, 'd> {
 
 // from
 
-impl<'m, 'd> From<IdxDepr<'m, 'd>> for Int<'m, 'd> {
-    fn from(value: IdxDepr<'m, 'd>) -> Self {
+impl<'m, 'd> From<Idx<'m, 'd>> for Int<'m, 'd> {
+    fn from(value: Idx<'m, 'd>) -> Self {
         let p = unsafe { ValPtr::new(value.val_ptr()) };
         let fun = IntFun(Box::new(move || p.val()));
         value.m.add_int(fun)

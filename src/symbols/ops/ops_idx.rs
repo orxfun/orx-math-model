@@ -1,14 +1,14 @@
 use crate::ptr::ValPtr;
-use crate::symbols::{IdxDepr, Int, IntFun};
+use crate::symbols::{Idx, Int, IntFun};
 use alloc::boxed::Box;
 use core::ops::Add;
 
 // Idx x Idx
 
-impl<'m, 'd> Add<IdxDepr<'m, 'd>> for IdxDepr<'m, 'd> {
+impl<'m, 'd> Add<Idx<'m, 'd>> for Idx<'m, 'd> {
     type Output = Int<'m, 'd>;
 
-    fn add(self, rhs: IdxDepr<'m, 'd>) -> Self::Output {
+    fn add(self, rhs: Idx<'m, 'd>) -> Self::Output {
         assert!(core::ptr::eq(self.m, rhs.m), "TODO: err-msg");
 
         // SAFETY: both are tied to lifetime of 'm and 'd due to return type
@@ -20,7 +20,7 @@ impl<'m, 'd> Add<IdxDepr<'m, 'd>> for IdxDepr<'m, 'd> {
 
 // Idx x usize
 
-impl<'m, 'd> Add<usize> for IdxDepr<'m, 'd> {
+impl<'m, 'd> Add<usize> for Idx<'m, 'd> {
     type Output = Int<'m, 'd>;
 
     fn add(self, rhs: usize) -> Self::Output {
@@ -31,10 +31,10 @@ impl<'m, 'd> Add<usize> for IdxDepr<'m, 'd> {
     }
 }
 
-impl<'m, 'd> Add<IdxDepr<'m, 'd>> for usize {
+impl<'m, 'd> Add<Idx<'m, 'd>> for usize {
     type Output = Int<'m, 'd>;
 
-    fn add(self, rhs: IdxDepr<'m, 'd>) -> Self::Output {
+    fn add(self, rhs: Idx<'m, 'd>) -> Self::Output {
         // SAFETY: both are tied to lifetime of 'm and 'd due to return type
         let b = unsafe { ValPtr::new(rhs.val_ptr()) };
         let f = move || self + b.val();

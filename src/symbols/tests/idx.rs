@@ -1,7 +1,7 @@
-use crate::symbols::IdxDepr;
+use crate::symbols::Idx;
 use crate::Model;
 
-fn assert_idx_value(idx_symbols: &[IdxDepr<'_, '_>], expected: usize) {
+fn assert_idx_value(idx_symbols: &[Idx<'_, '_>], expected: usize) {
     for i in idx_symbols {
         assert_eq!(unsafe { i.el.get() }.value(), expected);
     }
