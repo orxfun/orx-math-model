@@ -1,12 +1,12 @@
 use alloc::vec::Vec;
 
-#[derive(Default, Debug)]
+#[derive(Default, Debug, PartialEq)]
 pub struct ElementContainer<T> {
     data: Vec<T>,
 }
 
 impl<T> ElementContainer<T> {
-    pub fn fill_with(&mut self, values: impl IntoIterator<Item = T>) {
+    pub fn fill(&mut self, values: impl IntoIterator<Item = T>) {
         self.data.clear();
         self.data.extend(values);
     }

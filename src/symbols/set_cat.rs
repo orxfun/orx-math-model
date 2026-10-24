@@ -6,6 +6,7 @@ use orx_imp_vec::Elem;
 
 // elem
 
+#[derive(Debug, PartialEq)]
 pub enum Elements<'d> {
     Usize(ElementContainer<usize>),
     Str(ElementContainer<&'d str>),

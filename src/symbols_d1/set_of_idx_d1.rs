@@ -45,7 +45,7 @@ impl<'d> SetOfIdxD1Data<'d> {
     where
         I: IntoIterator<Item = usize>,
     {
-        let fun = move |i1: usize, e: &mut ElementContainer<usize>| e.fill_with(fun(i1));
+        let fun = move |i1: usize, e: &mut ElementContainer<usize>| e.fill(fun(i1));
         self.update_fun(SetOfIdxD1Fun(Box::new(fun)));
     }
 

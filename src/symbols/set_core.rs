@@ -43,7 +43,7 @@ impl<'d, T> SetCoreData<'d, T> {
     where
         I: IntoIterator<Item = T>,
     {
-        let fun = move |e: &mut ElementContainer<T>| e.fill_with(fun());
+        let fun = move |e: &mut ElementContainer<T>| e.fill(fun());
         self.update_fun(SetCoreFun(Box::new(fun)));
     }
 }

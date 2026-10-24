@@ -41,25 +41,24 @@ impl<'d> SetOfIdxData<'d> {
     {
         let fun = match (begin.into(), exclusive_end.into()) {
             (PseudoInt::Raw(a), PseudoInt::Raw(b)) => {
-                let fill = move |e: &mut ElementContainer<usize>| e.fill_with(a..b);
+                let fill = move |e: &mut ElementContainer<usize>| e.fill(a..b);
                 SetOfIdxFun(Box::new(fill))
             }
             (PseudoInt::Raw(a), PseudoInt::Int(b)) => {
                 // SAFETY: b is tied to lifetime of 'm and 'd
                 let b = unsafe { RefPtr::new(b.fun_ptr()) };
-                let fill = move |e: &mut ElementContainer<usize>| e.fill_with(a..b.val().eval());
+                let fill = move |e: &mut ElementContainer<usize>| e.fill(a..b.val().eval());
                 SetOfIdxFun(Box::new(fill))
             }
             (PseudoInt::Int(a), PseudoInt::Raw(b)) => {
                 let a = unsafe { RefPtr::new(a.fun_ptr()) };
-                let fill = move |e: &mut ElementContainer<usize>| e.fill_with(a.val().eval()..b);
+                let fill = move |e: &mut ElementContainer<usize>| e.fill(a.val().eval()..b);
                 SetOfIdxFun(Box::new(fill))
             }
             (PseudoInt::Int(a), PseudoInt::Int(b)) => {
                 let [a, b] = unsafe { [a, b].map(|x| RefPtr::new(x.fun_ptr())) };
-                let fill = move |e: &mut ElementContainer<usize>| {
-                    e.fill_with(a.val().eval()..b.val().eval())
-                };
+                let fill =
+                    move |e: &mut ElementContainer<usize>| e.fill(a.val().eval()..b.val().eval());
                 SetOfIdxFun(Box::new(fill))
             }
         };
@@ -78,7 +77,7 @@ impl<'d> SetOfIdxData<'d> {
     where
         I: IntoIterator<Item = usize>,
     {
-        let fun = move |e: &mut ElementContainer<usize>| e.fill_with(fun());
+        let fun = move |e: &mut ElementContainer<usize>| e.fill(fun());
         self.update_fun(SetOfIdxFun(Box::new(fun)));
     }
 }
