@@ -97,7 +97,16 @@ pub struct SetOfIdx<'m, 'd> {
 }
 
 impl<'m, 'd> SetOfIdx<'m, 'd> {
+    pub(crate) fn fun_ptr(&self) -> *const SetOfIdxFun<'d> {
+        unsafe { core::ptr::addr_of!((*self.el.as_ptr()).fun) }
+    }
+
     pub fn idx(self) -> Idx<'m, 'd> {
         self.m.idx(self)
+    }
+
+    pub fn subset(self, filter: impl Fn(usize) -> bool) -> SetOfIdx<'m, 'd> {
+        // let fun_ptr = RefPtr::new(self.)
+        todo!()
     }
 }
