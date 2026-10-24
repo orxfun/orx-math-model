@@ -47,11 +47,12 @@ impl<'d> Model<'d> {
     }
 
     pub fn range<'m>(
-        &self,
+        &'m self,
         begin: impl Into<PseudoInt<'m, 'd>>,
         exclusive_end: impl Into<PseudoInt<'m, 'd>>,
     ) -> SetOfIdx<'m, 'd> {
-        todo!()
+        let data = SetOfIdxData::range(begin, exclusive_end);
+        SetOfIdx::new(self, self.set_of_idx.push(data))
     }
 
     pub(crate) fn add_set_of_idx(&self, data: SetOfIdxData<'d>) -> SetOfIdx<'_, 'd> {
