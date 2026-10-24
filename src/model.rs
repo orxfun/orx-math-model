@@ -22,7 +22,7 @@ pub struct Model<'d> {
     par_int: Bag<ParIntData>,
     par_int_d1: Bag<ParIntD1Data<'d>>,
 
-    idx: Bag<IdxDataDepr<'d>>,
+    idx_depr: Bag<IdxDataDepr<'d>>,
 
     num: Bag<NumFun<'d>>,
     int: Bag<IntFun<'d>>,
@@ -41,7 +41,7 @@ impl<'d> Model<'d> {
             par_int: new_bag(),
             par_int_d1: new_bag(),
 
-            idx: new_bag(),
+            idx_depr: new_bag(),
 
             num: new_bag(),
             int: new_bag(),
@@ -100,9 +100,9 @@ impl<'d> Model<'d> {
 
     // idx
 
-    pub(crate) fn idx<'m>(&'m self, set: SetOfIdx<'m, 'd>) -> IdxDepr<'m, 'd> {
+    pub(crate) fn idx_depr<'m>(&'m self, set: SetOfIdx<'m, 'd>) -> IdxDepr<'m, 'd> {
         let data = IdxDataDepr::new(set.fun_ptr(), 0);
-        IdxDepr::new(self, self.idx.push(data))
+        IdxDepr::new(self, self.idx_depr.push(data))
     }
 
     // scalars

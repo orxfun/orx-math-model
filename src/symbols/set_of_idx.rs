@@ -57,8 +57,7 @@ impl<'d> SetOfIdxData<'d> {
             }
             (PseudoInt::Int(a), PseudoInt::Int(b)) => {
                 let [a, b] = unsafe { [a, b].map(|x| RefPtr::new(x.fun_ptr())) };
-                let fill =
-                    move |e: &mut ElemCont<usize>| e.fill(a.val().eval()..b.val().eval());
+                let fill = move |e: &mut ElemCont<usize>| e.fill(a.val().eval()..b.val().eval());
                 SetOfIdxFun(Box::new(fill))
             }
         };
@@ -97,6 +96,6 @@ impl<'m, 'd> SetOfIdx<'m, 'd> {
     }
 
     pub fn idx(self) -> IdxDepr<'m, 'd> {
-        self.m.idx(self)
+        self.m.idx_depr(self)
     }
 }
