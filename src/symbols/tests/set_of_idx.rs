@@ -1,5 +1,5 @@
 use crate::elements::ElementsOfIdx;
-use crate::symbols::{ParData, SetOfIdx};
+use crate::symbols::{ParData, ParIntData, SetOfIdx};
 use crate::Model;
 use alloc::vec;
 
@@ -49,10 +49,17 @@ fn set_of_idx_get_set() {
 #[test]
 fn range_get_set() {
     let m = Model::new();
+    let mut elements = ElementsOfIdx::default();
 
-    let p = m.par();
-    p.el.set(ParData::new(2.0));
+    let p = m.par_int();
+    p.el.set(ParIntData::new(2));
 
-    let q = m.par();
-    q.el.set(ParData::new(6.0));
+    let q = m.par_int();
+    q.el.set(ParIntData::new(6));
+
+    let s = m.range(2, 6);
+    assert_elements(&mut elements, &[s], &[2, 3, 4, 5]);
+
+    // let s = m.range(p, 6);
+    // assert_elements(&mut elements, &[s], &[2, 3, 4, 5]);
 }
