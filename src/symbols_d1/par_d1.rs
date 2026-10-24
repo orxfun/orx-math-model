@@ -27,6 +27,10 @@ pub struct ParCoreD1Data<'d, T: Default> {
 }
 
 impl<'d, T: Default> ParCoreD1Data<'d, T> {
+    pub fn empty(s0: SetOfIdxRef) -> Self {
+        Self::new(s0, ParCoreD1Fun::empty())
+    }
+
     pub fn eval(&self, i0: usize) -> T {
         self.fun.eval(i0)
     }

@@ -1,11 +1,8 @@
 use crate::symbols::{
     Idx, IdxData, Int, IntFun, Num, NumFun, Par, ParData, ParInt, ParIntData, PseudoInt, SetOfIdx,
-    SetOfIdxData, SetOfIdxFun, SetOfIdxRef,
+    SetOfIdxData, SetOfIdxRef,
 };
-use crate::symbols_d1::{
-    ParD1, ParD1Data, ParD1Fun, ParIntD1, ParIntD1Data, ParIntD1Fun, SetOfIdxD1, SetOfIdxD1Data,
-    SetOfIdxD1Fun,
-};
+use crate::symbols_d1::{ParD1, ParD1Data, ParIntD1, ParIntD1Data, SetOfIdxD1, SetOfIdxD1Data};
 use orx_imp_vec::{Doubling, ImpVec, SplitVec};
 
 type Pinned<T> = SplitVec<T, Doubling>;
@@ -50,7 +47,7 @@ impl<'d> Model<'d> {
     // sets
 
     pub fn set_of_idx(&self) -> SetOfIdx<'_, 'd> {
-        self.add_set_of_idx(SetOfIdxData::new(SetOfIdxFun::empty()))
+        self.add_set_of_idx(SetOfIdxData::empty())
     }
 
     pub fn range<'m>(
@@ -67,7 +64,7 @@ impl<'d> Model<'d> {
     }
 
     pub fn set_of_idx_d1<'m>(&'m self, set: SetOfIdx<'m, 'd>) -> SetOfIdxD1<'m, 'd> {
-        let data = SetOfIdxD1Data::new(self.set_ref(set), SetOfIdxD1Fun::empty());
+        let data = SetOfIdxD1Data::empty(self.set_ref(set));
         SetOfIdxD1::new(self, self.set_of_idx_d1.push(data))
     }
 
@@ -84,12 +81,12 @@ impl<'d> Model<'d> {
     }
 
     pub fn par_d1<'m>(&'m self, set: SetOfIdx<'m, 'd>) -> ParD1<'m, 'd> {
-        let data = ParD1Data::new(self.set_ref(set), ParD1Fun::empty());
+        let data = ParD1Data::empty(self.set_ref(set));
         ParD1::new(self, self.par_d1.push(data))
     }
 
     pub fn par_int_d1<'m>(&'m self, set: SetOfIdx<'m, 'd>) -> ParIntD1<'m, 'd> {
-        let data = ParIntD1Data::new(self.set_ref(set), ParIntD1Fun::empty());
+        let data = ParIntD1Data::empty(self.set_ref(set));
         ParIntD1::new(self, self.par_int_d1.push(data))
     }
 

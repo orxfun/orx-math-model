@@ -28,6 +28,10 @@ pub struct SetOfIdxData<'d> {
 }
 
 impl<'d> SetOfIdxData<'d> {
+    pub fn empty() -> Self {
+        Self::new(SetOfIdxFun::empty())
+    }
+
     pub fn range<'m>(
         begin: impl Into<PseudoInt<'m, 'd>>,
         exclusive_end: impl Into<PseudoInt<'m, 'd>>,

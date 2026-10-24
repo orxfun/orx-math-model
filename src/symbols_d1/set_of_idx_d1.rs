@@ -28,6 +28,10 @@ pub struct SetOfIdxD1Data<'d> {
 }
 
 impl<'d> SetOfIdxD1Data<'d> {
+    pub fn empty(s0: SetOfIdxRef) -> Self {
+        Self::new(s0, SetOfIdxD1Fun::empty())
+    }
+
     pub fn fill(&self, i0: usize, elements: &mut ElementsOfIdx) {
         self.fun.fill(i0, elements);
     }
