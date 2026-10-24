@@ -5,14 +5,12 @@ mod idx;
 mod int;
 mod num;
 mod par;
-mod par_int;
 mod pseudo_numbers;
 mod set_of_idx;
 
 pub use idx::{Idx, IdxData, PtrIdxValue};
 pub use int::{Int, IntFun, PtrIntFun};
 pub use num::{Num, NumFun};
-pub use par::{Par, ParData};
-pub use par_int::{ParInt, ParIntData};
+pub use par::{Par, ParData, ParInt, ParIntData};
 pub use pseudo_numbers::PseudoInt;
 pub use set_of_idx::{SetOfIdx, SetOfIdxData, SetOfIdxFun, SetOfIdxRef};

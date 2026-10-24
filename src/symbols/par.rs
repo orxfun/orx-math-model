@@ -1,17 +1,17 @@
 use crate::Model;
 use orx_imp_vec::Elem;
 
-//data
+// data
 
 #[derive(derive_new::new, Clone, Copy)]
-pub struct ParData(f64);
+pub struct ParCoreData<T: Copy>(T);
 
-impl ParData {
-    pub fn value(&self) -> f64 {
+impl<T: Copy> ParCoreData<T> {
+    pub fn value(&self) -> T {
         self.0
     }
 
-    pub fn ptr_value(p: *const ParData) -> *const f64 {
+    pub fn ptr_value(p: *const ParCoreData<T>) -> *const T {
         unsafe { core::ptr::addr_of!((*p).0) }
     }
 }
@@ -19,7 +19,19 @@ impl ParData {
 // symbol
 
 #[derive(derive_new::new, Clone, Copy)]
-pub struct Par<'m, 'd> {
+pub struct ParCore<'m, 'd, T: Copy> {
     pub(crate) m: &'m Model<'d>,
-    pub(crate) el: Elem<'m, ParData>,
+    pub(crate) el: Elem<'m, ParCoreData<T>>,
 }
+
+// number
+
+pub type ParData = ParCoreData<f64>;
+
+pub type Par<'m, 'd> = ParCore<'m, 'd, f64>;
+
+// int
+
+pub type ParIntData = ParCoreData<usize>;
+
+pub type ParInt<'m, 'd> = ParCore<'m, 'd, usize>;

@@ -14,12 +14,12 @@ fn par_get_set() {
     add_some_more_pars(&m);
 
     let p = m.par();
-    assert!((unsafe { p.el.get() }.value() - 0.0).abs() < 1e-5);
+    assert_eq!(unsafe { p.el.get() }.value(), 0.0);
 
     add_some_more_pars(&m);
 
-    assert!((unsafe { p.el.get() }.value() - 0.0).abs() < 1e-5);
+    assert_eq!(unsafe { p.el.get() }.value(), 0.0);
 
     p.el.set(ParData::new(7.0));
-    assert!((unsafe { p.el.get() }.value() - 7.0).abs() < 1e-5);
+    assert_eq!(unsafe { p.el.get() }.value(), 7.0);
 }
