@@ -1,6 +1,5 @@
 use crate::elements::Elements;
 use crate::ptr::RefPtr;
-use crate::symbols::{IdxDepr, PseudoInt};
 use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -62,8 +61,4 @@ impl<'m, 'd, T> Set<'m, 'd, T> {
         // TODO: safety note
         unsafe { RefPtr::new(core::ptr::addr_of!((*self.el.as_ptr()).fun)) }
     }
-
-    // pub fn idx(self) -> Idx<'m, 'd, T> {
-    //     self.m.idx(self)
-    // }
 }

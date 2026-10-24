@@ -1,5 +1,5 @@
 use crate::ptr::RefPtr;
-use crate::symbols::{SetFun, SetOfIdxFun};
+use crate::symbols::SetFun;
 use crate::Model;
 use orx_imp_vec::Elem;
 
