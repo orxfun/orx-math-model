@@ -3,6 +3,7 @@ use crate::ptr::RefPtr;
 use crate::symbols::{PseudoInt, SetOfIdx, SetOfIdxData, SetOfIdxFun};
 use crate::Model;
 use alloc::boxed::Box;
+use core::ops::Index;
 use orx_imp_vec::Elem;
 
 // fun
@@ -63,7 +64,7 @@ pub struct SetOfIdxD1<'m, 'd> {
 }
 
 impl<'m, 'd> SetOfIdxD1<'m, 'd> {
-    pub(crate) fn at(self, i: impl Into<PseudoInt<'m, 'd>>) -> SetOfIdx<'m, 'd> {
+    unsafe fn at_unchecked(self, i: impl Into<PseudoInt<'m, 'd>>) -> SetOfIdx<'d, 'd> {
         struct PtrSetD1Fun<'d>(*const SetOfIdxD1Fun<'d>);
 
         impl<'d> PtrSetD1Fun<'d> {
@@ -92,6 +93,17 @@ impl<'m, 'd> SetOfIdxD1<'m, 'd> {
             PseudoInt::Raw(i0) => SetOfIdxFun::new(Box::new(move |e| fun_d1.val().0(i0, e))),
         };
 
-        self.m.add_set_of_idx(SetOfIdxData::new(f))
+        let m = unsafe { &*(self.m as *const Model<'d>) };
+        m.add_set_of_idx(SetOfIdxData::new(f))
+    }
+}
+
+// index
+
+impl<'m, 'd, I: Into<PseudoInt<'m, 'd>>> Index<I> for SetOfIdxD1<'m, 'd> {
+    type Output = SetOfIdx<'m, 'd>;
+
+    fn index(&self, index: I) -> &Self::Output {
+        self.m.add_sym_set(unsafe { self.at_unchecked(index) })
     }
 }

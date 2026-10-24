@@ -12,7 +12,7 @@ mod set;
 mod set_of_idx;
 
 pub use element::{Element, ElementData};
-pub use idx::{IdxData, Idx};
+pub use idx::{Idx, IdxData};
 pub use int::{Int, IntFun};
 pub use num::{Num, NumFun};
 pub use par::{Par, ParData, ParInt, ParIntData};

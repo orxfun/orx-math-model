@@ -28,8 +28,8 @@ fn set_d1_get_set() {
     }
 
     let data = vec![vec![0], vec![1, 2, 3], vec![4, 5], vec![6, 7, 8, 9]];
-
     let m = Model::new();
+
     let mut elements = ElemCont::default();
 
     add_some_more_sets(&m);
@@ -56,7 +56,7 @@ fn set_d1_get_set() {
     let idx = s0.idx();
     for (i, expected) in data.iter().enumerate() {
         idx.el.update(|x| x.set_value(i));
-        let generated = set.at(idx);
+        let generated = set[idx];
         unsafe { generated.el.get() }.fill(&mut elements);
         assert_eq!(elements.as_slice(), expected);
     }
@@ -83,7 +83,7 @@ fn set_from_set_d1() {
 
     let i0 = s0.idx();
 
-    let s = s1.at(i0);
+    let s = s1[i0];
 
     // before wire up set-d1 data
 
@@ -111,7 +111,7 @@ fn set_from_set_d1() {
 
     // int expression as index
 
-    let s = s1.at(i0 + 1);
+    let s = s1[i0 + 1];
 
     i0.el.update(|x| x.set_value(0));
     assert_elements(&mut elements, s, &[1, 2, 3]);
@@ -124,6 +124,6 @@ fn set_from_set_d1() {
 
     // constant int as index
 
-    let s = s1.at(2);
+    let s = s1[2];
     assert_elements(&mut elements, s, &[4, 5]);
 }

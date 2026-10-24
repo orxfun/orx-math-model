@@ -26,6 +26,9 @@ pub struct Model<'d> {
 
     num: Bag<NumFun<'d>>,
     int: Bag<IntFun<'d>>,
+
+    // symbols
+    sym_set: Bag<SetOfIdx<'d, 'd>>,
 }
 
 impl<'d> Model<'d> {
@@ -45,6 +48,9 @@ impl<'d> Model<'d> {
 
             num: new_bag(),
             int: new_bag(),
+
+            // symbols
+            sym_set: new_bag(),
         }
     }
 
@@ -118,5 +124,12 @@ impl<'d> Model<'d> {
 
     pub(crate) fn add_int<'m>(&'m self, fun: IntFun<'d>) -> Int<'m, 'd> {
         Int::new(self, self.int.push(fun))
+    }
+
+    // symbols
+
+    pub(crate) fn add_sym_set<'m>(&'m self, set: SetOfIdx<'d, 'd>) -> &'m SetOfIdx<'d, 'd> {
+        let el = self.sym_set.push(set);
+        unsafe { el.get() }
     }
 }
