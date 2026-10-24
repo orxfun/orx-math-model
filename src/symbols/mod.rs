@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests;
 
-mod idx;
+mod element;
 mod idx_numeric;
 mod int;
 mod num;
@@ -11,7 +11,7 @@ mod pseudo_numbers;
 mod set;
 mod set_of_idx;
 
-pub use idx::{Idx, IdxData};
+pub use element::{Element, ElementData};
 pub use idx_numeric::{IdxDataDepr, IdxDepr};
 pub use int::{Int, IntFun};
 pub use num::{Num, NumFun};

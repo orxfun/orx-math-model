@@ -1,6 +1,6 @@
 use crate::symbols::{
-    Idx, IdxData, IdxDataDepr, IdxDepr, Int, IntFun, Num, NumFun, Par, ParData, ParInt, ParIntData,
-    PseudoInt, Set, SetFun, SetOfIdx, SetOfIdxData,
+    Element, ElementData, IdxDataDepr, IdxDepr, Int, IntFun, Num, NumFun, Par, ParData, ParInt,
+    ParIntData, PseudoInt, Set, SetFun, SetOfIdx, SetOfIdxData,
 };
 use crate::symbols_d1::{ParD1, ParD1Data, ParIntD1, ParIntD1Data, SetOfIdxD1, SetOfIdxD1Data};
 use orx_imp_vec::{Doubling, ImpVec, SplitVec};
@@ -13,7 +13,7 @@ fn new_bag<T>() -> Bag<T> {
 
 pub struct Model<'d> {
     set: Bag<SetFun<'d>>,
-    idx: Bag<IdxData<'d>>,
+    idx: Bag<ElementData<'d>>,
 
     set_of_idx: Bag<SetOfIdxData<'d>>,
     set_of_idx_d1: Bag<SetOfIdxD1Data<'d>>,
@@ -102,9 +102,9 @@ impl<'d> Model<'d> {
 
     // idx
 
-    pub(crate) fn idx<'m>(&'m self, set: Set<'m, 'd>) -> Idx<'m, 'd> {
-        let data = IdxData::new(set.fun_ptr(), 0);
-        Idx::new(self, self.idx.push(data))
+    pub(crate) fn element<'m>(&'m self, set: Set<'m, 'd>) -> Element<'m, 'd> {
+        let data = ElementData::new(set.fun_ptr(), 0);
+        Element::new(self, self.idx.push(data))
     }
 
     pub(crate) fn idx_depr<'m>(&'m self, set: SetOfIdx<'m, 'd>) -> IdxDepr<'m, 'd> {
