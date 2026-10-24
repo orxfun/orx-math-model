@@ -1,5 +1,5 @@
 use crate::ptr::{RefPtr, ValPtr};
-use crate::symbols::{Idx, Int, IntFun, ParInt};
+use crate::symbols::{IdxDepr, Int, IntFun, ParInt};
 use alloc::boxed::Box;
 use core::ops::Add;
 
@@ -20,10 +20,10 @@ impl<'m, 'd> Add<Int<'m, 'd>> for Int<'m, 'd> {
 
 // Int x Idx
 
-impl<'m, 'd> Add<Idx<'m, 'd>> for Int<'m, 'd> {
+impl<'m, 'd> Add<IdxDepr<'m, 'd>> for Int<'m, 'd> {
     type Output = Int<'m, 'd>;
 
-    fn add(self, rhs: Idx<'m, 'd>) -> Self::Output {
+    fn add(self, rhs: IdxDepr<'m, 'd>) -> Self::Output {
         assert!(core::ptr::eq(self.m, rhs.m), "TODO: err-msg");
 
         // SAFETY: both are tied to lifetime of 'm and 'd due to return type
@@ -33,7 +33,7 @@ impl<'m, 'd> Add<Idx<'m, 'd>> for Int<'m, 'd> {
     }
 }
 
-impl<'m, 'd> Add<Int<'m, 'd>> for Idx<'m, 'd> {
+impl<'m, 'd> Add<Int<'m, 'd>> for IdxDepr<'m, 'd> {
     type Output = Int<'m, 'd>;
 
     fn add(self, rhs: Int<'m, 'd>) -> Self::Output {
@@ -48,10 +48,10 @@ impl<'m, 'd> Add<Int<'m, 'd>> for Idx<'m, 'd> {
 
 // Int x ParInt
 
-impl<'m, 'd> Add<Idx<'m, 'd>> for ParInt<'m, 'd> {
+impl<'m, 'd> Add<IdxDepr<'m, 'd>> for ParInt<'m, 'd> {
     type Output = Int<'m, 'd>;
 
-    fn add(self, rhs: Idx<'m, 'd>) -> Self::Output {
+    fn add(self, rhs: IdxDepr<'m, 'd>) -> Self::Output {
         assert!(core::ptr::eq(self.m, rhs.m), "TODO: err-msg");
 
         // SAFETY: both are tied to lifetime of 'm and 'd due to return type
@@ -62,7 +62,7 @@ impl<'m, 'd> Add<Idx<'m, 'd>> for ParInt<'m, 'd> {
     }
 }
 
-impl<'m, 'd> Add<ParInt<'m, 'd>> for Idx<'m, 'd> {
+impl<'m, 'd> Add<ParInt<'m, 'd>> for IdxDepr<'m, 'd> {
     type Output = Int<'m, 'd>;
 
     fn add(self, rhs: ParInt<'m, 'd>) -> Self::Output {

@@ -1,6 +1,6 @@
 use crate::symbols::{
-    Idx, IdxData, Int, IntFun, Num, NumFun, Par, ParData, ParInt, ParIntData, PseudoInt, SetOfIdx,
-    SetOfIdxData,
+    IdxDataDepr, IdxDepr, Int, IntFun, Num, NumFun, Par, ParData, ParInt, ParIntData, PseudoInt,
+    SetOfIdx, SetOfIdxData,
 };
 use crate::symbols_d1::{ParD1, ParD1Data, ParIntD1, ParIntD1Data, SetOfIdxD1, SetOfIdxD1Data};
 use orx_imp_vec::{Doubling, ImpVec, SplitVec};
@@ -20,7 +20,7 @@ pub struct Model<'d> {
     par_int: Bag<ParIntData>,
     par_int_d1: Bag<ParIntD1Data<'d>>,
 
-    idx: Bag<IdxData<'d>>,
+    idx: Bag<IdxDataDepr<'d>>,
 
     num: Bag<NumFun<'d>>,
     int: Bag<IntFun<'d>>,
@@ -92,9 +92,9 @@ impl<'d> Model<'d> {
 
     // idx
 
-    pub(crate) fn idx<'m>(&'m self, set: SetOfIdx<'m, 'd>) -> Idx<'m, 'd> {
-        let data = IdxData::new(set.fun_ptr(), 0);
-        Idx::new(self, self.idx.push(data))
+    pub(crate) fn idx<'m>(&'m self, set: SetOfIdx<'m, 'd>) -> IdxDepr<'m, 'd> {
+        let data = IdxDataDepr::new(set.fun_ptr(), 0);
+        IdxDepr::new(self, self.idx.push(data))
     }
 
     // scalars

@@ -1,6 +1,6 @@
 use crate::elements::Elements;
 use crate::ptr::RefPtr;
-use crate::symbols::{Idx, PseudoInt};
+use crate::symbols::{IdxDepr, PseudoInt};
 use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -96,7 +96,7 @@ impl<'m, 'd> SetOfIdx<'m, 'd> {
         unsafe { RefPtr::new(core::ptr::addr_of!((*self.el.as_ptr()).fun)) }
     }
 
-    pub fn idx(self) -> Idx<'m, 'd> {
+    pub fn idx(self) -> IdxDepr<'m, 'd> {
         self.m.idx(self)
     }
 }
