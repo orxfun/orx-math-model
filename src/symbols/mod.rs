@@ -13,4 +13,4 @@ pub use int::{Int, IntFun, PtrIntFun};
 pub use num::{Num, NumFun};
 pub use par::{Par, ParData, ParInt, ParIntData};
 pub use pseudo_numbers::PseudoInt;
-pub use set_of_idx::{SetOfIdx, SetOfIdxData, SetOfIdxFun, SetOfIdxRef};
+pub use set_of_idx::{SetOfIdx, SetOfIdxData, SetOfIdxFun, RefSetOfIdx};

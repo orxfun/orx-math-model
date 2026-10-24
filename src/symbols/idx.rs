@@ -1,4 +1,4 @@
-use crate::symbols::{Int, IntFun, SetOfIdxRef};
+use crate::symbols::{Int, IntFun, RefSetOfIdx};
 use crate::Model;
 use alloc::boxed::Box;
 use core::ops::Add;
@@ -30,12 +30,12 @@ impl PtrIdxValue {
 
 #[derive(derive_new::new)]
 pub struct IdxData {
-    s0: SetOfIdxRef,
+    s0: RefSetOfIdx,
     value: usize,
 }
 
 impl IdxData {
-    pub fn s0(&self) -> SetOfIdxRef {
+    pub fn s0(&self) -> RefSetOfIdx {
         self.s0
     }
 

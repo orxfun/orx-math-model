@@ -18,7 +18,7 @@ impl SetOfIdxFun<'_> {
 }
 
 #[derive(derive_new::new, Clone, Copy, PartialEq, Debug)]
-pub struct SetOfIdxRef {
+pub struct RefSetOfIdx {
     i: usize,
 }
 

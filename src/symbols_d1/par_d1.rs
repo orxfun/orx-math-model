@@ -1,4 +1,4 @@
-use crate::symbols::{Int, IntFun, Num, NumFun, PseudoInt, PtrIntFun, SetOfIdxRef};
+use crate::symbols::{Int, IntFun, Num, NumFun, PseudoInt, PtrIntFun, RefSetOfIdx};
 use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -22,12 +22,12 @@ impl<T: Default> ParCoreD1Fun<'_, T> {
 
 #[derive(derive_new::new)]
 pub struct ParCoreD1Data<'d, T: Default> {
-    s0: SetOfIdxRef,
+    s0: RefSetOfIdx,
     fun: ParCoreD1Fun<'d, T>,
 }
 
 impl<'d, T: Default> ParCoreD1Data<'d, T> {
-    pub fn empty(s0: SetOfIdxRef) -> Self {
+    pub fn empty(s0: RefSetOfIdx) -> Self {
         Self::new(s0, ParCoreD1Fun::empty())
     }
 

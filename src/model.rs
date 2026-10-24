@@ -1,6 +1,6 @@
 use crate::symbols::{
-    Idx, IdxData, Int, IntFun, Num, NumFun, Par, ParData, ParInt, ParIntData, PseudoInt, SetOfIdx,
-    SetOfIdxData, SetOfIdxRef,
+    Idx, IdxData, Int, IntFun, Num, NumFun, Par, ParData, ParInt, ParIntData, PseudoInt,
+    RefSetOfIdx, SetOfIdx, SetOfIdxData,
 };
 use crate::symbols_d1::{ParD1, ParD1Data, ParIntD1, ParIntD1Data, SetOfIdxD1, SetOfIdxD1Data};
 use orx_imp_vec::{Doubling, ImpVec, SplitVec};
@@ -109,11 +109,11 @@ impl<'d> Model<'d> {
 
     // helper
 
-    fn set_ref(&self, set: SetOfIdx<'_, 'd>) -> SetOfIdxRef {
+    fn set_ref(&self, set: SetOfIdx<'_, 'd>) -> RefSetOfIdx {
         let set_pos = set
             .el
             .position_in(&self.set_of_idx)
             .expect("TODO: error msg");
-        SetOfIdxRef::new(set_pos)
+        RefSetOfIdx::new(set_pos)
     }
 }
