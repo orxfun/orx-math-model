@@ -4,3 +4,66 @@ use crate::symbols::{Idx, PseudoInt};
 use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
+
+// fun
+
+#[derive(derive_new::new)]
+pub struct SetFun<'d, T>(Box<dyn Fn(&mut Elements<T>) + 'd>);
+
+impl<T> SetFun<'_, T> {
+    pub fn empty() -> Self {
+        Self(Box::new(|_| {}))
+    }
+
+    pub fn fill(&self, elements: &mut Elements<T>) {
+        self.0(elements)
+    }
+}
+
+// data
+
+#[derive(derive_new::new)]
+pub struct SetData<'d, T> {
+    fun: SetFun<'d, T>,
+}
+
+impl<'d, T> SetData<'d, T> {
+    pub fn empty() -> Self {
+        Self::new(SetFun::empty())
+    }
+
+    pub fn fill(&self, elements: &mut Elements<T>) {
+        self.fun.fill(elements);
+    }
+
+    pub fn update_fun(&mut self, fun: SetFun<'d, T>) {
+        self.fun = fun;
+    }
+
+    pub fn update_fun_from_gen<I>(&mut self, fun: impl Fn() -> I + 'd)
+    where
+        I: IntoIterator<Item = T>,
+    {
+        let fun = move |e: &mut Elements<T>| e.fill_with(fun());
+        self.update_fun(SetFun(Box::new(fun)));
+    }
+}
+
+// symbol
+
+#[derive(derive_new::new, Clone, Copy)]
+pub struct Set<'m, 'd, T> {
+    pub(crate) m: &'m Model<'d>,
+    pub(crate) el: Elem<'m, SetData<'d, T>>,
+}
+
+impl<'m, 'd, T> Set<'m, 'd, T> {
+    pub(crate) fn fun_ptr(&self) -> RefPtr<SetFun<'d, T>> {
+        // TODO: safety note
+        unsafe { RefPtr::new(core::ptr::addr_of!((*self.el.as_ptr()).fun)) }
+    }
+
+    // pub fn idx(self) -> Idx<'m, 'd, T> {
+    //     self.m.idx(self)
+    // }
+}
