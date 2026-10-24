@@ -12,8 +12,8 @@ fn new_bag<T>() -> Bag<T> {
 }
 
 pub struct Model<'d> {
-    set: Bag<SetOfIdxData<'d>>,
-    set_d1: Bag<SetOfIdxD1Data<'d>>,
+    set_of_idx: Bag<SetOfIdxData<'d>>,
+    set_of_idx_d1: Bag<SetOfIdxD1Data<'d>>,
 
     par: Bag<ParData>,
     par_d1: Bag<ParD1Data<'d>>,
@@ -27,8 +27,8 @@ pub struct Model<'d> {
 impl<'d> Model<'d> {
     pub fn new() -> Self {
         Self {
-            set: new_bag(),
-            set_d1: new_bag(),
+            set_of_idx: new_bag(),
+            set_of_idx_d1: new_bag(),
 
             par: new_bag(),
             par_d1: new_bag(),
@@ -47,12 +47,12 @@ impl<'d> Model<'d> {
     }
 
     pub(crate) fn add_set_of_idx(&self, data: SetOfIdxData<'d>) -> SetOfIdx<'_, 'd> {
-        SetOfIdx::new(self, self.set.push(data))
+        SetOfIdx::new(self, self.set_of_idx.push(data))
     }
 
     pub fn set_of_idx_d1<'m>(&'m self, set: SetOfIdx<'m, 'd>) -> SetOfIdxD1<'m, 'd> {
         let data = SetOfIdxD1Data::new(self.set_ref(set), SetOfIdxD1Fun::empty());
-        SetOfIdxD1::new(self, self.set_d1.push(data))
+        SetOfIdxD1::new(self, self.set_of_idx_d1.push(data))
     }
 
     // pars
@@ -87,7 +87,10 @@ impl<'d> Model<'d> {
     // helper
 
     fn set_ref(&self, set: SetOfIdx<'_, 'd>) -> SetOfIdxRef {
-        let set_pos = set.el.position_in(&self.set).expect("TODO: error msg");
+        let set_pos = set
+            .el
+            .position_in(&self.set_of_idx)
+            .expect("TODO: error msg");
         SetOfIdxRef::new(set_pos)
     }
 }
