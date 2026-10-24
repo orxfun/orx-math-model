@@ -1,5 +1,6 @@
 use crate::elements::ElemCont;
 use crate::ptr::RefPtr;
+use crate::symbols::Idx;
 use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -53,5 +54,9 @@ impl<'m, 'd> Set<'m, 'd> {
     pub(crate) fn fun_ptr(&self) -> RefPtr<SetFun<'d>> {
         // TODO: safety note
         unsafe { RefPtr::new(self.el.as_ptr()) }
+    }
+
+    pub fn idx(self) -> Idx<'m, 'd> {
+        self.m.idx(self)
     }
 }

@@ -12,6 +12,7 @@ mod set;
 mod set_core;
 mod set_of_idx;
 
+pub use idx::{Idx, IdxData};
 pub use idx_numeric::{IdxDataDepr, IdxDepr};
 pub use int::{Int, IntFun};
 pub use num::{Num, NumFun};
