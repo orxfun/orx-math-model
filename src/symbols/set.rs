@@ -1,4 +1,4 @@
-use crate::elements::ElementsOfIdx;
+use crate::elements::Elements;
 use crate::ptr::RefPtr;
 use crate::symbols::{Idx, PseudoInt};
 use crate::Model;
