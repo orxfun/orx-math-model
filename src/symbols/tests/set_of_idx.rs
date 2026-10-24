@@ -69,6 +69,6 @@ fn range_get_set() {
     let s = m.range(p2, p6);
     assert_elements(&mut elements, &[s], &[2, 3, 4, 5]);
 
-    // let s = m.range(p2 + 1, p6 + 2);
-    // assert_elements(&mut elements, &[s], &[3, 4, 5, 6, 7]);
+    let s = m.range(p2 + 1, p6 + 2);
+    assert_elements(&mut elements, &[s], &[3, 4, 5, 6, 7]);
 }
