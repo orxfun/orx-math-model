@@ -28,9 +28,11 @@ impl<'d> Num<'_, 'd> {
     }
 }
 
+// from
+
 impl<'m, 'd> From<Par<'m, 'd>> for Num<'m, 'd> {
     fn from(value: Par<'m, 'd>) -> Self {
-        let p = ParData::ptr_value(value.el.as_ptr());
+        let p = ParData::ptr_val(value.el.as_ptr());
         let fun = NumFun(Box::new(move || unsafe { *p }));
         value.m.add_num(fun)
     }

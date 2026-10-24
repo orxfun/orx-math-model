@@ -1,5 +1,6 @@
 use crate::ptr::{RefPtr, ValPtr};
-use crate::symbols::{Idx, IdxData};
+use crate::symbols::par::ParCoreData;
+use crate::symbols::{Idx, IdxData, ParInt};
 use crate::Model;
 use alloc::boxed::Box;
 use core::ops::Add;
@@ -30,10 +31,20 @@ impl<'d> Int<'_, 'd> {
     }
 }
 
+// from
+
 impl<'m, 'd> From<Idx<'m, 'd>> for Int<'m, 'd> {
     fn from(value: Idx<'m, 'd>) -> Self {
         let p = IdxData::ptr_value(value.el.as_ptr());
         let fun = IntFun(Box::new(move || unsafe { *p }));
+        value.m.add_int(fun)
+    }
+}
+
+impl<'m, 'd> From<ParInt<'m, 'd>> for Int<'m, 'd> {
+    fn from(value: ParInt<'m, 'd>) -> Self {
+        let p = unsafe { ValPtr::new(ParCoreData::ptr_val(value.el.as_ptr())) };
+        let fun = IntFun(Box::new(move || p.val()));
         value.m.add_int(fun)
     }
 }

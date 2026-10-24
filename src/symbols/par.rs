@@ -11,7 +11,7 @@ impl<T: Copy> ParCoreData<T> {
         self.0
     }
 
-    pub fn ptr_value(p: *const ParCoreData<T>) -> *const T {
+    pub fn ptr_val(p: *const ParCoreData<T>) -> *const T {
         unsafe { core::ptr::addr_of!((*p).0) }
     }
 }
