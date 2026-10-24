@@ -5,6 +5,8 @@ use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 
+// fun
+
 #[derive(derive_new::new)]
 pub struct SetOfIdxFun<'d>(Box<dyn Fn(&mut ElementsOfIdx) + 'd>);
 
@@ -18,10 +20,14 @@ impl SetOfIdxFun<'_> {
     }
 }
 
+// ref
+
 #[derive(derive_new::new, Clone, Copy, PartialEq, Debug)]
 pub struct RefSetOfIdx {
     i: usize,
 }
+
+// data
 
 #[derive(derive_new::new)]
 pub struct SetOfIdxData<'d> {
@@ -81,6 +87,8 @@ impl<'d> SetOfIdxData<'d> {
         self.update_fun(SetOfIdxFun(Box::new(fun)));
     }
 }
+
+// symbol
 
 #[derive(derive_new::new, Clone, Copy)]
 pub struct SetOfIdx<'m, 'd> {
