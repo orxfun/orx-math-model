@@ -54,5 +54,5 @@ fn range_get_set() {
     p.el.set(ParData::new(2.0));
 
     let q = m.par();
-    q.el.set(ParData::new(7.0));
+    q.el.set(ParData::new(6.0));
 }
