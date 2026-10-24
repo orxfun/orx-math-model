@@ -1,4 +1,5 @@
-use crate::symbols::{Idx, IdxData, PtrIdxValue};
+use crate::symbols::{Idx, IdxData};
+use crate::value_ptr::ValPtr;
 use crate::Model;
 use alloc::boxed::Box;
 use core::ops::Add;
@@ -72,7 +73,7 @@ impl<'m, 'd> Add<Idx<'m, 'd>> for Int<'m, 'd> {
         assert!(core::ptr::eq(self.m, rhs.m), "TODO: err-msg");
 
         // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let (a, b) = unsafe { (PtrIntFun::new(self), PtrIdxValue::new(rhs)) };
+        let (a, b) = unsafe { (PtrIntFun::new(self), ValPtr::new(rhs.val_ptr())) };
         let f = move || a.fun().eval() + b.value();
         self.m.add_int(IntFun(Box::new(f)))
     }
@@ -85,7 +86,7 @@ impl<'m, 'd> Add<Int<'m, 'd>> for Idx<'m, 'd> {
         assert!(core::ptr::eq(self.m, rhs.m), "TODO: err-msg");
 
         // SAFETY: p and fun_d1 is tied to lifetime of 'm and 'd due to return type Sca<'m, 'd>.
-        let (a, b) = unsafe { (PtrIdxValue::new(self), PtrIntFun::new(rhs)) };
+        let (a, b) = unsafe { (ValPtr::new(self.val_ptr()), PtrIntFun::new(rhs)) };
         let f = move || a.value() + b.fun().eval();
         self.m.add_int(IntFun(Box::new(f)))
     }
