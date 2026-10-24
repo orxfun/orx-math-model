@@ -1,5 +1,5 @@
 use crate::elements::ElementsOfIdx;
-use crate::symbols::{ParData, ParIntData, SetOfIdx};
+use crate::symbols::{ParIntData, SetOfIdx};
 use crate::Model;
 use alloc::vec;
 

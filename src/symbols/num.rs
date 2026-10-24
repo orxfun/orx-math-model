@@ -1,8 +1,7 @@
-use crate::ptr::{RefPtr, ValPtr};
-use crate::symbols::{Int, Par};
+use crate::ptr::ValPtr;
+use crate::symbols::Par;
 use crate::Model;
 use alloc::boxed::Box;
-use core::ops::Add;
 use orx_imp_vec::Elem;
 
 #[derive(derive_new::new)]
