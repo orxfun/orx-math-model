@@ -1,4 +1,4 @@
-use crate::elements::Elements;
+use crate::elements::ElementContainer;
 use crate::ptr::RefPtr;
 use crate::symbols::{IdxDepr, PseudoInt};
 use crate::Model;
@@ -8,14 +8,14 @@ use orx_imp_vec::Elem;
 // fun
 
 #[derive(derive_new::new)]
-pub struct SetOfIdxFun<'d>(Box<dyn Fn(&mut Elements<usize>) + 'd>);
+pub struct SetOfIdxFun<'d>(Box<dyn Fn(&mut ElementContainer<usize>) + 'd>);
 
 impl SetOfIdxFun<'_> {
     pub fn empty() -> Self {
         Self(Box::new(|_| {}))
     }
 
-    pub fn fill(&self, elements: &mut Elements<usize>) {
+    pub fn fill(&self, elements: &mut ElementContainer<usize>) {
         self.0(elements)
     }
 }
@@ -41,31 +41,32 @@ impl<'d> SetOfIdxData<'d> {
     {
         let fun = match (begin.into(), exclusive_end.into()) {
             (PseudoInt::Raw(a), PseudoInt::Raw(b)) => {
-                let fill = move |e: &mut Elements<usize>| e.fill_with(a..b);
+                let fill = move |e: &mut ElementContainer<usize>| e.fill_with(a..b);
                 SetOfIdxFun(Box::new(fill))
             }
             (PseudoInt::Raw(a), PseudoInt::Int(b)) => {
                 // SAFETY: b is tied to lifetime of 'm and 'd
                 let b = unsafe { RefPtr::new(b.fun_ptr()) };
-                let fill = move |e: &mut Elements<usize>| e.fill_with(a..b.val().eval());
+                let fill = move |e: &mut ElementContainer<usize>| e.fill_with(a..b.val().eval());
                 SetOfIdxFun(Box::new(fill))
             }
             (PseudoInt::Int(a), PseudoInt::Raw(b)) => {
                 let a = unsafe { RefPtr::new(a.fun_ptr()) };
-                let fill = move |e: &mut Elements<usize>| e.fill_with(a.val().eval()..b);
+                let fill = move |e: &mut ElementContainer<usize>| e.fill_with(a.val().eval()..b);
                 SetOfIdxFun(Box::new(fill))
             }
             (PseudoInt::Int(a), PseudoInt::Int(b)) => {
                 let [a, b] = unsafe { [a, b].map(|x| RefPtr::new(x.fun_ptr())) };
-                let fill =
-                    move |e: &mut Elements<usize>| e.fill_with(a.val().eval()..b.val().eval());
+                let fill = move |e: &mut ElementContainer<usize>| {
+                    e.fill_with(a.val().eval()..b.val().eval())
+                };
                 SetOfIdxFun(Box::new(fill))
             }
         };
         Self::new(fun)
     }
 
-    pub fn fill(&self, elements: &mut Elements<usize>) {
+    pub fn fill(&self, elements: &mut ElementContainer<usize>) {
         self.fun.fill(elements);
     }
 
@@ -77,7 +78,7 @@ impl<'d> SetOfIdxData<'d> {
     where
         I: IntoIterator<Item = usize>,
     {
-        let fun = move |e: &mut Elements<usize>| e.fill_with(fun());
+        let fun = move |e: &mut ElementContainer<usize>| e.fill_with(fun());
         self.update_fun(SetOfIdxFun(Box::new(fun)));
     }
 }

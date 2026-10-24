@@ -1,6 +1,6 @@
 use crate::symbols::{
     IdxDataDepr, IdxDepr, Int, IntFun, Num, NumFun, Par, ParData, ParInt, ParIntData, PseudoInt,
-    SetOfIdx, SetOfIdxData,
+    Set, SetFun, SetOfIdx, SetOfIdxData,
 };
 use crate::symbols_d1::{ParD1, ParD1Data, ParIntD1, ParIntD1Data, SetOfIdxD1, SetOfIdxD1Data};
 use orx_imp_vec::{Doubling, ImpVec, SplitVec};
@@ -12,6 +12,8 @@ fn new_bag<T>() -> Bag<T> {
 }
 
 pub struct Model<'d> {
+    set: Bag<SetFun<'d>>,
+
     set_of_idx: Bag<SetOfIdxData<'d>>,
     set_of_idx_d1: Bag<SetOfIdxD1Data<'d>>,
 
@@ -29,6 +31,8 @@ pub struct Model<'d> {
 impl<'d> Model<'d> {
     pub fn new() -> Self {
         Self {
+            set: new_bag(),
+
             set_of_idx: new_bag(),
             set_of_idx_d1: new_bag(),
 
@@ -45,6 +49,8 @@ impl<'d> Model<'d> {
     }
 
     // sets
+
+    // pub fn set(&self) -> Set
 
     pub fn set_of_idx(&self) -> SetOfIdx<'_, 'd> {
         self.add_set_of_idx(SetOfIdxData::empty())

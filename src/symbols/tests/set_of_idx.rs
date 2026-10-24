@@ -1,9 +1,13 @@
-use crate::elements::Elements;
+use crate::elements::ElementContainer;
 use crate::symbols::{ParIntData, SetOfIdx};
 use crate::Model;
 use alloc::vec;
 
-fn assert_elements(e: &mut Elements<usize>, set_symbols: &[SetOfIdx<'_, '_>], expected: &[usize]) {
+fn assert_elements(
+    e: &mut ElementContainer<usize>,
+    set_symbols: &[SetOfIdx<'_, '_>],
+    expected: &[usize],
+) {
     for s in set_symbols {
         for _ in 0..3 {
             unsafe { s.el.get() }.fill(e);
@@ -23,7 +27,7 @@ fn set_of_idx_get_set() {
     let data = vec![1, 2, 3];
 
     let m = Model::new();
-    let mut elements = Elements::default();
+    let mut elements = ElementContainer::default();
 
     add_some_more_sets(&m);
 
@@ -49,7 +53,7 @@ fn set_of_idx_get_set() {
 #[test]
 fn range_get_set() {
     let m = Model::new();
-    let mut elements = Elements::default();
+    let mut elements = ElementContainer::default();
 
     let p2 = m.par_int();
     p2.el.set(ParIntData::new(2));

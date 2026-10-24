@@ -1,4 +1,4 @@
-use crate::elements::Elements;
+use crate::elements::ElementContainer;
 use crate::ptr::RefPtr;
 use crate::Model;
 use alloc::boxed::Box;
@@ -6,35 +6,35 @@ use orx_imp_vec::Elem;
 
 // elem
 
-pub enum ElementsCat<'d> {
-    Usize(Elements<usize>),
-    Str(Elements<&'d str>),
+pub enum Elements<'d> {
+    Usize(ElementContainer<usize>),
+    Str(ElementContainer<&'d str>),
 }
 
 // fun
 
 #[derive(derive_new::new)]
-pub enum SetCatFun<'d> {
-    Usize(Box<dyn Fn(&mut Elements<usize>) + 'd>),
-    Str(Box<dyn Fn(&mut Elements<&'d str>) + 'd>),
+pub enum SetFun<'d> {
+    Usize(Box<dyn Fn(&mut ElementContainer<usize>) + 'd>),
+    Str(Box<dyn Fn(&mut ElementContainer<&'d str>) + 'd>),
 }
 
-impl<'d> SetCatFun<'d> {
+impl<'d> SetFun<'d> {
     pub fn empty() -> Self {
         Self::Usize(Box::new(|_| {}))
     }
 
-    pub fn create_elements(&self) -> ElementsCat<'d> {
+    pub fn create_elements(&self) -> Elements<'d> {
         match self {
-            Self::Usize(_) => ElementsCat::Usize(Default::default()),
-            Self::Str(_) => ElementsCat::Str(Default::default()),
+            Self::Usize(_) => Elements::Usize(Default::default()),
+            Self::Str(_) => Elements::Str(Default::default()),
         }
     }
 
-    pub fn fill(&self, elements: &mut ElementsCat<'d>) {
+    pub fn fill(&self, elements: &mut Elements<'d>) {
         match (self, elements) {
-            (Self::Usize(f), ElementsCat::Usize(e)) => f(e),
-            (Self::Str(f), ElementsCat::Str(e)) => f(e),
+            (Self::Usize(f), Elements::Usize(e)) => f(e),
+            (Self::Str(f), Elements::Str(e)) => f(e),
             _ => unreachable!("TODO: should not happen"),
         }
     }
@@ -43,13 +43,13 @@ impl<'d> SetCatFun<'d> {
 // symbol
 
 #[derive(derive_new::new, Clone, Copy)]
-pub struct SetCat<'m, 'd> {
+pub struct Set<'m, 'd> {
     pub(crate) m: &'m Model<'d>,
-    pub(crate) el: Elem<'m, SetCatFun<'d>>,
+    pub(crate) el: Elem<'m, SetFun<'d>>,
 }
 
-impl<'m, 'd> SetCat<'m, 'd> {
-    pub(crate) fn fun_ptr(&self) -> RefPtr<SetCatFun<'d>> {
+impl<'m, 'd> Set<'m, 'd> {
+    pub(crate) fn fun_ptr(&self) -> RefPtr<SetFun<'d>> {
         // TODO: safety note
         unsafe { RefPtr::new(self.el.as_ptr()) }
     }

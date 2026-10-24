@@ -1,4 +1,4 @@
-use crate::elements::Elements;
+use crate::elements::ElementContainer;
 use crate::symbols::SetOfIdx;
 use crate::symbols_d1::SetOfIdxD1;
 use crate::Model;
@@ -14,7 +14,7 @@ fn add_some_more_sets(m: &Model<'_>) {
 #[test]
 fn set_d1_get_set() {
     fn assert_elements(
-        e: &mut Elements<usize>,
+        e: &mut ElementContainer<usize>,
         set_symbols: &[SetOfIdxD1<'_, '_>],
         i0: usize,
         expected: &[usize],
@@ -30,7 +30,7 @@ fn set_d1_get_set() {
     let data = vec![vec![0], vec![1, 2, 3], vec![4, 5], vec![6, 7, 8, 9]];
 
     let m = Model::new();
-    let mut elements = Elements::default();
+    let mut elements = ElementContainer::default();
 
     add_some_more_sets(&m);
 
@@ -64,7 +64,7 @@ fn set_d1_get_set() {
 
 #[test]
 fn set_from_set_d1() {
-    fn assert_elements(e: &mut Elements<usize>, set: SetOfIdx<'_, '_>, expected: &[usize]) {
+    fn assert_elements(e: &mut ElementContainer<usize>, set: SetOfIdx<'_, '_>, expected: &[usize]) {
         for _ in 0..1 {
             unsafe { set.el.get() }.fill(e);
             assert_eq!(e.as_slice(), expected);
@@ -74,7 +74,7 @@ fn set_from_set_d1() {
     let data = vec![vec![0], vec![1, 2, 3], vec![4, 5], vec![6, 7, 8, 9]];
 
     let m = Model::new();
-    let mut elements = Elements::default();
+    let mut elements = ElementContainer::default();
 
     add_some_more_sets(&m);
 
