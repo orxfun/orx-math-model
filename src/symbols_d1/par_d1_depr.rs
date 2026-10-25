@@ -1,5 +1,5 @@
 use crate::ptr::RefPtr;
-use crate::symbols::{Int, IntFun, Num, NumFun, PseudoInt, IndicesFun};
+use crate::symbols::{IndicesFun, Int, IntFun, Num, NumFun, PseudoInt};
 use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -7,9 +7,9 @@ use orx_imp_vec::Elem;
 // fun
 
 #[derive(derive_new::new)]
-pub struct ParCoreD1Fun<'d, T: Default>(Box<dyn Fn(usize) -> T + 'd>);
+pub struct ParCoreD1FunDepr<'d, T: Default>(Box<dyn Fn(usize) -> T + 'd>);
 
-impl<T: Default> ParCoreD1Fun<'_, T> {
+impl<T: Default> ParCoreD1FunDepr<'_, T> {
     pub fn empty() -> Self {
         Self(Box::new(|_| Default::default()))
     }
@@ -22,25 +22,25 @@ impl<T: Default> ParCoreD1Fun<'_, T> {
 // data
 
 #[derive(derive_new::new)]
-pub struct ParCoreD1Data<'d, T: Default> {
+pub struct ParCoreD1DataDepr<'d, T: Default> {
     s0: RefPtr<IndicesFun<'d>>,
-    fun: ParCoreD1Fun<'d, T>,
+    fun: ParCoreD1FunDepr<'d, T>,
 }
 
-impl<'d, T: Default> ParCoreD1Data<'d, T> {
+impl<'d, T: Default> ParCoreD1DataDepr<'d, T> {
     pub fn empty(s0: RefPtr<IndicesFun<'d>>) -> Self {
-        Self::new(s0, ParCoreD1Fun::empty())
+        Self::new(s0, ParCoreD1FunDepr::empty())
     }
 
     pub fn eval(&self, i0: usize) -> T {
         self.fun.eval(i0)
     }
 
-    pub fn update_fun(&mut self, fun: ParCoreD1Fun<'d, T>) {
+    pub fn update_fun(&mut self, fun: ParCoreD1FunDepr<'d, T>) {
         self.fun = fun;
     }
 
-    pub fn ptr_fun(p: *const ParCoreD1Data<'d, T>) -> *const ParCoreD1Fun<'d, T> {
+    pub fn ptr_fun(p: *const ParCoreD1DataDepr<'d, T>) -> *const ParCoreD1FunDepr<'d, T> {
         unsafe { core::ptr::addr_of!((*p).fun) }
     }
 }
@@ -50,20 +50,20 @@ impl<'d, T: Default> ParCoreD1Data<'d, T> {
 #[derive(derive_new::new, Clone, Copy)]
 pub struct ParCoreD1<'m, 'd, T: Default> {
     pub(crate) m: &'m Model<'d>,
-    pub(crate) el: Elem<'m, ParCoreD1Data<'d, T>>,
+    pub(crate) el: Elem<'m, ParCoreD1DataDepr<'d, T>>,
 }
 
 // number
 
-pub type ParD1Fun<'d> = ParCoreD1Fun<'d, f64>;
+pub type ParD1FunDepr<'d> = ParCoreD1FunDepr<'d, f64>;
 
-pub type ParD1Data<'d> = ParCoreD1Data<'d, f64>;
+pub type ParD1DataDepr<'d> = ParCoreD1DataDepr<'d, f64>;
 
-pub type ParD1<'m, 'd> = ParCoreD1<'m, 'd, f64>;
+pub type ParD1Depr<'m, 'd> = ParCoreD1<'m, 'd, f64>;
 
-impl<'m, 'd> ParD1<'m, 'd> {
+impl<'m, 'd> ParD1Depr<'m, 'd> {
     pub(crate) fn at(self, i: impl Into<PseudoInt<'m, 'd>>) -> Num<'m, 'd> {
-        struct PtrParD1Fun<'d, T: Default>(*const ParCoreD1Fun<'d, T>);
+        struct PtrParD1Fun<'d, T: Default>(*const ParCoreD1FunDepr<'d, T>);
 
         impl<'d, T: Default> PtrParD1Fun<'d, T> {
             /// # SAFETY
@@ -73,7 +73,7 @@ impl<'m, 'd> ParD1<'m, 'd> {
                 Self(core::ptr::addr_of!((*set.el.as_ptr()).fun))
             }
 
-            fn val(&self) -> &ParCoreD1Fun<'d, T> {
+            fn val(&self) -> &ParCoreD1FunDepr<'d, T> {
                 unsafe { &*self.0 }
             }
         }
@@ -96,15 +96,15 @@ impl<'m, 'd> ParD1<'m, 'd> {
 
 // int
 
-pub type ParIntD1Fun<'d> = ParCoreD1Fun<'d, usize>;
+pub type ParIntD1FunDepr<'d> = ParCoreD1FunDepr<'d, usize>;
 
-pub type ParIntD1Data<'d> = ParCoreD1Data<'d, usize>;
+pub type ParIntD1DataDepr<'d> = ParCoreD1DataDepr<'d, usize>;
 
-pub type ParIntD1<'m, 'd> = ParCoreD1<'m, 'd, usize>;
+pub type ParIntD1Depr<'m, 'd> = ParCoreD1<'m, 'd, usize>;
 
-impl<'m, 'd> ParIntD1<'m, 'd> {
+impl<'m, 'd> ParIntD1Depr<'m, 'd> {
     pub(crate) fn at(self, i: impl Into<PseudoInt<'m, 'd>>) -> Int<'m, 'd> {
-        struct PtrParD1Fun<'d, T: Default>(*const ParCoreD1Fun<'d, T>);
+        struct PtrParD1Fun<'d, T: Default>(*const ParCoreD1FunDepr<'d, T>);
 
         impl<'d, T: Default> PtrParD1Fun<'d, T> {
             /// # SAFETY
@@ -114,7 +114,7 @@ impl<'m, 'd> ParIntD1<'m, 'd> {
                 Self(core::ptr::addr_of!((*set.el.as_ptr()).fun))
             }
 
-            fn val(&self) -> &ParCoreD1Fun<'d, T> {
+            fn val(&self) -> &ParCoreD1FunDepr<'d, T> {
                 unsafe { &*self.0 }
             }
         }
