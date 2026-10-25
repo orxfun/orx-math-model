@@ -1,5 +1,6 @@
 mod idx;
+mod indices;
 mod par;
 mod par_int;
 mod sca;
-mod set_of_idx;
+mod set;

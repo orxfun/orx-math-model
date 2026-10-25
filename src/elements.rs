@@ -1,21 +1,27 @@
 use alloc::vec::Vec;
 
-#[derive(Default, Debug)]
-pub struct ElementsOfIdx {
-    data: Vec<usize>,
+#[derive(Default, Debug, PartialEq)]
+pub struct ElemCont<T> {
+    data: Vec<T>,
 }
 
-impl ElementsOfIdx {
-    pub fn fill_with(&mut self, values: impl IntoIterator<Item = usize>) {
+impl<T> From<Vec<T>> for ElemCont<T> {
+    fn from(data: Vec<T>) -> Self {
+        Self { data }
+    }
+}
+
+impl<T> ElemCont<T> {
+    pub fn fill(&mut self, values: impl IntoIterator<Item = T>) {
         self.data.clear();
         self.data.extend(values);
     }
 
-    pub fn retain(&mut self, filter: impl Fn(usize) -> bool) {
-        self.data.retain(|x| filter(*x));
+    pub fn retain(&mut self, filter: impl Fn(&T) -> bool) {
+        self.data.retain(filter);
     }
 
-    pub fn as_slice(&self) -> &[usize] {
+    pub fn as_slice(&self) -> &[T] {
         &self.data
     }
 }

@@ -1,4 +1,4 @@
-use crate::elements::ElementsOfIdx;
+use crate::elements::ElemCont;
 use crate::ptr::RefPtr;
 use crate::symbols::{Idx, PseudoInt};
 use crate::Model;
@@ -8,35 +8,28 @@ use orx_imp_vec::Elem;
 // fun
 
 #[derive(derive_new::new)]
-pub struct SetOfIdxFun<'d>(Box<dyn Fn(&mut ElementsOfIdx) + 'd>);
+pub struct IndicesFun<'d>(Box<dyn Fn(&mut ElemCont<usize>) + 'd>);
 
-impl SetOfIdxFun<'_> {
+impl IndicesFun<'_> {
     pub fn empty() -> Self {
         Self(Box::new(|_| {}))
     }
 
-    pub fn fill(&self, elements: &mut ElementsOfIdx) {
+    pub fn fill(&self, elements: &mut ElemCont<usize>) {
         self.0(elements)
     }
-}
-
-// ref
-
-#[derive(derive_new::new, Clone, Copy, PartialEq, Debug)]
-pub struct RefSetOfIdx {
-    i: usize,
 }
 
 // data
 
 #[derive(derive_new::new)]
-pub struct SetOfIdxData<'d> {
-    fun: SetOfIdxFun<'d>,
+pub struct IndicesData<'d> {
+    fun: IndicesFun<'d>,
 }
 
-impl<'d> SetOfIdxData<'d> {
+impl<'d> IndicesData<'d> {
     pub fn empty() -> Self {
-        Self::new(SetOfIdxFun::empty())
+        Self::new(IndicesFun::empty())
     }
 
     pub fn range<'m>(
@@ -48,34 +41,34 @@ impl<'d> SetOfIdxData<'d> {
     {
         let fun = match (begin.into(), exclusive_end.into()) {
             (PseudoInt::Raw(a), PseudoInt::Raw(b)) => {
-                let fill = move |e: &mut ElementsOfIdx| e.fill_with(a..b);
-                SetOfIdxFun(Box::new(fill))
+                let fill = move |e: &mut ElemCont<usize>| e.fill(a..b);
+                IndicesFun(Box::new(fill))
             }
             (PseudoInt::Raw(a), PseudoInt::Int(b)) => {
                 // SAFETY: b is tied to lifetime of 'm and 'd
                 let b = unsafe { RefPtr::new(b.fun_ptr()) };
-                let fill = move |e: &mut ElementsOfIdx| e.fill_with(a..b.val().eval());
-                SetOfIdxFun(Box::new(fill))
+                let fill = move |e: &mut ElemCont<usize>| e.fill(a..b.val().eval());
+                IndicesFun(Box::new(fill))
             }
             (PseudoInt::Int(a), PseudoInt::Raw(b)) => {
                 let a = unsafe { RefPtr::new(a.fun_ptr()) };
-                let fill = move |e: &mut ElementsOfIdx| e.fill_with(a.val().eval()..b);
-                SetOfIdxFun(Box::new(fill))
+                let fill = move |e: &mut ElemCont<usize>| e.fill(a.val().eval()..b);
+                IndicesFun(Box::new(fill))
             }
             (PseudoInt::Int(a), PseudoInt::Int(b)) => {
                 let [a, b] = unsafe { [a, b].map(|x| RefPtr::new(x.fun_ptr())) };
-                let fill = move |e: &mut ElementsOfIdx| e.fill_with(a.val().eval()..b.val().eval());
-                SetOfIdxFun(Box::new(fill))
+                let fill = move |e: &mut ElemCont<usize>| e.fill(a.val().eval()..b.val().eval());
+                IndicesFun(Box::new(fill))
             }
         };
         Self::new(fun)
     }
 
-    pub fn fill(&self, elements: &mut ElementsOfIdx) {
+    pub fn fill(&self, elements: &mut ElemCont<usize>) {
         self.fun.fill(elements);
     }
 
-    pub fn update_fun(&mut self, fun: SetOfIdxFun<'d>) {
+    pub fn update_fun(&mut self, fun: IndicesFun<'d>) {
         self.fun = fun;
     }
 
@@ -83,22 +76,23 @@ impl<'d> SetOfIdxData<'d> {
     where
         I: IntoIterator<Item = usize>,
     {
-        let fun = move |e: &mut ElementsOfIdx| e.fill_with(fun());
-        self.update_fun(SetOfIdxFun(Box::new(fun)));
+        let fun = move |e: &mut ElemCont<usize>| e.fill(fun());
+        self.update_fun(IndicesFun(Box::new(fun)));
     }
 }
 
 // symbol
 
 #[derive(derive_new::new, Clone, Copy)]
-pub struct SetOfIdx<'m, 'd> {
+pub struct Indices<'m, 'd> {
     pub(crate) m: &'m Model<'d>,
-    pub(crate) el: Elem<'m, SetOfIdxData<'d>>,
+    pub(crate) el: Elem<'m, IndicesData<'d>>,
 }
 
-impl<'m, 'd> SetOfIdx<'m, 'd> {
-    pub(crate) fn fun_ptr(&self) -> *const SetOfIdxFun<'d> {
-        unsafe { core::ptr::addr_of!((*self.el.as_ptr()).fun) }
+impl<'m, 'd> Indices<'m, 'd> {
+    pub(crate) fn fun_ptr(&self) -> RefPtr<IndicesFun<'d>> {
+        // TODO: safety note
+        unsafe { RefPtr::new(core::ptr::addr_of!((*self.el.as_ptr()).fun)) }
     }
 
     pub fn idx(self) -> Idx<'m, 'd> {

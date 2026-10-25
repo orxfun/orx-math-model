@@ -18,8 +18,15 @@ impl<T: Copy> ValPtr<T> {
     }
 }
 
-#[derive(Clone, Copy)]
 pub struct RefPtr<T>(*const T);
+
+impl<T> Clone for RefPtr<T> {
+    fn clone(&self) -> Self {
+        *self
+    }
+}
+
+impl<T> Copy for RefPtr<T> {}
 
 impl<T> RefPtr<T> {
     /// # SAFETY

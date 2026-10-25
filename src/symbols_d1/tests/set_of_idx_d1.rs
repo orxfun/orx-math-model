@@ -1,12 +1,12 @@
-use crate::elements::ElementsOfIdx;
-use crate::symbols::SetOfIdx;
+use crate::elements::ElemCont;
+use crate::symbols::Indices;
 use crate::symbols_d1::SetOfIdxD1;
 use crate::Model;
 use alloc::vec;
 
 fn add_some_more_sets(m: &Model<'_>) {
     for _ in 0..3 {
-        let x = m.set_of_idx();
+        let x = m.indices();
         let _ = m.set_of_idx_d1(x);
     }
 }
@@ -14,7 +14,7 @@ fn add_some_more_sets(m: &Model<'_>) {
 #[test]
 fn set_d1_get_set() {
     fn assert_elements(
-        e: &mut ElementsOfIdx,
+        e: &mut ElemCont<usize>,
         set_symbols: &[SetOfIdxD1<'_, '_>],
         i0: usize,
         expected: &[usize],
@@ -28,13 +28,13 @@ fn set_d1_get_set() {
     }
 
     let data = vec![vec![0], vec![1, 2, 3], vec![4, 5], vec![6, 7, 8, 9]];
-
     let m = Model::new();
-    let mut elements = ElementsOfIdx::default();
+
+    let mut elements = ElemCont::default();
 
     add_some_more_sets(&m);
 
-    let s0 = m.set_of_idx();
+    let s0 = m.indices();
     let set = m.set_of_idx_d1(s0);
     let s = set;
 
@@ -56,7 +56,7 @@ fn set_d1_get_set() {
     let idx = s0.idx();
     for (i, expected) in data.iter().enumerate() {
         idx.el.update(|x| x.set_value(i));
-        let generated = set.at(idx);
+        let generated = set[idx];
         unsafe { generated.el.get() }.fill(&mut elements);
         assert_eq!(elements.as_slice(), expected);
     }
@@ -64,7 +64,7 @@ fn set_d1_get_set() {
 
 #[test]
 fn set_from_set_d1() {
-    fn assert_elements(e: &mut ElementsOfIdx, set: SetOfIdx<'_, '_>, expected: &[usize]) {
+    fn assert_elements(e: &mut ElemCont<usize>, set: Indices<'_, '_>, expected: &[usize]) {
         for _ in 0..1 {
             unsafe { set.el.get() }.fill(e);
             assert_eq!(e.as_slice(), expected);
@@ -74,16 +74,16 @@ fn set_from_set_d1() {
     let data = vec![vec![0], vec![1, 2, 3], vec![4, 5], vec![6, 7, 8, 9]];
 
     let m = Model::new();
-    let mut elements = ElementsOfIdx::default();
+    let mut elements = ElemCont::default();
 
     add_some_more_sets(&m);
 
-    let s0 = m.set_of_idx();
+    let s0 = m.indices();
     let s1 = m.set_of_idx_d1(s0);
 
     let i0 = s0.idx();
 
-    let s = s1.at(i0);
+    let s = s1[i0];
 
     // before wire up set-d1 data
 
@@ -111,7 +111,7 @@ fn set_from_set_d1() {
 
     // int expression as index
 
-    let s = s1.at(i0 + 1);
+    let s = s1[i0 + 1];
 
     i0.el.update(|x| x.set_value(0));
     assert_elements(&mut elements, s, &[1, 2, 3]);
@@ -124,6 +124,6 @@ fn set_from_set_d1() {
 
     // constant int as index
 
-    let s = s1.at(2);
+    let s = s1[2];
     assert_elements(&mut elements, s, &[4, 5]);
 }

@@ -1,17 +1,21 @@
 #[cfg(test)]
 mod tests;
 
+mod element;
 mod idx;
+mod indices;
 mod int;
 mod num;
 mod ops;
 mod par;
 mod pseudo_numbers;
-mod set_of_idx;
+mod set;
 
+pub use element::{Element, ElementData};
 pub use idx::{Idx, IdxData};
+pub use indices::{Indices, IndicesData, IndicesFun};
 pub use int::{Int, IntFun};
 pub use num::{Num, NumFun};
 pub use par::{Par, ParData, ParInt, ParIntData};
 pub use pseudo_numbers::PseudoInt;
-pub use set_of_idx::{RefSetOfIdx, SetOfIdx, SetOfIdxData, SetOfIdxFun};
+pub use set::{Elements, Set, SetFun};
