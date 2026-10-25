@@ -18,4 +18,4 @@ pub use int::{Int, IntFun};
 pub use num::{Num, NumFun};
 pub use par::{Par, ParData, ParInt, ParIntData};
 pub use pseudo_numbers::PseudoInt;
-pub use set::{Elements, Set, SetFun};
+pub use set::Set;

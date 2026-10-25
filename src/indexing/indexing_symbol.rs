@@ -1,4 +1,4 @@
-use crate::symbols::{Element, Set, SetFun};
+use crate::symbols::{Element, Set};
 use crate::symbols::{Idx, Indices, IndicesFun};
 
 pub trait IndexingSymbol<'d> {
@@ -10,7 +10,7 @@ pub trait IndexingSymbol<'d> {
 // categorical
 
 impl<'m, 'd> IndexingSymbol<'d> for Set<'m, 'd> {
-    type Fun = SetFun<'d>;
+    type Fun = IndicesFun<'d>;
 
     type Idx = Element<'m, 'd>;
 }
