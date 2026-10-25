@@ -1,6 +1,7 @@
 #[cfg(test)]
 mod tests;
 
+mod par_d1;
 mod par_d1_depr;
 mod set_of_idx_d1;
 
