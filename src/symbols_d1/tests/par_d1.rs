@@ -1,5 +1,5 @@
 use crate::symbols::Num;
-use crate::symbols_d1::{ParD1, ParD1Fun};
+use crate::symbols_d1::{ParD1Depr, ParD1FunDepr};
 use crate::Model;
 use alloc::boxed::Box;
 use alloc::vec;
@@ -12,7 +12,7 @@ fn add_some_more_pars(m: &Model<'_>) {
 
 #[test]
 fn par_d1_get_set() {
-    fn assert_values(par_symbols: &[ParD1<'_, '_>], i0: usize, expected: f64) {
+    fn assert_values(par_symbols: &[ParD1Depr<'_, '_>], i0: usize, expected: f64) {
         for s in par_symbols {
             assert_eq!(unsafe { s.el.get() }.eval(i0), expected);
         }
@@ -30,15 +30,15 @@ fn par_d1_get_set() {
     assert_values(&[p, par], 0, 0.0);
     assert_values(&[p, par], 42, 0.0);
 
-    p.el.update(|x| x.update_fun(ParD1Fun::new(Box::new(|_| 42.0))));
+    p.el.update(|x| x.update_fun(ParD1FunDepr::new(Box::new(|_| 42.0))));
     assert_values(&[p, par], 0, 42.0);
     assert_values(&[p, par], 42, 42.0);
 
-    p.el.update(|x| x.update_fun(ParD1Fun::new(Box::new(|i| i as f64))));
+    p.el.update(|x| x.update_fun(ParD1FunDepr::new(Box::new(|i| i as f64))));
     assert_values(&[p, par], 0, 0.0);
     assert_values(&[p, par], 42, 42.0);
 
-    p.el.update(|x| x.update_fun(ParD1Fun::new(Box::new(|i| data[i]))));
+    p.el.update(|x| x.update_fun(ParD1FunDepr::new(Box::new(|i| data[i]))));
     assert_values(&[p, par], 0, 10.0);
     assert_values(&[p, par], 1, 11.0);
     assert_values(&[p, par], 2, 12.0);
@@ -72,7 +72,7 @@ fn sca_from_par_d1() {
     // after wire up par-d1 data
 
     p1.el
-        .update(|x| x.update_fun(ParD1Fun::new(Box::new(|i| data[i]))));
+        .update(|x| x.update_fun(ParD1FunDepr::new(Box::new(|i| data[i]))));
 
     i0.el.update(|x| x.set_value(0));
     assert_value(p, 10.0);

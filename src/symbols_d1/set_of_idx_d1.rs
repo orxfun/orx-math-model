@@ -1,4 +1,4 @@
-use crate::elements::ElemCont;
+use crate::data_structs::ElemCont;
 use crate::ptr::RefPtr;
 use crate::symbols::{Indices, IndicesData, IndicesFun, PseudoInt};
 use crate::Model;
