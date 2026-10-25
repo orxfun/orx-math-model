@@ -1,4 +1,4 @@
-use crate::elements::ElemCont;
+use crate::data_structs::ElemCont;
 use crate::symbols::{IndicesFun, Set};
 use crate::Model;
 use alloc::boxed::Box;
