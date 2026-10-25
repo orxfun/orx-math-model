@@ -1,6 +1,6 @@
 use crate::elements::ElemCont;
 use crate::ptr::RefPtr;
-use crate::symbols::{PseudoInt, SetOfIdx, SetOfIdxData, SetOfIdxFun};
+use crate::symbols::{Indices, IndicesData, IndicesFun, PseudoInt};
 use crate::Model;
 use alloc::boxed::Box;
 use core::ops::Index;
@@ -25,12 +25,12 @@ impl SetOfIdxD1Fun<'_> {
 
 #[derive(derive_new::new)]
 pub struct SetOfIdxD1Data<'d> {
-    s0: RefPtr<SetOfIdxFun<'d>>,
+    s0: RefPtr<IndicesFun<'d>>,
     fun: SetOfIdxD1Fun<'d>,
 }
 
 impl<'d> SetOfIdxD1Data<'d> {
-    pub fn empty(s0: RefPtr<SetOfIdxFun<'d>>) -> Self {
+    pub fn empty(s0: RefPtr<IndicesFun<'d>>) -> Self {
         Self::new(s0, SetOfIdxD1Fun::empty())
     }
 
@@ -64,7 +64,7 @@ pub struct SetOfIdxD1<'m, 'd> {
 }
 
 impl<'m, 'd> SetOfIdxD1<'m, 'd> {
-    unsafe fn at_unchecked(self, i: impl Into<PseudoInt<'m, 'd>>) -> SetOfIdx<'d, 'd> {
+    unsafe fn at_unchecked(self, i: impl Into<PseudoInt<'m, 'd>>) -> Indices<'d, 'd> {
         struct PtrSetD1Fun<'d>(*const SetOfIdxD1Fun<'d>);
 
         impl<'d> PtrSetD1Fun<'d> {
@@ -88,20 +88,20 @@ impl<'m, 'd> SetOfIdxD1<'m, 'd> {
                 assert!(core::ptr::eq(self.m, i.m), "TODO: error msg");
                 // SAFETY: lifetime is tied to lifetime of 'm and 'd due to return type
                 let p = unsafe { RefPtr::new(i.fun_ptr()) };
-                SetOfIdxFun::new(Box::new(move |e| fun_d1.val().0(p.val().eval(), e)))
+                IndicesFun::new(Box::new(move |e| fun_d1.val().0(p.val().eval(), e)))
             }
-            PseudoInt::Raw(i0) => SetOfIdxFun::new(Box::new(move |e| fun_d1.val().0(i0, e))),
+            PseudoInt::Raw(i0) => IndicesFun::new(Box::new(move |e| fun_d1.val().0(i0, e))),
         };
 
         let m = unsafe { &*(self.m as *const Model<'d>) };
-        m.add_set_of_idx(SetOfIdxData::new(f))
+        m.add_set_of_idx(IndicesData::new(f))
     }
 }
 
 // index
 
 impl<'m, 'd, I: Into<PseudoInt<'m, 'd>>> Index<I> for SetOfIdxD1<'m, 'd> {
-    type Output = SetOfIdx<'m, 'd>;
+    type Output = Indices<'m, 'd>;
 
     fn index(&self, index: I) -> &Self::Output {
         // TODO: safety note: we are changing the lifetime from 'm,'d to 'd,'d

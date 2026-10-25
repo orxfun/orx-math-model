@@ -1,5 +1,5 @@
 use crate::ptr::RefPtr;
-use crate::symbols::{Int, IntFun, Num, NumFun, PseudoInt, SetOfIdxFun};
+use crate::symbols::{Int, IntFun, Num, NumFun, PseudoInt, IndicesFun};
 use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -23,12 +23,12 @@ impl<T: Default> ParCoreD1Fun<'_, T> {
 
 #[derive(derive_new::new)]
 pub struct ParCoreD1Data<'d, T: Default> {
-    s0: RefPtr<SetOfIdxFun<'d>>,
+    s0: RefPtr<IndicesFun<'d>>,
     fun: ParCoreD1Fun<'d, T>,
 }
 
 impl<'d, T: Default> ParCoreD1Data<'d, T> {
-    pub fn empty(s0: RefPtr<SetOfIdxFun<'d>>) -> Self {
+    pub fn empty(s0: RefPtr<IndicesFun<'d>>) -> Self {
         Self::new(s0, ParCoreD1Fun::empty())
     }
 
