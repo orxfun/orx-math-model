@@ -18,6 +18,8 @@ fn add_some_more_sets(m: &Model<'_>) {
     }
 }
 
+// indices
+
 #[test]
 fn indices_get_set() {
     let data = vec![1, 2, 3];
