@@ -3,6 +3,8 @@ use crate::symbols::SetFun;
 use crate::Model;
 use orx_imp_vec::Elem;
 
+pub enum ElementVal {}
+
 // data
 
 #[derive(derive_new::new)]

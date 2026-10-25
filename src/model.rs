@@ -3,7 +3,7 @@ use crate::symbols::{
     ParData, ParInt, ParIntData, PseudoInt, Set, SetFun,
 };
 use crate::symbols_d1::{
-    ParD1DataDepr, ParD1Depr, ParIntD1Depr, ParIntD1DataDepr, SetOfIdxD1, SetOfIdxD1Data,
+    ParD1DataDepr, ParD1Depr, ParIntD1DataDepr, ParIntD1Depr, SetOfIdxD1, SetOfIdxD1Data,
 };
 use orx_imp_vec::{Doubling, ImpVec, SplitVec};
 
