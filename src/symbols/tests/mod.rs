@@ -1,3 +1,5 @@
+mod element;
+mod element_str;
 mod idx;
 mod indices;
 mod par;
