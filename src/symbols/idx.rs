@@ -1,5 +1,5 @@
 use crate::ptr::RefPtr;
-use crate::symbols::IndicesFun;
+use crate::symbols::SetFun;
 use crate::Model;
 use orx_imp_vec::Elem;
 
@@ -7,12 +7,12 @@ use orx_imp_vec::Elem;
 
 #[derive(derive_new::new)]
 pub struct IdxData<'d> {
-    s0: RefPtr<IndicesFun<'d>>,
+    s0: RefPtr<SetFun<'d>>,
     value: usize,
 }
 
 impl<'d> IdxData<'d> {
-    pub fn s0(&self) -> RefPtr<IndicesFun<'d>> {
+    pub fn s0(&self) -> RefPtr<SetFun<'d>> {
         self.s0
     }
 

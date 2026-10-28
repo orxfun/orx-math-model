@@ -1,6 +1,6 @@
 use crate::data_structs::ElemCont;
 use crate::symbols::Indices;
-use crate::symbols_d1::SetOfIdxD1;
+use crate::symbols_d1_depr::SetOfIdxD1;
 use crate::Model;
 use alloc::vec;
 

@@ -1,5 +1,5 @@
 use crate::symbols::Int;
-use crate::symbols_d1::{ParIntD1Depr, ParIntD1FunDepr};
+use crate::symbols_d1_depr::{ParIntD1Depr, ParIntD1FunDepr};
 use crate::Model;
 use alloc::boxed::Box;
 use alloc::vec;

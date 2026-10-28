@@ -18,10 +18,8 @@ extern crate alloc;
 extern crate std;
 
 mod data_structs;
-mod indexing;
 mod model;
 mod ptr;
 mod symbols;
-mod symbols_d1;
 
 pub use model::Model;

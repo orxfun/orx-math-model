@@ -16,7 +16,7 @@ mod set_str;
 pub use element::{Element, ElementData};
 pub use element_str::{ElementStr, ElementStrData};
 pub use idx::{Idx, IdxData};
-pub use indices::{Indices, IndicesData, IndicesFun};
+pub use indices::{Indices, IndicesData};
 pub use int::{Int, IntFun};
 pub use num::{Num, NumFun};
 pub use par::{Par, ParData, ParInt, ParIntData};

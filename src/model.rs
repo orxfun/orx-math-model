@@ -3,9 +3,6 @@ use crate::symbols::{
     IntFun, Num, NumFun, Par, ParData, ParInt, ParIntData, PseudoInt, Set, SetFun, SetStr,
     SetStrFun,
 };
-use crate::symbols_d1::{
-    ParD1DataDepr, ParD1Depr, ParIntD1DataDepr, ParIntD1Depr, SetOfIdxD1, SetOfIdxD1Data,
-};
 use orx_imp_vec::{Doubling, ImpVec, SplitVec};
 
 type Pinned<T> = SplitVec<T, Doubling>;
@@ -22,13 +19,10 @@ pub struct Model<'d> {
     element_str: Bag<ElementStrData<'d>>,
 
     set_of_idx: Bag<IndicesData<'d>>,
-    set_of_idx_d1: Bag<SetOfIdxD1Data<'d>>,
     idx: Bag<IdxData<'d>>,
 
     par: Bag<ParData>,
-    par_d1: Bag<ParD1DataDepr<'d>>,
     par_int: Bag<ParIntData>,
-    par_int_d1: Bag<ParIntD1DataDepr<'d>>,
 
     num: Bag<NumFun<'d>>,
     int: Bag<IntFun<'d>>,
@@ -47,13 +41,10 @@ impl<'d> Model<'d> {
             element_str: new_bag(),
 
             set_of_idx: new_bag(),
-            set_of_idx_d1: new_bag(),
             idx: new_bag(),
 
             par: new_bag(),
-            par_d1: new_bag(),
             par_int: new_bag(),
-            par_int_d1: new_bag(),
 
             num: new_bag(),
             int: new_bag(),
@@ -90,11 +81,6 @@ impl<'d> Model<'d> {
         Indices::new(self, self.set_of_idx.push(data))
     }
 
-    pub fn set_of_idx_d1<'m>(&'m self, set: Indices<'m, 'd>) -> SetOfIdxD1<'m, 'd> {
-        let data = SetOfIdxD1Data::empty(set.fun_ptr());
-        SetOfIdxD1::new(self, self.set_of_idx_d1.push(data))
-    }
-
     // pars
 
     pub fn par(&self) -> Par<'_, 'd> {
@@ -105,16 +91,6 @@ impl<'d> Model<'d> {
     pub fn par_int(&self) -> ParInt<'_, 'd> {
         let data = ParIntData::new(0);
         ParInt::new(self, self.par_int.push(data))
-    }
-
-    pub fn par_d1<'m>(&'m self, set: Indices<'m, 'd>) -> ParD1Depr<'m, 'd> {
-        let data = ParD1DataDepr::empty(set.fun_ptr());
-        ParD1Depr::new(self, self.par_d1.push(data))
-    }
-
-    pub fn par_int_d1<'m>(&'m self, set: Indices<'m, 'd>) -> ParIntD1Depr<'m, 'd> {
-        let data = ParIntD1DataDepr::empty(set.fun_ptr());
-        ParIntD1Depr::new(self, self.par_int_d1.push(data))
     }
 
     // idx
