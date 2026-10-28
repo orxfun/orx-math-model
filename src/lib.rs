@@ -19,8 +19,10 @@ extern crate std;
 
 mod data_structs;
 mod dim1;
+mod key;
 mod model;
 mod ptr;
 mod symbols;
+mod val;
 
 pub use model::Model;
