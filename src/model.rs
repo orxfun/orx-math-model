@@ -1,6 +1,6 @@
 use crate::symbols::{
-    Element, ElementData, ElementStr, ElementStrData, Idx, IdxData, Indices, IndicesData,
-    IndicesFun, Int, IntFun, Num, NumFun, Par, ParData, ParInt, ParIntData, PseudoInt, Set, SetStr,
+    Element, ElementData, ElementStr, ElementStrData, Idx, IdxData, Indices, IndicesData, Int,
+    IntFun, Num, NumFun, Par, ParData, ParInt, ParIntData, PseudoInt, Set, SetFun, SetStr,
     SetStrFun,
 };
 use crate::symbols_d1::{
@@ -15,7 +15,7 @@ fn new_bag<T>() -> Bag<T> {
 }
 
 pub struct Model<'d> {
-    set: Bag<IndicesFun<'d>>,
+    set: Bag<SetFun<'d>>,
     element: Bag<ElementData<'d>>,
 
     set_str: Bag<SetStrFun<'d>>,
@@ -66,7 +66,7 @@ impl<'d> Model<'d> {
     // sets
 
     pub fn set(&self) -> Set<'_, 'd> {
-        Set::new(self, self.set.push(IndicesFun::empty()))
+        Set::new(self, self.set.push(SetFun::empty()))
     }
 
     pub fn set_str(&self) -> SetStr<'_, 'd> {
