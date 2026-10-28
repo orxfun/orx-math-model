@@ -2,6 +2,7 @@
 mod tests;
 
 mod element;
+mod element_str;
 mod idx;
 mod indices;
 mod int;
@@ -20,3 +21,4 @@ pub use num::{Num, NumFun};
 pub use par::{Par, ParData, ParInt, ParIntData};
 pub use pseudo_numbers::PseudoInt;
 pub use set::Set;
+pub use set_str::{SetStr, SetStrData, SetStrFun};
