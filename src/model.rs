@@ -1,7 +1,6 @@
 use crate::symbols::{
-    Element, ElementData, ElementStr, ElementStrData, Idx, IdxData, Indices, IndicesData, Int,
-    IntFun, Num, NumFun, Par, ParData, ParInt, ParIntData, PseudoInt, Set, SetFun, SetStr,
-    SetStrFun,
+    Element, ElementData, ElementStr, ElementStrData, Idx, IdxData, Indices, Int, IntFun, Num,
+    NumFun, Par, ParData, ParInt, ParIntData, PseudoInt, Set, SetFun, SetStr, SetStrFun,
 };
 use orx_imp_vec::{Doubling, ImpVec, SplitVec};
 

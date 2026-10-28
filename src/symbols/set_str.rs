@@ -20,35 +20,6 @@ impl<'d> SetStrFun<'d> {
     }
 }
 
-// data
-
-#[derive(derive_new::new)]
-pub struct SetStrData<'d> {
-    fun: SetStrFun<'d>,
-}
-
-impl<'d> SetStrData<'d> {
-    pub fn empty() -> Self {
-        Self::new(SetStrFun::empty())
-    }
-
-    pub fn fill(&self, elements: &mut ElemCont<&'d str>) {
-        self.fun.fill(elements);
-    }
-
-    pub fn update_fun(&mut self, fun: SetStrFun<'d>) {
-        self.fun = fun;
-    }
-
-    pub fn update_fun_from_gen<I>(&mut self, fun: impl Fn() -> I + 'd)
-    where
-        I: IntoIterator<Item = &'d str>,
-    {
-        let fun = move |e: &mut ElemCont<&'d str>| e.fill(fun());
-        self.update_fun(SetStrFun(Box::new(fun)));
-    }
-}
-
 // symbol
 
 #[derive(derive_new::new, Clone, Copy)]

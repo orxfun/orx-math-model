@@ -51,35 +51,6 @@ impl<'d> SetFun<'d> {
     }
 }
 
-// data
-
-#[derive(derive_new::new)]
-pub struct SetData<'d> {
-    fun: SetFun<'d>,
-}
-
-impl<'d> SetData<'d> {
-    pub fn empty() -> Self {
-        Self::new(SetFun::empty())
-    }
-
-    pub fn fill(&self, elements: &mut ElemCont<usize>) {
-        self.fun.fill(elements);
-    }
-
-    pub fn update_fun(&mut self, fun: SetFun<'d>) {
-        self.fun = fun;
-    }
-
-    pub fn update_fun_from_gen<I>(&mut self, fun: impl Fn() -> I + 'd)
-    where
-        I: IntoIterator<Item = usize>,
-    {
-        let fun = move |e: &mut ElemCont<usize>| e.fill(fun());
-        self.update_fun(SetFun(Box::new(fun)));
-    }
-}
-
 // symbol
 
 #[derive(derive_new::new, Clone, Copy)]
