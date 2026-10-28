@@ -4,3 +4,4 @@ mod par;
 mod par_int;
 mod sca;
 mod set;
+mod set_str;
