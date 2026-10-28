@@ -1,4 +1,4 @@
-pub trait Val {}
+pub trait Val: Default {}
 
 impl Val for i32 {}
 
