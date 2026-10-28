@@ -18,6 +18,7 @@ extern crate alloc;
 extern crate std;
 
 mod data_structs;
+mod dim1;
 mod model;
 mod ptr;
 mod symbols;
