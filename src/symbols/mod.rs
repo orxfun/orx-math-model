@@ -10,6 +10,7 @@ mod ops;
 mod par;
 mod pseudo_numbers;
 mod set;
+mod set_str;
 
 pub use element::{Element, ElementData};
 pub use idx::{Idx, IdxData};
