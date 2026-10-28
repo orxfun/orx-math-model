@@ -1,6 +1,7 @@
 use crate::data_structs::ElemCont;
-use crate::symbols::{Indices, ParIntData};
+use crate::symbols::{Indices, ParIntData, SetFun};
 use crate::Model;
+use alloc::boxed::Box;
 use alloc::vec;
 
 fn assert_elements(e: &mut ElemCont<usize>, set_symbols: &[Indices<'_, '_>], expected: &[usize]) {
@@ -36,13 +37,13 @@ fn indices_get_set() {
 
     add_some_more_sets(&m);
 
-    s.el.update(|x| x.update_fun_from_gen(|| data.iter().copied()));
+    s.el.update(|x| *x = SetFun::new(Box::new(|e| e.fill(data.iter().copied()))));
     assert_elements(&mut elements, &[s, set], &[1, 2, 3]);
 
-    s.el.update(|x| x.update_fun_from_gen(|| 0..data.len()));
+    s.el.update(|x| *x = SetFun::new(Box::new(|e| e.fill(0..data.len()))));
     assert_elements(&mut elements, &[s, set], &[0, 1, 2]);
 
-    s.el.update(|x| x.update_fun_from_gen(|| vec![1, 3, 5]));
+    s.el.update(|x| *x = SetFun::new(Box::new(|e| e.fill(vec![1, 3, 5]))));
     assert_elements(&mut elements, &[s, set], &[1, 3, 5]);
 }
 

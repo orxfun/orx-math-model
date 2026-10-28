@@ -1,9 +1,6 @@
 use crate::symbols::{
-    Element, ElementData, Idx, IdxData, Indices, IndicesData, IndicesFun, Int, IntFun, Num, NumFun,
-    Par, ParData, ParInt, ParIntData, PseudoInt, Set,
-};
-use crate::symbols_d1::{
-    ParD1DataDepr, ParD1Depr, ParIntD1DataDepr, ParIntD1Depr, SetOfIdxD1, SetOfIdxD1Data,
+    Element, ElementData, ElementStr, ElementStrData, Idx, IdxData, Indices, Int, IntFun, Num,
+    NumFun, Par, ParData, ParInt, ParIntData, PseudoInt, Set, SetFun, SetStr, SetStrFun,
 };
 use orx_imp_vec::{Doubling, ImpVec, SplitVec};
 
@@ -14,17 +11,17 @@ fn new_bag<T>() -> Bag<T> {
 }
 
 pub struct Model<'d> {
-    set: Bag<IndicesFun<'d>>,
+    set: Bag<SetFun<'d>>,
     element: Bag<ElementData<'d>>,
 
-    set_of_idx: Bag<IndicesData<'d>>,
-    set_of_idx_d1: Bag<SetOfIdxD1Data<'d>>,
+    set_str: Bag<SetStrFun<'d>>,
+    element_str: Bag<ElementStrData<'d>>,
+
+    set_of_idx: Bag<SetFun<'d>>,
     idx: Bag<IdxData<'d>>,
 
     par: Bag<ParData>,
-    par_d1: Bag<ParD1DataDepr<'d>>,
     par_int: Bag<ParIntData>,
-    par_int_d1: Bag<ParIntD1DataDepr<'d>>,
 
     num: Bag<NumFun<'d>>,
     int: Bag<IntFun<'d>>,
@@ -39,14 +36,14 @@ impl<'d> Model<'d> {
             set: new_bag(),
             element: new_bag(),
 
+            set_str: new_bag(),
+            element_str: new_bag(),
+
             set_of_idx: new_bag(),
-            set_of_idx_d1: new_bag(),
             idx: new_bag(),
 
             par: new_bag(),
-            par_d1: new_bag(),
             par_int: new_bag(),
-            par_int_d1: new_bag(),
 
             num: new_bag(),
             int: new_bag(),
@@ -59,11 +56,15 @@ impl<'d> Model<'d> {
     // sets
 
     pub fn set(&self) -> Set<'_, 'd> {
-        Set::new(self, self.set.push(IndicesFun::empty()))
+        Set::new(self, self.set.push(SetFun::empty()))
+    }
+
+    pub fn set_str(&self) -> SetStr<'_, 'd> {
+        SetStr::new(self, self.set_str.push(SetStrFun::empty()))
     }
 
     pub fn indices(&self) -> Indices<'_, 'd> {
-        self.add_set_of_idx(IndicesData::empty())
+        self.add_set_of_idx(SetFun::empty())
     }
 
     pub fn range<'m>(
@@ -71,17 +72,12 @@ impl<'d> Model<'d> {
         begin: impl Into<PseudoInt<'m, 'd>>,
         exclusive_end: impl Into<PseudoInt<'m, 'd>>,
     ) -> Indices<'m, 'd> {
-        let data = IndicesData::range(begin, exclusive_end);
+        let data = SetFun::range(begin, exclusive_end);
         Indices::new(self, self.set_of_idx.push(data))
     }
 
-    pub(crate) fn add_set_of_idx(&self, data: IndicesData<'d>) -> Indices<'_, 'd> {
+    pub(crate) fn add_set_of_idx(&self, data: SetFun<'d>) -> Indices<'_, 'd> {
         Indices::new(self, self.set_of_idx.push(data))
-    }
-
-    pub fn set_of_idx_d1<'m>(&'m self, set: Indices<'m, 'd>) -> SetOfIdxD1<'m, 'd> {
-        let data = SetOfIdxD1Data::empty(set.fun_ptr());
-        SetOfIdxD1::new(self, self.set_of_idx_d1.push(data))
     }
 
     // pars
@@ -96,21 +92,16 @@ impl<'d> Model<'d> {
         ParInt::new(self, self.par_int.push(data))
     }
 
-    pub fn par_d1<'m>(&'m self, set: Indices<'m, 'd>) -> ParD1Depr<'m, 'd> {
-        let data = ParD1DataDepr::empty(set.fun_ptr());
-        ParD1Depr::new(self, self.par_d1.push(data))
-    }
-
-    pub fn par_int_d1<'m>(&'m self, set: Indices<'m, 'd>) -> ParIntD1Depr<'m, 'd> {
-        let data = ParIntD1DataDepr::empty(set.fun_ptr());
-        ParIntD1Depr::new(self, self.par_int_d1.push(data))
-    }
-
     // idx
 
     pub(crate) fn element<'m>(&'m self, set: Set<'m, 'd>) -> Element<'m, 'd> {
         let data = ElementData::new(set.fun_ptr(), 0);
         Element::new(self, self.element.push(data))
+    }
+
+    pub(crate) fn element_str<'m>(&'m self, set: SetStr<'m, 'd>) -> ElementStr<'m, 'd> {
+        let data = ElementStrData::new(set.fun_ptr(), "");
+        ElementStr::new(self, self.element_str.push(data))
     }
 
     pub(crate) fn idx<'m>(&'m self, set: Indices<'m, 'd>) -> Idx<'m, 'd> {
