@@ -18,7 +18,7 @@ pub struct Model<'d> {
     set_str: Bag<SetStrFun<'d>>,
     element_str: Bag<ElementStrData<'d>>,
 
-    set_of_idx: Bag<IndicesData<'d>>,
+    set_of_idx: Bag<SetFun<'d>>,
     idx: Bag<IdxData<'d>>,
 
     par: Bag<ParData>,
@@ -65,7 +65,7 @@ impl<'d> Model<'d> {
     }
 
     pub fn indices(&self) -> Indices<'_, 'd> {
-        self.add_set_of_idx(IndicesData::empty())
+        self.add_set_of_idx(SetFun::empty())
     }
 
     pub fn range<'m>(
@@ -73,11 +73,11 @@ impl<'d> Model<'d> {
         begin: impl Into<PseudoInt<'m, 'd>>,
         exclusive_end: impl Into<PseudoInt<'m, 'd>>,
     ) -> Indices<'m, 'd> {
-        let data = IndicesData::range(begin, exclusive_end);
+        let data = SetFun::range(begin, exclusive_end);
         Indices::new(self, self.set_of_idx.push(data))
     }
 
-    pub(crate) fn add_set_of_idx(&self, data: IndicesData<'d>) -> Indices<'_, 'd> {
+    pub(crate) fn add_set_of_idx(&self, data: SetFun<'d>) -> Indices<'_, 'd> {
         Indices::new(self, self.set_of_idx.push(data))
     }
 
