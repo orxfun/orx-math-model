@@ -1,6 +1,5 @@
 use crate::data_structs::ElemCont;
 use crate::ptr::RefPtr;
-use crate::set_and_idx::SetAndIdx;
 use crate::symbols::{ElIdx, PseudoInt};
 use crate::Model;
 use alloc::boxed::Box;
@@ -69,12 +68,4 @@ impl<'m, 'd> SetIdx<'m, 'd> {
     pub fn idx(self) -> ElIdx<'m, 'd> {
         self.m.el_idx(self)
     }
-}
-
-// set & idx
-
-impl<'m, 'd> SetAndIdx for SetIdx<'m, 'd> {
-    type Idx = ElIdx<'m, 'd>;
-
-    type Key = usize;
 }

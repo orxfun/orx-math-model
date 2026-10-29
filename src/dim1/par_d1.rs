@@ -35,3 +35,11 @@ where
     pub(crate) m: &'m Model<'d>,
     pub(crate) el: Elem<'m, ParD1Fun<'d, S, V>>,
 }
+
+impl<'m, 'd, S, V> ParD1<'m, 'd, S, V>
+where
+    S: SetAndIdx,
+    V: Val,
+{
+    // pub(crate) fn at(self, )
+}

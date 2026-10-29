@@ -1,5 +1,4 @@
 use crate::ptr::RefPtr;
-use crate::set_and_idx::SetAndIdx;
 use crate::symbols::{Idx, SetIdxFun};
 use crate::Model;
 use orx_imp_vec::Elem;
@@ -21,12 +20,4 @@ impl<'m, 'd> Indices<'m, 'd> {
     pub fn idx(self) -> Idx<'m, 'd> {
         self.m.idx(self)
     }
-}
-
-// set & idx
-
-impl<'m, 'd> SetAndIdx for Indices<'m, 'd> {
-    type Idx = Idx<'m, 'd>;
-
-    type Key = usize;
 }
