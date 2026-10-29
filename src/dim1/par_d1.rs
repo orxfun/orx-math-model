@@ -1,8 +1,8 @@
 use crate::{
     key::Key,
-    ptr::RefPtr,
-    set_and_idx::{AsSetIdxIdx, SetAndIdx},
-    symbols::{Num, NumFun, SetIdx},
+    ptr::{RefPtr, ValPtr},
+    set_and_idx::{AsIdxIdx, AsSetIdxIdx, AsSetStrIdx, SetAndIdx},
+    symbols::{Indices, Num, NumFun, SetIdx, SetStr},
     val::Val,
     Model,
 };
@@ -66,10 +66,46 @@ impl<'m, 'd> ParD1<'m, 'd, SetIdx<'m, 'd>, f64> {
 
         let f = match i.into() {
             AsSetIdxIdx::El(el) => {
-                //
-                todo!()
+                let p = unsafe { ValPtr::new(el.val_ptr()) };
+                NumFun::new(Box::new(move || fun_d1.val().0(p.val())))
             }
             AsSetIdxIdx::Const(i) => NumFun::new(Box::new(move || fun_d1.val().0(i))),
+        };
+
+        self.m.num(f)
+    }
+}
+
+// S = set-str; V = f64
+
+impl<'m, 'd> ParD1<'m, 'd, SetStr<'m, 'd>, f64> {
+    pub(crate) fn at(self, i: impl Into<AsSetStrIdx<'m, 'd>>) -> Num<'m, 'd> {
+        let fun_d1 = unsafe { RefPtr::new(self.el.as_ptr()) };
+
+        let f = match i.into() {
+            AsSetStrIdx::El(el) => {
+                let p = unsafe { ValPtr::new(el.val_ptr()) };
+                NumFun::new(Box::new(move || fun_d1.val().0(p.val())))
+            }
+            AsSetStrIdx::Const(i) => NumFun::new(Box::new(move || fun_d1.val().0(i))),
+        };
+
+        self.m.num(f)
+    }
+}
+
+// S = indices; V = f64
+
+impl<'m, 'd> ParD1<'m, 'd, Indices<'m, 'd>, f64> {
+    pub(crate) fn at(self, i: impl Into<AsIdxIdx<'m, 'd>>) -> Num<'m, 'd> {
+        let fun_d1 = unsafe { RefPtr::new(self.el.as_ptr()) };
+
+        let f = match i.into() {
+            AsIdxIdx::Int(int) => {
+                let p = unsafe { RefPtr::new(int.fun_ptr()) };
+                NumFun::new(Box::new(move || fun_d1.val().0(p.val().eval())))
+            }
+            AsIdxIdx::Const(i) => NumFun::new(Box::new(move || fun_d1.val().0(i))),
         };
 
         self.m.num(f)
