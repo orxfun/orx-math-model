@@ -8,10 +8,6 @@ use orx_imp_vec::Elem;
 pub struct ValFun<'d, T: Default>(Box<dyn Fn() -> T + 'd>);
 
 impl<T: Default> ValFun<'_, T> {
-    pub fn empty() -> Self {
-        Self(Box::new(|| Default::default()))
-    }
-
     pub fn eval(&self) -> T {
         self.0()
     }

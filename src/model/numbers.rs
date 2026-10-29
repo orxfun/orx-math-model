@@ -15,11 +15,11 @@ impl<'d> Numbers<'d> {
         }
     }
 
-    pub fn int<'m>(&'m self) -> Elem<'m, ValFun<'d, i64>> {
-        self.int.push(ValFun::empty())
+    pub fn int<'m>(&'m self, fun: ValFun<'d, i64>) -> Elem<'m, ValFun<'d, i64>> {
+        self.int.push(fun)
     }
 
-    pub fn num<'m>(&'m self) -> Elem<'m, ValFun<'d, f64>> {
-        self.num.push(ValFun::empty())
+    pub fn num<'m>(&'m self, fun: ValFun<'d, f64>) -> Elem<'m, ValFun<'d, f64>> {
+        self.num.push(fun)
     }
 }
