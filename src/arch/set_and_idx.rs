@@ -89,7 +89,7 @@ impl<'m, 'd> From<Int<'m, 'd>> for AsIdxIdx<'m, 'd> {
 impl<'m, 'd> From<Idx<'m, 'd>> for AsIdxIdx<'m, 'd> {
     fn from(value: Idx<'m, 'd>) -> Self {
         let p = unsafe { ValPtr::new(value.val_ptr()) };
-        let fun = IntFun::new(Box::new(move || p.val()));
+        let fun = IntFun::new(Box::new(move || p.val() as i64));
         Self::Int(value.m.int(fun))
     }
 }
