@@ -1,7 +1,7 @@
 use crate::dim1::ParD1Fun;
 use crate::symbols::{
     ElIdx, ElIdxData, ElStr, ElStrData, Idx, IdxData, Indices, Int, IntFun, Num, NumFun, Par,
-    ParData, ParInt, ParIntData, PseudoInt, Set, SetFun, SetStr, SetStrFun,
+    ParData, ParInt, ParIntData, PseudoInt, SetIdx, SetIdxFun, SetStr, SetStrFun,
 };
 use orx_imp_vec::{Doubling, ImpVec, SplitVec};
 
@@ -12,13 +12,13 @@ fn new_bag<T>() -> Bag<T> {
 }
 
 pub struct Model<'d> {
-    set: Bag<SetFun<'d>>,
+    set: Bag<SetIdxFun<'d>>,
     element: Bag<ElIdxData<'d>>,
 
     set_str: Bag<SetStrFun<'d>>,
     element_str: Bag<ElStrData<'d>>,
 
-    set_of_idx: Bag<SetFun<'d>>,
+    set_of_idx: Bag<SetIdxFun<'d>>,
     idx: Bag<IdxData<'d>>,
 
     par: Bag<ParData>,
@@ -62,8 +62,8 @@ impl<'d> Model<'d> {
 
     // sets
 
-    pub fn set(&self) -> Set<'_, 'd> {
-        Set::new(self, self.set.push(SetFun::empty()))
+    pub fn set(&self) -> SetIdx<'_, 'd> {
+        SetIdx::new(self, self.set.push(SetIdxFun::empty()))
     }
 
     pub fn set_str(&self) -> SetStr<'_, 'd> {
@@ -71,7 +71,7 @@ impl<'d> Model<'d> {
     }
 
     pub fn indices(&self) -> Indices<'_, 'd> {
-        self.add_set_of_idx(SetFun::empty())
+        self.add_set_of_idx(SetIdxFun::empty())
     }
 
     pub fn range<'m>(
@@ -79,11 +79,11 @@ impl<'d> Model<'d> {
         begin: impl Into<PseudoInt<'m, 'd>>,
         exclusive_end: impl Into<PseudoInt<'m, 'd>>,
     ) -> Indices<'m, 'd> {
-        let data = SetFun::range(begin, exclusive_end);
+        let data = SetIdxFun::range(begin, exclusive_end);
         Indices::new(self, self.set_of_idx.push(data))
     }
 
-    pub(crate) fn add_set_of_idx(&self, data: SetFun<'d>) -> Indices<'_, 'd> {
+    pub(crate) fn add_set_of_idx(&self, data: SetIdxFun<'d>) -> Indices<'_, 'd> {
         Indices::new(self, self.set_of_idx.push(data))
     }
 
@@ -103,7 +103,7 @@ impl<'d> Model<'d> {
 
     // idx
 
-    pub(crate) fn element<'m>(&'m self, set: Set<'m, 'd>) -> ElIdx<'m, 'd> {
+    pub(crate) fn element<'m>(&'m self, set: SetIdx<'m, 'd>) -> ElIdx<'m, 'd> {
         let data = ElIdxData::new(set.fun_ptr(), 0);
         ElIdx::new(self, self.element.push(data))
     }

@@ -1,5 +1,5 @@
 use crate::ptr::RefPtr;
-use crate::symbols::SetFun;
+use crate::symbols::SetIdxFun;
 use crate::Model;
 use orx_imp_vec::Elem;
 
@@ -7,12 +7,12 @@ use orx_imp_vec::Elem;
 
 #[derive(derive_new::new)]
 pub struct ElIdxData<'d> {
-    s0: RefPtr<SetFun<'d>>,
+    s0: RefPtr<SetIdxFun<'d>>,
     value: usize,
 }
 
 impl<'d> ElIdxData<'d> {
-    pub fn s0(&self) -> RefPtr<SetFun<'d>> {
+    pub fn s0(&self) -> RefPtr<SetIdxFun<'d>> {
         self.s0
     }
 
