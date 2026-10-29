@@ -14,9 +14,21 @@ impl<'m, 'd> SetAndIdx for SetIdx<'m, 'd> {
     type Key = usize;
 }
 
-pub enum IntoElIdx<'m, 'd> {
+pub enum AsSetIdxIdx<'m, 'd> {
     El(ElIdx<'m, 'd>),
     Const(usize),
+}
+
+impl<'m, 'd> From<ElIdx<'m, 'd>> for AsSetIdxIdx<'m, 'd> {
+    fn from(value: ElIdx<'m, 'd>) -> Self {
+        Self::El(value)
+    }
+}
+
+impl<'m, 'd> From<usize> for AsSetIdxIdx<'m, 'd> {
+    fn from(value: usize) -> Self {
+        Self::Const(value)
+    }
 }
 
 // set-str
@@ -27,9 +39,21 @@ impl<'m, 'd> SetAndIdx for SetStr<'m, 'd> {
     type Key = &'d str;
 }
 
-pub enum IntoElStr<'m, 'd> {
+pub enum AsSetStrIdx<'m, 'd> {
     El(ElStr<'m, 'd>),
     Const(&'d str),
+}
+
+impl<'m, 'd> From<ElStr<'m, 'd>> for AsSetStrIdx<'m, 'd> {
+    fn from(value: ElStr<'m, 'd>) -> Self {
+        Self::El(value)
+    }
+}
+
+impl<'m, 'd> From<&'d str> for AsSetStrIdx<'m, 'd> {
+    fn from(value: &'d str) -> Self {
+        Self::Const(value)
+    }
 }
 
 // indices
@@ -40,7 +64,19 @@ impl<'m, 'd> SetAndIdx for Indices<'m, 'd> {
     type Key = usize;
 }
 
-pub enum IntoIdx<'m, 'd> {
+pub enum AsIdxIdx<'m, 'd> {
     Int(Int<'m, 'd>),
     Const(usize),
+}
+
+impl<'m, 'd> From<Int<'m, 'd>> for AsIdxIdx<'m, 'd> {
+    fn from(value: Int<'m, 'd>) -> Self {
+        Self::Int(value)
+    }
+}
+
+impl<'m, 'd> From<usize> for AsIdxIdx<'m, 'd> {
+    fn from(value: usize) -> Self {
+        Self::Const(value)
+    }
 }
