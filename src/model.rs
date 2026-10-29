@@ -1,7 +1,7 @@
 use crate::dim1::ParD1Fun;
 use crate::symbols::{
-    ElIdx, ElIdxData, ElementStr, ElementStrData, Idx, IdxData, Indices, Int, IntFun, Num, NumFun,
-    Par, ParData, ParInt, ParIntData, PseudoInt, Set, SetFun, SetStr, SetStrFun,
+    ElIdx, ElIdxData, ElStr, ElStrData, Idx, IdxData, Indices, Int, IntFun, Num, NumFun, Par,
+    ParData, ParInt, ParIntData, PseudoInt, Set, SetFun, SetStr, SetStrFun,
 };
 use orx_imp_vec::{Doubling, ImpVec, SplitVec};
 
@@ -16,7 +16,7 @@ pub struct Model<'d> {
     element: Bag<ElIdxData<'d>>,
 
     set_str: Bag<SetStrFun<'d>>,
-    element_str: Bag<ElementStrData<'d>>,
+    element_str: Bag<ElStrData<'d>>,
 
     set_of_idx: Bag<SetFun<'d>>,
     idx: Bag<IdxData<'d>>,
@@ -108,9 +108,9 @@ impl<'d> Model<'d> {
         ElIdx::new(self, self.element.push(data))
     }
 
-    pub(crate) fn element_str<'m>(&'m self, set: SetStr<'m, 'd>) -> ElementStr<'m, 'd> {
-        let data = ElementStrData::new(set.fun_ptr(), "");
-        ElementStr::new(self, self.element_str.push(data))
+    pub(crate) fn element_str<'m>(&'m self, set: SetStr<'m, 'd>) -> ElStr<'m, 'd> {
+        let data = ElStrData::new(set.fun_ptr(), "");
+        ElStr::new(self, self.element_str.push(data))
     }
 
     pub(crate) fn idx<'m>(&'m self, set: Indices<'m, 'd>) -> Idx<'m, 'd> {

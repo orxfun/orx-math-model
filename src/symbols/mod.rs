@@ -2,7 +2,7 @@
 mod tests;
 
 mod el_idx;
-mod element_str;
+mod el_str;
 mod idx;
 mod indices;
 mod int;
@@ -14,7 +14,7 @@ mod set;
 mod set_str;
 
 pub use el_idx::{ElIdx, ElIdxData};
-pub use element_str::{ElementStr, ElementStrData};
+pub use el_str::{ElStr, ElStrData};
 pub use idx::{Idx, IdxData};
 pub use indices::Indices;
 pub use int::{Int, IntFun};

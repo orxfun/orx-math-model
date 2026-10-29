@@ -1,7 +1,7 @@
-use crate::symbols::ElementStr;
+use crate::symbols::ElStr;
 use crate::Model;
 
-fn assert_idx_value<'d>(idx_symbols: &[ElementStr<'_, 'd>], expected: &'d str) {
+fn assert_idx_value<'d>(idx_symbols: &[ElStr<'_, 'd>], expected: &'d str) {
     for i in idx_symbols {
         assert_eq!(unsafe { i.el.get() }.value(), expected);
     }
