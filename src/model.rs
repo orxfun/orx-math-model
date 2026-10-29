@@ -27,9 +27,6 @@ pub struct Model<'d> {
     num: Bag<NumFun<'d>>,
     int: Bag<IntFun<'d>>,
 
-    // dim1
-    par_d1: Bag<ParD1Fun<'d, f64>>,
-
     // symbols
     sym_set: Bag<Indices<'d, 'd>>,
 }
@@ -51,9 +48,6 @@ impl<'d> Model<'d> {
 
             num: new_bag(),
             int: new_bag(),
-
-            // dim1
-            par_d1: new_bag(),
 
             // symbols
             sym_set: new_bag(),

@@ -75,4 +75,6 @@ impl<'m, 'd> SetIdx<'m, 'd> {
 
 impl<'m, 'd> SetAndIdx for SetIdx<'m, 'd> {
     type Idx = ElIdx<'m, 'd>;
+
+    type Key = usize;
 }

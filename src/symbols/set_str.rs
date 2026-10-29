@@ -44,4 +44,6 @@ impl<'m, 'd> SetStr<'m, 'd> {
 
 impl<'m, 'd> SetAndIdx for SetStr<'m, 'd> {
     type Idx = ElStr<'m, 'd>;
+
+    type Key = &'d str;
 }

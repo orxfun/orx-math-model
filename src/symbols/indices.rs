@@ -27,4 +27,6 @@ impl<'m, 'd> Indices<'m, 'd> {
 
 impl<'m, 'd> SetAndIdx for Indices<'m, 'd> {
     type Idx = Idx<'m, 'd>;
+
+    type Key = usize;
 }
