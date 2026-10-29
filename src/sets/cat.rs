@@ -15,6 +15,7 @@ impl<'d, K> SetFun<'d, K> {
 
 // symbol
 
+#[derive(derive_new::new)]
 pub struct Set<'m, 'd, K> {
     pub(crate) m: &'m Model<'d>,
     pub(crate) el: Elem<'m, SetFun<'d, K>>,

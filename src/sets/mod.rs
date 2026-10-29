@@ -1,6 +1,6 @@
 mod cat;
 mod elements;
-mod int_set;
+mod indices;
 
 pub use cat::{Set, SetFun};
-pub use int_set::{IntSet, IntSetFun};
+pub use indices::{Indices, IndicesFun};
