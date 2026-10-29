@@ -1,25 +1,25 @@
-use crate::{key::Key, val::Val, Model};
+use crate::{set_and_idx::SetAndIdx, val::Val, Model};
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 
 // fun
 
 #[derive(derive_new::new)]
-pub struct ParD1Fun<'d, K, V>(Box<dyn Fn(K) -> V + 'd>)
+pub struct ParD1Fun<'d, S, V>(Box<dyn Fn(S::Key) -> V + 'd>)
 where
-    K: Key,
+    S: SetAndIdx,
     V: Val;
 
-impl<'d, K, V> ParD1Fun<'d, K, V>
+impl<'d, S, V> ParD1Fun<'d, S, V>
 where
-    K: Key,
+    S: SetAndIdx,
     V: Val,
 {
     pub fn empty() -> Self {
         Self(Box::new(|_| Default::default()))
     }
 
-    pub fn eval(&self, i0: K) -> V {
+    pub fn eval(&self, i0: S::Key) -> V {
         self.0(i0)
     }
 }
@@ -27,11 +27,11 @@ where
 // symbol
 
 #[derive(derive_new::new)]
-pub struct ParD1<'m, 'd, K, V>
+pub struct ParD1<'m, 'd, S, V>
 where
-    K: Key,
+    S: SetAndIdx,
     V: Val,
 {
     pub(crate) m: &'m Model<'d>,
-    pub(crate) el: Elem<'m, ParD1Fun<'d, K, V>>,
+    pub(crate) el: Elem<'m, ParD1Fun<'d, S, V>>,
 }
