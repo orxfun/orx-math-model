@@ -35,6 +35,6 @@ impl<'m, 'd> SetStr<'m, 'd> {
     }
 
     pub fn idx(self) -> ElStr<'m, 'd> {
-        self.m.element_str(self)
+        self.m.el_str(self)
     }
 }

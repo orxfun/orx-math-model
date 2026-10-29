@@ -14,7 +14,7 @@ impl<'m, 'd> Add<Idx<'m, 'd>> for Idx<'m, 'd> {
         // SAFETY: both are tied to lifetime of 'm and 'd due to return type
         let [a, b] = unsafe { [ValPtr::new(self.val_ptr()), ValPtr::new(rhs.val_ptr())] };
         let f = move || a.val() + b.val();
-        self.m.add_int(IntFun::new(Box::new(f)))
+        self.m.int(IntFun::new(Box::new(f)))
     }
 }
 
@@ -27,7 +27,7 @@ impl<'m, 'd> Add<usize> for Idx<'m, 'd> {
         // SAFETY: both are tied to lifetime of 'm and 'd due to return type
         let a = unsafe { ValPtr::new(self.val_ptr()) };
         let f = move || a.val() + rhs;
-        self.m.add_int(IntFun::new(Box::new(f)))
+        self.m.int(IntFun::new(Box::new(f)))
     }
 }
 
@@ -38,6 +38,6 @@ impl<'m, 'd> Add<Idx<'m, 'd>> for usize {
         // SAFETY: both are tied to lifetime of 'm and 'd due to return type
         let b = unsafe { ValPtr::new(rhs.val_ptr()) };
         let f = move || self + b.val();
-        rhs.m.add_int(IntFun::new(Box::new(f)))
+        rhs.m.int(IntFun::new(Box::new(f)))
     }
 }

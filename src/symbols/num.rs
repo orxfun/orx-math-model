@@ -33,6 +33,6 @@ impl<'m, 'd> From<Par<'m, 'd>> for Num<'m, 'd> {
     fn from(value: Par<'m, 'd>) -> Self {
         let p = unsafe { ValPtr::new(value.val_ptr()) };
         let fun = NumFun(Box::new(move || p.val()));
-        value.m.add_num(fun)
+        value.m.num(fun)
     }
 }

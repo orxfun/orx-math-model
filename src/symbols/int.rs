@@ -35,7 +35,7 @@ impl<'m, 'd> From<Idx<'m, 'd>> for Int<'m, 'd> {
     fn from(value: Idx<'m, 'd>) -> Self {
         let p = unsafe { ValPtr::new(value.val_ptr()) };
         let fun = IntFun(Box::new(move || p.val()));
-        value.m.add_int(fun)
+        value.m.int(fun)
     }
 }
 
@@ -43,6 +43,6 @@ impl<'m, 'd> From<ParInt<'m, 'd>> for Int<'m, 'd> {
     fn from(value: ParInt<'m, 'd>) -> Self {
         let p = unsafe { ValPtr::new(value.val_ptr()) };
         let fun = IntFun(Box::new(move || p.val()));
-        value.m.add_int(fun)
+        value.m.int(fun)
     }
 }

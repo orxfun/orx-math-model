@@ -66,6 +66,6 @@ impl<'m, 'd> SetIdx<'m, 'd> {
     }
 
     pub fn idx(self) -> ElIdx<'m, 'd> {
-        self.m.element(self)
+        self.m.el_idx(self)
     }
 }

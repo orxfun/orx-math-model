@@ -14,7 +14,7 @@ fn assert_elements<'d>(e: &mut ElemCont<&'d str>, s: SetStr<'_, 'd>, expected: &
 
 fn add_some_more_sets(m: &Model<'_>) {
     for _ in 0..3 {
-        let _ = m.set();
+        let _ = m.set_idx();
     }
 }
 

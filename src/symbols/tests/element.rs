@@ -11,7 +11,7 @@ fn assert_idx_value(idx_symbols: &[ElIdx<'_, '_>], expected: usize) {
 fn idx_get_set() {
     let m = Model::new();
 
-    let s = m.set();
+    let s = m.set_idx();
     let idx = s.idx();
     let i = idx;
 

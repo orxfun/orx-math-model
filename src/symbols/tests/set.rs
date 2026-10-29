@@ -13,7 +13,7 @@ fn assert_elements(e: &mut ElemCont<usize>, s: SetIdx<'_, '_>, expected: &[usize
 
 fn add_some_more_sets(m: &Model<'_>) {
     for _ in 0..3 {
-        let _ = m.set();
+        let _ = m.set_idx();
     }
 }
 
@@ -26,7 +26,7 @@ fn set_get_set() {
 
     add_some_more_sets(&m);
 
-    let s = m.set();
+    let s = m.set_idx();
 
     assert_elements(&mut e, s, &[]);
 
