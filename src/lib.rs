@@ -21,7 +21,7 @@ mod data_structs;
 mod dim1;
 mod model;
 mod ptr;
-mod sets_and_indices;
+mod set_and_idx;
 mod symbols;
 mod val;
 

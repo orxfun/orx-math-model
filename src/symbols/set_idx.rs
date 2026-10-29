@@ -1,6 +1,6 @@
 use crate::data_structs::ElemCont;
 use crate::ptr::RefPtr;
-use crate::sets_and_indices::SetAndIdx;
+use crate::set_and_idx::SetAndIdx;
 use crate::symbols::{ElIdx, PseudoInt};
 use crate::Model;
 use alloc::boxed::Box;
