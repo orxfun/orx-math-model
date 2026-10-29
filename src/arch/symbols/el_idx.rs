@@ -1,18 +1,18 @@
 use crate::ptr::RefPtr;
-use crate::symbols::SetFun;
+use crate::symbols::SetIdxFun;
 use crate::Model;
 use orx_imp_vec::Elem;
 
 // data
 
 #[derive(derive_new::new)]
-pub struct IdxData<'d> {
-    s0: RefPtr<SetFun<'d>>,
+pub struct ElIdxData<'d> {
+    s0: RefPtr<SetIdxFun<'d>>,
     value: usize,
 }
 
-impl<'d> IdxData<'d> {
-    pub fn s0(&self) -> RefPtr<SetFun<'d>> {
+impl<'d> ElIdxData<'d> {
+    pub fn s0(&self) -> RefPtr<SetIdxFun<'d>> {
         self.s0
     }
 
@@ -28,12 +28,12 @@ impl<'d> IdxData<'d> {
 // symbol
 
 #[derive(derive_new::new, Clone, Copy)]
-pub struct Idx<'m, 'd> {
+pub struct ElIdx<'m, 'd> {
     pub(crate) m: &'m Model<'d>,
-    pub(crate) el: Elem<'m, IdxData<'d>>,
+    pub(crate) el: Elem<'m, ElIdxData<'d>>,
 }
 
-impl<'m, 'd> Idx<'m, 'd> {
+impl<'m, 'd> ElIdx<'m, 'd> {
     pub(crate) fn val_ptr(&self) -> *const usize {
         unsafe { core::ptr::addr_of!((*self.el.as_ptr()).value) }
     }

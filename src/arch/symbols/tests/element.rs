@@ -1,7 +1,7 @@
-use crate::symbols::Element;
+use crate::symbols::ElIdx;
 use crate::Model;
 
-fn assert_idx_value(idx_symbols: &[Element<'_, '_>], expected: usize) {
+fn assert_idx_value(idx_symbols: &[ElIdx<'_, '_>], expected: usize) {
     for i in idx_symbols {
         assert_eq!(unsafe { i.el.get() }.value(), expected);
     }
@@ -11,7 +11,7 @@ fn assert_idx_value(idx_symbols: &[Element<'_, '_>], expected: usize) {
 fn idx_get_set() {
     let m = Model::new();
 
-    let s = m.set();
+    let s = m.set_idx();
     let idx = s.idx();
     let i = idx;
 

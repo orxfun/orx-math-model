@@ -7,10 +7,10 @@ use orx_imp_vec::Elem;
 // fun
 
 #[derive(derive_new::new)]
-pub struct IntFun<'d>(Box<dyn Fn() -> usize + 'd>);
+pub struct IntFun<'d>(Box<dyn Fn() -> i64 + 'd>);
 
 impl IntFun<'_> {
-    pub fn eval(&self) -> usize {
+    pub fn eval(&self) -> i64 {
         self.0()
     }
 }
@@ -34,15 +34,15 @@ impl<'d> Int<'_, 'd> {
 impl<'m, 'd> From<Idx<'m, 'd>> for Int<'m, 'd> {
     fn from(value: Idx<'m, 'd>) -> Self {
         let p = unsafe { ValPtr::new(value.val_ptr()) };
-        let fun = IntFun(Box::new(move || p.val()));
-        value.m.add_int(fun)
+        let fun = IntFun(Box::new(move || p.val() as i64));
+        value.m.int(fun)
     }
 }
 
 impl<'m, 'd> From<ParInt<'m, 'd>> for Int<'m, 'd> {
     fn from(value: ParInt<'m, 'd>) -> Self {
         let p = unsafe { ValPtr::new(value.val_ptr()) };
-        let fun = IntFun(Box::new(move || p.val()));
-        value.m.add_int(fun)
+        let fun = IntFun(Box::new(move || p.val() as i64));
+        value.m.int(fun)
     }
 }

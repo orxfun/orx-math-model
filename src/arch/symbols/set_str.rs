@@ -1,6 +1,6 @@
 use crate::data_structs::ElemCont;
 use crate::ptr::RefPtr;
-use crate::symbols::ElementStr;
+use crate::symbols::ElStr;
 use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -34,7 +34,7 @@ impl<'m, 'd> SetStr<'m, 'd> {
         unsafe { RefPtr::new(self.el.as_ptr()) }
     }
 
-    pub fn idx(self) -> ElementStr<'m, 'd> {
-        self.m.element_str(self)
+    pub fn idx(self) -> ElStr<'m, 'd> {
+        self.m.el_str(self)
     }
 }

@@ -17,9 +17,10 @@ extern crate alloc;
 #[cfg(any(test, feature = "std"))]
 extern crate std;
 
-mod data_structs;
+mod idx;
 mod model;
+mod numbers;
 mod ptr;
-mod symbols;
+mod sets;
 
 pub use model::Model;

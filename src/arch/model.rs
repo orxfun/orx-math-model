@@ -1,6 +1,7 @@
+use crate::dim1::ParD1Fun;
 use crate::symbols::{
-    Element, ElementData, ElementStr, ElementStrData, Idx, IdxData, Indices, Int, IntFun, Num,
-    NumFun, Par, ParData, ParInt, ParIntData, PseudoInt, Set, SetFun, SetStr, SetStrFun,
+    ElIdx, ElIdxData, ElStr, ElStrData, Idx, IdxData, Indices, Int, IntFun, Num, NumFun, Par,
+    ParData, ParInt, ParIntData, PseudoInt, SetIdx, SetIdxFun, SetStr, SetStrFun,
 };
 use orx_imp_vec::{Doubling, ImpVec, SplitVec};
 
@@ -11,13 +12,13 @@ fn new_bag<T>() -> Bag<T> {
 }
 
 pub struct Model<'d> {
-    set: Bag<SetFun<'d>>,
-    element: Bag<ElementData<'d>>,
+    set_idx: Bag<SetIdxFun<'d>>,
+    el_idx: Bag<ElIdxData<'d>>,
 
     set_str: Bag<SetStrFun<'d>>,
-    element_str: Bag<ElementStrData<'d>>,
+    el_str: Bag<ElStrData<'d>>,
 
-    set_of_idx: Bag<SetFun<'d>>,
+    indices: Bag<SetIdxFun<'d>>,
     idx: Bag<IdxData<'d>>,
 
     par: Bag<ParData>,
@@ -33,13 +34,13 @@ pub struct Model<'d> {
 impl<'d> Model<'d> {
     pub fn new() -> Self {
         Self {
-            set: new_bag(),
-            element: new_bag(),
+            set_idx: new_bag(),
+            el_idx: new_bag(),
 
             set_str: new_bag(),
-            element_str: new_bag(),
+            el_str: new_bag(),
 
-            set_of_idx: new_bag(),
+            indices: new_bag(),
             idx: new_bag(),
 
             par: new_bag(),
@@ -55,8 +56,8 @@ impl<'d> Model<'d> {
 
     // sets
 
-    pub fn set(&self) -> Set<'_, 'd> {
-        Set::new(self, self.set.push(SetFun::empty()))
+    pub fn set_idx(&self) -> SetIdx<'_, 'd> {
+        SetIdx::new(self, self.set_idx.push(SetIdxFun::empty()))
     }
 
     pub fn set_str(&self) -> SetStr<'_, 'd> {
@@ -64,7 +65,7 @@ impl<'d> Model<'d> {
     }
 
     pub fn indices(&self) -> Indices<'_, 'd> {
-        self.add_set_of_idx(SetFun::empty())
+        Indices::new(self, self.indices.push(SetIdxFun::empty()))
     }
 
     pub fn range<'m>(
@@ -72,12 +73,8 @@ impl<'d> Model<'d> {
         begin: impl Into<PseudoInt<'m, 'd>>,
         exclusive_end: impl Into<PseudoInt<'m, 'd>>,
     ) -> Indices<'m, 'd> {
-        let data = SetFun::range(begin, exclusive_end);
-        Indices::new(self, self.set_of_idx.push(data))
-    }
-
-    pub(crate) fn add_set_of_idx(&self, data: SetFun<'d>) -> Indices<'_, 'd> {
-        Indices::new(self, self.set_of_idx.push(data))
+        let data = SetIdxFun::range(begin, exclusive_end);
+        Indices::new(self, self.indices.push(data))
     }
 
     // pars
@@ -94,14 +91,14 @@ impl<'d> Model<'d> {
 
     // idx
 
-    pub(crate) fn element<'m>(&'m self, set: Set<'m, 'd>) -> Element<'m, 'd> {
-        let data = ElementData::new(set.fun_ptr(), 0);
-        Element::new(self, self.element.push(data))
+    pub(crate) fn el_idx<'m>(&'m self, set: SetIdx<'m, 'd>) -> ElIdx<'m, 'd> {
+        let data = ElIdxData::new(set.fun_ptr(), 0);
+        ElIdx::new(self, self.el_idx.push(data))
     }
 
-    pub(crate) fn element_str<'m>(&'m self, set: SetStr<'m, 'd>) -> ElementStr<'m, 'd> {
-        let data = ElementStrData::new(set.fun_ptr(), "");
-        ElementStr::new(self, self.element_str.push(data))
+    pub(crate) fn el_str<'m>(&'m self, set: SetStr<'m, 'd>) -> ElStr<'m, 'd> {
+        let data = ElStrData::new(set.fun_ptr(), "");
+        ElStr::new(self, self.el_str.push(data))
     }
 
     pub(crate) fn idx<'m>(&'m self, set: Indices<'m, 'd>) -> Idx<'m, 'd> {
@@ -111,11 +108,11 @@ impl<'d> Model<'d> {
 
     // scalars
 
-    pub(crate) fn add_num<'m>(&'m self, fun: NumFun<'d>) -> Num<'m, 'd> {
+    pub(crate) fn num<'m>(&'m self, fun: NumFun<'d>) -> Num<'m, 'd> {
         Num::new(self, self.num.push(fun))
     }
 
-    pub(crate) fn add_int<'m>(&'m self, fun: IntFun<'d>) -> Int<'m, 'd> {
+    pub(crate) fn int<'m>(&'m self, fun: IntFun<'d>) -> Int<'m, 'd> {
         Int::new(self, self.int.push(fun))
     }
 

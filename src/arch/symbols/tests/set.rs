@@ -1,10 +1,10 @@
 use crate::data_structs::ElemCont;
-use crate::symbols::{Set, SetFun};
+use crate::symbols::{SetIdx, SetIdxFun};
 use crate::Model;
 use alloc::boxed::Box;
 use alloc::vec;
 
-fn assert_elements(e: &mut ElemCont<usize>, s: Set<'_, '_>, expected: &[usize]) {
+fn assert_elements(e: &mut ElemCont<usize>, s: SetIdx<'_, '_>, expected: &[usize]) {
     for _ in 0..3 {
         unsafe { s.el.get() }.fill(e);
         assert_eq!(e.as_slice(), expected);
@@ -13,7 +13,7 @@ fn assert_elements(e: &mut ElemCont<usize>, s: Set<'_, '_>, expected: &[usize]) 
 
 fn add_some_more_sets(m: &Model<'_>) {
     for _ in 0..3 {
-        let _ = m.set();
+        let _ = m.set_idx();
     }
 }
 
@@ -26,18 +26,18 @@ fn set_get_set() {
 
     add_some_more_sets(&m);
 
-    let s = m.set();
+    let s = m.set_idx();
 
     assert_elements(&mut e, s, &[]);
 
     add_some_more_sets(&m);
 
-    s.el.update(|x| *x = SetFun::new(Box::new(|e| e.fill(data.iter().copied()))));
+    s.el.update(|x| *x = SetIdxFun::new(Box::new(|e| e.fill(data.iter().copied()))));
     assert_elements(&mut e, s, &[1, 2, 3]);
 
-    s.el.update(|x| *x = SetFun::new(Box::new(|e| e.fill(0..data.len()))));
+    s.el.update(|x| *x = SetIdxFun::new(Box::new(|e| e.fill(0..data.len()))));
     assert_elements(&mut e, s, &[0, 1, 2]);
 
-    s.el.update(|x| *x = SetFun::new(Box::new(|e| e.fill(vec![1, 3, 5]))));
+    s.el.update(|x| *x = SetIdxFun::new(Box::new(|e| e.fill(vec![1, 3, 5]))));
     assert_elements(&mut e, s, &[1, 3, 5]);
 }
