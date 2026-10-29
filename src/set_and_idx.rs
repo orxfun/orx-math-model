@@ -1,4 +1,6 @@
-use crate::symbols::{ElIdx, ElStr, Idx, Indices, Int, SetIdx, SetStr};
+use crate::ptr::ValPtr;
+use crate::symbols::{ElIdx, ElStr, Idx, Indices, Int, IntFun, SetIdx, SetStr};
+use alloc::boxed::Box;
 
 pub trait SetAndIdx {
     type Idx;
@@ -72,6 +74,14 @@ pub enum AsIdxIdx<'m, 'd> {
 impl<'m, 'd> From<Int<'m, 'd>> for AsIdxIdx<'m, 'd> {
     fn from(value: Int<'m, 'd>) -> Self {
         Self::Int(value)
+    }
+}
+
+impl<'m, 'd> From<Idx<'m, 'd>> for AsIdxIdx<'m, 'd> {
+    fn from(value: Idx<'m, 'd>) -> Self {
+        let p = unsafe { ValPtr::new(value.val_ptr()) };
+        let fun = IntFun::new(Box::new(move || p.val()));
+        Self::Int(value.m.int(fun))
     }
 }
 
