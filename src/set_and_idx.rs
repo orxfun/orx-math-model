@@ -6,6 +6,8 @@ pub trait SetAndIdx {
     type Idx;
 
     type Key;
+
+    type AsIdx;
 }
 
 // set-idx
@@ -14,6 +16,8 @@ impl<'m, 'd> SetAndIdx for SetIdx<'m, 'd> {
     type Idx = ElIdx<'m, 'd>;
 
     type Key = usize;
+
+    type AsIdx = AsSetIdxIdx<'m, 'd>;
 }
 
 pub enum AsSetIdxIdx<'m, 'd> {
@@ -39,6 +43,8 @@ impl<'m, 'd> SetAndIdx for SetStr<'m, 'd> {
     type Idx = ElStr<'m, 'd>;
 
     type Key = &'d str;
+
+    type AsIdx = AsSetStrIdx<'m, 'd>;
 }
 
 pub enum AsSetStrIdx<'m, 'd> {
@@ -64,6 +70,8 @@ impl<'m, 'd> SetAndIdx for Indices<'m, 'd> {
     type Idx = Idx<'m, 'd>;
 
     type Key = usize;
+
+    type AsIdx = AsIdxIdx<'m, 'd>;
 }
 
 pub enum AsIdxIdx<'m, 'd> {
