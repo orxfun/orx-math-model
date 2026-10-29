@@ -1,3 +1,4 @@
+use crate::key::Key;
 use crate::ptr::ValPtr;
 use crate::symbols::{ElIdx, ElStr, Idx, Indices, Int, IntFun, SetIdx, SetStr};
 use alloc::boxed::Box;
@@ -5,7 +6,7 @@ use alloc::boxed::Box;
 pub trait SetAndIdx {
     type Idx;
 
-    type Key;
+    type Key: Key;
 
     type AsIdx;
 }
