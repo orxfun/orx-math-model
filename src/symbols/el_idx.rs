@@ -6,12 +6,12 @@ use orx_imp_vec::Elem;
 // data
 
 #[derive(derive_new::new)]
-pub struct ElementData<'d> {
+pub struct ElIdxData<'d> {
     s0: RefPtr<SetFun<'d>>,
     value: usize,
 }
 
-impl<'d> ElementData<'d> {
+impl<'d> ElIdxData<'d> {
     pub fn s0(&self) -> RefPtr<SetFun<'d>> {
         self.s0
     }
@@ -28,12 +28,12 @@ impl<'d> ElementData<'d> {
 // symbol
 
 #[derive(derive_new::new, Clone, Copy)]
-pub struct Element<'m, 'd> {
+pub struct ElIdx<'m, 'd> {
     pub(crate) m: &'m Model<'d>,
-    pub(crate) el: Elem<'m, ElementData<'d>>,
+    pub(crate) el: Elem<'m, ElIdxData<'d>>,
 }
 
-impl<'m, 'd> Element<'m, 'd> {
+impl<'m, 'd> ElIdx<'m, 'd> {
     pub(crate) fn val_ptr(&self) -> *const usize {
         unsafe { core::ptr::addr_of!((*self.el.as_ptr()).value) }
     }

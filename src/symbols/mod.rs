@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests;
 
-mod element;
+mod el_idx;
 mod element_str;
 mod idx;
 mod indices;
@@ -13,7 +13,7 @@ mod pseudo_numbers;
 mod set;
 mod set_str;
 
-pub use element::{Element, ElementData};
+pub use el_idx::{ElIdx, ElIdxData};
 pub use element_str::{ElementStr, ElementStrData};
 pub use idx::{Idx, IdxData};
 pub use indices::Indices;
