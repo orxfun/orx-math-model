@@ -1,11 +1,8 @@
-use crate::{
-    key::Key,
-    ptr::{RefPtr, ValPtr},
-    set_and_idx::{AsIdxIdx, AsSetIdxIdx, AsSetStrIdx, SetAndIdx},
-    symbols::{Indices, Num, NumFun, SetIdx, SetStr},
-    val::Val,
-    Model,
-};
+use crate::ptr::{RefPtr, ValPtr};
+use crate::set_and_idx::{AsIdxIdx, AsSetIdxIdx, AsSetStrIdx, SetAndIdx};
+use crate::symbols::{Indices, Int, IntFun, Num, NumFun, SetIdx, SetStr};
+use crate::Model;
+use crate::{key::Key, val::Val};
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 
@@ -109,5 +106,59 @@ impl<'m, 'd> ParD1<'m, 'd, Indices<'m, 'd>, f64> {
         };
 
         self.m.num(f)
+    }
+}
+
+// S = set-idx; V = i32
+
+impl<'m, 'd> ParD1<'m, 'd, SetIdx<'m, 'd>, i32> {
+    pub(crate) fn at(self, i: impl Into<AsSetIdxIdx<'m, 'd>>) -> Int<'m, 'd> {
+        let fun_d1 = unsafe { RefPtr::new(self.el.as_ptr()) };
+
+        let f = match i.into() {
+            AsSetIdxIdx::El(el) => {
+                let p = unsafe { ValPtr::new(el.val_ptr()) };
+                IntFun::new(Box::new(move || fun_d1.val().0(p.val())))
+            }
+            AsSetIdxIdx::Const(i) => IntFun::new(Box::new(move || fun_d1.val().0(i))),
+        };
+
+        self.m.int(f)
+    }
+}
+
+// S = set-str; V = i32
+
+impl<'m, 'd> ParD1<'m, 'd, SetStr<'m, 'd>, i32> {
+    pub(crate) fn at(self, i: impl Into<AsSetStrIdx<'m, 'd>>) -> Int<'m, 'd> {
+        let fun_d1 = unsafe { RefPtr::new(self.el.as_ptr()) };
+
+        let f = match i.into() {
+            AsSetStrIdx::El(el) => {
+                let p = unsafe { ValPtr::new(el.val_ptr()) };
+                IntFun::new(Box::new(move || fun_d1.val().0(p.val())))
+            }
+            AsSetStrIdx::Const(i) => IntFun::new(Box::new(move || fun_d1.val().0(i))),
+        };
+
+        self.m.int(f)
+    }
+}
+
+// S = indices; V = i32
+
+impl<'m, 'd> ParD1<'m, 'd, Indices<'m, 'd>, i32> {
+    pub(crate) fn at(self, i: impl Into<AsIdxIdx<'m, 'd>>) -> Int<'m, 'd> {
+        let fun_d1 = unsafe { RefPtr::new(self.el.as_ptr()) };
+
+        let f = match i.into() {
+            AsIdxIdx::Int(int) => {
+                let p = unsafe { RefPtr::new(int.fun_ptr()) };
+                IntFun::new(Box::new(move || fun_d1.val().0(p.val().eval())))
+            }
+            AsIdxIdx::Const(i) => IntFun::new(Box::new(move || fun_d1.val().0(i))),
+        };
+
+        self.m.int(f)
     }
 }
