@@ -19,9 +19,9 @@ extern crate std;
 
 mod data_structs;
 mod dim1;
-mod key;
 mod model;
 mod ptr;
+mod sets_and_indices;
 mod symbols;
 mod val;
 

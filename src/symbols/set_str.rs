@@ -1,5 +1,6 @@
 use crate::data_structs::ElemCont;
 use crate::ptr::RefPtr;
+use crate::sets_and_indices::SetAndIdx;
 use crate::symbols::ElStr;
 use crate::Model;
 use alloc::boxed::Box;
@@ -37,4 +38,10 @@ impl<'m, 'd> SetStr<'m, 'd> {
     pub fn idx(self) -> ElStr<'m, 'd> {
         self.m.el_str(self)
     }
+}
+
+// set & idx
+
+impl<'m, 'd> SetAndIdx for SetStr<'m, 'd> {
+    type Idx = ElStr<'m, 'd>;
 }
