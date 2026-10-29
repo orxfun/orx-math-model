@@ -41,4 +41,7 @@ where
     S: SetAndIdx,
     V: Val,
 {
+    pub(crate) fn at(self, i: impl Into<S::AsIdx>) {
+        //
+    }
 }
