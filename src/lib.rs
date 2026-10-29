@@ -19,3 +19,5 @@ extern crate std;
 
 mod model;
 mod sets;
+
+pub use model::Model;
