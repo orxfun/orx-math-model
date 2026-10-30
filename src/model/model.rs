@@ -22,15 +22,15 @@ impl<'d> Model<'d> {
 
     // sets
 
-    pub fn set_int<'m>(&'m self) -> CatSet<'m, 'd, usize> {
+    pub fn cat_set_int<'m>(&'m self) -> CatSet<'m, 'd, usize> {
         CatSet::new(self, self.sets.cat_int())
     }
 
-    pub fn set_str<'m>(&'m self) -> CatSet<'m, 'd, &'d str> {
+    pub fn cat_set_str<'m>(&'m self) -> CatSet<'m, 'd, &'d str> {
         CatSet::new(self, self.sets.cat_str())
     }
 
-    pub fn indices<'m>(&'m self) -> OrdSet<'m, 'd> {
+    pub fn ord_set<'m>(&'m self) -> OrdSet<'m, 'd> {
         OrdSet::new(self, self.sets.ord())
     }
 
