@@ -1,4 +1,4 @@
-use crate::{idx_scalars::IndicesIdx, ptr::RefPtr, sets::elements::Elements, Model};
+use crate::{indices::OrdIdx, ptr::RefPtr, sets::elements::Elements, Model};
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 
@@ -28,7 +28,7 @@ impl<'m, 'd> OrdSet<'m, 'd> {
         unsafe { RefPtr::new(self.el.as_ptr()) }
     }
 
-    pub fn idx(self) -> IndicesIdx<'m, 'd> {
-        self.m.idx_scalar_indices(self)
+    pub fn idx(self) -> OrdIdx<'m, 'd> {
+        self.m.idx_ord(self)
     }
 }

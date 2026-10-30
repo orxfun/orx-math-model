@@ -1,5 +1,5 @@
 mod bag;
-mod idx_scalars;
+mod indices;
 mod model;
 mod numbers;
 mod sets;

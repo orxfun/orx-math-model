@@ -5,12 +5,12 @@ use orx_imp_vec::Elem;
 
 // data
 
-pub struct IndicesIdxData<'d> {
+pub struct OrdIdxData<'d> {
     s0: RefPtr<OrdSetFun<'d>>,
     value: usize,
 }
 
-impl<'d> IndicesIdxData<'d> {
+impl<'d> OrdIdxData<'d> {
     pub fn new(set: OrdSet<'_, 'd>) -> Self {
         let s0 = set.fun_ptr();
         let value = 0;
@@ -30,7 +30,7 @@ impl<'d> IndicesIdxData<'d> {
 
 #[derive(derive_new::new)]
 #[new(visibility = "pub(crate)")]
-pub struct IndicesIdx<'m, 'd> {
+pub struct OrdIdx<'m, 'd> {
     pub(crate) m: &'m Model<'d>,
-    pub(crate) el: Elem<'m, IndicesIdxData<'d>>,
+    pub(crate) el: Elem<'m, OrdIdxData<'d>>,
 }

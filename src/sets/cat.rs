@@ -1,4 +1,4 @@
-use crate::{idx_scalars::Idx, ptr::RefPtr, sets::elements::Elements, Model};
+use crate::{indices::CatIdx, ptr::RefPtr, sets::elements::Elements, Model};
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 
@@ -30,13 +30,13 @@ impl<'m, 'd, K> CatSet<'m, 'd, K> {
 }
 
 impl<'m, 'd> CatSet<'m, 'd, usize> {
-    pub fn idx(self) -> Idx<'m, 'd, usize> {
-        self.m.idx_scalar_int(self)
+    pub fn idx(self) -> CatIdx<'m, 'd, usize> {
+        self.m.idx_cat_int(self)
     }
 }
 
 impl<'m, 'd> CatSet<'m, 'd, &'d str> {
-    pub fn idx(self) -> Idx<'m, 'd, &'d str> {
-        self.m.idx_scalar_str(self)
+    pub fn idx(self) -> CatIdx<'m, 'd, &'d str> {
+        self.m.idx_cat_str(self)
     }
 }
