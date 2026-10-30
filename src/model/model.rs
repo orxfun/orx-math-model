@@ -9,6 +9,13 @@ pub struct Model<'d> {
 }
 
 impl<'d> Model<'d> {
+    pub fn new() -> Self {
+        Self {
+            sets: Sets::new(),
+            numbers: Numbers::new(),
+        }
+    }
+
     // sets
 
     pub fn set_int<'m>(&'m self) -> Set<'m, 'd, usize> {
