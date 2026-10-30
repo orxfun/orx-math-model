@@ -16,6 +16,7 @@ impl<T: Default> ValFun<'_, T> {
 // symbol
 
 #[derive(derive_new::new, Clone, Copy)]
+#[new(visibility = "pub(crate)")]
 pub struct Val<'m, 'd, T: Default> {
     pub(crate) m: &'m Model<'d>,
     pub(crate) el: Elem<'m, ValFun<'d, T>>,

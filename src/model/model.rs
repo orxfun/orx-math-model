@@ -37,7 +37,11 @@ impl<'d> Model<'d> {
     // idx-scalars
 
     pub(crate) fn idx_scalar_int<'m>(&'m self, s: Set<'m, 'd, usize>) -> Idx<'m, 'd, usize> {
-        todo!()
+        Idx::new(self, self.idx_scalars.int(s))
+    }
+
+    pub(crate) fn idx_scalar_str<'m>(&'m self, s: Set<'m, 'd, &'d str>) -> Idx<'m, 'd, &'d str> {
+        Idx::new(self, self.idx_scalars.str(s))
     }
 
     // numbers

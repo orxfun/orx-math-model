@@ -30,6 +30,8 @@ impl<'d, K: Copy + Default> IdxData<'d, K> {
 
 // symbol
 
+#[derive(derive_new::new)]
+#[new(visibility = "pub(crate)")]
 pub struct Idx<'m, 'd, K: Copy + Default> {
     pub(crate) m: &'m Model<'d>,
     pub(crate) el: Elem<'m, IdxData<'d, K>>,

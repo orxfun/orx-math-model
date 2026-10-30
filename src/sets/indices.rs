@@ -16,6 +16,7 @@ impl<'d> IndicesFun<'d> {
 // symbol
 
 #[derive(derive_new::new)]
+#[new(visibility = "pub(crate)")]
 pub struct Indices<'m, 'd> {
     pub(crate) m: &'m Model<'d>,
     pub(crate) el: Elem<'m, IndicesFun<'d>>,
