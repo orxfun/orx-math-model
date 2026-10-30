@@ -1,4 +1,4 @@
-use crate::{sets::elements::Elements, Model};
+use crate::{ptr::RefPtr, sets::elements::Elements, Model};
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 
@@ -22,5 +22,10 @@ pub struct Set<'m, 'd, K> {
 }
 
 impl<'m, 'd, K> Set<'m, 'd, K> {
+    pub(crate) fn fun_ptr(&self) -> RefPtr<SetFun<'d, K>> {
+        // TODO: safety note
+        unsafe { RefPtr::new(self.el.as_ptr()) }
+    }
+
     // pub fn idx(&self) -> Idx
 }

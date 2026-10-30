@@ -1,15 +1,24 @@
-use crate::{ptr::RefPtr, sets::SetFun, Model};
+use crate::{
+    ptr::RefPtr,
+    sets::{Set, SetFun},
+    Model,
+};
 use orx_imp_vec::Elem;
 
 // data
 
-#[derive(derive_new::new)]
-pub struct IdxData<'d, K: Copy> {
+pub struct IdxData<'d, K: Copy + Default> {
     s0: RefPtr<SetFun<'d, K>>,
     value: K,
 }
 
-impl<'d, K: Copy> IdxData<'d, K> {
+impl<'d, K: Copy + Default> IdxData<'d, K> {
+    pub fn new(set: Set<'_, 'd, K>) -> Self {
+        let s0 = set.fun_ptr();
+        let value = K::default();
+        Self { s0, value }
+    }
+
     pub fn read(&self) -> K {
         self.value
     }
@@ -21,7 +30,7 @@ impl<'d, K: Copy> IdxData<'d, K> {
 
 // symbol
 
-pub struct Idx<'m, 'd, K: Copy> {
+pub struct Idx<'m, 'd, K: Copy + Default> {
     pub(crate) m: &'m Model<'d>,
     pub(crate) el: Elem<'m, IdxData<'d, K>>,
 }
