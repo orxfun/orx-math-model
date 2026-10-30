@@ -17,7 +17,7 @@ extern crate alloc;
 #[cfg(any(test, feature = "std"))]
 extern crate std;
 
-mod idx;
+mod idx_scalars;
 mod model;
 mod numbers;
 mod par_d1;

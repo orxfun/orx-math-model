@@ -1,4 +1,4 @@
-use crate::{sets::elements::Elements, Model};
+use crate::{idx_scalars::IndicesIdx, ptr::RefPtr, sets::elements::Elements, Model};
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 
@@ -15,9 +15,20 @@ impl<'d> IndicesFun<'d> {
 
 // symbol
 
-#[derive(derive_new::new)]
+#[derive(derive_new::new, Clone, Copy)]
 #[new(visibility = "pub(crate)")]
 pub struct Indices<'m, 'd> {
     pub(crate) m: &'m Model<'d>,
     pub(crate) el: Elem<'m, IndicesFun<'d>>,
+}
+
+impl<'m, 'd> Indices<'m, 'd> {
+    pub(crate) fn fun_ptr(&self) -> RefPtr<IndicesFun<'d>> {
+        // TODO: safety note
+        unsafe { RefPtr::new(self.el.as_ptr()) }
+    }
+
+    pub fn idx(self) -> IndicesIdx<'m, 'd> {
+        self.m.idx_scalar_indices(self)
+    }
 }

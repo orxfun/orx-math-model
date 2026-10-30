@@ -1,4 +1,4 @@
-use crate::{idx::Idx, ptr::RefPtr, sets::elements::Elements, Model};
+use crate::{idx_scalars::Idx, ptr::RefPtr, sets::elements::Elements, Model};
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 
@@ -15,7 +15,7 @@ impl<'d, K> SetFun<'d, K> {
 
 // symbol
 
-#[derive(derive_new::new)]
+#[derive(derive_new::new, Clone, Copy)]
 #[new(visibility = "pub(crate)")]
 pub struct Set<'m, 'd, K> {
     pub(crate) m: &'m Model<'d>,

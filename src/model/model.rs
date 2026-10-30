@@ -1,4 +1,4 @@
-use crate::idx::Idx;
+use crate::idx_scalars::{Idx, IndicesIdx};
 use crate::model::idx_scalars::IdxScalars;
 use crate::model::numbers::Numbers;
 use crate::model::sets::Sets;
@@ -42,6 +42,10 @@ impl<'d> Model<'d> {
 
     pub(crate) fn idx_scalar_str<'m>(&'m self, s: Set<'m, 'd, &'d str>) -> Idx<'m, 'd, &'d str> {
         Idx::new(self, self.idx_scalars.str(s))
+    }
+
+    pub(crate) fn idx_scalar_indices<'m>(&'m self, s: Indices<'m, 'd>) -> IndicesIdx<'m, 'd> {
+        IndicesIdx::new(self, self.idx_scalars.indices(s))
     }
 
     // numbers

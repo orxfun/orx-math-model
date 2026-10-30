@@ -17,6 +17,7 @@ fn idx_scalars() {
     let ss = m.set_str();
     let i = m.indices();
 
-    let ii = si.idx();
-    let is = ss.idx();
+    let si_i = si.idx();
+    let ss_i = ss.idx();
+    let i_i = i.idx();
 }

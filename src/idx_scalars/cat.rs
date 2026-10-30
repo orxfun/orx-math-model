@@ -1,8 +1,6 @@
-use crate::{
-    ptr::RefPtr,
-    sets::{Set, SetFun},
-    Model,
-};
+use crate::ptr::RefPtr;
+use crate::sets::{Set, SetFun};
+use crate::Model;
 use orx_imp_vec::Elem;
 
 // data
