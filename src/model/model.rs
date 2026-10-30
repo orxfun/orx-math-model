@@ -1,3 +1,4 @@
+use crate::model::idx_scalars::IdxScalars;
 use crate::model::numbers::Numbers;
 use crate::model::sets::Sets;
 use crate::numbers::{Int, Num, ValFun};
@@ -5,6 +6,7 @@ use crate::sets::{Indices, Set};
 
 pub struct Model<'d> {
     sets: Sets<'d>,
+    idx_scalars: IdxScalars<'d>,
     numbers: Numbers<'d>,
 }
 
@@ -12,6 +14,7 @@ impl<'d> Model<'d> {
     pub fn new() -> Self {
         Self {
             sets: Sets::new(),
+            idx_scalars: IdxScalars::new(),
             numbers: Numbers::new(),
         }
     }
