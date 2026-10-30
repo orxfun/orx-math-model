@@ -1,4 +1,7 @@
-use crate::{ptr::RefPtr, sets::SetFun};
+use crate::{ptr::RefPtr, sets::SetFun, Model};
+use orx_imp_vec::Elem;
+
+// data
 
 #[derive(derive_new::new)]
 pub struct IdxData<'d, K: Copy> {
@@ -14,4 +17,11 @@ impl<'d, K: Copy> IdxData<'d, K> {
     pub fn write(&mut self, value: K) {
         self.value = value;
     }
+}
+
+// symbol
+
+pub struct Idx<'m, 'd, K: Copy> {
+    pub(crate) m: &'m Model<'d>,
+    pub(crate) el: Elem<'m, IdxData<'d, K>>,
 }

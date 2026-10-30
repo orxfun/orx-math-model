@@ -20,3 +20,7 @@ pub struct Set<'m, 'd, K> {
     pub(crate) m: &'m Model<'d>,
     pub(crate) el: Elem<'m, SetFun<'d, K>>,
 }
+
+impl<'m, 'd, K> Set<'m, 'd, K> {
+    // pub fn idx(&self) -> Idx
+}
