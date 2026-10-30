@@ -1,6 +1,6 @@
 mod cat;
 mod elements;
-mod indices;
+mod ord;
 
-pub use cat::{Set, SetFun};
-pub use indices::{Indices, IndicesFun};
+pub use cat::{CatSet, CatSetFun};
+pub use ord::{OrdSet, OrdSetFun};

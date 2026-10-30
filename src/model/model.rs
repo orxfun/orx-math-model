@@ -3,7 +3,7 @@ use crate::model::idx_scalars::IdxScalars;
 use crate::model::numbers::Numbers;
 use crate::model::sets::Sets;
 use crate::numbers::{Int, Num, ValFun};
-use crate::sets::{Indices, Set};
+use crate::sets::{CatSet, OrdSet};
 
 pub struct Model<'d> {
     sets: Sets<'d>,
@@ -22,29 +22,29 @@ impl<'d> Model<'d> {
 
     // sets
 
-    pub fn set_int<'m>(&'m self) -> Set<'m, 'd, usize> {
-        Set::new(self, self.sets.int())
+    pub fn set_int<'m>(&'m self) -> CatSet<'m, 'd, usize> {
+        CatSet::new(self, self.sets.cat_int())
     }
 
-    pub fn set_str<'m>(&'m self) -> Set<'m, 'd, &'d str> {
-        Set::new(self, self.sets.str())
+    pub fn set_str<'m>(&'m self) -> CatSet<'m, 'd, &'d str> {
+        CatSet::new(self, self.sets.cat_str())
     }
 
-    pub fn indices<'m>(&'m self) -> Indices<'m, 'd> {
-        Indices::new(self, self.sets.indices())
+    pub fn indices<'m>(&'m self) -> OrdSet<'m, 'd> {
+        OrdSet::new(self, self.sets.ord())
     }
 
     // idx-scalars
 
-    pub(crate) fn idx_scalar_int<'m>(&'m self, s: Set<'m, 'd, usize>) -> Idx<'m, 'd, usize> {
+    pub(crate) fn idx_scalar_int<'m>(&'m self, s: CatSet<'m, 'd, usize>) -> Idx<'m, 'd, usize> {
         Idx::new(self, self.idx_scalars.int(s))
     }
 
-    pub(crate) fn idx_scalar_str<'m>(&'m self, s: Set<'m, 'd, &'d str>) -> Idx<'m, 'd, &'d str> {
+    pub(crate) fn idx_scalar_str<'m>(&'m self, s: CatSet<'m, 'd, &'d str>) -> Idx<'m, 'd, &'d str> {
         Idx::new(self, self.idx_scalars.str(s))
     }
 
-    pub(crate) fn idx_scalar_indices<'m>(&'m self, s: Indices<'m, 'd>) -> IndicesIdx<'m, 'd> {
+    pub(crate) fn idx_scalar_indices<'m>(&'m self, s: OrdSet<'m, 'd>) -> IndicesIdx<'m, 'd> {
         IndicesIdx::new(self, self.idx_scalars.indices(s))
     }
 

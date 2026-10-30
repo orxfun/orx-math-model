@@ -5,9 +5,9 @@ use orx_imp_vec::Elem;
 // fun
 
 #[derive(derive_new::new)]
-pub struct SetFun<'d, K>(Box<dyn Fn(&mut Elements<K>) + 'd>);
+pub struct CatSetFun<'d, K>(Box<dyn Fn(&mut Elements<K>) + 'd>);
 
-impl<'d, K> SetFun<'d, K> {
+impl<'d, K> CatSetFun<'d, K> {
     pub fn empty() -> Self {
         Self(Box::new(|_| {}))
     }
@@ -17,25 +17,25 @@ impl<'d, K> SetFun<'d, K> {
 
 #[derive(derive_new::new, Clone, Copy)]
 #[new(visibility = "pub(crate)")]
-pub struct Set<'m, 'd, K> {
+pub struct CatSet<'m, 'd, K> {
     pub(crate) m: &'m Model<'d>,
-    pub(crate) el: Elem<'m, SetFun<'d, K>>,
+    pub(crate) el: Elem<'m, CatSetFun<'d, K>>,
 }
 
-impl<'m, 'd, K> Set<'m, 'd, K> {
-    pub(crate) fn fun_ptr(&self) -> RefPtr<SetFun<'d, K>> {
+impl<'m, 'd, K> CatSet<'m, 'd, K> {
+    pub(crate) fn fun_ptr(&self) -> RefPtr<CatSetFun<'d, K>> {
         // TODO: safety note
         unsafe { RefPtr::new(self.el.as_ptr()) }
     }
 }
 
-impl<'m, 'd> Set<'m, 'd, usize> {
+impl<'m, 'd> CatSet<'m, 'd, usize> {
     pub fn idx(self) -> Idx<'m, 'd, usize> {
         self.m.idx_scalar_int(self)
     }
 }
 
-impl<'m, 'd> Set<'m, 'd, &'d str> {
+impl<'m, 'd> CatSet<'m, 'd, &'d str> {
     pub fn idx(self) -> Idx<'m, 'd, &'d str> {
         self.m.idx_scalar_str(self)
     }

@@ -1,17 +1,17 @@
 use crate::ptr::RefPtr;
-use crate::sets::{Indices, IndicesFun};
+use crate::sets::{OrdSet, OrdSetFun};
 use crate::Model;
 use orx_imp_vec::Elem;
 
 // data
 
 pub struct IndicesIdxData<'d> {
-    s0: RefPtr<IndicesFun<'d>>,
+    s0: RefPtr<OrdSetFun<'d>>,
     value: usize,
 }
 
 impl<'d> IndicesIdxData<'d> {
-    pub fn new(set: Indices<'_, 'd>) -> Self {
+    pub fn new(set: OrdSet<'_, 'd>) -> Self {
         let s0 = set.fun_ptr();
         let value = 0;
         Self { s0, value }

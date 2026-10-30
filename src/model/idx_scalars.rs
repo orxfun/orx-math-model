@@ -1,6 +1,6 @@
 use super::bag::{new_bag, Bag};
 use crate::idx_scalars::{IdxData, IndicesIdxData};
-use crate::sets::{Indices, Set};
+use crate::sets::{OrdSet, CatSet};
 use orx_imp_vec::Elem;
 
 pub struct IdxScalars<'d> {
@@ -18,15 +18,15 @@ impl<'d> IdxScalars<'d> {
         }
     }
 
-    pub fn int<'m>(&'m self, s: Set<'m, 'd, usize>) -> Elem<'m, IdxData<'d, usize>> {
+    pub fn int<'m>(&'m self, s: CatSet<'m, 'd, usize>) -> Elem<'m, IdxData<'d, usize>> {
         self.int.push(IdxData::new(s))
     }
 
-    pub fn str<'m>(&'m self, s: Set<'m, 'd, &'d str>) -> Elem<'m, IdxData<'d, &'d str>> {
+    pub fn str<'m>(&'m self, s: CatSet<'m, 'd, &'d str>) -> Elem<'m, IdxData<'d, &'d str>> {
         self.str.push(IdxData::new(s))
     }
 
-    pub fn indices<'m>(&'m self, s: Indices<'m, 'd>) -> Elem<'m, IndicesIdxData<'d>> {
+    pub fn indices<'m>(&'m self, s: OrdSet<'m, 'd>) -> Elem<'m, IndicesIdxData<'d>> {
         self.indices.push(IndicesIdxData::new(s))
     }
 }

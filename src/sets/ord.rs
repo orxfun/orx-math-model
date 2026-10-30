@@ -5,9 +5,9 @@ use orx_imp_vec::Elem;
 // fun
 
 #[derive(derive_new::new)]
-pub struct IndicesFun<'d>(Box<dyn Fn(&mut Elements<usize>) + 'd>);
+pub struct OrdSetFun<'d>(Box<dyn Fn(&mut Elements<usize>) + 'd>);
 
-impl<'d> IndicesFun<'d> {
+impl<'d> OrdSetFun<'d> {
     pub fn empty() -> Self {
         Self(Box::new(|_| {}))
     }
@@ -17,13 +17,13 @@ impl<'d> IndicesFun<'d> {
 
 #[derive(derive_new::new, Clone, Copy)]
 #[new(visibility = "pub(crate)")]
-pub struct Indices<'m, 'd> {
+pub struct OrdSet<'m, 'd> {
     pub(crate) m: &'m Model<'d>,
-    pub(crate) el: Elem<'m, IndicesFun<'d>>,
+    pub(crate) el: Elem<'m, OrdSetFun<'d>>,
 }
 
-impl<'m, 'd> Indices<'m, 'd> {
-    pub(crate) fn fun_ptr(&self) -> RefPtr<IndicesFun<'d>> {
+impl<'m, 'd> OrdSet<'m, 'd> {
+    pub(crate) fn fun_ptr(&self) -> RefPtr<OrdSetFun<'d>> {
         // TODO: safety note
         unsafe { RefPtr::new(self.el.as_ptr()) }
     }

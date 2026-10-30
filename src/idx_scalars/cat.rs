@@ -1,17 +1,17 @@
 use crate::ptr::RefPtr;
-use crate::sets::{Set, SetFun};
+use crate::sets::{CatSet, CatSetFun};
 use crate::Model;
 use orx_imp_vec::Elem;
 
 // data
 
 pub struct IdxData<'d, K: Copy + Default> {
-    s0: RefPtr<SetFun<'d, K>>,
+    s0: RefPtr<CatSetFun<'d, K>>,
     value: K,
 }
 
 impl<'d, K: Copy + Default> IdxData<'d, K> {
-    pub fn new(set: Set<'_, 'd, K>) -> Self {
+    pub fn new(set: CatSet<'_, 'd, K>) -> Self {
         let s0 = set.fun_ptr();
         let value = K::default();
         Self { s0, value }
