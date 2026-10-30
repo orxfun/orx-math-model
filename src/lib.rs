@@ -20,7 +20,6 @@ extern crate std;
 mod idx_scalars;
 mod model;
 mod numbers;
-mod par_d1;
 mod ptr;
 mod sets;
 
