@@ -5,3 +5,4 @@ mod set;
 
 pub use cat::{CatSet, CatSetFun};
 pub use ord::{OrdSet, OrdSetFun};
+pub use set::Set;
