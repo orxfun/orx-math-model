@@ -25,12 +25,17 @@
 //     Ord(OrdSet<'m, 'd>),
 // }
 
-use crate::sets::{CatSet, CatSetFun, OrdSet, OrdSetFun};
+use crate::{
+    ptr::RefPtr,
+    sets::{CatSet, CatSetFun, OrdSet, OrdSetFun},
+};
 
 pub trait Set {
     type Fun;
 
     type RawIdx;
+
+    fn fun_ptr(&self) -> RefPtr<Self::Fun>;
 }
 
 // cat-set-int
@@ -39,6 +44,10 @@ impl<'m, 'd> Set for CatSet<'m, 'd, usize> {
     type Fun = CatSetFun<'d, usize>;
 
     type RawIdx = usize;
+
+    fn fun_ptr(&self) -> RefPtr<Self::Fun> {
+        Self::fun_ptr(self)
+    }
 }
 
 // cat-set-str
@@ -47,6 +56,10 @@ impl<'m, 'd> Set for CatSet<'m, 'd, &'d str> {
     type Fun = CatSetFun<'d, &'d str>;
 
     type RawIdx = &'d str;
+
+    fn fun_ptr(&self) -> RefPtr<Self::Fun> {
+        Self::fun_ptr(self)
+    }
 }
 
 // ord-set
@@ -55,4 +68,8 @@ impl<'m, 'd> Set for OrdSet<'m, 'd> {
     type Fun = OrdSetFun<'d>;
 
     type RawIdx = usize;
+
+    fn fun_ptr(&self) -> RefPtr<Self::Fun> {
+        Self::fun_ptr(self)
+    }
 }
