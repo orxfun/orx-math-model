@@ -1,5 +1,6 @@
-use crate::{ptr::RefPtr, sets::Set};
+use crate::{ptr::RefPtr, sets::Set, Model};
 use alloc::boxed::Box;
+use orx_imp_vec::Elem;
 
 // fun
 
@@ -25,18 +26,15 @@ where
     }
 }
 
-// enum Accessor<'d, T> {
-//     Int(Box<dyn Fn(usize) -> T + 'd>),
-//     Str(Box<dyn Fn(&'d str) -> T + 'd>),
-// }
+// symbol
 
-// pub struct ParD1Fun<'d, T> {
-//     s0: SetFunPtr<'d>,
-//     fun: Accessor<'d, T>,
-// }
-
-// impl<'d, T> ParD1Fun<'d, T> {
-//     pub fn empty<'m>(set: Set<'m, 'd>) -> Self {
-//         tod
-//     }
-// }
+#[derive(derive_new::new, Clone, Copy)]
+#[new(visibility = "pub(crate)")]
+pub struct ParD1<'m, 'd, S0, T>
+where
+    S0: Set,
+    T: Default,
+{
+    pub(crate) m: &'m Model<'d>,
+    pub(crate) el: Elem<'m, ParD1Fun<'d, S0, T>>,
+}
