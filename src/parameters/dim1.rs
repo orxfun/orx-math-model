@@ -1,8 +1,28 @@
-// use crate::{ptr::RefPtr, sets::Set, Model};
-// use alloc::boxed::Box;
-// use orx_imp_vec::Elem;
+use crate::{ptr::RefPtr, sets::SetFunPtr, Model};
+use alloc::boxed::Box;
+use orx_imp_vec::Elem;
 
-// // fun
+// fun
+
+pub enum RawParD1Fun<'d, T: Default> {
+    Int(Box<dyn Fn(usize) -> T + 'd>),
+    Str(Box<dyn Fn(&'d str) -> T + 'd>),
+}
+
+pub struct ParD1Fun<'d, T: Default> {
+    s0: SetFunPtr<'d>,
+    fun: RawParD1Fun<'d, T>,
+}
+
+impl<'d, T: Default> ParD1Fun<'d, T> {
+    pub fn empty(set: usize) -> Self {
+        todo!()
+    }
+}
+
+// symbol
+
+pub struct ParD1;
 
 // #[derive(derive_new::new)]
 // pub struct ParD1Fun<'d, S0, T>
