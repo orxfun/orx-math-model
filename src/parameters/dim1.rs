@@ -10,8 +10,8 @@ where
     S0: Set,
     T: Default,
 {
-    s0: RefPtr<S0::Fun>,
-    fun: Box<dyn Fn(S0::RawIdx) -> T + 'd>,
+    s0: RefPtr<S0::Fun<'d>>,
+    fun: Box<dyn Fn(S0::RawIdx<'d>) -> T + 'd>,
 }
 
 impl<'d, S0, T> ParD1Fun<'d, S0, T>
@@ -19,9 +19,9 @@ where
     S0: Set,
     T: Default,
 {
-    pub fn empty(set: S0) -> Self {
-        let s0 = set.fun_ptr();
-        let fun = Box::new(|_: S0::RawIdx| Default::default());
+    pub fn empty<'m>(set: S0::Sym<'m, 'd>) -> Self {
+        let s0 = S0::fun_ptr(set);
+        let fun = Box::new(|_: S0::RawIdx<'d>| Default::default());
         Self { s0, fun }
     }
 }

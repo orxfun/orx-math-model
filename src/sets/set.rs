@@ -1,73 +1,71 @@
-// use crate::ptr::RefPtr;
-// use crate::sets::{CatSet, CatSetFun, OrdSet, OrdSetFun};
-
-// // ptr
-
-// pub enum SetFunPtr<'d> {
-//     CatInt(RefPtr<CatSetFun<'d, usize>>),
-//     CatStr(RefPtr<CatSetFun<'d, &'d str>>),
-//     Ord(RefPtr<OrdSetFun<'d>>),
-// }
-
-// // fun
-
-// pub enum SetFun<'d> {
-//     CatInt(CatSetFun<'d, usize>),
-//     CatStr(CatSetFun<'d, &'d str>),
-//     Ord(OrdSetFun<'d>),
-// }
-
-// // symbol
-
-// pub enum Set<'m, 'd> {
-//     CatInt(CatSet<'m, 'd, usize>),
-//     CatStr(CatSet<'m, 'd, &'d str>),
-//     Ord(OrdSet<'m, 'd>),
-// }
-
 use crate::ptr::RefPtr;
 use crate::sets::{CatSet, CatSetFun, OrdSet, OrdSetFun};
 
 pub trait Set {
-    type Fun;
+    type Sym<'m, 'd>
+    where
+        'd: 'm;
 
-    type RawIdx;
+    type Fun<'d>;
 
-    fn fun_ptr(&self) -> RefPtr<Self::Fun>;
+    type RawIdx<'d>;
+
+    fn fun_ptr<'m, 'd>(sym: Self::Sym<'m, 'd>) -> RefPtr<Self::Fun<'d>>;
 }
 
 // cat-set-int
 
-impl<'m, 'd> Set for CatSet<'m, 'd, usize> {
-    type Fun = CatSetFun<'d, usize>;
+pub struct CategoricalSetInt;
 
-    type RawIdx = usize;
+impl Set for CategoricalSetInt {
+    type Sym<'m, 'd>
+        = CatSet<'m, 'd, usize>
+    where
+        'd: 'm;
 
-    fn fun_ptr(&self) -> RefPtr<Self::Fun> {
-        Self::fun_ptr(self)
+    type Fun<'d> = CatSetFun<'d, usize>;
+
+    type RawIdx<'d> = usize;
+
+    fn fun_ptr<'m, 'd>(sym: Self::Sym<'m, 'd>) -> RefPtr<Self::Fun<'d>> {
+        sym.fun_ptr()
     }
 }
 
 // cat-set-str
 
-impl<'m, 'd> Set for CatSet<'m, 'd, &'d str> {
-    type Fun = CatSetFun<'d, &'d str>;
+pub struct CategoricalSetStr;
 
-    type RawIdx = &'d str;
+impl Set for CategoricalSetStr {
+    type Sym<'m, 'd>
+        = CatSet<'m, 'd, &'d str>
+    where
+        'd: 'm;
 
-    fn fun_ptr(&self) -> RefPtr<Self::Fun> {
-        Self::fun_ptr(self)
+    type Fun<'d> = CatSetFun<'d, &'d str>;
+
+    type RawIdx<'d> = &'d str;
+
+    fn fun_ptr<'m, 'd>(sym: Self::Sym<'m, 'd>) -> RefPtr<Self::Fun<'d>> {
+        sym.fun_ptr()
     }
 }
 
 // ord-set
 
-impl<'m, 'd> Set for OrdSet<'m, 'd> {
-    type Fun = OrdSetFun<'d>;
+pub struct OrdinalSet;
 
-    type RawIdx = usize;
+impl Set for OrdinalSet {
+    type Sym<'m, 'd>
+        = OrdSet<'m, 'd>
+    where
+        'd: 'm;
 
-    fn fun_ptr(&self) -> RefPtr<Self::Fun> {
-        Self::fun_ptr(self)
+    type Fun<'d> = OrdSetFun<'d>;
+
+    type RawIdx<'d> = usize;
+
+    fn fun_ptr<'m, 'd>(sym: Self::Sym<'m, 'd>) -> RefPtr<Self::Fun<'d>> {
+        sym.fun_ptr()
     }
 }
