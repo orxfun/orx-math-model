@@ -5,4 +5,5 @@ mod set;
 
 pub use cat::{CatSet, CatSetFun};
 pub use ord::{OrdSet, OrdSetFun};
-pub use set::Set;
+// pub use set::{Set, SetFun, SetFunPtr};
+pub use set::*;
