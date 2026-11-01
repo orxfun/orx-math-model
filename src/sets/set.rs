@@ -25,10 +25,8 @@
 //     Ord(OrdSet<'m, 'd>),
 // }
 
-use crate::{
-    ptr::RefPtr,
-    sets::{CatSet, CatSetFun, OrdSet, OrdSetFun},
-};
+use crate::ptr::RefPtr;
+use crate::sets::{CatSet, CatSetFun, OrdSet, OrdSetFun};
 
 pub trait Set {
     type Fun;

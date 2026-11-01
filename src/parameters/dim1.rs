@@ -1,4 +1,4 @@
-use crate::sets::Set;
+use crate::{ptr::RefPtr, sets::Set};
 use alloc::boxed::Box;
 
 // fun
@@ -7,13 +7,22 @@ use alloc::boxed::Box;
 pub struct ParD1Fun<'d, S0, T>
 where
     S0: Set,
+    T: Default,
 {
-    s0: S0::Fun,
+    s0: RefPtr<S0::Fun>,
     fun: Box<dyn Fn(S0::RawIdx) -> T + 'd>,
 }
 
-impl<'d, S0: Set, T> ParD1Fun<'d, S0, T> {
-    //
+impl<'d, S0, T> ParD1Fun<'d, S0, T>
+where
+    S0: Set,
+    T: Default,
+{
+    pub fn empty(set: S0) -> Self {
+        let s0 = set.fun_ptr();
+        let fun = Box::new(|_: S0::RawIdx| Default::default());
+        Self { s0, fun }
+    }
 }
 
 // enum Accessor<'d, T> {
@@ -28,6 +37,6 @@ impl<'d, S0: Set, T> ParD1Fun<'d, S0, T> {
 
 // impl<'d, T> ParD1Fun<'d, T> {
 //     pub fn empty<'m>(set: Set<'m, 'd>) -> Self {
-//         todo!()
+//         tod
 //     }
 // }
