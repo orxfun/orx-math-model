@@ -1,3 +1,3 @@
-mod dim1;
+// mod dim1;
 
-pub use dim1::{ParD1, ParD1Fun};
+// pub use dim1::{ParD1, ParD1Fun};
