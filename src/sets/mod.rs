@@ -5,4 +5,4 @@ mod set;
 
 pub use cat::CatSet;
 pub use ord::OrdSet;
-pub use set::*;
+pub use set::{DSet, Set};
