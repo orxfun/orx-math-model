@@ -1,6 +1,7 @@
-use crate::indices::{CatIdx, DIdx};
+use crate::indices::{CatIdx, DIdx, Idx};
 use crate::ptr::RefPtr;
 use crate::sets::{DSet, Set};
+use crate::values::Num;
 use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -54,8 +55,14 @@ pub struct ParD1<'m, 'd, T> {
     pub(crate) el: Elem<'m, DParD1<'d, T>>,
 }
 
-impl<'m, 'd, T> ParD1<'m, 'd, T> {
-    // pub fn at(self, i0: Idx) {
-    //     todo!()
-    // }
+impl<'m, 'd> ParD1<'m, 'd, f64> {
+    pub fn at(self, i0: impl Into<Idx<'m, 'd>>) -> Num<'m, 'd> {
+        let i0 = i0.into();
+        let par = unsafe { self.el.get() };
+
+        match (i0, &par.fun) {
+            (Idx::CatInt(i0), FunParD1::CatInt(f)) => todo!(),
+            _ => todo!(),
+        }
+    }
 }
