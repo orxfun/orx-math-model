@@ -1,15 +1,21 @@
-use crate::{indices::OrdIdx, ptr::RefPtr, sets::elements::Elements, Model};
+use crate::indices::{DIdx, OrdIdx};
+use crate::sets::{elements::Elements, DSet};
+use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 
-// fun
+// data
 
 #[derive(derive_new::new)]
-pub struct OrdSetFun<'d>(Box<dyn Fn(&mut Elements<usize>) + 'd>);
+pub struct DOrdSet<'d> {
+    fun: Box<dyn Fn(&mut Elements<usize>) + 'd>,
+}
 
-impl<'d> OrdSetFun<'d> {
+impl<'d> DOrdSet<'d> {
     pub fn empty() -> Self {
-        Self(Box::new(|_| {}))
+        Self {
+            fun: Box::new(|_| {}),
+        }
     }
 }
 
@@ -19,16 +25,11 @@ impl<'d> OrdSetFun<'d> {
 #[new(visibility = "pub(crate)")]
 pub struct OrdSet<'m, 'd> {
     pub(crate) m: &'m Model<'d>,
-    pub(crate) el: Elem<'m, OrdSetFun<'d>>,
+    pub(crate) el: Elem<'m, DSet<'d>>,
 }
 
 impl<'m, 'd> OrdSet<'m, 'd> {
-    pub(crate) fn fun_ptr(&self) -> RefPtr<OrdSetFun<'d>> {
-        // TODO: safety note
-        unsafe { RefPtr::new(self.el.as_ptr()) }
-    }
-
     pub fn idx(self) -> OrdIdx<'m, 'd> {
-        self.m.idx_ord(self)
+        OrdIdx::new(self.m, self.m.index(DIdx::empty_ord(self)))
     }
 }

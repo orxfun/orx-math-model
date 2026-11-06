@@ -1,15 +1,22 @@
-use crate::{indices::CatIdx, ptr::RefPtr, sets::elements::Elements, Model};
+use crate::indices::{CatIdx, DIdx};
+use crate::sets::{elements::Elements, DSet};
+use crate::Model;
 use alloc::boxed::Box;
+use core::marker::PhantomData;
 use orx_imp_vec::Elem;
 
-// fun
+// data
 
 #[derive(derive_new::new)]
-pub struct CatSetFun<'d, K>(Box<dyn Fn(&mut Elements<K>) + 'd>);
+pub struct DCatSet<'d, K> {
+    fun: Box<dyn Fn(&mut Elements<K>) + 'd>,
+}
 
-impl<'d, K> CatSetFun<'d, K> {
+impl<'d, K> DCatSet<'d, K> {
     pub fn empty() -> Self {
-        Self(Box::new(|_| {}))
+        Self {
+            fun: Box::new(|_| {}),
+        }
     }
 }
 
@@ -19,24 +26,18 @@ impl<'d, K> CatSetFun<'d, K> {
 #[new(visibility = "pub(crate)")]
 pub struct CatSet<'m, 'd, K> {
     pub(crate) m: &'m Model<'d>,
-    pub(crate) el: Elem<'m, CatSetFun<'d, K>>,
-}
-
-impl<'m, 'd, K> CatSet<'m, 'd, K> {
-    pub(crate) fn fun_ptr(&self) -> RefPtr<CatSetFun<'d, K>> {
-        // TODO: safety note
-        unsafe { RefPtr::new(self.el.as_ptr()) }
-    }
+    pub(crate) el: Elem<'m, DSet<'d>>,
+    p: PhantomData<K>,
 }
 
 impl<'m, 'd> CatSet<'m, 'd, usize> {
     pub fn idx(self) -> CatIdx<'m, 'd, usize> {
-        self.m.idx_cat_int(self)
+        CatIdx::new(self.m, self.m.index(DIdx::empty_cat_int(self)))
     }
 }
 
 impl<'m, 'd> CatSet<'m, 'd, &'d str> {
     pub fn idx(self) -> CatIdx<'m, 'd, &'d str> {
-        self.m.idx_cat_str(self)
+        CatIdx::new(self.m, self.m.index(DIdx::empty_cat_str(self)))
     }
 }

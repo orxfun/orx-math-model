@@ -2,6 +2,6 @@ mod cat;
 mod idx;
 mod ord;
 
-pub use cat::{CatIdx, CatIdxData};
-pub use idx::Idx;
-pub use ord::{OrdIdx, OrdIdxData};
+pub use cat::CatIdx;
+pub use idx::{DIdx, ValIdx};
+pub use ord::OrdIdx;

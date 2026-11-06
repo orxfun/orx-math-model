@@ -1,0 +1,27 @@
+use alloc::vec::Vec;
+
+#[derive(Default, Debug, PartialEq)]
+pub struct Elements<T> {
+    data: Vec<T>,
+}
+
+impl<T> From<Vec<T>> for Elements<T> {
+    fn from(data: Vec<T>) -> Self {
+        Self { data }
+    }
+}
+
+impl<T> Elements<T> {
+    pub fn fill(&mut self, values: impl IntoIterator<Item = T>) {
+        self.data.clear();
+        self.data.extend(values);
+    }
+
+    pub fn retain(&mut self, filter: impl Fn(&T) -> bool) {
+        self.data.retain(filter);
+    }
+
+    pub fn as_slice(&self) -> &[T] {
+        &self.data
+    }
+}

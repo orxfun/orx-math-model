@@ -1,91 +1,48 @@
-use crate::ptr::RefPtr;
-use crate::sets::{CatSet, CatSetFun, OrdSet, OrdSetFun};
+use crate::sets::cat::DCatSet;
+use crate::sets::ord::DOrdSet;
 
-// fun
+// data
 
-pub enum SetFun<'d> {
-    CatInt(CatSetFun<'d, usize>),
-    CatStr(CatSetFun<'d, &'d str>),
-    Ord(OrdSetFun<'d>),
+pub enum DSet<'d> {
+    CatInt(DCatSet<'d, usize>),
+    CatStr(DCatSet<'d, &'d str>),
+    Ord(DOrdSet<'d>),
 }
 
-impl<'d> From<CatSetFun<'d, usize>> for SetFun<'d> {
-    fn from(value: CatSetFun<'d, usize>) -> Self {
-        Self::CatInt(value)
+impl<'d> DSet<'d> {
+    pub fn empty_cat_int() -> Self {
+        Self::CatInt(DCatSet::empty())
     }
-}
 
-impl<'d> From<CatSetFun<'d, &'d str>> for SetFun<'d> {
-    fn from(value: CatSetFun<'d, &'d str>) -> Self {
-        Self::CatStr(value)
+    pub fn empty_cat_str() -> Self {
+        Self::CatStr(DCatSet::empty())
     }
-}
 
-impl<'d> From<OrdSetFun<'d>> for SetFun<'d> {
-    fn from(value: OrdSetFun<'d>) -> Self {
-        Self::Ord(value)
+    pub fn empty_ord() -> Self {
+        Self::Ord(DOrdSet::empty())
     }
-}
 
-// fun-ptr
-
-pub enum SetFunPtr<'d> {
-    CatInt(RefPtr<CatSetFun<'d, usize>>),
-    CatStr(RefPtr<CatSetFun<'d, &'d str>>),
-    Ord(RefPtr<OrdSetFun<'d>>),
-}
-
-impl<'d> From<RefPtr<CatSetFun<'d, usize>>> for SetFunPtr<'d> {
-    fn from(value: RefPtr<CatSetFun<'d, usize>>) -> Self {
-        Self::CatInt(value)
-    }
-}
-
-impl<'d> From<RefPtr<CatSetFun<'d, &'d str>>> for SetFunPtr<'d> {
-    fn from(value: RefPtr<CatSetFun<'d, &'d str>>) -> Self {
-        Self::CatStr(value)
-    }
-}
-
-impl<'d> From<RefPtr<OrdSetFun<'d>>> for SetFunPtr<'d> {
-    fn from(value: RefPtr<OrdSetFun<'d>>) -> Self {
-        Self::Ord(value)
-    }
-}
-
-// sym
-
-#[derive(Clone, Copy)]
-pub enum Set<'m, 'd> {
-    CatInt(CatSet<'m, 'd, usize>),
-    CatStr(CatSet<'m, 'd, &'d str>),
-    Ord(OrdSet<'m, 'd>),
-}
-
-impl<'m, 'd> Set<'m, 'd> {
-    pub fn fun_ptr(&self) -> SetFunPtr<'d> {
+    // TODO: add panics
+    pub fn into_cat_int(&self) -> &DCatSet<'d, usize> {
         match self {
-            Self::CatInt(x) => SetFunPtr::CatInt(x.fun_ptr()),
-            Self::CatStr(x) => SetFunPtr::CatStr(x.fun_ptr()),
-            Self::Ord(x) => SetFunPtr::Ord(x.fun_ptr()),
+            Self::CatInt(x) => x,
+            _ => unreachable!(),
         }
     }
-}
 
-impl<'m, 'd> From<CatSet<'m, 'd, usize>> for Set<'m, 'd> {
-    fn from(value: CatSet<'m, 'd, usize>) -> Self {
-        Self::CatInt(value)
+    // TODO: add panics
+    pub fn into_cat_str(&self) -> &DCatSet<'d, &'d str> {
+        match self {
+            Self::CatStr(x) => x,
+            _ => unreachable!(),
+        }
     }
-}
 
-impl<'m, 'd> From<CatSet<'m, 'd, &'d str>> for Set<'m, 'd> {
-    fn from(value: CatSet<'m, 'd, &'d str>) -> Self {
-        Self::CatStr(value)
-    }
-}
-
-impl<'m, 'd> From<OrdSet<'m, 'd>> for Set<'m, 'd> {
-    fn from(value: OrdSet<'m, 'd>) -> Self {
-        Self::Ord(value)
+    // TODO: add panics
+    pub fn into_ord(&self) -> &DOrdSet<'d> {
+        match self {
+            Self::Ord(x) => x,
+            _ => unreachable!(),
+        }
     }
 }
