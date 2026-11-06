@@ -8,9 +8,9 @@ use orx_imp_vec::Elem;
 // data
 
 pub enum FunParD1<'d, T> {
-    CatInt2(Box<dyn Fn(usize) -> T + 'd>),
-    CatStr2(Box<dyn Fn(&'d str) -> T + 'd>),
-    Ord2(Box<dyn Fn(usize) -> T + 'd>),
+    CatInt(Box<dyn Fn(usize) -> T + 'd>),
+    CatStr(Box<dyn Fn(&'d str) -> T + 'd>),
+    Ord(Box<dyn Fn(usize) -> T + 'd>),
 }
 
 impl<'d, T> FunParD1<'d, T> {
@@ -20,9 +20,9 @@ impl<'d, T> FunParD1<'d, T> {
         T: Default,
     {
         match set.into() {
-            Set::CatInt(_) => Self::CatInt2(Box::new(|_| Default::default())),
-            Set::CatStr(_) => Self::CatStr2(Box::new(|_| Default::default())),
-            Set::Ord(_) => Self::Ord2(Box::new(|_| Default::default())),
+            Set::CatInt(_) => Self::CatInt(Box::new(|_| Default::default())),
+            Set::CatStr(_) => Self::CatStr(Box::new(|_| Default::default())),
+            Set::Ord(_) => Self::Ord(Box::new(|_| Default::default())),
         }
     }
 }
