@@ -25,5 +25,6 @@ mod model;
 mod params;
 mod ptr;
 mod sets;
+mod values;
 
 pub use model::Model;
