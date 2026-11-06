@@ -55,7 +55,7 @@ pub struct ParD1<'m, 'd, T> {
 }
 
 impl<'m, 'd, T> ParD1<'m, 'd, T> {
-    pub fn at(self) {
-        todo!()
-    }
+    // pub fn at(self, i0: Idx) {
+    //     todo!()
+    // }
 }
