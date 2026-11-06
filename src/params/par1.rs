@@ -75,3 +75,9 @@ pub struct ParD1<'m, 'd> {
     pub(crate) m: &'m Model<'d>,
     pub(crate) el: Elem<'m, DParD1<'d>>,
 }
+
+impl<'m, 'd> ParD1<'m, 'd> {
+    pub fn at(self) {
+        todo!()
+    }
+}
