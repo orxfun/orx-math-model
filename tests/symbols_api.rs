@@ -1,3 +1,5 @@
+#![allow(unused)]
+
 use orx_math_model::*;
 
 #[test]
