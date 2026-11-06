@@ -34,6 +34,22 @@ impl<'d> DIdx<'d> {
         let set = RefPtr::from(set.el);
         Self { set, val_ptr }
     }
+
+    // TODO: add panics
+    pub fn val_ptr_int(&self) -> ValPtr<usize> {
+        match &self.val_ptr {
+            ValIdxPtr::Int(x) => *x,
+            _ => unreachable!(),
+        }
+    }
+
+    // TODO: add panics
+    pub fn val_ptr_str(&self) -> ValPtr<&'d str> {
+        match &self.val_ptr {
+            ValIdxPtr::Str(x) => *x,
+            _ => unreachable!(),
+        }
+    }
 }
 
 // sym

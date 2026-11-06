@@ -31,7 +31,7 @@ impl<T: Copy> From<Elem<'_, T>> for ValPtr<T> {
 
 // ref
 
-pub struct RefPtr<T>(*const T);
+pub struct RefPtr<T: ?Sized>(*const T);
 
 impl<T> Clone for RefPtr<T> {
     fn clone(&self) -> Self {
@@ -41,11 +41,11 @@ impl<T> Clone for RefPtr<T> {
 
 impl<T> Copy for RefPtr<T> {}
 
-impl<T> RefPtr<T> {
+impl<T: ?Sized> RefPtr<T> {
     /// # SAFETY
     ///
     /// * Created value must not outlive `'m` or `'d`.
-    unsafe fn new(p: *const T) -> Self {
+    pub unsafe fn new(p: *const T) -> Self {
         Self(p)
     }
 
