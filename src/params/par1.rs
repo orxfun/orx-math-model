@@ -7,61 +7,39 @@ use orx_imp_vec::Elem;
 
 // data
 
-pub enum FunParD1<'d> {
-    CatInt2Num(Box<dyn Fn(usize) -> f64 + 'd>),
-    CatStr2Num(Box<dyn Fn(&'d str) -> f64 + 'd>),
-    Ord2Num(Box<dyn Fn(usize) -> f64 + 'd>),
-    CatInt2Int(Box<dyn Fn(usize) -> i64 + 'd>),
-    CatStr2Int(Box<dyn Fn(&'d str) -> i64 + 'd>),
-    Ord2Int(Box<dyn Fn(usize) -> i64 + 'd>),
+pub enum FunParD1<'d, T> {
+    CatInt2(Box<dyn Fn(usize) -> T + 'd>),
+    CatStr2(Box<dyn Fn(&'d str) -> T + 'd>),
+    Ord2(Box<dyn Fn(usize) -> T + 'd>),
 }
 
-impl<'d> FunParD1<'d> {
-    pub fn empty_num<'m>(set: impl Into<Set<'m, 'd>>) -> Self
+impl<'d, T> FunParD1<'d, T> {
+    pub fn empty<'m>(set: impl Into<Set<'m, 'd>>) -> Self
     where
         'd: 'm,
+        T: Default,
     {
         match set.into() {
-            Set::CatInt(_) => Self::CatInt2Num(Box::new(|_| Default::default())),
-            Set::CatStr(_) => Self::CatStr2Num(Box::new(|_| Default::default())),
-            Set::Ord(_) => Self::Ord2Num(Box::new(|_| Default::default())),
-        }
-    }
-
-    pub fn empty_int<'m>(set: impl Into<Set<'m, 'd>>) -> Self
-    where
-        'd: 'm,
-    {
-        match set.into() {
-            Set::CatInt(_) => Self::CatInt2Int(Box::new(|_| Default::default())),
-            Set::CatStr(_) => Self::CatStr2Int(Box::new(|_| Default::default())),
-            Set::Ord(_) => Self::Ord2Int(Box::new(|_| Default::default())),
+            Set::CatInt(_) => Self::CatInt2(Box::new(|_| Default::default())),
+            Set::CatStr(_) => Self::CatStr2(Box::new(|_| Default::default())),
+            Set::Ord(_) => Self::Ord2(Box::new(|_| Default::default())),
         }
     }
 }
 
-pub struct DParD1<'d> {
+pub struct DParD1<'d, T> {
     s0: RefPtr<DSet<'d>>,
-    fun: FunParD1<'d>,
+    fun: FunParD1<'d, T>,
 }
 
-impl<'d> DParD1<'d> {
-    pub fn empty_num<'m>(set: impl Into<Set<'m, 'd>>) -> Self
+impl<'d, T> DParD1<'d, T> {
+    pub fn empty<'m>(set: impl Into<Set<'m, 'd>>) -> Self
     where
+        T: Default,
         'd: 'm,
     {
         let set = set.into();
-        let fun = FunParD1::empty_num(set);
-        let s0 = RefPtr::from(set.el());
-        Self { s0, fun }
-    }
-
-    pub fn empty_int<'m>(set: impl Into<Set<'m, 'd>>) -> Self
-    where
-        'd: 'm,
-    {
-        let set = set.into();
-        let fun = FunParD1::empty_int(set);
+        let fun = FunParD1::empty(set);
         let s0 = RefPtr::from(set.el());
         Self { s0, fun }
     }
@@ -71,12 +49,12 @@ impl<'d> DParD1<'d> {
 
 #[derive(derive_new::new, Clone, Copy)]
 #[new(visibility = "pub(crate)")]
-pub struct ParD1<'m, 'd> {
+pub struct ParD1<'m, 'd, T> {
     pub(crate) m: &'m Model<'d>,
-    pub(crate) el: Elem<'m, DParD1<'d>>,
+    pub(crate) el: Elem<'m, DParD1<'d, T>>,
 }
 
-impl<'m, 'd> ParD1<'m, 'd> {
+impl<'m, 'd, T> ParD1<'m, 'd, T> {
     pub fn at(self) {
         todo!()
     }

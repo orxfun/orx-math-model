@@ -8,7 +8,8 @@ use orx_imp_vec::Elem;
 pub struct Model<'d> {
     sets: Bag<DSet<'d>>,
     indices: Bag<DIdx<'d>>,
-    d1_pars: Bag<DParD1<'d>>,
+    d1_pars_num: Bag<DParD1<'d, f64>>,
+    d1_pars_int: Bag<DParD1<'d, i64>>,
 
     // values
     val_usize: Bag<usize>,
@@ -24,7 +25,8 @@ impl<'d> Model<'d> {
         Self {
             sets: new_bag(),
             indices: new_bag(),
-            d1_pars: new_bag(),
+            d1_pars_num: new_bag(),
+            d1_pars_int: new_bag(),
 
             // values
             val_usize: new_bag(),
@@ -52,12 +54,12 @@ impl<'d> Model<'d> {
 
     // pars
 
-    pub fn par_d1_num<'m>(&'m self, set: impl Into<Set<'m, 'd>>) -> ParD1<'m, 'd> {
-        ParD1::new(self, self.d1_pars.push(DParD1::empty_num(set)))
+    pub fn par_d1_num<'m>(&'m self, set: impl Into<Set<'m, 'd>>) -> ParD1<'m, 'd, f64> {
+        ParD1::new(self, self.d1_pars_num.push(DParD1::empty(set)))
     }
 
-    pub fn par_d1_int<'m>(&'m self, set: impl Into<Set<'m, 'd>>) -> ParD1<'m, 'd> {
-        ParD1::new(self, self.d1_pars.push(DParD1::empty_int(set)))
+    pub fn par_d1_int<'m>(&'m self, set: impl Into<Set<'m, 'd>>) -> ParD1<'m, 'd, i64> {
+        ParD1::new(self, self.d1_pars_int.push(DParD1::empty(set)))
     }
 
     // indices
