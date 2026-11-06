@@ -1,3 +1,5 @@
+use orx_imp_vec::Elem;
+
 use crate::sets::cat::DCatSet;
 use crate::sets::ord::DOrdSet;
 use crate::sets::{CatSet, OrdSet};
@@ -50,6 +52,7 @@ impl<'d> DSet<'d> {
 
 // sym
 
+#[derive(Clone, Copy)]
 pub enum Set<'m, 'd> {
     CatInt(CatSet<'m, 'd, usize>),
     CatStr(CatSet<'m, 'd, &'d str>),
@@ -71,5 +74,15 @@ impl<'m, 'd> From<CatSet<'m, 'd, &'d str>> for Set<'m, 'd> {
 impl<'m, 'd> From<OrdSet<'m, 'd>> for Set<'m, 'd> {
     fn from(value: OrdSet<'m, 'd>) -> Self {
         Self::Ord(value)
+    }
+}
+
+impl<'m, 'd> Set<'m, 'd> {
+    pub fn el(&self) -> Elem<'m, DSet<'d>> {
+        match self {
+            Self::CatInt(x) => x.el,
+            Self::CatStr(x) => x.el,
+            Self::Ord(x) => x.el,
+        }
     }
 }

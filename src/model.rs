@@ -1,11 +1,13 @@
 use crate::bag::{new_bag, Bag};
 use crate::indices::DIdx;
-use crate::sets::{CatSet, DSet, OrdSet};
+use crate::params::{DParD1, ParD1};
+use crate::sets::{CatSet, DSet, OrdSet, Set};
 use orx_imp_vec::Elem;
 
 pub struct Model<'d> {
     sets: Bag<DSet<'d>>,
     indices: Bag<DIdx<'d>>,
+    d1_pars: Bag<DParD1<'d>>,
 
     // values
     val_usize: Bag<usize>,
@@ -17,6 +19,7 @@ impl<'d> Model<'d> {
         Self {
             sets: new_bag(),
             indices: new_bag(),
+            d1_pars: new_bag(),
 
             // values
             val_usize: new_bag(),
@@ -36,6 +39,16 @@ impl<'d> Model<'d> {
 
     pub fn set_ord<'m>(&'m self) -> OrdSet<'m, 'd> {
         OrdSet::new(self, self.sets.push(DSet::empty_ord()))
+    }
+
+    // pars
+
+    pub fn par_d1_num<'m>(&'m self, set: impl Into<Set<'m, 'd>>) -> ParD1<'m, 'd> {
+        ParD1::new(self, self.d1_pars.push(DParD1::empty_num(set)))
+    }
+
+    pub fn par_d1_int<'m>(&'m self, set: impl Into<Set<'m, 'd>>) -> ParD1<'m, 'd> {
+        ParD1::new(self, self.d1_pars.push(DParD1::empty_int(set)))
     }
 
     // indices
