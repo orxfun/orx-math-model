@@ -1,6 +1,5 @@
 use crate::ptr::{RefPtr, ValPtr};
 use crate::sets::{CatSet, DSet, OrdSet};
-use crate::Model;
 
 // data
 
