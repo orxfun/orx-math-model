@@ -2,6 +2,7 @@ use crate::bag::{new_bag, Bag};
 use crate::indices::DIdx;
 use crate::params::{DParD1, ParD1};
 use crate::sets::{CatSet, DSet, OrdSet, Set};
+use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 
 pub struct Model<'d> {
@@ -12,6 +13,10 @@ pub struct Model<'d> {
     // values
     val_usize: Bag<usize>,
     val_str: Bag<&'d str>,
+
+    // funs
+    fun_f64: Bag<Box<dyn Fn() -> f64 + 'd>>,
+    fun_i64: Bag<Box<dyn Fn() -> i64 + 'd>>,
 }
 
 impl<'d> Model<'d> {
@@ -24,6 +29,10 @@ impl<'d> Model<'d> {
             // values
             val_usize: new_bag(),
             val_str: new_bag(),
+
+            // funs
+            fun_f64: new_bag(),
+            fun_i64: new_bag(),
         }
     }
 
@@ -65,5 +74,21 @@ impl<'d> Model<'d> {
 
     pub(crate) fn val_str<'m>(&'m self) -> Elem<'m, &'d str> {
         self.val_str.push(Default::default())
+    }
+
+    // funs
+
+    pub(crate) fn fun_f64<'m>(
+        &'m self,
+        fun: Box<dyn Fn() -> f64 + 'd>,
+    ) -> Elem<'m, Box<dyn Fn() -> f64 + 'd>> {
+        self.fun_f64.push(fun)
+    }
+
+    pub(crate) fn fun_i64<'m>(
+        &'m self,
+        fun: Box<dyn Fn() -> i64 + 'd>,
+    ) -> Elem<'m, Box<dyn Fn() -> i64 + 'd>> {
+        self.fun_i64.push(fun)
     }
 }
