@@ -1,3 +1,6 @@
+#[cfg(test)]
+mod tests;
+
 mod cat;
 mod elements;
 mod ord;
