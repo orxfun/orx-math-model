@@ -3,7 +3,7 @@ use alloc::string::ToString;
 use alloc::{vec, vec::Vec};
 
 #[test]
-fn cat_int() {
+fn set_cat_int() {
     let values = vec![1, 2, 7, 9];
 
     let m = Model::new();
@@ -32,7 +32,7 @@ fn cat_int() {
 }
 
 #[test]
-fn cat_str() {
+fn set_cat_str() {
     let values: Vec<_> = [1, 2, 7, 9].map(|x| x.to_string()).into_iter().collect();
 
     let m = Model::new();
@@ -55,7 +55,7 @@ fn cat_str() {
 }
 
 #[test]
-fn ord() {
+fn set_ord() {
     let values = vec![1, 2, 7, 9];
 
     let m = Model::new();

@@ -45,12 +45,6 @@ pub struct CatSet<'m, 'd, K> {
     p: PhantomData<K>,
 }
 
-impl<'m, 'd, K> CatSet<'m, 'd, K> {
-    pub(crate) fn bind(&self) {
-        //
-    }
-}
-
 impl<'m, 'd> CatSet<'m, 'd, usize> {
     pub fn idx(self) -> CatIdx<'m, 'd, usize> {
         CatIdx::new(self.m, self.m.index(DIdx::empty_cat_int(self)))
