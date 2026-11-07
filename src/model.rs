@@ -2,7 +2,7 @@ use crate::bag::{new_bag, Bag};
 use crate::indices::DIdx;
 use crate::params::{DParD1, ParD1};
 use crate::sets::{CatSet, DSet, OrdSet, Set};
-use crate::values::{DVal, Int, Num};
+use crate::values::{DVal, DValKinds, Int, Num};
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 

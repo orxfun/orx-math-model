@@ -1,7 +1,7 @@
 use crate::indices::{CatIdx, DIdx, Idx};
 use crate::ptr::RefPtr;
 use crate::sets::{DSet, Set};
-use crate::values::{DVal, Num};
+use crate::values::{DVal, Num, Value};
 use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -49,13 +49,13 @@ impl<'d, T> DParD1<'d, T> {
 
 #[derive(derive_new::new, Clone, Copy)]
 #[new(visibility = "pub(crate)")]
-pub struct ParD1<'m, 'd, T> {
+pub struct ParD1<'m, 'd, T: Value> {
     pub(crate) m: &'m Model<'d>,
     pub(crate) el: Elem<'m, DParD1<'d, T>>,
 }
 
-impl<'m, 'd> ParD1<'m, 'd, f64> {
-    pub fn at(self, i0: impl Into<Idx<'m, 'd>>) -> Num<'m, 'd> {
+impl<'m, 'd, T: Value> ParD1<'m, 'd, T> {
+    pub fn at(self, i0: impl Into<Idx<'m, 'd>>) -> T::Sym<'m, 'd> {
         // TODO: check if i0 and s0 agree
         let i0 = i0.into();
         let dpar = unsafe { self.el.get() };
@@ -65,19 +65,20 @@ impl<'m, 'd> ParD1<'m, 'd, f64> {
             Idx::CatInt(i0) => {
                 let i0 = unsafe { i0.el.get() }.val_ptr_int();
                 let fun = dpar.fun_int_ptr();
-                m.fun_num(DVal::new(Box::new(move || fun.val()(i0.val()))))
+                let data = DVal::new(Box::new(move || fun.val()(i0.val())));
+                Value::add_fun_to_model(m, data)
             }
             Idx::CatStr(i0) => {
                 let i0 = unsafe { i0.el.get() }.val_ptr_str();
                 let fun = dpar.fun_str_ptr();
-                m.fun_num(DVal::new(Box::new(move || fun.val()(i0.val()))))
+                let data = DVal::new(Box::new(move || fun.val()(i0.val())));
+                Value::add_fun_to_model(m, data)
             }
             Idx::Ord(i0) => {
                 let i0 = RefPtr::from(i0.el);
                 let fun = dpar.fun_int_ptr();
-                m.fun_num(DVal::new(Box::new(move || {
-                    fun.val()(i0.val().eval() as usize)
-                })))
+                let data = DVal::new(Box::new(move || fun.val()(i0.val().eval() as usize)));
+                Value::add_fun_to_model(m, data)
             }
         }
     }
