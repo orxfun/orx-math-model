@@ -26,7 +26,7 @@ impl<'d> DSet<'d> {
     }
 
     // TODO: add panics
-    pub fn into_cat_int(&self) -> &DCatSet<'d, usize> {
+    pub fn as_cat_int(&self) -> &DCatSet<'d, usize> {
         match self {
             Self::CatInt(x) => x,
             _ => unreachable!(),
@@ -34,7 +34,7 @@ impl<'d> DSet<'d> {
     }
 
     // TODO: add panics
-    pub fn into_cat_str(&self) -> &DCatSet<'d, &'d str> {
+    pub fn as_cat_str(&self) -> &DCatSet<'d, &'d str> {
         match self {
             Self::CatStr(x) => x,
             _ => unreachable!(),
@@ -42,7 +42,31 @@ impl<'d> DSet<'d> {
     }
 
     // TODO: add panics
-    pub fn into_ord(&self) -> &DOrdSet<'d> {
+    pub fn as_ord(&self) -> &DOrdSet<'d> {
+        match self {
+            Self::Ord(x) => x,
+            _ => unreachable!(),
+        }
+    }
+
+    // TODO: add panics
+    pub fn as_cat_int_mut(&mut self) -> &mut DCatSet<'d, usize> {
+        match self {
+            Self::CatInt(x) => x,
+            _ => unreachable!(),
+        }
+    }
+
+    // TODO: add panics
+    pub fn as_cat_str_mut(&mut self) -> &mut DCatSet<'d, &'d str> {
+        match self {
+            Self::CatStr(x) => x,
+            _ => unreachable!(),
+        }
+    }
+
+    // TODO: add panics
+    pub fn as_ord_mut(&mut self) -> &mut DOrdSet<'d> {
         match self {
             Self::Ord(x) => x,
             _ => unreachable!(),

@@ -18,6 +18,21 @@ impl<'d, K> DCatSet<'d, K> {
             fun: Box::new(|_| {}),
         }
     }
+
+    pub fn set_fun(&mut self, fun: Box<dyn Fn(&mut Elements<K>) + 'd>) {
+        self.fun = fun;
+    }
+
+    pub fn bind<I>(&mut self, elements: impl Fn() -> I + 'd)
+    where
+        I: IntoIterator<Item = K>,
+    {
+        self.set_fun(Box::new(move |e: &mut Elements<_>| e.fill(elements())));
+    }
+
+    pub fn fill(&self, elements: &mut Elements<K>) {
+        (self.fun)(elements)
+    }
 }
 
 // symbol
@@ -28,6 +43,12 @@ pub struct CatSet<'m, 'd, K> {
     pub(crate) m: &'m Model<'d>,
     pub(crate) el: Elem<'m, DSet<'d>>,
     p: PhantomData<K>,
+}
+
+impl<'m, 'd, K> CatSet<'m, 'd, K> {
+    pub(crate) fn bind(&self) {
+        //
+    }
 }
 
 impl<'m, 'd> CatSet<'m, 'd, usize> {

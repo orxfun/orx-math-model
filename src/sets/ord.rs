@@ -17,6 +17,21 @@ impl<'d> DOrdSet<'d> {
             fun: Box::new(|_| {}),
         }
     }
+
+    pub fn set_fun(&mut self, fun: Box<dyn Fn(&mut Elements<usize>) + 'd>) {
+        self.fun = fun;
+    }
+
+    pub fn bind<I>(&mut self, elements: impl Fn() -> I + 'd)
+    where
+        I: IntoIterator<Item = usize>,
+    {
+        self.set_fun(Box::new(move |e: &mut Elements<_>| e.fill(elements())));
+    }
+
+    pub fn fill(&self, elements: &mut Elements<usize>) {
+        (self.fun)(elements)
+    }
 }
 
 // symbol
