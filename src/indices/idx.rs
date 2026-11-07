@@ -35,6 +35,10 @@ impl<'d> DIdx<'d> {
         Self { set, val_ptr }
     }
 
+    pub fn set(&self) -> &DSet<'d> {
+        self.set.val()
+    }
+
     // TODO: add panics
     pub fn val_ptr_int(&self) -> ValPtr<usize> {
         match &self.val_ptr {

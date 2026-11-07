@@ -3,13 +3,13 @@ use orx_imp_vec::Elem;
 // val
 
 #[derive(Clone, Copy)]
-pub struct ValPtr<T: Copy>(*const T);
+pub struct ValPtr<T: Copy>(*mut T);
 
 impl<T: Copy> ValPtr<T> {
     /// # SAFETY
     ///
     /// * Created value must not outlive `'m` or `'d`.
-    unsafe fn new(p: *const T) -> Self {
+    unsafe fn new(p: *mut T) -> Self {
         Self(p)
     }
 
@@ -20,12 +20,16 @@ impl<T: Copy> ValPtr<T> {
     pub fn val(self) -> T {
         unsafe { *self.0 }
     }
+
+    pub fn write(self, value: T) {
+        unsafe { self.0.write(value) };
+    }
 }
 
 impl<T: Copy> From<Elem<'_, T>> for ValPtr<T> {
     fn from(el: Elem<'_, T>) -> Self {
         // TODO: safety note
-        unsafe { Self::new(el.as_ptr()) }
+        unsafe { Self::new(el.as_mut_ptr()) }
     }
 }
 

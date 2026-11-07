@@ -1,4 +1,5 @@
 use alloc::vec::Vec;
+use core::{iter::Copied, slice::Iter};
 
 #[derive(Default, Debug, PartialEq)]
 pub struct Elements<T> {
@@ -23,5 +24,12 @@ impl<T> Elements<T> {
 
     pub fn as_slice(&self) -> &[T] {
         &self.data
+    }
+
+    pub fn iter(&self) -> Copied<Iter<'_, T>>
+    where
+        T: Copy,
+    {
+        self.data.iter().copied()
     }
 }

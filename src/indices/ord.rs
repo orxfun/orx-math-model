@@ -1,5 +1,7 @@
+use crate::elements::{Elements, ElementsIter};
 use crate::indices::idx::DIdx;
 use crate::Model;
+use core::{iter::Copied, slice::Iter};
 use orx_imp_vec::Elem;
 
 #[derive(derive_new::new, Clone, Copy)]
@@ -10,7 +12,12 @@ pub struct OrdIdx<'m, 'd> {
 }
 
 impl<'m, 'd> OrdIdx<'m, 'd> {
-    pub fn iter(self) {
-        todo!()
+    pub fn iter<'a>(
+        self,
+        elements: &'a mut Elements<usize>,
+    ) -> ElementsIter<usize, Copied<Iter<'a, usize>>> {
+        let data = unsafe { self.el.get() };
+        data.set().as_ord().fill(elements);
+        ElementsIter::new(elements.iter(), data.val_ptr_int())
     }
 }
