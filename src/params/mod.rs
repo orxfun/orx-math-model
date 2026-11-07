@@ -1,4 +1,6 @@
-mod d1;
-mod par1;
+#[cfg(test)]
+mod tests;
 
-pub use par1::{DParD1, ParD1};
+mod par_d1;
+
+pub use par_d1::{DParD1, ParD1};
