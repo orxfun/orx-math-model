@@ -1,5 +1,6 @@
+use crate::elements::Elements;
 use crate::indices::{CatIdx, DIdx};
-use crate::sets::{elements::Elements, DSet};
+use crate::sets::DSet;
 use crate::Model;
 use alloc::boxed::Box;
 use core::marker::PhantomData;

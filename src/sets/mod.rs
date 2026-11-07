@@ -2,11 +2,9 @@
 mod tests;
 
 mod cat;
-mod elements;
 mod ord;
 mod set;
 
 pub use cat::CatSet;
-pub use elements::Elements;
 pub use ord::OrdSet;
 pub use set::{DSet, Set};

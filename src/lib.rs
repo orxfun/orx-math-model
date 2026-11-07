@@ -20,6 +20,7 @@ extern crate alloc;
 extern crate std;
 
 mod bag;
+mod elements;
 mod indices;
 mod model;
 mod params;

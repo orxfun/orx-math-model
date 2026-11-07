@@ -1,5 +1,6 @@
+use crate::elements::Elements;
 use crate::indices::{DIdx, OrdIdx};
-use crate::sets::{elements::Elements, DSet};
+use crate::sets::DSet;
 use crate::Model;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
