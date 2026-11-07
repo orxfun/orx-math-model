@@ -1,4 +1,5 @@
 mod val;
+mod value;
 
 pub use val::DVal;
 
