@@ -3,7 +3,7 @@ use crate::Model;
 use core::marker::PhantomData;
 use orx_imp_vec::Elem;
 
-#[derive(derive_new::new)]
+#[derive(derive_new::new, Clone, Copy)]
 #[new(visibility = "pub(crate)")]
 pub struct CatIdx<'m, 'd, K: Copy + Default> {
     pub(crate) m: &'m Model<'d>,
