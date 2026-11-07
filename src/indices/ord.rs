@@ -12,7 +12,7 @@ pub struct OrdIdx<'m, 'd> {
 }
 
 impl<'m, 'd> OrdIdx<'m, 'd> {
-    pub fn iter<'a>(
+    pub(crate) fn iter<'a>(
         self,
         elements: &'a mut Elements<usize>,
     ) -> ElementsIter<usize, Copied<Iter<'a, usize>>> {

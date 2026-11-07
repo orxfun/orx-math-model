@@ -14,7 +14,7 @@ pub struct CatIdx<'m, 'd, K: Copy + Default> {
 }
 
 impl<'m, 'd> CatIdx<'m, 'd, usize> {
-    pub fn iter<'a>(
+    pub(crate) fn iter<'a>(
         self,
         elements: &'a mut Elements<usize>,
     ) -> ElementsIter<usize, Copied<Iter<'a, usize>>> {
@@ -25,7 +25,7 @@ impl<'m, 'd> CatIdx<'m, 'd, usize> {
 }
 
 impl<'m, 'd> CatIdx<'m, 'd, &'d str> {
-    pub fn iter<'a>(
+    pub(crate) fn iter<'a>(
         self,
         elements: &'a mut Elements<&'d str>,
     ) -> ElementsIter<&'d str, Copied<Iter<'a, &'d str>>> {
