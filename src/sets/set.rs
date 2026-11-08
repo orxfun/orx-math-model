@@ -1,8 +1,7 @@
-use orx_imp_vec::Elem;
-
 use crate::sets::cat::DCatSet;
 use crate::sets::ord::DOrdSet;
 use crate::sets::{CatSet, OrdSet};
+use orx_imp_vec::Elem;
 
 // data
 

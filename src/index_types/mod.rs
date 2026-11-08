@@ -1,5 +1,6 @@
-mod idx_input;
-mod idx_variants;
+mod input;
+mod input_ptr;
+mod variants;
 
-pub use idx_input::IdxIn;
-pub use idx_variants::IdxInVariant;
+pub use input::IdxIn;
+pub use variants::IdxInVariant;

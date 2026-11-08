@@ -10,7 +10,7 @@ pub trait IdxIn<'d>: Sized {
 
 impl<'d> IdxIn<'d> for usize {
     fn variant() -> IdxInVariant {
-        IdxInVariant::Int
+        IdxInVariant::USize
     }
 
     // fn update_dpar_d1<T>(data: &mut DParD1<'d, T>, fun: impl Fn(Self) -> T + 'd) {
@@ -27,5 +27,17 @@ impl<'d> IdxIn<'d> for &'d str {
 
     // fn update_dpar_d1<T>(data: &mut DParD1<'d, T>, fun: impl Fn(Self) -> T + 'd) {
     //     data.fun_str = Box::new(fun);
+    // }
+}
+
+// i64
+
+impl<'d> IdxIn<'d> for i64 {
+    fn variant() -> IdxInVariant {
+        IdxInVariant::I64
+    }
+
+    // fn update_dpar_d1<T>(data: &mut DParD1<'d, T>, fun: impl Fn(Self) -> T + 'd) {
+    //     data.fun_int = Box::new(fun);
     // }
 }
