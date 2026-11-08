@@ -1,4 +1,4 @@
-pub enum InputVariant {
+pub enum IdxInVariant {
     Int,
     Str,
 }
