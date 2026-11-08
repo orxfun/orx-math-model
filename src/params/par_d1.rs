@@ -8,6 +8,54 @@ use orx_imp_vec::Elem;
 
 // data
 
+pub enum FunParD1<'d, T> {
+    Int(Box<dyn Fn(usize) -> T + 'd>),
+    Str(Box<dyn Fn(&'d str) -> T + 'd>),
+}
+
+impl<'d, T> From<Box<dyn Fn(usize) -> T + 'd>> for FunParD1<'d, T> {
+    fn from(value: Box<dyn Fn(usize) -> T + 'd>) -> Self {
+        Self::Int(value)
+    }
+}
+
+impl<'d, T> From<Box<dyn Fn(&'d str) -> T + 'd>> for FunParD1<'d, T> {
+    fn from(value: Box<dyn Fn(&'d str) -> T + 'd>) -> Self {
+        Self::Str(value)
+    }
+}
+
+pub enum InputVariant {
+    Int,
+    Str,
+}
+
+pub trait In<'d>: Sized {
+    fn variant() -> InputVariant;
+
+    fn update_dpar_d1<T>(data: &mut DParD1<'d, T>, fun: impl Fn(Self) -> T + 'd);
+}
+
+impl<'d> In<'d> for usize {
+    fn variant() -> InputVariant {
+        InputVariant::Int
+    }
+
+    fn update_dpar_d1<T>(data: &mut DParD1<'d, T>, fun: impl Fn(Self) -> T + 'd) {
+        data.fun_int = Box::new(fun);
+    }
+}
+
+impl<'d> In<'d> for &'d str {
+    fn variant() -> InputVariant {
+        InputVariant::Str
+    }
+
+    fn update_dpar_d1<T>(data: &mut DParD1<'d, T>, fun: impl Fn(Self) -> T + 'd) {
+        data.fun_str = Box::new(fun);
+    }
+}
+
 #[derive(Clone, Copy)]
 enum State {
     FunIntSet,
@@ -42,6 +90,20 @@ impl<'d, T> DParD1<'d, T> {
 
     fn fun_str_ptr(&self) -> RefPtr<dyn Fn(&'d str) -> T + 'd> {
         unsafe { RefPtr::new(self.fun_str.as_ref() as *const dyn Fn(&'d str) -> T) }
+    }
+
+    pub fn bind(&mut self, fun: impl Into<FunParD1<'d, T>>) {
+        match fun.into() {
+            FunParD1::Int(f) => self.fun_int = f,
+            FunParD1::Str(f) => self.fun_str = f,
+        }
+    }
+
+    pub fn bind2<I>(&mut self, fun: impl Fn(I) -> T + 'd)
+    where
+        I: In<'d>,
+    {
+        I::update_dpar_d1(self, fun);
     }
 }
 
