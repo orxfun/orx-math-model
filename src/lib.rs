@@ -21,6 +21,7 @@ extern crate std;
 
 mod bag;
 mod elements;
+mod index_types;
 mod indices;
 mod model;
 mod params;
