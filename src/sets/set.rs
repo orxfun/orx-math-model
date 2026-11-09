@@ -3,6 +3,27 @@ use crate::sets::ord::DOrdSet;
 use crate::sets::{CatSet, OrdSet};
 use orx_imp_vec::Elem;
 
+use crate::{elements::Elements, index_types::IdxIn};
+use alloc::boxed::Box;
+
+// data
+
+pub enum DSet2<'d> {
+    CatUsize(Box<dyn Fn(&mut Elements<usize>) + 'd>),
+    CatStr(Box<dyn Fn(&mut Elements<&'d str>) + 'd>),
+    Ord(Box<dyn Fn(&mut Elements<i64>) + 'd>),
+}
+
+impl<'d> DSet2<'d> {
+    pub fn empty_cat() -> Self {
+        Self::CatUsize(Box::new(|_| {}))
+    }
+
+    pub fn bind<I: IdxIn<'d>>(&mut self, fun: impl Fn(&mut Elements<I>) + 'd) {
+        I::bind_set(self, fun);
+    }
+}
+
 // data
 
 pub enum DSet<'d> {

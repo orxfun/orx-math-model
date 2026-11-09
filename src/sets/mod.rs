@@ -2,11 +2,9 @@
 mod tests;
 
 mod cat;
-mod new_set;
 mod ord;
 mod set;
 
-pub use cat::CatSet;
-pub use new_set::DSet2;
-pub use ord::OrdSet;
-pub use set::{DSet, Set};
+pub use cat::{CatSet, CatSet2};
+pub use ord::{OrdSet, OrdSet2};
+pub use set::{DSet, DSet2, Set};

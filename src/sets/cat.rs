@@ -1,10 +1,19 @@
 use crate::elements::Elements;
 use crate::indices::{CatIdx, DIdx};
-use crate::sets::DSet;
+use crate::sets::{DSet, DSet2};
 use crate::Model;
 use alloc::boxed::Box;
 use core::marker::PhantomData;
 use orx_imp_vec::Elem;
+
+// symbol
+
+#[derive(derive_new::new, Clone, Copy)]
+#[new(visibility = "pub(crate)")]
+pub struct CatSet2<'m, 'd> {
+    pub(crate) m: &'m Model<'d>,
+    pub(crate) el: Elem<'m, DSet2<'d>>,
+}
 
 // data
 
