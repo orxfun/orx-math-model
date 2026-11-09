@@ -1,7 +1,7 @@
 use crate::ptr::ValPtr;
 
 pub enum IdxInPtr<'d> {
-    USize(ValPtr<usize>),
+    Usize(ValPtr<usize>),
     Str(ValPtr<&'d str>),
     I64(ValPtr<i64>),
 }

@@ -1,7 +1,14 @@
+use crate::elements::Elements;
 use crate::index_types::IdxInVariant;
+use crate::sets::DSet2;
+use alloc::boxed::Box;
 
 pub trait IdxIn<'d>: Sized {
     fn variant() -> IdxInVariant;
+
+    // set
+
+    fn bind_set(set: &mut DSet2<'d>, fun: impl Fn(&mut Elements<Self>) + 'd);
 
     // fn update_dpar_d1<T>(data: &mut DParD1<'d, T>, fun: impl Fn(Self) -> T + 'd);
 }
@@ -10,7 +17,16 @@ pub trait IdxIn<'d>: Sized {
 
 impl<'d> IdxIn<'d> for usize {
     fn variant() -> IdxInVariant {
-        IdxInVariant::USize
+        IdxInVariant::Usize
+    }
+
+    // set
+
+    fn bind_set(set: &mut DSet2<'d>, fun: impl Fn(&mut Elements<Self>) + 'd) {
+        match set {
+            DSet2::CatUsize(_) | DSet2::CatStr(_) => *set = DSet2::CatUsize(Box::new(fun)),
+            _ => unreachable!(),
+        }
     }
 
     // fn update_dpar_d1<T>(data: &mut DParD1<'d, T>, fun: impl Fn(Self) -> T + 'd) {
@@ -25,9 +41,14 @@ impl<'d> IdxIn<'d> for &'d str {
         IdxInVariant::Str
     }
 
-    // fn update_dpar_d1<T>(data: &mut DParD1<'d, T>, fun: impl Fn(Self) -> T + 'd) {
-    //     data.fun_str = Box::new(fun);
-    // }
+    // set
+
+    fn bind_set(set: &mut DSet2<'d>, fun: impl Fn(&mut Elements<Self>) + 'd) {
+        match set {
+            DSet2::CatUsize(_) | DSet2::CatStr(_) => *set = DSet2::CatStr(Box::new(fun)),
+            _ => unreachable!(),
+        }
+    }
 }
 
 // i64
@@ -37,7 +58,12 @@ impl<'d> IdxIn<'d> for i64 {
         IdxInVariant::I64
     }
 
-    // fn update_dpar_d1<T>(data: &mut DParD1<'d, T>, fun: impl Fn(Self) -> T + 'd) {
-    //     data.fun_int = Box::new(fun);
-    // }
+    // set
+
+    fn bind_set(set: &mut DSet2<'d>, fun: impl Fn(&mut Elements<Self>) + 'd) {
+        match set {
+            DSet2::Ord(x) => *x = Box::new(fun),
+            _ => unreachable!(),
+        }
+    }
 }

@@ -1,5 +1,5 @@
 pub enum IdxInVariant {
-    USize,
+    Usize,
     Str,
     I64,
 }
