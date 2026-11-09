@@ -15,6 +15,7 @@ pub struct Model<'d> {
     // values
     val_usize: Bag<usize>,
     val_str: Bag<&'d str>,
+    val_i64: Bag<i64>,
 
     // funs
     fun_num: Bag<DVal<'d, f64>>,
@@ -32,6 +33,7 @@ impl<'d> Model<'d> {
             // values
             val_usize: new_bag(),
             val_str: new_bag(),
+            val_i64: new_bag(),
 
             // funs
             fun_num: new_bag(),
@@ -77,6 +79,10 @@ impl<'d> Model<'d> {
 
     pub(crate) fn val_str<'m>(&'m self) -> Elem<'m, &'d str> {
         self.val_str.push(Default::default())
+    }
+
+    pub(crate) fn val_i64<'m>(&'m self) -> Elem<'m, i64> {
+        self.val_i64.push(Default::default())
     }
 
     // funs
