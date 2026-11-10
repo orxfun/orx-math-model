@@ -5,6 +5,6 @@ mod cat;
 mod idx;
 mod ord;
 
-pub use cat::CatIdx;
-pub use idx::{DIdx, Idx, ValIdxPtr};
-pub use ord::OrdIdx;
+pub use cat::CatIdx2;
+pub use idx::DIdx2;
+pub use ord::OrdIdx2;

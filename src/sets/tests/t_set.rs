@@ -7,7 +7,7 @@ fn set_cat_int() {
     let values = vec![1, 2, 7, 9];
 
     let m = Model::new();
-    let set = m.set_cat_int();
+    let set = m.set_cat();
     let mut elements = Elements::from(vec![]);
     unsafe { set.el.get() }.as_cat_int().fill(&mut elements);
     assert_eq!(elements.as_slice(), &[]);

@@ -8,7 +8,7 @@ fn idx_cat_int() {
     let mut elements = Elements::from(vec![]);
 
     let m = Model::new();
-    let set = m.set_cat_int();
+    let set = m.set_cat();
     let idx = set.idx();
 
     let mut iter = idx.iter(&mut elements);

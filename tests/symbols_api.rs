@@ -6,7 +6,7 @@ use orx_math_model::*;
 fn api() {
     let m = Model::new();
 
-    let si = m.set_cat_int();
+    let si = m.set_cat();
     let ss = m.set_cat_str();
     let i = m.set_ord();
 

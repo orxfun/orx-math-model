@@ -1,14 +1,14 @@
 use crate::bag::{new_bag, Bag};
-use crate::indices::DIdx;
+use crate::indices::DIdx2;
 use crate::params::{DParD1, ParD1};
-use crate::sets::{CatSet, DSet, OrdSet, Set};
+use crate::sets::{CatSet2, DSet2, OrdSet2};
 use crate::values::{DVal, DValKinds, Int, Num};
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 
 pub struct Model<'d> {
-    sets: Bag<DSet<'d>>,
-    indices: Bag<DIdx<'d>>,
+    sets: Bag<DSet2<'d>>,
+    indices: Bag<DIdx2<'d>>,
     d1_pars_num: Bag<DParD1<'d, f64>>,
     d1_pars_int: Bag<DParD1<'d, i64>>,
 
@@ -43,31 +43,27 @@ impl<'d> Model<'d> {
 
     // sets
 
-    pub fn set_cat_int<'m>(&'m self) -> CatSet<'m, 'd, usize> {
-        CatSet::new(self, self.sets.push(DSet::empty_cat_int()))
+    pub fn set_cat<'m>(&'m self) -> CatSet2<'m, 'd> {
+        CatSet2::new(self, self.sets.push(DSet2::new_cat()))
     }
 
-    pub fn set_cat_str<'m>(&'m self) -> CatSet<'m, 'd, &'d str> {
-        CatSet::new(self, self.sets.push(DSet::empty_cat_str()))
-    }
-
-    pub fn set_ord<'m>(&'m self) -> OrdSet<'m, 'd> {
-        OrdSet::new(self, self.sets.push(DSet::empty_ord()))
+    pub fn set_ord<'m>(&'m self) -> OrdSet2<'m, 'd> {
+        OrdSet2::new(self, self.sets.push(DSet2::new_ord()))
     }
 
     // pars
 
-    pub fn par_d1_num<'m>(&'m self, set: impl Into<Set<'m, 'd>>) -> ParD1<'m, 'd, f64> {
-        ParD1::new(self, self.d1_pars_num.push(DParD1::empty(set)))
-    }
+    // pub fn par_d1_num<'m>(&'m self, set: impl Into<Set<'m, 'd>>) -> ParD1<'m, 'd, f64> {
+    //     ParD1::new(self, self.d1_pars_num.push(DParD1::empty(set)))
+    // }
 
-    pub fn par_d1_int<'m>(&'m self, set: impl Into<Set<'m, 'd>>) -> ParD1<'m, 'd, i64> {
-        ParD1::new(self, self.d1_pars_int.push(DParD1::empty(set)))
-    }
+    // pub fn par_d1_int<'m>(&'m self, set: impl Into<Set<'m, 'd>>) -> ParD1<'m, 'd, i64> {
+    //     ParD1::new(self, self.d1_pars_int.push(DParD1::empty(set)))
+    // }
 
     // indices
 
-    pub(crate) fn index<'m>(&'m self, data: DIdx<'d>) -> Elem<'m, DIdx<'d>> {
+    pub(crate) fn index<'m>(&'m self, data: DIdx2<'d>) -> Elem<'m, DIdx2<'d>> {
         self.indices.push(data)
     }
 

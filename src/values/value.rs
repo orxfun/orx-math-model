@@ -1,4 +1,3 @@
-use crate::indices::DIdx;
 use crate::values::{DVal, Int, Num};
 use crate::Model;
 use alloc::boxed::Box;
