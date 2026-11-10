@@ -114,9 +114,17 @@ impl<'m, 'd> IntParD1<'m, 'd> {
     where
         I: Into<ParIdx<'m, 'd>>,
     {
-        let (m, par) = (self.m, unsafe { self.el.get() });
+        unsafe { self.at_unchecked(i0) }
+    }
 
-        let data = match (par, i0.into().into_data()) {
+    unsafe fn at_unchecked<I>(self, i0: I) -> Int<'d, 'd>
+    where
+        I: Into<ParIdx<'m, 'd>>,
+    {
+        let par = unsafe { self.el.get() };
+        let i0 = i0.into().into_data();
+
+        let data = match (par, i0) {
             (DParD1::Int(_, _, FParD1::CatUsize(f)), DParIdx::Idx(DIdx::CatUsize(_, i0))) => {
                 let f = unsafe { RefPtr::new(f) };
                 let fun = Box::new(move || f.val()(i0.val()));
@@ -155,10 +163,10 @@ impl<'m, 'd> IntParD1<'m, 'd> {
                 let fun = Box::new(move || f.val()((i0.val())()));
                 DVal::Int(fun)
             }
-
             _ => unreachable!(),
         };
-        Int::new(m, m.val(data))
+        let el = unsafe { self.m.val_for_idx(data) };
+        Int::new(unsafe { &*(self.m as *const Model<'_>) }, el)
     }
 }
 
@@ -166,6 +174,7 @@ impl<'m, 'd, I: Into<ParIdx<'m, 'd>>> Index<I> for IntParD1<'m, 'd> {
     type Output = Int<'m, 'd>;
 
     fn index(&self, i0: I) -> &Self::Output {
-        todo!()
+        let x = unsafe { self.at_unchecked(i0) };
+        unsafe { self.m.sym_int(x) }
     }
 }

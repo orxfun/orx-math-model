@@ -96,14 +96,14 @@ impl<'d> Model<'d> {
         self.val.push(data)
     }
 
-    pub(crate) fn val2<'m>(&'m self, data: DVal<'d>) -> Elem<'d, DVal<'d>> {
+    pub(crate) unsafe fn val_for_idx<'m>(&'m self, data: DVal<'d>) -> Elem<'d, DVal<'d>> {
         let ptr = self.val.push(data).as_mut_ptr();
         unsafe { Elem::new(ptr) }
     }
 
     // value symbols
 
-    pub(crate) fn sym_int<'m>(&'m self, sym: Int<'d, 'd>) -> &'m Int<'m, 'd> {
+    pub(crate) unsafe fn sym_int<'m>(&'m self, sym: Int<'d, 'd>) -> &'m Int<'d, 'd> {
         let el = self.sym_int.push(sym).as_mut_ptr();
         unsafe { Elem::new(el).get() }
     }
