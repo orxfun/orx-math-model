@@ -6,9 +6,7 @@ use crate::pars::{DParD1, FParD1};
 use crate::sets::DSet;
 use alloc::boxed::Box;
 
-pub trait IdxIn<'d>: Sized + Clone + Copy {
-    fn into_variant(self) -> IdxInVariant<'d>;
-
+pub trait IdxIn<'d>: Sized + Clone + Copy + Into<IdxInVariant<'d>> {
     // set
 
     fn set_bind(set: &mut DSet<'d>, fun: impl Fn(&mut Elements<Self>) + 'd);
@@ -22,11 +20,13 @@ pub trait IdxIn<'d>: Sized + Clone + Copy {
 
 // usize
 
-impl<'d> IdxIn<'d> for usize {
-    fn into_variant(self) -> IdxInVariant<'d> {
-        IdxInVariant::Usize(self)
+impl From<usize> for IdxInVariant<'_> {
+    fn from(value: usize) -> Self {
+        Self::Usize(value)
     }
+}
 
+impl<'d> IdxIn<'d> for usize {
     // set
 
     fn set_bind(set: &mut DSet<'d>, fun: impl Fn(&mut Elements<Self>) + 'd) {
@@ -58,11 +58,13 @@ impl<'d> IdxIn<'d> for usize {
 
 // &str
 
-impl<'d> IdxIn<'d> for &'d str {
-    fn into_variant(self) -> IdxInVariant<'d> {
-        IdxInVariant::Str(self)
+impl<'d> From<&'d str> for IdxInVariant<'d> {
+    fn from(value: &'d str) -> Self {
+        Self::Str(value)
     }
+}
 
+impl<'d> IdxIn<'d> for &'d str {
     // set
 
     fn set_bind(set: &mut DSet<'d>, fun: impl Fn(&mut Elements<Self>) + 'd) {
@@ -94,11 +96,13 @@ impl<'d> IdxIn<'d> for &'d str {
 
 // i64
 
-impl<'d> IdxIn<'d> for i64 {
-    fn into_variant(self) -> IdxInVariant<'d> {
-        IdxInVariant::I64(self)
+impl From<i64> for IdxInVariant<'_> {
+    fn from(value: i64) -> Self {
+        Self::I64(value)
     }
+}
 
+impl<'d> IdxIn<'d> for i64 {
     // set
 
     fn set_bind(set: &mut DSet<'d>, fun: impl Fn(&mut Elements<Self>) + 'd) {

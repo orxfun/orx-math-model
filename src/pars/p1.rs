@@ -1,6 +1,5 @@
-use crate::{
-    binding::Binding, index_types::IdxIn, pars::io1::Io1, ptr::RefPtr, sets::DSet, values::Value,
-};
+use crate::{binding::Binding, index_types::IdxIn, ptr::RefPtr, sets::DSet};
+use crate::{pars::io1::Io1, values::Value};
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 

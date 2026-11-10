@@ -1,7 +1,7 @@
 mod input;
 mod input_ptr;
-mod variants;
+mod variant;
 
 pub use input::IdxIn;
 pub use input_ptr::IdxInPtr;
-pub use variants::IdxInVariant;
+pub use variant::IdxInVariant;
