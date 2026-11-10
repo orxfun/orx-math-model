@@ -25,7 +25,7 @@ mod elements;
 mod index_types;
 mod indices;
 mod model;
-mod params;
+mod pars;
 mod ptr;
 mod sets;
 mod values;
