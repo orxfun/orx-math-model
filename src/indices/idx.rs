@@ -14,7 +14,7 @@ pub enum DIdx2<'d> {
 }
 
 impl<'d> DIdx2<'d> {
-    pub fn new_cat<'m>(m: &'m Model<'d>, data: Elem<'m, DSet2<'d>>) -> Self {
+    pub fn new<'m>(m: &'m Model<'d>, data: Elem<'m, DSet2<'d>>) -> Self {
         let s = RefPtr::from(data);
         match unsafe { data.get() } {
             DSet2::CatUsize(_) => Self::CatUsize(s, ValPtr::from(m.val_usize())),
