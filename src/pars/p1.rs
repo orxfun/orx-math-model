@@ -1,7 +1,6 @@
-use crate::index_types::IdxInVariant;
-use crate::values::ValVariant;
-use crate::{binding::Binding, index_types::IdxIn, ptr::RefPtr, sets::DSet};
-use crate::{pars::io1::Io1, values::Value};
+use crate::{binding::Binding, ptr::RefPtr, sets::DSet};
+use crate::{index_types::IdxIn, index_types::IdxInVariant, pars::io1::Io1, values::ValVariant};
+use crate::{values::Value, Model};
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 
@@ -86,4 +85,20 @@ impl<'d> DParD1<'d> {
             },
         }
     }
+}
+
+// symbol
+
+#[derive(derive_new::new, Clone, Copy)]
+#[new(visibility = "pub(crate)")]
+pub struct IntParD1<'m, 'd> {
+    pub(crate) m: &'m Model<'d>,
+    pub(crate) el: Elem<'m, DParD1<'d>>,
+}
+
+#[derive(derive_new::new, Clone, Copy)]
+#[new(visibility = "pub(crate)")]
+pub struct NumParD1<'m, 'd> {
+    pub(crate) m: &'m Model<'d>,
+    pub(crate) el: Elem<'m, DParD1<'d>>,
 }

@@ -1,5 +1,6 @@
 use crate::bag::{new_bag, Bag};
 use crate::indices::DIdx;
+use crate::pars::DParD1;
 use crate::ptr::ref_eq;
 use crate::sets::{CatSet2, DSet, OrdSet};
 use crate::values::DVal;
@@ -9,6 +10,7 @@ use orx_imp_vec::Elem;
 pub struct Model<'d> {
     sets: Bag<DSet<'d>>,
     indices: Bag<DIdx<'d>>,
+    p1: Bag<DParD1<'d>>,
     // d1_pars_num: Bag<DParD1<'d, f64>>,
     // d1_pars_int: Bag<DParD1<'d, i64>>,
 
@@ -26,6 +28,7 @@ impl<'d> Model<'d> {
         Self {
             sets: new_bag(),
             indices: new_bag(),
+            p1: new_bag(),
             // d1_pars_num: new_bag(),
             // d1_pars_int: new_bag(),
 
@@ -54,6 +57,8 @@ impl<'d> Model<'d> {
     }
 
     // pars
+
+    // pub fn int_par_d1<'m>(&'m self, )
 
     // pub fn par_d1_num<'m>(&'m self, set: impl Into<Set<'m, 'd>>) -> ParD1<'m, 'd, f64> {
     //     ParD1::new(self, self.d1_pars_num.push(DParD1::empty(set)))

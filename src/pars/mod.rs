@@ -4,7 +4,7 @@ mod tests;
 mod io1;
 mod p1;
 
-pub use p1::{DParD1, FParD1};
+pub use p1::{DParD1, FParD1, IntParD1, NumParD1};
 
 // mod par_d1;
 
