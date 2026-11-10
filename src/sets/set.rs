@@ -28,6 +28,19 @@ impl<'d> DSet<'d> {
     }
 
     pub fn bind<I: IdxIn<'d>>(&mut self, fun: impl Fn(&mut Elements<I>) + 'd) {
-        I::bind_set(self, fun);
+        I::set_bind(self, fun);
+    }
+
+    pub fn bind_from<I, J>(&mut self, fun: impl Fn() -> J + 'd)
+    where
+        I: IdxIn<'d>,
+        J: IntoIterator<Item = I>,
+    {
+        let fun = move |e: &mut Elements<I>| e.fill(fun());
+        I::set_bind(self, fun);
+    }
+
+    pub fn fill<I: IdxIn<'d>>(&self, elements: &mut Elements<I>) {
+        I::set_fill(self, elements);
     }
 }

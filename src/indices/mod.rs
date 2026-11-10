@@ -7,4 +7,4 @@ mod ord;
 
 pub use cat::CatIdx2;
 pub use idx::DIdx;
-pub use ord::OrdIdx2;
+pub use ord::OrdIdx;

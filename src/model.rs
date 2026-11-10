@@ -1,6 +1,6 @@
 use crate::bag::{new_bag, Bag};
 use crate::indices::DIdx;
-use crate::sets::{CatSet2, DSet, OrdSet2};
+use crate::sets::{CatSet2, DSet, OrdSet};
 use crate::values::{DVal, DValKinds, Int, Num};
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -46,8 +46,8 @@ impl<'d> Model<'d> {
         CatSet2::new(self, self.sets.push(DSet::new_cat()))
     }
 
-    pub fn set_ord<'m>(&'m self) -> OrdSet2<'m, 'd> {
-        OrdSet2::new(self, self.sets.push(DSet::new_ord()))
+    pub fn set_ord<'m>(&'m self) -> OrdSet<'m, 'd> {
+        OrdSet::new(self, self.sets.push(DSet::new_ord()))
     }
 
     // pars

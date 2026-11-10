@@ -9,7 +9,9 @@ pub trait IdxIn<'d>: Sized {
 
     // set
 
-    fn bind_set(set: &mut DSet<'d>, fun: impl Fn(&mut Elements<Self>) + 'd);
+    fn set_bind(set: &mut DSet<'d>, fun: impl Fn(&mut Elements<Self>) + 'd);
+
+    fn set_fill(set: &DSet<'d>, elements: &mut Elements<Self>);
 
     // fn update_dpar_d1<T>(data: &mut DParD1<'d, T>, fun: impl Fn(Self) -> T + 'd);
 }
@@ -23,12 +25,20 @@ impl<'d> IdxIn<'d> for usize {
 
     // set
 
-    fn bind_set(set: &mut DSet<'d>, fun: impl Fn(&mut Elements<Self>) + 'd) {
+    fn set_bind(set: &mut DSet<'d>, fun: impl Fn(&mut Elements<Self>) + 'd) {
         assert!(!set.is_bound());
         match set {
             DSet::CatUsize(_, _) | DSet::CatStr(_, _) => {
                 *set = DSet::CatUsize(Binding::Bound, Box::new(fun))
             }
+            _ => unreachable!(),
+        }
+    }
+
+    fn set_fill(set: &DSet<'d>, elements: &mut Elements<Self>) {
+        assert!(set.is_bound());
+        match set {
+            DSet::CatUsize(_, f) => f(elements),
             _ => unreachable!(),
         }
     }
@@ -47,12 +57,20 @@ impl<'d> IdxIn<'d> for &'d str {
 
     // set
 
-    fn bind_set(set: &mut DSet<'d>, fun: impl Fn(&mut Elements<Self>) + 'd) {
+    fn set_bind(set: &mut DSet<'d>, fun: impl Fn(&mut Elements<Self>) + 'd) {
         assert!(!set.is_bound());
         match set {
             DSet::CatUsize(_, _) | DSet::CatStr(_, _) => {
                 *set = DSet::CatStr(Binding::Bound, Box::new(fun))
             }
+            _ => unreachable!(),
+        }
+    }
+
+    fn set_fill(set: &DSet<'d>, elements: &mut Elements<Self>) {
+        assert!(set.is_bound());
+        match set {
+            DSet::CatStr(_, f) => f(elements),
             _ => unreachable!(),
         }
     }
@@ -67,10 +85,18 @@ impl<'d> IdxIn<'d> for i64 {
 
     // set
 
-    fn bind_set(set: &mut DSet<'d>, fun: impl Fn(&mut Elements<Self>) + 'd) {
+    fn set_bind(set: &mut DSet<'d>, fun: impl Fn(&mut Elements<Self>) + 'd) {
         assert!(!set.is_bound());
         match set {
-            DSet::Ord(_, x) => *x = Box::new(fun),
+            DSet::Ord(_, x) => *set = DSet::Ord(Binding::Bound, Box::new(fun)),
+            _ => unreachable!(),
+        }
+    }
+
+    fn set_fill(set: &DSet<'d>, elements: &mut Elements<Self>) {
+        assert!(set.is_bound());
+        match set {
+            DSet::Ord(_, f) => f(elements),
             _ => unreachable!(),
         }
     }
