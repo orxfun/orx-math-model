@@ -1,5 +1,6 @@
 use crate::bag::{new_bag, Bag};
 use crate::indices::DIdx;
+use crate::ptr::ref_eq;
 use crate::sets::{CatSet2, DSet, OrdSet};
 use crate::values::{DVal, DValKinds, Int, Num};
 use alloc::boxed::Box;

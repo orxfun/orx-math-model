@@ -12,14 +12,3 @@ pub struct OrdIdx<'m, 'd> {
     pub(crate) m: &'m Model<'d>,
     pub(crate) el: Elem<'m, DIdx<'d>>,
 }
-
-// impl<'m, 'd> OrdIdx<'m, 'd> {
-//     pub(crate) fn iter<'a>(
-//         self,
-//         elements: &'a mut Elements<usize>,
-//     ) -> ElementsIter<usize, Copied<Iter<'a, usize>>> {
-//         let data = unsafe { self.el.get() };
-//         data.set().as_ord().fill(elements);
-//         ElementsIter::new(elements.iter(), data.val_ptr_int())
-//     }
-// }

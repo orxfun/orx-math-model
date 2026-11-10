@@ -1,9 +1,10 @@
 use crate::ptr::ValPtr;
+use core::{iter::Copied, slice::Iter};
 
 // TODO: safety notes, T must be copy and no-drop
 
 #[derive(derive_new::new)]
-pub struct ElementsIter<T, I>
+pub struct ElementsIterCore<T, I>
 where
     T: Copy,
     I: Iterator<Item = T>,
@@ -12,7 +13,7 @@ where
     slot: ValPtr<T>,
 }
 
-impl<T, I> Iterator for ElementsIter<T, I>
+impl<T, I> Iterator for ElementsIterCore<T, I>
 where
     T: Copy,
     I: Iterator<Item = T>,
@@ -25,3 +26,5 @@ where
         })
     }
 }
+
+pub type ElementsIter<'a, T> = ElementsIterCore<T, Copied<Iter<'a, T>>>;

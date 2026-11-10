@@ -9,8 +9,8 @@ fn set_cat_int() {
     let m = Model::new();
     let set = m.set_cat();
     let mut elements: Elements<usize> = vec![].into();
-
     unsafe { set.el.get_mut() }.bind_from(|| values.iter().copied());
+
     unsafe { set.el.get() }.fill(&mut elements);
     assert_eq!(elements.as_slice(), &[1, 2, 7, 9]);
 }

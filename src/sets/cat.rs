@@ -1,5 +1,5 @@
 use crate::elements::Elements;
-use crate::indices::{CatIdx2, DIdx};
+use crate::indices::{CatIdx, DIdx};
 use crate::sets::DSet;
 use crate::Model;
 use alloc::boxed::Box;
@@ -16,8 +16,8 @@ pub struct CatSet2<'m, 'd> {
 }
 
 impl<'m, 'd> CatSet2<'m, 'd> {
-    pub fn idx(self) -> CatIdx2<'m, 'd> {
+    pub fn idx(self) -> CatIdx<'m, 'd> {
         let data = DIdx::new(self.m, self.el);
-        CatIdx2::new(self.m, self.m.index(data))
+        CatIdx::new(self.m, self.m.index(data))
     }
 }

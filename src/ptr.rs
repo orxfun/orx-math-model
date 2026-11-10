@@ -1,4 +1,9 @@
+use core::ptr::eq;
 use orx_imp_vec::Elem;
+
+pub fn ref_eq<T>(a: &T, b: &T) -> bool {
+    core::ptr::eq(a, b)
+}
 
 // val
 

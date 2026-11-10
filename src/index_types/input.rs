@@ -1,17 +1,22 @@
 use crate::binding::Binding;
-use crate::elements::Elements;
+use crate::elements::{Elements, ElementsIter};
 use crate::index_types::IdxInVariant;
+use crate::indices::DIdx;
 use crate::sets::DSet;
 use alloc::boxed::Box;
 
-pub trait IdxIn<'d>: Sized {
-    fn variant() -> IdxInVariant;
+pub trait IdxIn<'d>: Sized + Clone + Copy {
+    fn into_variant(self) -> IdxInVariant<'d>;
 
     // set
 
-    fn set_bind(set: &mut DSet<'d>, fun: impl Fn(&mut Elements<Self>) + 'd);
+    fn set_bind<'m>(set: &mut DSet<'d>, fun: impl Fn(&mut Elements<Self>) + 'd);
 
     fn set_fill(set: &DSet<'d>, elements: &mut Elements<Self>);
+
+    // idx
+
+    fn idx_iter<'a>(idx: &DIdx<'d>, elements: &'a mut Elements<Self>) -> ElementsIter<'a, Self>;
 
     // fn update_dpar_d1<T>(data: &mut DParD1<'d, T>, fun: impl Fn(Self) -> T + 'd);
 }
@@ -19,8 +24,8 @@ pub trait IdxIn<'d>: Sized {
 // usize
 
 impl<'d> IdxIn<'d> for usize {
-    fn variant() -> IdxInVariant {
-        IdxInVariant::Usize
+    fn into_variant(self) -> IdxInVariant<'d> {
+        IdxInVariant::Usize(self)
     }
 
     // set
@@ -43,6 +48,16 @@ impl<'d> IdxIn<'d> for usize {
         }
     }
 
+    // idx
+
+    fn idx_iter<'a>(idx: &DIdx<'d>, elements: &'a mut Elements<Self>) -> ElementsIter<'a, Self> {
+        idx.set().fill(elements);
+        match idx {
+            DIdx::CatUsize(_, v) => ElementsIter::new(elements.iter(), *v),
+            _ => todo!(),
+        }
+    }
+
     // fn update_dpar_d1<T>(data: &mut DParD1<'d, T>, fun: impl Fn(Self) -> T + 'd) {
     //     data.fun_int = Box::new(fun);
     // }
@@ -51,8 +66,8 @@ impl<'d> IdxIn<'d> for usize {
 // &str
 
 impl<'d> IdxIn<'d> for &'d str {
-    fn variant() -> IdxInVariant {
-        IdxInVariant::Str
+    fn into_variant(self) -> IdxInVariant<'d> {
+        IdxInVariant::Str(self)
     }
 
     // set
@@ -74,13 +89,23 @@ impl<'d> IdxIn<'d> for &'d str {
             _ => unreachable!(),
         }
     }
+
+    // idx
+
+    fn idx_iter<'a>(idx: &DIdx<'d>, elements: &'a mut Elements<Self>) -> ElementsIter<'a, Self> {
+        idx.set().fill(elements);
+        match idx {
+            DIdx::CatStr(_, v) => ElementsIter::new(elements.iter(), *v),
+            _ => todo!(),
+        }
+    }
 }
 
 // i64
 
 impl<'d> IdxIn<'d> for i64 {
-    fn variant() -> IdxInVariant {
-        IdxInVariant::I64
+    fn into_variant(self) -> IdxInVariant<'d> {
+        IdxInVariant::I64(self)
     }
 
     // set
@@ -98,6 +123,16 @@ impl<'d> IdxIn<'d> for i64 {
         match set {
             DSet::Ord(_, f) => f(elements),
             _ => unreachable!(),
+        }
+    }
+
+    // idx
+
+    fn idx_iter<'a>(idx: &DIdx<'d>, elements: &'a mut Elements<Self>) -> ElementsIter<'a, Self> {
+        idx.set().fill(elements);
+        match idx {
+            DIdx::Ord(_, v) => ElementsIter::new(elements.iter(), *v),
+            _ => todo!(),
         }
     }
 }
