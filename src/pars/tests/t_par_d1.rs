@@ -3,6 +3,9 @@ use crate::{elements::Elements, Model};
 use alloc::string::{String, ToString};
 use alloc::{vec, vec::Vec};
 use std::collections::HashMap;
+use std::println;
+
+// int
 
 #[test]
 fn p1_catint_to_int() {
@@ -37,5 +40,75 @@ fn p1_catstr_to_int() {
     for (i, expected) in data.iter() {
         let val = unsafe { par.el.get() }.value_as_variant(i);
         assert_eq!(val, ValVariant::Int(*expected));
+    }
+}
+
+#[test]
+fn p1_ord_to_int() {
+    let data = vec![10, 11, 12, 13];
+
+    let m = Model::new();
+    let set = m.set_ord();
+    let par = m.int_par_d1(set);
+
+    unsafe { par.el.get_mut() }.bind(|i: i64| data[i as usize]);
+
+    for (i, expected) in data.iter().copied().enumerate() {
+        let val = unsafe { par.el.get() }.value_as_variant(i as i64);
+        assert_eq!(val, ValVariant::Int(expected));
+    }
+}
+
+// num
+
+#[test]
+fn p1_catint_to_num() {
+    let data = vec![10.0, 11.0, 12.0, 13.0];
+
+    let m = Model::new();
+    let set = m.set_cat_int();
+    let par = m.num_par_d1(set);
+
+    unsafe { par.el.get_mut() }.bind(|i: usize| data[i]);
+
+    for (i, expected) in data.iter().copied().enumerate() {
+        let val = unsafe { par.el.get() }.value_as_variant(i);
+        assert_eq!(val, ValVariant::Num(expected));
+    }
+}
+
+#[test]
+fn p1_catstr_to_num() {
+    let data: HashMap<_, _> = [10, 11, 12, 13]
+        .iter()
+        .enumerate()
+        .map(|(i, x)| (x.to_string(), i as f64))
+        .collect();
+
+    let m = Model::new();
+    let set = m.set_cat_str();
+    let par = m.num_par_d1(set);
+
+    unsafe { par.el.get_mut() }.bind(|i: &String| *data.get(i).unwrap());
+
+    for (i, expected) in data.iter() {
+        let val = unsafe { par.el.get() }.value_as_variant(i);
+        assert_eq!(val, ValVariant::Num(*expected));
+    }
+}
+
+#[test]
+fn p1_ord_to_num() {
+    let data = vec![10.0, 11.0, 12.0, 13.0];
+
+    let m = Model::new();
+    let set = m.set_ord();
+    let par = m.num_par_d1(set);
+
+    unsafe { par.el.get_mut() }.bind(|i: i64| data[i as usize]);
+
+    for (i, expected) in data.iter().copied().enumerate() {
+        let val = unsafe { par.el.get() }.value_as_variant(i as i64);
+        assert_eq!(val, ValVariant::Num(expected));
     }
 }

@@ -70,6 +70,7 @@ impl<'d> DParD1<'d> {
     }
 
     pub fn value_as_variant<I: IdxIn<'d>>(&self, idx: I) -> ValVariant {
+        assert!(self.is_bound());
         let idx: IdxInVariant = idx.into();
         match self {
             Self::Int(_, _, f) => match (idx, f) {
