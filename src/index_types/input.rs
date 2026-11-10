@@ -109,7 +109,7 @@ impl<'d> IdxIn<'d> for i64 {
     fn set_bind(set: &mut DSet<'d>, fun: impl Fn(&mut Elements<Self>) + 'd) {
         assert!(!set.is_bound());
         match set {
-            DSet::Ord(_, x) => *set = DSet::Ord(Binding::Bound, Box::new(fun)),
+            DSet::Ord(_, _) => *set = DSet::Ord(Binding::Bound, Box::new(fun)),
             _ => unreachable!(),
         }
     }
