@@ -54,8 +54,8 @@ impl<T: ?Sized> RefPtr<T> {
     /// # SAFETY
     ///
     /// * Created value must not outlive `'m` or `'d`.
-    pub unsafe fn new(p: *const T) -> Self {
-        Self(p)
+    pub unsafe fn new(p: &T) -> Self {
+        Self(p as *const T)
     }
 
     /// # SAFETY
@@ -70,6 +70,6 @@ impl<T: ?Sized> RefPtr<T> {
 impl<T> From<Elem<'_, T>> for RefPtr<T> {
     fn from(el: Elem<'_, T>) -> Self {
         // TODO: safety note
-        unsafe { Self::new(el.as_ptr()) }
+        unsafe { Self::new(el.get()) }
     }
 }

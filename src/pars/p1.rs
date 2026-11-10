@@ -113,18 +113,54 @@ impl<'m, 'd, I: Into<ParIdx<'m, 'd>>> Index<I> for IntParD1<'m, 'd> {
     type Output = Int<'m, 'd>;
 
     fn index(&self, i0: I) -> &Self::Output {
-        let (m, d) = (self.m, unsafe { self.el.get() });
+        let (m, par) = (self.m, unsafe { self.el.get() });
         let i0 = i0.into().into_data();
-        let el = match (d, i0) {
-            (DParD1::Int(_, _, f), DParIdx::Idx(i0)) => match (f, i0) {
-                (FParD1::CatUsize(f), DIdx::CatUsize(_, v)) => {
-                    let data = DVal::Int(Box::new(|| f(v.val())));
-                    m.val(data)
-                }
-                _ => todo!(),
-            },
-            _ => todo!(),
+
+        let data = match (par, i0) {
+            (DParD1::Int(_, _, FParD1::CatUsize(f)), DParIdx::Idx(DIdx::CatUsize(_, i0))) => {
+                let f = unsafe { RefPtr::new(f) };
+                let fun = Box::new(move || f.val()(i0.val()));
+                DVal::Int(fun)
+            }
+            (DParD1::Int(_, _, FParD1::CatUsize(f)), DParIdx::RawUsize(i0)) => {
+                let f = unsafe { RefPtr::new(f) };
+                let fun = Box::new(move || f.val()(i0));
+                DVal::Int(fun)
+            }
+
+            (DParD1::Int(_, _, FParD1::CatStr(f)), DParIdx::Idx(DIdx::CatStr(_, i0))) => {
+                let f = unsafe { RefPtr::new(f) };
+                let fun = Box::new(move || f.val()(i0.val()));
+                DVal::Int(fun)
+            }
+            (DParD1::Int(_, _, FParD1::CatStr(f)), DParIdx::RawStr(i0)) => {
+                let f = unsafe { RefPtr::new(f) };
+                let fun = Box::new(move || f.val()(i0));
+                DVal::Int(fun)
+            }
+
+            (DParD1::Int(_, _, FParD1::Ord(f)), DParIdx::Idx(DIdx::Ord(_, i0))) => {
+                let f = unsafe { RefPtr::new(f) };
+                let fun = Box::new(move || f.val()(i0.val()));
+                DVal::Int(fun)
+            }
+            (DParD1::Int(_, _, FParD1::Ord(f)), DParIdx::RawI64(i0)) => {
+                let f = unsafe { RefPtr::new(f) };
+                let fun = Box::new(move || f.val()(i0));
+                DVal::Int(fun)
+            }
+            (DParD1::Int(_, _, FParD1::Ord(f)), DParIdx::Val(DVal::Int(i0))) => {
+                let f = unsafe { RefPtr::new(f) };
+                let i0 = unsafe { RefPtr::new(i0) };
+                let fun = Box::new(move || f.val()((i0.val())()));
+                DVal::Int(fun)
+            }
+
+            _ => unreachable!(),
         };
+        let el = m.val(data);
+        let sym = Int::new(m, el);
+
         todo!()
     }
 }
