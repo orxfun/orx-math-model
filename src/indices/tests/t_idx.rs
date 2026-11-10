@@ -8,7 +8,7 @@ fn idx_cat_int() {
     let values = vec![1usize, 2, 7, 9];
 
     let m = Model::new();
-    let set = m.set_cat();
+    let set = m.set_cat_int();
     let idx = set.idx();
 
     let mut elements: Elements<usize> = vec![].into();
@@ -26,7 +26,7 @@ fn idx_cat_str() {
     let values: Vec<_> = [1, 2, 7, 9].map(|x| x.to_string()).into_iter().collect();
 
     let m = Model::new();
-    let set = m.set_cat();
+    let set = m.set_cat_str();
     let idx = set.idx();
 
     let mut elements: Elements<&str> = vec![].into();

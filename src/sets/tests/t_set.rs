@@ -7,7 +7,7 @@ fn set_cat_int() {
     let values = vec![1usize, 2, 7, 9];
 
     let m = Model::new();
-    let set = m.set_cat();
+    let set = m.set_cat_int();
     let mut elements: Elements<usize> = vec![].into();
     unsafe { set.el.get_mut() }.bind_from(|| values.iter().copied());
 
@@ -20,7 +20,7 @@ fn set_cat_str() {
     let values: Vec<_> = [1, 2, 7, 9].map(|x| x.to_string()).into_iter().collect();
 
     let m = Model::new();
-    let set = m.set_cat();
+    let set = m.set_cat_str();
     let mut elements: Elements<&str> = vec![].into();
 
     unsafe { set.el.get_mut() }.bind_from(|| values.iter().map(|x| x.as_str()));

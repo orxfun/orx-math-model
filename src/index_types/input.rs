@@ -33,9 +33,7 @@ impl<'d> IdxIn<'d> for usize {
     fn set_bind(set: &mut DSet<'d>, fun: impl Fn(&mut Elements<Self>) + 'd) {
         assert!(!set.is_bound());
         match set {
-            DSet::CatUsize(_, _) | DSet::CatStr(_, _) => {
-                *set = DSet::CatUsize(Binding::Bound, Box::new(fun))
-            }
+            DSet::CatUsize(_, _) => *set = DSet::CatUsize(Binding::Bound, Box::new(fun)),
             _ => unreachable!(),
         }
     }
@@ -75,9 +73,7 @@ impl<'d> IdxIn<'d> for &'d str {
     fn set_bind(set: &mut DSet<'d>, fun: impl Fn(&mut Elements<Self>) + 'd) {
         assert!(!set.is_bound());
         match set {
-            DSet::CatUsize(_, _) | DSet::CatStr(_, _) => {
-                *set = DSet::CatStr(Binding::Bound, Box::new(fun))
-            }
+            DSet::CatStr(_, _) => *set = DSet::CatStr(Binding::Bound, Box::new(fun)),
             _ => unreachable!(),
         }
     }

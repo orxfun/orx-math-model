@@ -43,8 +43,12 @@ impl<'d> Model<'d> {
 
     // sets
 
-    pub fn set_cat<'m>(&'m self) -> CatSet2<'m, 'd> {
-        CatSet2::new(self, self.sets.push(DSet::new_cat()))
+    pub fn set_cat_int<'m>(&'m self) -> CatSet2<'m, 'd> {
+        CatSet2::new(self, self.sets.push(DSet::new_cat_int()))
+    }
+
+    pub fn set_cat_str<'m>(&'m self) -> CatSet2<'m, 'd> {
+        CatSet2::new(self, self.sets.push(DSet::new_cat_str()))
     }
 
     pub fn set_ord<'m>(&'m self) -> OrdSet<'m, 'd> {

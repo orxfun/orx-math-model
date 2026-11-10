@@ -11,8 +11,12 @@ pub enum DSet<'d> {
 }
 
 impl<'d> DSet<'d> {
-    pub fn new_cat() -> Self {
+    pub fn new_cat_int() -> Self {
         Self::CatUsize(Binding::Empty, Box::new(|_| {}))
+    }
+
+    pub fn new_cat_str() -> Self {
+        Self::CatStr(Binding::Empty, Box::new(|_| {}))
     }
 
     pub fn new_ord() -> Self {
