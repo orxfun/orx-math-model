@@ -2,6 +2,7 @@ use crate::bag::{new_bag, Bag};
 use crate::indices::DIdx;
 use crate::ptr::ref_eq;
 use crate::sets::{CatSet2, DSet, OrdSet};
+use crate::values::DVal;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 
@@ -11,14 +12,13 @@ pub struct Model<'d> {
     // d1_pars_num: Bag<DParD1<'d, f64>>,
     // d1_pars_int: Bag<DParD1<'d, i64>>,
 
+    // idx slots
+    slot_usize: Bag<usize>,
+    slot_str: Bag<&'d str>,
+    slot_i64: Bag<i64>,
+
     // values
-    val_usize: Bag<usize>,
-    val_str: Bag<&'d str>,
-    val_i64: Bag<i64>,
-    //
-    // // funs
-    // fun_num: Bag<DVal<'d, f64>>,
-    // fun_int: Bag<DVal<'d, i64>>,
+    val: Bag<DVal<'d>>,
 }
 
 impl<'d> Model<'d> {
@@ -29,13 +29,13 @@ impl<'d> Model<'d> {
             // d1_pars_num: new_bag(),
             // d1_pars_int: new_bag(),
 
+            // idx slots
+            slot_usize: new_bag(),
+            slot_str: new_bag(),
+            slot_i64: new_bag(),
+
             // values
-            val_usize: new_bag(),
-            val_str: new_bag(),
-            val_i64: new_bag(),
-            // funs
-            // fun_num: new_bag(),
-            // fun_int: new_bag(),
+            val: new_bag(),
         }
     }
 
@@ -69,27 +69,23 @@ impl<'d> Model<'d> {
         self.indices.push(data)
     }
 
-    // values
+    // idx slots
 
-    pub(crate) fn val_usize<'m>(&'m self) -> Elem<'m, usize> {
-        self.val_usize.push(Default::default())
+    pub(crate) fn slot_usize<'m>(&'m self) -> Elem<'m, usize> {
+        self.slot_usize.push(Default::default())
     }
 
-    pub(crate) fn val_str<'m>(&'m self) -> Elem<'m, &'d str> {
-        self.val_str.push(Default::default())
+    pub(crate) fn slot_str<'m>(&'m self) -> Elem<'m, &'d str> {
+        self.slot_str.push(Default::default())
     }
 
-    pub(crate) fn val_i64<'m>(&'m self) -> Elem<'m, i64> {
-        self.val_i64.push(Default::default())
+    pub(crate) fn slot_i64<'m>(&'m self) -> Elem<'m, i64> {
+        self.slot_i64.push(Default::default())
     }
 
-    // funs
+    // val
 
-    // pub(crate) fn fun_num<'m>(&'m self, data: DVal<'d, f64>) -> Num<'m, 'd> {
-    //     Num::new(self, self.fun_num.push(data))
-    // }
-
-    // pub(crate) fn fun_int<'m>(&'m self, data: DVal<'d, i64>) -> Int<'m, 'd> {
-    //     Int::new(self, self.fun_int.push(data))
-    // }
+    pub(crate) fn val<'m>(&'m self, data: DVal<'d>) -> Elem<'m, DVal<'d>> {
+        self.val.push(data)
+    }
 }

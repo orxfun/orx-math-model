@@ -17,9 +17,9 @@ impl<'d> DIdx<'d> {
     pub fn new<'m>(m: &'m Model<'d>, data: Elem<'m, DSet<'d>>) -> Self {
         let s = RefPtr::from(data);
         match unsafe { data.get() } {
-            DSet::CatUsize(_, _) => Self::CatUsize(s, ValPtr::from(m.val_usize())),
-            DSet::CatStr(_, _) => Self::CatStr(s, ValPtr::from(m.val_str())),
-            DSet::Ord(_, _) => Self::Ord(s, ValPtr::from(m.val_i64())),
+            DSet::CatUsize(_, _) => Self::CatUsize(s, ValPtr::from(m.slot_usize())),
+            DSet::CatStr(_, _) => Self::CatStr(s, ValPtr::from(m.slot_str())),
+            DSet::Ord(_, _) => Self::Ord(s, ValPtr::from(m.slot_i64())),
         }
     }
 
