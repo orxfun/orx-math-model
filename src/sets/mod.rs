@@ -9,3 +9,4 @@ mod sum;
 pub use cat::CatSet;
 pub use data::DSet;
 pub use ord::OrdSet;
+pub use sum::Set;

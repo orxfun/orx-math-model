@@ -1,8 +1,8 @@
 use crate::bag::{new_bag, Bag};
 use crate::indices::DIdx;
-use crate::pars::DParD1;
+use crate::pars::{DParD1, IntParD1, NumParD1};
 use crate::ptr::ref_eq;
-use crate::sets::{CatSet, DSet, OrdSet};
+use crate::sets::{CatSet, DSet, OrdSet, Set};
 use crate::values::DVal;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -58,7 +58,13 @@ impl<'d> Model<'d> {
 
     // pars
 
-    // pub fn int_par_d1<'m>(&'m self, )
+    pub fn int_par_d1<'m>(&'m self, set: impl Into<Set<'m, 'd>>) -> IntParD1<'m, 'd> {
+        IntParD1::new(self, self.p1.push(DParD1::new_int(set.into().el())))
+    }
+
+    pub fn num_par_d1<'m>(&'m self, set: impl Into<Set<'m, 'd>>) -> NumParD1<'m, 'd> {
+        NumParD1::new(self, self.p1.push(DParD1::new_num(set.into().el())))
+    }
 
     // pub fn par_d1_num<'m>(&'m self, set: impl Into<Set<'m, 'd>>) -> ParD1<'m, 'd, f64> {
     //     ParD1::new(self, self.d1_pars_num.push(DParD1::empty(set)))
