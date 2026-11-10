@@ -1,8 +1,12 @@
+use crate::indices::DIdx;
+use crate::pars::{DParIdx, ParIdx};
+use crate::values::{DVal, Int};
 use crate::{binding::Binding, ptr::RefPtr, sets::DSet};
 use crate::{index_types::IdxIn, index_types::IdxInVariant, pars::io1::Io1, values::ValVariant};
 use crate::{values::Value, Model};
 use alloc::boxed::Box;
 use alloc::string::String;
+use core::ops::Index;
 use orx_imp_vec::Elem;
 
 // data
@@ -103,4 +107,24 @@ pub struct IntParD1<'m, 'd> {
 pub struct NumParD1<'m, 'd> {
     pub(crate) m: &'m Model<'d>,
     pub(crate) el: Elem<'m, DParD1<'d>>,
+}
+
+impl<'m, 'd, I: Into<ParIdx<'m, 'd>>> Index<I> for IntParD1<'m, 'd> {
+    type Output = Int<'m, 'd>;
+
+    fn index(&self, i0: I) -> &Self::Output {
+        let (m, d) = (self.m, unsafe { self.el.get() });
+        let i0 = i0.into().into_data();
+        let el = match (d, i0) {
+            (DParD1::Int(_, _, f), DParIdx::Idx(i0)) => match (f, i0) {
+                (FParD1::CatUsize(f), DIdx::CatUsize(_, v)) => {
+                    let data = DVal::Int(Box::new(|| f(v.val())));
+                    m.val(data)
+                }
+                _ => todo!(),
+            },
+            _ => todo!(),
+        };
+        todo!()
+    }
 }
