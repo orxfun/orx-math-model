@@ -103,7 +103,7 @@ impl<'d> Model<'d> {
 
     // value symbols
 
-    pub(crate) fn sym_int<'m>(&'m self, sym: Int<'d, 'd>) -> &'m Int<'d, 'd> {
+    pub(crate) fn sym_int<'m>(&'m self, sym: Int<'d, 'd>) -> &'m Int<'m, 'd> {
         let el = self.sym_int.push(sym).as_mut_ptr();
         unsafe { Elem::new(el).get() }
     }

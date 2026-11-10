@@ -109,10 +109,11 @@ pub struct NumParD1<'m, 'd> {
     pub(crate) el: Elem<'m, DParD1<'d>>,
 }
 
-impl<'m, 'd, I: Into<ParIdx<'m, 'd>>> Index<I> for IntParD1<'m, 'd> {
-    type Output = Int<'d, 'd>;
-
-    fn index(&self, i0: I) -> &Self::Output {
+impl<'m, 'd> IntParD1<'m, 'd> {
+    pub fn at<I>(self, i0: I) -> Int<'m, 'd>
+    where
+        I: Into<ParIdx<'m, 'd>>,
+    {
         let (m, par) = (self.m, unsafe { self.el.get() });
         let i0 = i0.into().into_data();
 
@@ -158,11 +159,15 @@ impl<'m, 'd, I: Into<ParIdx<'m, 'd>>> Index<I> for IntParD1<'m, 'd> {
 
             _ => unreachable!(),
         };
-        let el: Elem<'d, DVal<'d>> = m.val2(data);
-        let sym = Int::new(m, el);
+        let el: Elem<'m, DVal<'d>> = m.val2(data);
+        Int::new(m, el)
+    }
+}
 
-        let x: &Int<'d, 'd> = m.sym_int(sym);
+impl<'m, 'd, I: Into<ParIdx<'m, 'd>>> Index<I> for IntParD1<'m, 'd> {
+    type Output = Int<'m, 'd>;
 
-        x
+    fn index(&self, i0: I) -> &Self::Output {
+        todo!()
     }
 }
