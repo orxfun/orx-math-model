@@ -2,7 +2,7 @@ use alloc::string::String;
 use core::mem::MaybeUninit;
 use core::sync::atomic::{AtomicBool, Ordering};
 
-pub fn empty_string() -> &'static String {
+pub unsafe fn empty_string() -> &'static String {
     static INITIALIZED: AtomicBool = AtomicBool::new(false);
     static mut STRING: MaybeUninit<String> = MaybeUninit::uninit();
 

@@ -81,7 +81,7 @@ impl<'d> Model<'d> {
     }
 
     pub(crate) fn slot_str<'m>(&'m self) -> Elem<'m, &'d String> {
-        self.slot_str.push(empty_string())
+        self.slot_str.push(unsafe { empty_string() })
     }
 
     pub(crate) fn slot_i64<'m>(&'m self) -> Elem<'m, i64> {
