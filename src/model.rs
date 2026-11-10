@@ -4,7 +4,7 @@ use crate::indices::DIdx;
 use crate::pars::{DParD1, IntParD1, NumParD1};
 use crate::ptr::ref_eq;
 use crate::sets::{CatSet, DSet, OrdSet, Set};
-use crate::values::DVal;
+use crate::values::{DVal, Int};
 use alloc::boxed::Box;
 use alloc::string::String;
 use orx_imp_vec::Elem;
@@ -13,8 +13,6 @@ pub struct Model<'d> {
     sets: Bag<DSet<'d>>,
     indices: Bag<DIdx<'d>>,
     p1: Bag<DParD1<'d>>,
-    // d1_pars_num: Bag<DParD1<'d, f64>>,
-    // d1_pars_int: Bag<DParD1<'d, i64>>,
 
     // idx slots
     slot_usize: Bag<usize>,
@@ -23,6 +21,9 @@ pub struct Model<'d> {
 
     // values
     val: Bag<DVal<'d>>,
+
+    // value symbols
+    sym_int: Bag<Int<'d, 'd>>,
 }
 
 impl<'d> Model<'d> {
@@ -31,8 +32,6 @@ impl<'d> Model<'d> {
             sets: new_bag(),
             indices: new_bag(),
             p1: new_bag(),
-            // d1_pars_num: new_bag(),
-            // d1_pars_int: new_bag(),
 
             // idx slots
             slot_usize: new_bag(),
@@ -41,6 +40,9 @@ impl<'d> Model<'d> {
 
             // values
             val: new_bag(),
+
+            // value symbols
+            sym_int: new_bag(),
         }
     }
 
@@ -92,5 +94,17 @@ impl<'d> Model<'d> {
 
     pub(crate) fn val<'m>(&'m self, data: DVal<'d>) -> Elem<'m, DVal<'d>> {
         self.val.push(data)
+    }
+
+    pub(crate) fn val2<'m>(&'m self, data: DVal<'d>) -> Elem<'d, DVal<'d>> {
+        let ptr = self.val.push(data).as_mut_ptr();
+        unsafe { Elem::new(ptr) }
+    }
+
+    // value symbols
+
+    pub(crate) fn sym_int<'m>(&'m self, sym: Int<'d, 'd>) -> &'m Int<'d, 'd> {
+        let el = self.sym_int.push(sym).as_mut_ptr();
+        unsafe { Elem::new(el).get() }
     }
 }

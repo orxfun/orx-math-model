@@ -110,7 +110,7 @@ pub struct NumParD1<'m, 'd> {
 }
 
 impl<'m, 'd, I: Into<ParIdx<'m, 'd>>> Index<I> for IntParD1<'m, 'd> {
-    type Output = Int<'m, 'd>;
+    type Output = Int<'d, 'd>;
 
     fn index(&self, i0: I) -> &Self::Output {
         let (m, par) = (self.m, unsafe { self.el.get() });
@@ -158,9 +158,11 @@ impl<'m, 'd, I: Into<ParIdx<'m, 'd>>> Index<I> for IntParD1<'m, 'd> {
 
             _ => unreachable!(),
         };
-        let el = m.val(data);
+        let el: Elem<'d, DVal<'d>> = m.val2(data);
         let sym = Int::new(m, el);
 
-        todo!()
+        let x: &Int<'d, 'd> = m.sym_int(sym);
+
+        x
     }
 }
