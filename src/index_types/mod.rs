@@ -1,7 +1,7 @@
 mod input;
 mod input_ptr;
-mod variant;
+mod sum;
 
 pub use input::IdxIn;
 pub use input_ptr::IdxInPtr;
-pub use variant::IdxInVariant;
+pub use sum::IdxInVariant;
