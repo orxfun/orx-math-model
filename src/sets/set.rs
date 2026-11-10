@@ -25,9 +25,9 @@ impl<'d> DSet<'d> {
 
     pub fn is_bound(&self) -> bool {
         *(match self {
-            DSet::CatUsize(b, _) => b,
-            DSet::CatStr(b, _) => b,
-            DSet::Ord(b, _) => b,
+            Self::CatUsize(b, _) => b,
+            Self::CatStr(b, _) => b,
+            Self::Ord(b, _) => b,
         }) == Binding::Bound
     }
 

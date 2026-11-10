@@ -1,0 +1,113 @@
+use crate::pars::{DParD1, FParD1};
+use crate::{binding::Binding, index_types::IdxIn, values::Value};
+use alloc::boxed::Box;
+
+pub trait Io1<'d> {
+    type I0: IdxIn<'d>;
+
+    type O: Value;
+
+    fn p1_bind(par: &mut DParD1<'d>, fun: impl Fn(Self::I0) -> Self::O + 'd);
+}
+
+// I = usize
+
+impl<'d> Io1<'d> for (usize, i64) {
+    type I0 = usize;
+
+    type O = i64;
+
+    fn p1_bind(par: &mut DParD1<'d>, fun: impl Fn(Self::I0) -> Self::O + 'd) {
+        assert!(!par.is_bound());
+        match par {
+            DParD1::Int(_, s, _) => {
+                *par = DParD1::Int(Binding::Bound, *s, FParD1::CatUsize(Box::new(fun)))
+            }
+            _ => unreachable!(),
+        }
+    }
+}
+
+impl<'d> Io1<'d> for (usize, f64) {
+    type I0 = usize;
+
+    type O = f64;
+
+    fn p1_bind(par: &mut DParD1<'d>, fun: impl Fn(Self::I0) -> Self::O + 'd) {
+        assert!(!par.is_bound());
+        match par {
+            DParD1::Int(_, s, _) => {
+                *par = DParD1::Num(Binding::Bound, *s, FParD1::CatUsize(Box::new(fun)))
+            }
+            _ => unreachable!(),
+        }
+    }
+}
+
+// I = &str
+
+impl<'d> Io1<'d> for (&'d str, i64) {
+    type I0 = &'d str;
+
+    type O = i64;
+
+    fn p1_bind(par: &mut DParD1<'d>, fun: impl Fn(Self::I0) -> Self::O + 'd) {
+        assert!(!par.is_bound());
+        match par {
+            DParD1::Int(_, s, _) => {
+                *par = DParD1::Int(Binding::Bound, *s, FParD1::CatStr(Box::new(fun)))
+            }
+            _ => unreachable!(),
+        }
+    }
+}
+
+impl<'d> Io1<'d> for (&'d str, f64) {
+    type I0 = &'d str;
+
+    type O = f64;
+
+    fn p1_bind(par: &mut DParD1<'d>, fun: impl Fn(Self::I0) -> Self::O + 'd) {
+        assert!(!par.is_bound());
+        match par {
+            DParD1::Int(_, s, _) => {
+                *par = DParD1::Num(Binding::Bound, *s, FParD1::CatStr(Box::new(fun)))
+            }
+            _ => unreachable!(),
+        }
+    }
+}
+
+// I = i64
+
+impl<'d> Io1<'d> for (i64, i64) {
+    type I0 = i64;
+
+    type O = i64;
+
+    fn p1_bind(par: &mut DParD1<'d>, fun: impl Fn(Self::I0) -> Self::O + 'd) {
+        assert!(!par.is_bound());
+        match par {
+            DParD1::Int(_, s, _) => {
+                *par = DParD1::Int(Binding::Bound, *s, FParD1::Ord(Box::new(fun)))
+            }
+            _ => unreachable!(),
+        }
+    }
+}
+
+impl<'d> Io1<'d> for (i64, f64) {
+    type I0 = i64;
+
+    type O = f64;
+
+    fn p1_bind(par: &mut DParD1<'d>, fun: impl Fn(Self::I0) -> Self::O + 'd) {
+        assert!(!par.is_bound());
+        match par {
+            DParD1::Int(_, s, _) => {
+                *par = DParD1::Num(Binding::Bound, *s, FParD1::Ord(Box::new(fun)))
+            }
+            _ => unreachable!(),
+        }
+    }
+}

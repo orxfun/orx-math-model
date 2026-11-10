@@ -2,6 +2,7 @@ use crate::binding::Binding;
 use crate::elements::{Elements, ElementsIter};
 use crate::index_types::IdxInVariant;
 use crate::indices::DIdx;
+use crate::pars::{DParD1, FParD1};
 use crate::sets::DSet;
 use alloc::boxed::Box;
 
@@ -10,15 +11,13 @@ pub trait IdxIn<'d>: Sized + Clone + Copy {
 
     // set
 
-    fn set_bind<'m>(set: &mut DSet<'d>, fun: impl Fn(&mut Elements<Self>) + 'd);
+    fn set_bind(set: &mut DSet<'d>, fun: impl Fn(&mut Elements<Self>) + 'd);
 
     fn set_fill(set: &DSet<'d>, elements: &mut Elements<Self>);
 
     // idx
 
     fn idx_iter<'a>(idx: &DIdx<'d>, elements: &'a mut Elements<Self>) -> ElementsIter<'a, Self>;
-
-    // fn update_dpar_d1<T>(data: &mut DParD1<'d, T>, fun: impl Fn(Self) -> T + 'd);
 }
 
 // usize
@@ -52,13 +51,9 @@ impl<'d> IdxIn<'d> for usize {
         idx.set().fill(elements);
         match idx {
             DIdx::CatUsize(_, v) => ElementsIter::new(elements.iter(), *v),
-            _ => todo!(),
+            _ => unreachable!(),
         }
     }
-
-    // fn update_dpar_d1<T>(data: &mut DParD1<'d, T>, fun: impl Fn(Self) -> T + 'd) {
-    //     data.fun_int = Box::new(fun);
-    // }
 }
 
 // &str
@@ -92,7 +87,7 @@ impl<'d> IdxIn<'d> for &'d str {
         idx.set().fill(elements);
         match idx {
             DIdx::CatStr(_, v) => ElementsIter::new(elements.iter(), *v),
-            _ => todo!(),
+            _ => unreachable!(),
         }
     }
 }
@@ -128,7 +123,7 @@ impl<'d> IdxIn<'d> for i64 {
         idx.set().fill(elements);
         match idx {
             DIdx::Ord(_, v) => ElementsIter::new(elements.iter(), *v),
-            _ => todo!(),
+            _ => unreachable!(),
         }
     }
 }
