@@ -2,7 +2,6 @@ use crate::elements::{Elements, ElementsIter};
 use crate::index_types::{IdxIn, IdxInVariant};
 use crate::ptr::{RefPtr, ValPtr};
 use crate::sets::DSet;
-use crate::values::Int;
 use crate::Model;
 use orx_imp_vec::Elem;
 

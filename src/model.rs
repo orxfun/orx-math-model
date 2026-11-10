@@ -2,7 +2,6 @@ use crate::bag::{new_bag, Bag};
 use crate::indices::DIdx;
 use crate::ptr::ref_eq;
 use crate::sets::{CatSet2, DSet, OrdSet};
-use crate::values::{DVal, DValKinds, Int, Num};
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 
@@ -16,10 +15,10 @@ pub struct Model<'d> {
     val_usize: Bag<usize>,
     val_str: Bag<&'d str>,
     val_i64: Bag<i64>,
-
-    // funs
-    fun_num: Bag<DVal<'d, f64>>,
-    fun_int: Bag<DVal<'d, i64>>,
+    //
+    // // funs
+    // fun_num: Bag<DVal<'d, f64>>,
+    // fun_int: Bag<DVal<'d, i64>>,
 }
 
 impl<'d> Model<'d> {
@@ -34,10 +33,9 @@ impl<'d> Model<'d> {
             val_usize: new_bag(),
             val_str: new_bag(),
             val_i64: new_bag(),
-
             // funs
-            fun_num: new_bag(),
-            fun_int: new_bag(),
+            // fun_num: new_bag(),
+            // fun_int: new_bag(),
         }
     }
 
@@ -87,11 +85,11 @@ impl<'d> Model<'d> {
 
     // funs
 
-    pub(crate) fn fun_num<'m>(&'m self, data: DVal<'d, f64>) -> Num<'m, 'd> {
-        Num::new(self, self.fun_num.push(data))
-    }
+    // pub(crate) fn fun_num<'m>(&'m self, data: DVal<'d, f64>) -> Num<'m, 'd> {
+    //     Num::new(self, self.fun_num.push(data))
+    // }
 
-    pub(crate) fn fun_int<'m>(&'m self, data: DVal<'d, i64>) -> Int<'m, 'd> {
-        Int::new(self, self.fun_int.push(data))
-    }
+    // pub(crate) fn fun_int<'m>(&'m self, data: DVal<'d, i64>) -> Int<'m, 'd> {
+    //     Int::new(self, self.fun_int.push(data))
+    // }
 }
