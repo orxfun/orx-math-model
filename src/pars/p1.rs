@@ -1,3 +1,5 @@
+use crate::index_types::IdxInVariant;
+use crate::values::ValVariant;
 use crate::{binding::Binding, index_types::IdxIn, ptr::RefPtr, sets::DSet};
 use crate::{pars::io1::Io1, values::Value};
 use alloc::boxed::Box;
@@ -65,5 +67,23 @@ impl<'d> DParD1<'d> {
         (I, V): Io1<'d, I0 = I, O = V>,
     {
         <(I, V) as Io1<'d>>::p1_bind(self, fun);
+    }
+
+    pub fn value_as_variant<I: IdxIn<'d>>(&self, idx: I) -> ValVariant {
+        let idx: IdxInVariant = idx.into();
+        match self {
+            Self::Int(_, _, f) => match (idx, f) {
+                (IdxInVariant::Usize(i0), FParD1::CatUsize(f)) => ValVariant::Int(f(i0)),
+                (IdxInVariant::Str(i0), FParD1::CatStr(f)) => ValVariant::Int(f(i0)),
+                (IdxInVariant::I64(i0), FParD1::Ord(f)) => ValVariant::Int(f(i0)),
+                _ => unreachable!(),
+            },
+            Self::Num(_, _, f) => match (idx, f) {
+                (IdxInVariant::Usize(i0), FParD1::CatUsize(f)) => ValVariant::Num(f(i0)),
+                (IdxInVariant::Str(i0), FParD1::CatStr(f)) => ValVariant::Num(f(i0)),
+                (IdxInVariant::I64(i0), FParD1::Ord(f)) => ValVariant::Num(f(i0)),
+                _ => unreachable!(),
+            },
+        }
     }
 }
