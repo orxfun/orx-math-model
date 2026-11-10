@@ -3,13 +3,14 @@ use crate::index_types::{IdxIn, IdxInVariant};
 use crate::ptr::{RefPtr, ValPtr};
 use crate::sets::DSet;
 use crate::Model;
+use alloc::string::String;
 use orx_imp_vec::Elem;
 
 // data
 
 pub enum DIdx<'d> {
     CatUsize(RefPtr<DSet<'d>>, ValPtr<usize>),
-    CatStr(RefPtr<DSet<'d>>, ValPtr<&'d str>),
+    CatStr(RefPtr<DSet<'d>>, ValPtr<&'d String>),
     Ord(RefPtr<DSet<'d>>, ValPtr<i64>),
 }
 

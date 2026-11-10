@@ -1,6 +1,7 @@
 use crate::pars::{DParD1, FParD1};
 use crate::{binding::Binding, index_types::IdxIn, values::Value};
 use alloc::boxed::Box;
+use alloc::string::String;
 
 pub trait Io1<'d> {
     type I0: IdxIn<'d>;
@@ -46,8 +47,8 @@ impl<'d> Io1<'d> for (usize, f64) {
 
 // I = &str
 
-impl<'d> Io1<'d> for (&'d str, i64) {
-    type I0 = &'d str;
+impl<'d> Io1<'d> for (&'d String, i64) {
+    type I0 = &'d String;
 
     type O = i64;
 
@@ -62,8 +63,8 @@ impl<'d> Io1<'d> for (&'d str, i64) {
     }
 }
 
-impl<'d> Io1<'d> for (&'d str, f64) {
-    type I0 = &'d str;
+impl<'d> Io1<'d> for (&'d String, f64) {
+    type I0 = &'d String;
 
     type O = f64;
 

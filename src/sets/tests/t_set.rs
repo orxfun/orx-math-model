@@ -1,5 +1,5 @@
 use crate::{elements::Elements, Model};
-use alloc::string::ToString;
+use alloc::string::{String, ToString};
 use alloc::{vec, vec::Vec};
 
 #[test]
@@ -21,9 +21,9 @@ fn set_cat_str() {
 
     let m = Model::new();
     let set = m.set_cat_str();
-    let mut elements: Elements<&str> = vec![].into();
+    let mut elements: Elements<&String> = vec![].into();
 
-    unsafe { set.el.get_mut() }.bind_from(|| values.iter().map(|x| x.as_str()));
+    unsafe { set.el.get_mut() }.bind_from(|| values.iter());
     unsafe { set.el.get() }.fill(&mut elements);
     assert_eq!(elements.as_slice(), &["1", "2", "7", "9"]);
 }

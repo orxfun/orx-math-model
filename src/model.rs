@@ -1,10 +1,12 @@
 use crate::bag::{new_bag, Bag};
+use crate::index_types::empty_string;
 use crate::indices::DIdx;
 use crate::pars::{DParD1, IntParD1, NumParD1};
 use crate::ptr::ref_eq;
 use crate::sets::{CatSet, DSet, OrdSet, Set};
 use crate::values::DVal;
 use alloc::boxed::Box;
+use alloc::string::String;
 use orx_imp_vec::Elem;
 
 pub struct Model<'d> {
@@ -16,7 +18,7 @@ pub struct Model<'d> {
 
     // idx slots
     slot_usize: Bag<usize>,
-    slot_str: Bag<&'d str>,
+    slot_str: Bag<&'d String>,
     slot_i64: Bag<i64>,
 
     // values
@@ -66,14 +68,6 @@ impl<'d> Model<'d> {
         NumParD1::new(self, self.p1.push(DParD1::new_num(set.into().el())))
     }
 
-    // pub fn par_d1_num<'m>(&'m self, set: impl Into<Set<'m, 'd>>) -> ParD1<'m, 'd, f64> {
-    //     ParD1::new(self, self.d1_pars_num.push(DParD1::empty(set)))
-    // }
-
-    // pub fn par_d1_int<'m>(&'m self, set: impl Into<Set<'m, 'd>>) -> ParD1<'m, 'd, i64> {
-    //     ParD1::new(self, self.d1_pars_int.push(DParD1::empty(set)))
-    // }
-
     // indices
 
     pub(crate) fn index<'m>(&'m self, data: DIdx<'d>) -> Elem<'m, DIdx<'d>> {
@@ -86,8 +80,8 @@ impl<'d> Model<'d> {
         self.slot_usize.push(Default::default())
     }
 
-    pub(crate) fn slot_str<'m>(&'m self) -> Elem<'m, &'d str> {
-        self.slot_str.push(Default::default())
+    pub(crate) fn slot_str<'m>(&'m self) -> Elem<'m, &'d String> {
+        self.slot_str.push(empty_string())
     }
 
     pub(crate) fn slot_i64<'m>(&'m self) -> Elem<'m, i64> {

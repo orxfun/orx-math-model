@@ -5,6 +5,7 @@ use crate::indices::DIdx;
 use crate::pars::{DParD1, FParD1};
 use crate::sets::DSet;
 use alloc::boxed::Box;
+use alloc::string::String;
 
 pub trait IdxIn<'d>: Sized + Clone + Copy + Into<IdxInVariant<'d>> {
     // set
@@ -56,15 +57,15 @@ impl<'d> IdxIn<'d> for usize {
     }
 }
 
-// &str
+// &String
 
-impl<'d> From<&'d str> for IdxInVariant<'d> {
-    fn from(value: &'d str) -> Self {
+impl<'d> From<&'d String> for IdxInVariant<'d> {
+    fn from(value: &'d String) -> Self {
         Self::Str(value)
     }
 }
 
-impl<'d> IdxIn<'d> for &'d str {
+impl<'d> IdxIn<'d> for &'d String {
     // set
 
     fn set_bind(set: &mut DSet<'d>, fun: impl Fn(&mut Elements<Self>) + 'd) {

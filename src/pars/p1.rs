@@ -2,13 +2,14 @@ use crate::{binding::Binding, ptr::RefPtr, sets::DSet};
 use crate::{index_types::IdxIn, index_types::IdxInVariant, pars::io1::Io1, values::ValVariant};
 use crate::{values::Value, Model};
 use alloc::boxed::Box;
+use alloc::string::String;
 use orx_imp_vec::Elem;
 
 // data
 
 pub enum FParD1<'d, V> {
     CatUsize(Box<dyn Fn(usize) -> V + 'd>),
-    CatStr(Box<dyn Fn(&'d str) -> V + 'd>),
+    CatStr(Box<dyn Fn(&'d String) -> V + 'd>),
     Ord(Box<dyn Fn(i64) -> V + 'd>),
 }
 

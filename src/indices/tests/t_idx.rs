@@ -1,6 +1,6 @@
 use crate::index_types::IdxInVariant;
 use crate::{elements::Elements, Model};
-use alloc::string::ToString;
+use alloc::string::{String, ToString};
 use alloc::{vec, vec::Vec};
 
 #[test]
@@ -29,13 +29,13 @@ fn idx_cat_str() {
     let set = m.set_cat_str();
     let idx = set.idx();
 
-    let mut elements: Elements<&str> = vec![].into();
-    unsafe { set.el.get_mut() }.bind_from(|| values.iter().map(|x| x.as_str()));
+    let mut elements: Elements<&String> = vec![].into();
+    unsafe { set.el.get_mut() }.bind_from(|| values.iter());
 
     let iter = unsafe { idx.el.get() }.iter(&mut elements);
     for (i, _) in iter.enumerate() {
         let val = unsafe { idx.el.get() }.value_as_variant();
-        assert_eq!(val, IdxInVariant::Str(values[i].as_str()));
+        assert_eq!(val, IdxInVariant::Str(&values[i]));
     }
 }
 
