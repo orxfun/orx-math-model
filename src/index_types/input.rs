@@ -1,6 +1,7 @@
+use crate::binding::Binding;
 use crate::elements::Elements;
 use crate::index_types::IdxInVariant;
-use crate::sets::DSet2;
+use crate::sets::DSet;
 use alloc::boxed::Box;
 
 pub trait IdxIn<'d>: Sized {
@@ -8,7 +9,7 @@ pub trait IdxIn<'d>: Sized {
 
     // set
 
-    fn bind_set(set: &mut DSet2<'d>, fun: impl Fn(&mut Elements<Self>) + 'd);
+    fn bind_set(set: &mut DSet<'d>, fun: impl Fn(&mut Elements<Self>) + 'd);
 
     // fn update_dpar_d1<T>(data: &mut DParD1<'d, T>, fun: impl Fn(Self) -> T + 'd);
 }
@@ -22,9 +23,12 @@ impl<'d> IdxIn<'d> for usize {
 
     // set
 
-    fn bind_set(set: &mut DSet2<'d>, fun: impl Fn(&mut Elements<Self>) + 'd) {
+    fn bind_set(set: &mut DSet<'d>, fun: impl Fn(&mut Elements<Self>) + 'd) {
+        assert!(!set.is_bound());
         match set {
-            DSet2::CatUsize(_) | DSet2::CatStr(_) => *set = DSet2::CatUsize(Box::new(fun)),
+            DSet::CatUsize(_, _) | DSet::CatStr(_, _) => {
+                *set = DSet::CatUsize(Binding::Bound, Box::new(fun))
+            }
             _ => unreachable!(),
         }
     }
@@ -43,9 +47,12 @@ impl<'d> IdxIn<'d> for &'d str {
 
     // set
 
-    fn bind_set(set: &mut DSet2<'d>, fun: impl Fn(&mut Elements<Self>) + 'd) {
+    fn bind_set(set: &mut DSet<'d>, fun: impl Fn(&mut Elements<Self>) + 'd) {
+        assert!(!set.is_bound());
         match set {
-            DSet2::CatUsize(_) | DSet2::CatStr(_) => *set = DSet2::CatStr(Box::new(fun)),
+            DSet::CatUsize(_, _) | DSet::CatStr(_, _) => {
+                *set = DSet::CatStr(Binding::Bound, Box::new(fun))
+            }
             _ => unreachable!(),
         }
     }
@@ -60,9 +67,10 @@ impl<'d> IdxIn<'d> for i64 {
 
     // set
 
-    fn bind_set(set: &mut DSet2<'d>, fun: impl Fn(&mut Elements<Self>) + 'd) {
+    fn bind_set(set: &mut DSet<'d>, fun: impl Fn(&mut Elements<Self>) + 'd) {
+        assert!(!set.is_bound());
         match set {
-            DSet2::Ord(x) => *x = Box::new(fun),
+            DSet::Ord(_, x) => *x = Box::new(fun),
             _ => unreachable!(),
         }
     }

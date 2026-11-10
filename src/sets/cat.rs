@@ -1,6 +1,6 @@
 use crate::elements::Elements;
-use crate::indices::{CatIdx2, DIdx2};
-use crate::sets::DSet2;
+use crate::indices::{CatIdx2, DIdx};
+use crate::sets::DSet;
 use crate::Model;
 use alloc::boxed::Box;
 use core::marker::PhantomData;
@@ -12,12 +12,12 @@ use orx_imp_vec::Elem;
 #[new(visibility = "pub(crate)")]
 pub struct CatSet2<'m, 'd> {
     pub(crate) m: &'m Model<'d>,
-    pub(crate) el: Elem<'m, DSet2<'d>>,
+    pub(crate) el: Elem<'m, DSet<'d>>,
 }
 
 impl<'m, 'd> CatSet2<'m, 'd> {
     pub fn idx(self) -> CatIdx2<'m, 'd> {
-        let data = DIdx2::new(self.m, self.el);
+        let data = DIdx::new(self.m, self.el);
         CatIdx2::new(self.m, self.m.index(data))
     }
 }

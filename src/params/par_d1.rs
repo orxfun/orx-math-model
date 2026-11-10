@@ -1,6 +1,4 @@
-use crate::indices::{CatIdx, DIdx, Idx};
 use crate::ptr::RefPtr;
-use crate::sets::{DSet, Set};
 use crate::values::{DVal, Num, Value};
 use crate::Model;
 use alloc::boxed::Box;

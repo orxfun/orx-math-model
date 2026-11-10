@@ -1,16 +1,15 @@
 use crate::bag::{new_bag, Bag};
-use crate::indices::DIdx2;
-use crate::params::{DParD1, ParD1};
-use crate::sets::{CatSet2, DSet2, OrdSet2};
+use crate::indices::DIdx;
+use crate::sets::{CatSet2, DSet, OrdSet2};
 use crate::values::{DVal, DValKinds, Int, Num};
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 
 pub struct Model<'d> {
-    sets: Bag<DSet2<'d>>,
-    indices: Bag<DIdx2<'d>>,
-    d1_pars_num: Bag<DParD1<'d, f64>>,
-    d1_pars_int: Bag<DParD1<'d, i64>>,
+    sets: Bag<DSet<'d>>,
+    indices: Bag<DIdx<'d>>,
+    // d1_pars_num: Bag<DParD1<'d, f64>>,
+    // d1_pars_int: Bag<DParD1<'d, i64>>,
 
     // values
     val_usize: Bag<usize>,
@@ -27,8 +26,8 @@ impl<'d> Model<'d> {
         Self {
             sets: new_bag(),
             indices: new_bag(),
-            d1_pars_num: new_bag(),
-            d1_pars_int: new_bag(),
+            // d1_pars_num: new_bag(),
+            // d1_pars_int: new_bag(),
 
             // values
             val_usize: new_bag(),
@@ -44,11 +43,11 @@ impl<'d> Model<'d> {
     // sets
 
     pub fn set_cat<'m>(&'m self) -> CatSet2<'m, 'd> {
-        CatSet2::new(self, self.sets.push(DSet2::new_cat()))
+        CatSet2::new(self, self.sets.push(DSet::new_cat()))
     }
 
     pub fn set_ord<'m>(&'m self) -> OrdSet2<'m, 'd> {
-        OrdSet2::new(self, self.sets.push(DSet2::new_ord()))
+        OrdSet2::new(self, self.sets.push(DSet::new_ord()))
     }
 
     // pars
@@ -63,7 +62,7 @@ impl<'d> Model<'d> {
 
     // indices
 
-    pub(crate) fn index<'m>(&'m self, data: DIdx2<'d>) -> Elem<'m, DIdx2<'d>> {
+    pub(crate) fn index<'m>(&'m self, data: DIdx<'d>) -> Elem<'m, DIdx<'d>> {
         self.indices.push(data)
     }
 
