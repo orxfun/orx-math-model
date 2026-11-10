@@ -115,9 +115,8 @@ impl<'m, 'd> IntParD1<'m, 'd> {
         I: Into<ParIdx<'m, 'd>>,
     {
         let (m, par) = (self.m, unsafe { self.el.get() });
-        let i0 = i0.into().into_data();
 
-        let data = match (par, i0) {
+        let data = match (par, i0.into().into_data()) {
             (DParD1::Int(_, _, FParD1::CatUsize(f)), DParIdx::Idx(DIdx::CatUsize(_, i0))) => {
                 let f = unsafe { RefPtr::new(f) };
                 let fun = Box::new(move || f.val()(i0.val()));
@@ -159,8 +158,7 @@ impl<'m, 'd> IntParD1<'m, 'd> {
 
             _ => unreachable!(),
         };
-        let el: Elem<'m, DVal<'d>> = m.val2(data);
-        Int::new(m, el)
+        Int::new(m, m.val(data))
     }
 }
 
