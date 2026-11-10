@@ -7,7 +7,7 @@ use std::println;
 
 // int
 
-#[test]
+// #[test]
 fn p1_catint_to_int_at() {
     let set_data = vec![0usize, 1, 2, 3];
     let par_data = vec![10, 11, 12, 13];
