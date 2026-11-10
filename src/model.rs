@@ -2,7 +2,7 @@ use crate::bag::{new_bag, Bag};
 use crate::indices::DIdx;
 use crate::pars::DParD1;
 use crate::ptr::ref_eq;
-use crate::sets::{CatSet2, DSet, OrdSet};
+use crate::sets::{CatSet, DSet, OrdSet};
 use crate::values::DVal;
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -44,12 +44,12 @@ impl<'d> Model<'d> {
 
     // sets
 
-    pub fn set_cat_int<'m>(&'m self) -> CatSet2<'m, 'd> {
-        CatSet2::new(self, self.sets.push(DSet::new_cat_int()))
+    pub fn set_cat_int<'m>(&'m self) -> CatSet<'m, 'd> {
+        CatSet::new(self, self.sets.push(DSet::new_cat_int()))
     }
 
-    pub fn set_cat_str<'m>(&'m self) -> CatSet2<'m, 'd> {
-        CatSet2::new(self, self.sets.push(DSet::new_cat_str()))
+    pub fn set_cat_str<'m>(&'m self) -> CatSet<'m, 'd> {
+        CatSet::new(self, self.sets.push(DSet::new_cat_str()))
     }
 
     pub fn set_ord<'m>(&'m self) -> OrdSet<'m, 'd> {

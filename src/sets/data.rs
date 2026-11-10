@@ -2,8 +2,6 @@ use crate::{binding::Binding, elements::Elements, index_types::IdxIn};
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 
-// data
-
 pub enum DSet<'d> {
     CatUsize(Binding, Box<dyn Fn(&mut Elements<usize>) + 'd>),
     CatStr(Binding, Box<dyn Fn(&mut Elements<&'d str>) + 'd>),

@@ -2,9 +2,10 @@
 mod tests;
 
 mod cat;
+mod data;
 mod ord;
-mod set;
+mod sum;
 
-pub use cat::CatSet2;
+pub use cat::CatSet;
+pub use data::DSet;
 pub use ord::OrdSet;
-pub use set::DSet;
