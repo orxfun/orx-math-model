@@ -27,6 +27,16 @@ impl<'m, 'd, I0: Idx<'d>, T: Val> Deref for ParD1<'m, 'd, I0, T> {
     }
 }
 
+// int
+
 pub type IntParD1<'m, 'd, I0> = ParD1<'m, 'd, I0, i64>;
+
+impl<'m, 'd, I0: Idx<'d>> IntParD1<'m, 'd, I0> {
+    pub fn bind(&self, fun: impl Fn(I0) -> i64 + 'd) {
+        todo!()
+    }
+}
+
+// num
 
 pub type NumParD1<'m, 'd, I0> = ParD1<'m, 'd, I0, f64>;

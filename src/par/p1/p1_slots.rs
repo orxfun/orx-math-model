@@ -1,5 +1,6 @@
+use crate::idxs::Idx;
 #[cfg(test)]
-use crate::idxs::{Idx, IdxVal};
+use crate::idxs::IdxVal;
 use crate::sets::SetType;
 #[cfg(test)]
 use crate::vals::ValVal;
@@ -10,6 +11,12 @@ pub enum P1Fun<'d, T: Val> {
     CatSetInt(Box<dyn Fn(usize) -> T + 'd>),
     CatSetStr(Box<dyn Fn(&'d String) -> T + 'd>),
     OrdSet(Box<dyn Fn(i64) -> T + 'd>),
+}
+
+impl<'d, T: Val, I0: Idx<'d>, F: Fn(I0) -> T + 'd> From<(I0, F)> for P1Fun<'d, T> {
+    fn from(value: (I0, F)) -> Self {
+        todo!()
+    }
 }
 
 pub enum P1Slot<'d, T: Val> {
