@@ -25,6 +25,7 @@ mod err;
 mod model;
 mod sets;
 mod slot;
+mod symbol;
 
 // crate
 pub(crate) use bag::{new_bag, Bag};

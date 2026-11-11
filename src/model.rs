@@ -1,1 +1,3 @@
-pub struct Model;
+pub struct Model<'d> {
+    a: &'d char,
+}

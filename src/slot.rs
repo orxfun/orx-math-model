@@ -9,6 +9,7 @@ pub enum State {
     Bound,
 }
 
+#[derive(Clone, Copy)]
 pub struct Slot<'d, T> {
     p: *mut T,
     state: State,
