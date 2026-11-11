@@ -36,24 +36,24 @@ impl<'d> Model<'d> {
 
     // idxs
 
-    pub(crate) fn cat_idx_int<'m>(&'m self, set: CatSetInt<'m, 'd>) -> Res<CatIdxInt<'m, 'd>> {
-        Res::assert_same_model(self, set)?;
+    pub(crate) fn cat_idx_int<'m>(&'m self, set: CatSetInt<'m, 'd>) -> CatIdxInt<'m, 'd> {
+        Res::dbg_assert_same_model(self, set);
         let slot = self.idx_slots.push(SetType::CatSetInt);
         let el = self.idx_bag.push(unsafe { set.el.get() }.clone(), slot);
-        Ok(Symbol::new(self, el).into())
+        Symbol::new(self, el).into()
     }
 
-    pub(crate) fn cat_idx_str<'m>(&'m self, set: CatSetStr<'m, 'd>) -> Res<CatIdxStr<'m, 'd>> {
-        Res::assert_same_model(self, set)?;
+    pub(crate) fn cat_idx_str<'m>(&'m self, set: CatSetStr<'m, 'd>) -> CatIdxStr<'m, 'd> {
+        Res::dbg_assert_same_model(self, set);
         let slot = self.idx_slots.push(SetType::CatSetStr);
         let el = self.idx_bag.push(unsafe { set.el.get() }.clone(), slot);
-        Ok(Symbol::new(self, el).into())
+        Symbol::new(self, el).into()
     }
 
-    pub(crate) fn ord_idx<'m>(&'m self, set: OrdSet<'m, 'd>) -> Res<OrdIdx<'m, 'd>> {
-        Res::assert_same_model(self, set)?;
+    pub(crate) fn ord_idx<'m>(&'m self, set: OrdSet<'m, 'd>) -> OrdIdx<'m, 'd> {
+        Res::dbg_assert_same_model(self, set);
         let slot = self.idx_slots.push(SetType::OrdSet);
         let el = self.idx_bag.push(unsafe { set.el.get() }.clone(), slot);
-        Ok(Symbol::new(self, el).into())
+        Symbol::new(self, el).into()
     }
 }

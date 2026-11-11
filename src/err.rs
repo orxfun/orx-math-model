@@ -49,4 +49,13 @@ pub trait Validation {
     ) -> Res {
         Self::assert(core::ptr::eq(m, sym.m), || String::from("wrong model used"))
     }
+
+    // panic
+
+    fn dbg_assert_same_model<'m, 'd, T>(
+        m: &'m Model<'d>,
+        sym: impl Deref<Target = Symbol<'m, 'd, T>>,
+    ) {
+        debug_assert!(core::ptr::eq(m, sym.m), "wrong model used");
+    }
 }

@@ -1,3 +1,4 @@
+use crate::idxs::{CatIdxInt, CatIdxStr, OrdIdx};
 use crate::sets::{SetFun, SetSlot};
 use crate::{Elements, Res, Symbol};
 use alloc::{boxed::Box, string::String};
@@ -13,6 +14,10 @@ impl<'m, 'd> CatSetInt<'m, 'd> {
         let slot = unsafe { self.el.get() };
         slot.bind(SetFun::CatSetInt(fun))
     }
+
+    pub fn idx(self) -> CatIdxInt<'m, 'd> {
+        self.m.cat_idx_int(self)
+    }
 }
 
 // cat str
@@ -26,6 +31,10 @@ impl<'m, 'd> CatSetStr<'m, 'd> {
         let slot = unsafe { self.el.get() };
         slot.bind(SetFun::CatSetStr(fun))
     }
+
+    pub fn idx(self) -> CatIdxStr<'m, 'd> {
+        self.m.cat_idx_str(self)
+    }
 }
 
 // ord
@@ -38,5 +47,9 @@ impl<'m, 'd> OrdSet<'m, 'd> {
         let fun = Box::new(move |e: &mut Elements<i64>| e.fill(fun()));
         let slot = unsafe { self.el.get() };
         slot.bind(SetFun::OrdSet(fun))
+    }
+
+    pub fn idx(self) -> OrdIdx<'m, 'd> {
+        self.m.ord_idx(self)
     }
 }
