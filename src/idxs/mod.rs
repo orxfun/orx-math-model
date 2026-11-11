@@ -1,3 +1,6 @@
+#[cfg(test)]
+mod tests;
+
 mod idx_bag;
 mod idx_slots;
 mod idx_symbols;
