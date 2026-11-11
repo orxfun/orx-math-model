@@ -24,6 +24,7 @@ pub type Res<T = ()> = Result<T, String>;
 
 impl Validation for Res {}
 
+// TODO: fix the error messages
 pub trait Validation {
     fn assert(condition: bool, msg: impl FnOnce() -> String) -> Res {
         match condition {
@@ -33,10 +34,12 @@ pub trait Validation {
     }
 
     fn assert_slot_empty(state: State) -> Res {
-        Self::assert(state == State::Empty, || String::from("TODO"))
+        Self::assert(state == State::Empty, || {
+            String::from("slot is already bound")
+        })
     }
 
     fn assert_slot_bound(state: State) -> Res {
-        Self::assert(state == State::Bound, || String::from("TODO"))
+        Self::assert(state == State::Bound, || String::from("slot is empty"))
     }
 }
