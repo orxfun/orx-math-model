@@ -1,5 +1,6 @@
 #[cfg(test)]
 use crate::idxs::{Idx, IdxVal};
+use crate::sets::SetType;
 #[cfg(test)]
 use crate::vals::ValVal;
 use crate::{new_bag, vals::Val, Bag, Elements, Res, Slot};
@@ -35,5 +36,50 @@ impl<'d, T: Val> P1Slot<'d, T> {
             (Self::OrdSet(f), IdxVal::OrdIdx(i)) => Ok(f.get()(i).as_val_val()),
             _ => Err(String::from("mistmatch in P1 index and argument")),
         }
+    }
+}
+
+// collection of
+
+pub struct P1SlotsOf<'d, T: Val> {
+    cat_idx_int: Bag<Box<dyn Fn(usize) -> T + 'd>>,
+    cat_idx_str: Bag<Box<dyn Fn(&'d String) -> T + 'd>>,
+    ord_idx: Bag<Box<dyn Fn(i64) -> T + 'd>>,
+}
+
+impl<'d, T: Val> P1SlotsOf<'d, T> {
+    fn push(&self, s0_type: SetType) -> P1Slot<'d, T> {
+        match s0_type {
+            SetType::CatSetInt => {
+                let el = self.cat_idx_int.push(Box::new(|_| Default::default()));
+                P1Slot::CatSetInt(el.into())
+            }
+            SetType::CatSetStr => {
+                let el = self.cat_idx_str.push(Box::new(|_| Default::default()));
+                P1Slot::CatSetStr(el.into())
+            }
+            SetType::OrdSet => {
+                let el = self.ord_idx.push(Box::new(|_| Default::default()));
+                P1Slot::OrdSet(el.into())
+            }
+            _ => todo!(),
+        }
+    }
+}
+
+// collection
+
+pub struct P1Slots<'d> {
+    int: P1SlotsOf<'d, i64>,
+    num: P1SlotsOf<'d, f64>,
+}
+
+impl<'d> P1Slots<'d> {
+    pub fn push_int(&self, s0_type: SetType) -> P1Slot<'d, i64> {
+        self.int.push(s0_type)
+    }
+
+    pub fn push_num(&self, s0_type: SetType) -> P1Slot<'d, f64> {
+        self.num.push(s0_type)
     }
 }

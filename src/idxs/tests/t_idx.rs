@@ -21,7 +21,7 @@ fn idx_cat_int() {
     let iter = idx.iter(&mut elements);
     for (i, _) in iter.enumerate() {
         assert_eq!(
-            unsafe { idx.el.get() }.idx.value(),
+            unsafe { idx.el.get() }.idx.test_value(),
             IdxVal::CatIdxInt(values[i])
         );
     }
@@ -45,7 +45,7 @@ fn idx_cat_str() {
     let iter = idx.iter(&mut elements);
     for (i, _) in iter.enumerate() {
         assert_eq!(
-            unsafe { idx.el.get() }.idx.value(),
+            unsafe { idx.el.get() }.idx.test_value(),
             IdxVal::CatIdxStr(&values[i])
         );
     }
@@ -69,7 +69,7 @@ fn idx_ord() {
     let iter = idx.iter(&mut elements);
     for (i, _) in iter.enumerate() {
         assert_eq!(
-            unsafe { idx.el.get() }.idx.value(),
+            unsafe { idx.el.get() }.idx.test_value(),
             IdxVal::OrdIdx(values[i])
         );
     }

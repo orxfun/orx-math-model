@@ -18,7 +18,7 @@ pub enum IdxVal<'d> {
 
 impl<'d> IdxSlot<'d> {
     #[cfg(test)]
-    pub fn value(&self) -> IdxVal<'d> {
+    pub fn test_value(&self) -> IdxVal<'d> {
         match self {
             Self::CatIdxInt(x) => IdxVal::CatIdxInt(*x.get()),
             Self::CatIdxStr(x) => IdxVal::CatIdxStr(*x.get()),
@@ -50,15 +50,15 @@ impl<'d> IdxSlots<'d> {
         match t {
             SetType::CatSetInt => {
                 let el = self.cat_idx_int.push(0);
-                IdxSlot::CatIdxInt(Slot::from(el))
+                IdxSlot::CatIdxInt(el.into())
             }
             SetType::CatSetStr => {
                 let el = self.cat_idx_str.push(unsafe { empty_string() });
-                IdxSlot::CatIdxStr(Slot::from(el))
+                IdxSlot::CatIdxStr(el.into())
             }
             SetType::OrdSet => {
                 let el = self.ord_idx.push(0);
-                IdxSlot::OrdIdx(Slot::from(el))
+                IdxSlot::OrdIdx(el.into())
             }
         }
     }

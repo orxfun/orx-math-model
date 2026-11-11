@@ -1,6 +1,6 @@
 use crate::vals::ValVal;
 
-pub trait Val {
+pub trait Val: Default {
     fn as_val_val(self) -> ValVal;
 }
 
