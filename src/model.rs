@@ -1,3 +1,4 @@
+use crate::idxs::{IdxBag, IdxSlots};
 use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetBag, SetSlots, SetType};
 use crate::Symbol;
 
@@ -6,6 +7,10 @@ pub struct Model<'d> {
     // sets
     set_slots: SetSlots<'d>,
     set_bag: SetBag<'d>,
+
+    // idxs
+    idx_slots: IdxSlots<'d>,
+    idx_bag: IdxBag<'d>,
 }
 
 impl<'d> Model<'d> {

@@ -3,8 +3,8 @@ mod tests;
 
 mod set_bag;
 mod set_slots;
-mod symbols;
+mod set_symbols;
 
 pub use set_bag::SetBag;
 pub use set_slots::{SetFun, SetSlot, SetSlots, SetType};
-pub use symbols::{CatSetInt, CatSetStr, OrdSet};
+pub use set_symbols::{CatSetInt, CatSetStr, OrdSet};
