@@ -4,7 +4,7 @@ use alloc::{boxed::Box, string::String};
 
 // cat int
 
-#[derive(derive_more::From, derive_more::Deref)]
+#[derive(derive_more::From, derive_more::Deref, Clone, Copy)]
 pub struct CatSetInt<'m, 'd>(pub(crate) Symbol<'m, 'd, SetSlot<'d>>);
 
 impl<'m, 'd> CatSetInt<'m, 'd> {
@@ -17,7 +17,7 @@ impl<'m, 'd> CatSetInt<'m, 'd> {
 
 // cat str
 
-#[derive(derive_more::From, derive_more::Deref)]
+#[derive(derive_more::From, derive_more::Deref, Clone, Copy)]
 pub struct CatSetStr<'m, 'd>(pub(crate) Symbol<'m, 'd, SetSlot<'d>>);
 
 impl<'m, 'd> CatSetStr<'m, 'd> {
@@ -30,7 +30,7 @@ impl<'m, 'd> CatSetStr<'m, 'd> {
 
 // ord
 
-#[derive(derive_more::From, derive_more::Deref)]
+#[derive(derive_more::From, derive_more::Deref, Clone, Copy)]
 pub struct OrdSet<'m, 'd>(pub(crate) Symbol<'m, 'd, SetSlot<'d>>);
 
 impl<'m, 'd> OrdSet<'m, 'd> {

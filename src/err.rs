@@ -28,8 +28,8 @@ impl Validation for Res {}
 pub trait Validation {
     fn assert(condition: bool, msg: impl FnOnce() -> String) -> Res {
         match condition {
-            true => Err(msg()),
-            false => Ok(()),
+            true => Ok(()),
+            false => Err(msg()),
         }
     }
 

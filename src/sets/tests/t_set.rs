@@ -4,39 +4,54 @@ use alloc::{vec, vec::Vec};
 
 #[test]
 fn set_cat_int() {
+    // data
     let values = vec![1usize, 2, 7, 9];
 
-    // let m = Model::default();
-    // let set = m.cat_set_int();
-    // let mut elements: Elements<usize> = vec![].into();
-    // unsafe { set.el.get_mut() }.bind_from(|| values.iter().copied());
+    // modeling
+    let m = Model::default();
+    let set = m.cat_set_int();
 
-    // unsafe { set.el.get() }.fill(&mut elements);
-    // assert_eq!(elements.as_slice(), &[1, 2, 7, 9]);
+    // binding
+    set.bind(|| values.iter().copied()).unwrap();
+
+    // running
+    let mut elements: Elements<usize> = vec![].into();
+    unsafe { set.el.get() }.fill(&mut elements).unwrap();
+    assert_eq!(elements.as_slice(), &[1, 2, 7, 9]);
 }
 
-// #[test]
-// fn set_cat_str() {
-//     let values: Vec<_> = [1, 2, 7, 9].map(|x| x.to_string()).into_iter().collect();
+#[test]
+fn set_cat_str() {
+    // data
+    let values: Vec<_> = [1, 2, 7, 9].map(|x| x.to_string()).into_iter().collect();
 
-//     let m = Model::new();
-//     let set = m.set_cat_str();
-//     let mut elements: Elements<&String> = vec![].into();
+    // modeling
+    let m = Model::default();
+    let set = m.cat_set_str();
 
-//     unsafe { set.el.get_mut() }.bind_from(|| values.iter());
-//     unsafe { set.el.get() }.fill(&mut elements);
-//     assert_eq!(elements.as_slice(), &["1", "2", "7", "9"]);
-// }
+    // binding
+    set.bind(|| &values).unwrap();
 
-// #[test]
-// fn set_ord() {
-//     let values = vec![1i64, 2, 7, 9];
+    // running
+    let mut elements: Elements<&String> = vec![].into();
+    unsafe { set.el.get() }.fill(&mut elements).unwrap();
+    assert_eq!(elements.as_slice(), &["1", "2", "7", "9"]);
+}
 
-//     let m = Model::new();
-//     let set = m.set_ord();
-//     let mut elements: Elements<i64> = vec![].into();
+#[test]
+fn set_ord() {
+    // data
+    let values = vec![1i64, 2, 7, 9];
 
-//     unsafe { set.el.get_mut() }.bind_from(|| values.iter().copied());
-//     unsafe { set.el.get() }.fill(&mut elements);
-//     assert_eq!(elements.as_slice(), &[1, 2, 7, 9]);
-// }
+    // modeling
+    let m = Model::default();
+    let set = m.ord_set();
+
+    // binding
+    set.bind(|| values.iter().copied()).unwrap();
+
+    // running
+    let mut elements: Elements<usize> = vec![].into();
+    unsafe { set.el.get() }.fill(&mut elements).unwrap();
+    assert_eq!(elements.as_slice(), &[1, 2, 7, 9]);
+}

@@ -19,12 +19,44 @@ pub enum SetSlot<'d> {
     OrdSet(Slot<'d, Box<dyn Fn(&mut Elements<i64>) + 'd>>),
 }
 
+#[derive(derive_more::From)]
+pub enum SetElements<'a, 'd> {
+    CatSetInt(&'a mut Elements<usize>),
+    CatSetStr(&'a mut Elements<&'d String>),
+    OrdSet(&'a mut Elements<i64>),
+}
+
 impl<'d> SetSlot<'d> {
     pub fn bind(&self, fun: SetFun<'d>) -> Res {
         match (self, fun) {
             (Self::CatSetInt(s), SetFun::CatSetInt(f)) => s.bind(f),
             (Self::CatSetStr(s), SetFun::CatSetStr(f)) => s.bind(f),
             (Self::OrdSet(s), SetFun::OrdSet(f)) => s.bind(f),
+            _ => unreachable!("TODO: explain why"),
+        }
+    }
+
+    pub fn fill<'a>(&self, elements: impl Into<SetElements<'a, 'd>>) -> Res
+    where
+        'd: 'a,
+    {
+        let elements = elements.into();
+        match (self, elements) {
+            (Self::CatSetInt(s), SetElements::CatSetInt(e)) => {
+                s.assert_is_bound()?;
+                (s.get())(e);
+                Ok(())
+            }
+            (Self::CatSetStr(s), SetElements::CatSetStr(e)) => {
+                s.assert_is_bound()?;
+                (s.get())(e);
+                Ok(())
+            }
+            (Self::OrdSet(s), SetElements::OrdSet(e)) => {
+                s.assert_is_bound()?;
+                (s.get())(e);
+                Ok(())
+            }
             _ => unreachable!("TODO: explain why"),
         }
     }
