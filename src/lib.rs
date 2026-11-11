@@ -32,6 +32,7 @@ pub(crate) use bag::{new_bag, Bag};
 pub(crate) use elements::Elements;
 pub(crate) use err::{Err, Res, Validation};
 pub(crate) use slot::Slot;
+pub(crate) use symbol::Symbol;
 
 // api
 pub use model::Model;
