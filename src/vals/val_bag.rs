@@ -5,7 +5,7 @@ use orx_imp_vec::Elem;
 // data
 
 #[derive(Debug, PartialEq)]
-pub enum ValValue {
+pub enum ValVal {
     Int(i64),
     Num(f64),
 }
@@ -17,10 +17,10 @@ pub enum ValFun<'d> {
 
 impl<'d> ValFun<'d> {
     #[cfg(test)]
-    pub fn test_eval(&self) -> ValValue {
+    pub fn test_eval(&self) -> ValVal {
         match self {
-            Self::Int(f) => ValValue::Int(f()),
-            Self::Num(f) => ValValue::Num(f()),
+            Self::Int(f) => ValVal::Int(f()),
+            Self::Num(f) => ValVal::Num(f()),
         }
     }
 }

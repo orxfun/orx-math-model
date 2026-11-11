@@ -1,4 +1,4 @@
-use crate::{vals::ValValue, Model};
+use crate::{vals::ValVal, Model};
 use alloc::vec;
 
 #[test]
@@ -13,10 +13,7 @@ fn val_int() {
     let val = m.val_int(|| values[2]);
 
     // running
-    assert_eq!(
-        ValValue::Int(values[2]),
-        unsafe { val.el.get() }.test_eval()
-    );
+    assert_eq!(ValVal::Int(values[2]), unsafe { val.el.get() }.test_eval());
 }
 
 #[test]
@@ -31,8 +28,5 @@ fn val_num() {
     let val = m.val_num(|| values[2]);
 
     // running
-    assert_eq!(
-        ValValue::Num(values[2]),
-        unsafe { val.el.get() }.test_eval()
-    );
+    assert_eq!(ValVal::Num(values[2]), unsafe { val.el.get() }.test_eval());
 }
