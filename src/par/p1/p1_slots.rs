@@ -1,7 +1,6 @@
-use crate::idxs::Idx;
 #[cfg(test)]
 use crate::idxs::IdxVal;
-use crate::sets::SetType;
+use crate::sets::{MetaSet, SetType};
 #[cfg(test)]
 use crate::vals::ValVal;
 use crate::{new_bag, vals::Val, Bag, Elements, Res, Slot};
@@ -13,7 +12,7 @@ pub enum P1Fun<'d, T: Val> {
     OrdSet(Box<dyn Fn(i64) -> T + 'd>),
 }
 
-impl<'d, T: Val, I0: Idx<'d>, F: Fn(I0) -> T + 'd> From<(I0, F)> for P1Fun<'d, T> {
+impl<'d, T: Val, I0: MetaSet, F: Fn(I0::Idx<'d>) -> T + 'd> From<(I0, F)> for P1Fun<'d, T> {
     fn from(value: (I0, F)) -> Self {
         todo!()
     }
@@ -36,8 +35,8 @@ impl<'d, T: Val> P1Slot<'d, T> {
     }
 
     #[cfg(test)]
-    fn test_at(&self, idx: impl Idx<'d>) -> Res<ValVal> {
-        match (self, idx.as_idx_val()) {
+    fn test_at<M: MetaSet>(&self, idx: M::Idx<'d>) -> Res<ValVal> {
+        match (self, M::idx_as_enum(idx)) {
             (Self::CatSetInt(f), IdxVal::CatIdxInt(i)) => Ok(f.get()(i).as_val_val()),
             (Self::CatSetStr(f), IdxVal::CatIdxStr(i)) => Ok(f.get()(i).as_val_val()),
             (Self::OrdSet(f), IdxVal::OrdIdx(i)) => Ok(f.get()(i).as_val_val()),
