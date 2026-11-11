@@ -26,6 +26,7 @@ mod slot;
 
 // crate
 pub(crate) use bag::{new_bag, Bag};
+pub(crate) use err::{Err, Res, Validation};
 pub(crate) use slot::Slot;
 
 // api

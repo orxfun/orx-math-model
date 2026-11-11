@@ -1,7 +1,10 @@
+use crate::{Res, Validation};
+use alloc::{format, string::String};
 use core::marker::PhantomData;
 use orx_imp_vec::Elem;
 
-enum State {
+#[derive(Debug, PartialEq, Clone, Copy)]
+pub enum State {
     Empty,
     Bound,
 }
@@ -23,5 +26,9 @@ impl<'m, 'd, T> From<Elem<'m, T>> for Slot<'d, T> {
 }
 
 impl<'d, T> Slot<'d, T> {
-    //
+    pub fn bind(&self, value: T) -> Res {
+        Res::assert_empty_slot(self.state)?;
+        *unsafe { &mut *self.p } = value;
+        Ok(())
+    }
 }
