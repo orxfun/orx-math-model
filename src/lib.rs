@@ -20,6 +20,13 @@ extern crate alloc;
 extern crate std;
 
 mod bag;
+mod err;
 mod model;
+mod slot;
 
+// crate
+pub(crate) use bag::{new_bag, Bag};
+pub(crate) use slot::Slot;
+
+// api
 pub use model::Model;
