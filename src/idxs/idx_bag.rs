@@ -4,9 +4,11 @@ use crate::{new_bag, Bag};
 use orx_imp_vec::Elem;
 
 pub struct DIdx<'d> {
-    set: SetSlot<'d>,
-    idx: IdxSlot<'d>,
+    pub set: SetSlot<'d>,
+    pub idx: IdxSlot<'d>,
 }
+
+// collection
 
 pub struct IdxBag<'d> {
     bag: Bag<DIdx<'d>>,
