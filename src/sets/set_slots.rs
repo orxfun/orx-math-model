@@ -86,15 +86,15 @@ impl<'d> SetSlots<'d> {
         match t {
             SetType::CatSetInt => {
                 let el = self.cat_set_int.push(Box::new(|_| {}));
-                SetSlot::CatSetInt(Slot::from(el))
+                SetSlot::CatSetInt(el.into())
             }
             SetType::CatSetStr => {
                 let el = self.cat_set_str.push(Box::new(|_| {}));
-                SetSlot::CatSetStr(Slot::from(el))
+                SetSlot::CatSetStr(el.into())
             }
             SetType::OrdSet => {
                 let el = self.ord_set.push(Box::new(|_| {}));
-                SetSlot::OrdSet(Slot::from(el))
+                SetSlot::OrdSet(el.into())
             }
         }
     }
