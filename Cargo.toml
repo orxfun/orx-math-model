@@ -10,7 +10,10 @@ keywords = ["optimization", "mathematical", "model", "linear", "solver"]
 categories = ["mathematics", "algorithms", "science", "no-std"]
 
 [dependencies]
-derive-new = { version = "0.7.0" }
+derive-new = { version = "0.7.0", default-features = false }
+derive_more = { version = "2.1.1", default-features = false, features = [
+    "from",
+] }
 orx-imp-vec = { git = "https://github.com/orxfun/orx-imp-vec/", branch = "feat--pinned-element-access" }
 orx-iterable = { version = "1.3.0", default-features = false }
 orx-pinned-vec = "3.21"
