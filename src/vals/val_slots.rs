@@ -6,6 +6,12 @@ pub enum ValType {
     Num,
 }
 
+#[derive(Debug, PartialEq)]
+pub enum ValValue {
+    Int(i64),
+    Num(f64),
+}
+
 pub enum ValFun<'d> {
     Int(Box<dyn Fn() -> i64 + 'd>),
     Num(Box<dyn Fn() -> f64 + 'd>),
@@ -23,6 +29,14 @@ impl<'d> ValSlot<'d> {
             (Self::Int(s), ValFun::Int(f)) => s.bind(f),
             (Self::Num(s), ValFun::Num(f)) => s.bind(f),
             _ => unreachable!("TODO: why"),
+        }
+    }
+
+    #[cfg(test)]
+    pub fn eval(&self) -> ValValue {
+        match self {
+            Self::Int(s) => ValValue::Int(s.get()()),
+            Self::Num(s) => ValValue::Num(s.get()()),
         }
     }
 }
