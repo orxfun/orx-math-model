@@ -1,10 +1,14 @@
-use crate::idxs::IdxVal;
-use alloc::string::String;
+use crate::{idxs::IdxVal, par::p1::P1Fun, vals::MetaVal};
+use alloc::{boxed::Box, string::String};
 
 pub trait MetaSet {
     type Idx<'d>;
 
     fn idx_as_enum<'d>(idx: Self::Idx<'d>) -> IdxVal<'d>;
+
+    // par
+
+    fn into_p1_fun<'d, V: MetaVal>(fun: impl Fn(Self::Idx<'d>) -> V::Val + 'd) -> P1Fun<'d, V>;
 }
 
 // cat set int
@@ -16,6 +20,12 @@ impl MetaSet for MetaCatSetInt {
 
     fn idx_as_enum<'d>(idx: Self::Idx<'d>) -> IdxVal<'d> {
         IdxVal::CatIdxInt(idx)
+    }
+
+    // par
+
+    fn into_p1_fun<'d, V: MetaVal>(fun: impl Fn(Self::Idx<'d>) -> V::Val + 'd) -> P1Fun<'d, V> {
+        P1Fun::CatSetInt(Box::new(fun))
     }
 }
 
@@ -29,6 +39,12 @@ impl MetaSet for MetaCatSetStr {
     fn idx_as_enum<'d>(idx: Self::Idx<'d>) -> IdxVal<'d> {
         IdxVal::CatIdxStr(idx)
     }
+
+    // par
+
+    fn into_p1_fun<'d, V: MetaVal>(fun: impl Fn(Self::Idx<'d>) -> V::Val + 'd) -> P1Fun<'d, V> {
+        P1Fun::CatSetStr(Box::new(fun))
+    }
 }
 
 // ord set
@@ -40,5 +56,11 @@ impl MetaSet for MetaOrdSet {
 
     fn idx_as_enum<'d>(idx: Self::Idx<'d>) -> IdxVal<'d> {
         IdxVal::OrdIdx(idx)
+    }
+
+    // par
+
+    fn into_p1_fun<'d, V: MetaVal>(fun: impl Fn(Self::Idx<'d>) -> V::Val + 'd) -> P1Fun<'d, V> {
+        P1Fun::OrdSet(Box::new(fun))
     }
 }

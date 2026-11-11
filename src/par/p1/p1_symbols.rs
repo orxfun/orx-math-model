@@ -1,5 +1,6 @@
 use crate::idxs::IdxSlot;
 use crate::par::p1::p1_bag::DP1;
+use crate::par::p1::P1Fun;
 use crate::sets::{MetaSet, SetSlot};
 use crate::vals::{MetaInt, MetaVal};
 use crate::{Elements, ElementsIter, Symbol};
@@ -32,8 +33,11 @@ impl<'m, 'd, I0: MetaSet, V: MetaVal> Deref for ParD1<'m, 'd, I0, V> {
 pub type IntParD1<'m, 'd, I0> = ParD1<'m, 'd, I0, MetaInt>;
 
 impl<'m, 'd, I0: MetaSet> IntParD1<'m, 'd, I0> {
-    pub fn bind(&self, fun: impl Fn(I0) -> i64 + 'd) {
-        todo!()
+    pub fn bind(&self, fun: impl Fn(I0::Idx<'d>) -> i64 + 'd) {
+        let x = unsafe { self.el.get() };
+        let y = &x.par;
+        let fun: P1Fun<'_, MetaInt> = I0::into_p1_fun(fun);
+        y.bind(fun).expect("TODO: it must succeed, why")
     }
 }
 
