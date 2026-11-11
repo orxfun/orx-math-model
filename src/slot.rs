@@ -27,8 +27,16 @@ impl<'m, 'd, T> From<Elem<'m, T>> for Slot<'d, T> {
 
 impl<'d, T> Slot<'d, T> {
     pub fn bind(&self, value: T) -> Res {
-        Res::assert_empty_slot(self.state)?;
+        Res::assert_slot_empty(self.state)?;
         *unsafe { &mut *self.p } = value;
         Ok(())
+    }
+
+    pub fn assert_is_bound(&self) -> Res {
+        Res::assert_slot_bound(self.state)
+    }
+
+    pub fn get(&self) -> &T {
+        unsafe { &*self.p }
     }
 }
