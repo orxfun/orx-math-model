@@ -51,7 +51,7 @@ fn set_ord() {
     set.bind(|| values.iter().copied()).unwrap();
 
     // running
-    let mut elements: Elements<usize> = vec![].into();
+    let mut elements: Elements<i64> = vec![].into();
     unsafe { set.el.get() }.fill(&mut elements).unwrap();
     assert_eq!(elements.as_slice(), &[1, 2, 7, 9]);
 }

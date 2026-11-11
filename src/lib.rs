@@ -22,6 +22,7 @@ extern crate std;
 mod bag;
 mod elements;
 mod err;
+mod idxs;
 mod model;
 mod sets;
 mod slot;
