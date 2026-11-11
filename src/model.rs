@@ -1,5 +1,6 @@
 use crate::idxs::{CatIdxInt, CatIdxStr, IdxBag, IdxSlots, OrdIdx};
 use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetBag, SetSlots, SetType};
+use crate::vals::{Int, Num, ValBag, ValSlots, ValType};
 use crate::{Res, Symbol, Validation};
 
 #[derive(Default)]
@@ -11,6 +12,10 @@ pub struct Model<'d> {
     // idxs
     idx_slots: IdxSlots<'d>,
     idx_bag: IdxBag<'d>,
+
+    // vals
+    val_slots: ValSlots<'d>,
+    val_bag: ValBag<'d>,
 }
 
 impl<'d> Model<'d> {
@@ -54,6 +59,20 @@ impl<'d> Model<'d> {
         Res::dbg_assert_same_model(self, set);
         let slot = self.idx_slots.push(SetType::OrdSet);
         let el = self.idx_bag.push(unsafe { set.el.get() }.clone(), slot);
+        Symbol::new(self, el).into()
+    }
+
+    // vals
+
+    pub(crate) fn val_int<'m>(&'m self) -> Int<'m, 'd> {
+        let slot = self.val_slots.push(ValType::Int);
+        let el = self.val_bag.push(slot);
+        Symbol::new(self, el).into()
+    }
+
+    pub(crate) fn val_num<'m>(&'m self) -> Num<'m, 'd> {
+        let slot = self.val_slots.push(ValType::Num);
+        let el = self.val_bag.push(slot);
         Symbol::new(self, el).into()
     }
 }
