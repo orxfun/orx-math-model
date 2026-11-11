@@ -1,4 +1,4 @@
-use crate::{new_bag, Bag, Elements, Slot};
+use crate::{new_bag, Bag, Elements, Res, Slot};
 use alloc::{boxed::Box, string::String};
 
 pub enum SetType {
@@ -7,11 +7,30 @@ pub enum SetType {
     OrdSet,
 }
 
+pub enum SetFun<'d> {
+    CatSetInt(Box<dyn Fn(&mut Elements<usize>) + 'd>),
+    CatSetStr(Box<dyn Fn(&mut Elements<&'d String>) + 'd>),
+    OrdSet(Box<dyn Fn(&mut Elements<i64>) + 'd>),
+}
+
 pub enum SetSlot<'d> {
     CatSetInt(Slot<'d, Box<dyn Fn(&mut Elements<usize>) + 'd>>),
     CatSetStr(Slot<'d, Box<dyn Fn(&mut Elements<&'d String>) + 'd>>),
     OrdSet(Slot<'d, Box<dyn Fn(&mut Elements<i64>) + 'd>>),
 }
+
+impl<'d> SetSlot<'d> {
+    pub fn bind(&self, fun: SetFun<'d>) -> Res {
+        match (self, fun) {
+            (Self::CatSetInt(s), SetFun::CatSetInt(f)) => s.bind(f),
+            (Self::CatSetStr(s), SetFun::CatSetStr(f)) => s.bind(f),
+            (Self::OrdSet(s), SetFun::OrdSet(f)) => s.bind(f),
+            _ => unreachable!("TODO: explain why"),
+        }
+    }
+}
+
+// collection
 
 pub struct SetSlots<'d> {
     cat_set_int: Bag<Box<dyn Fn(&mut Elements<usize>) + 'd>>,
