@@ -1,5 +1,5 @@
 use crate::{Res, Validation};
-use alloc::{format, string::String};
+use alloc::{format, rc::Rc, string::String};
 use core::{cell::UnsafeCell, marker::PhantomData};
 use orx_imp_vec::Elem;
 
@@ -11,7 +11,7 @@ pub enum State {
 
 pub struct Slot<'d, T> {
     p: *mut T,
-    state: UnsafeCell<State>,
+    state: Rc<UnsafeCell<State>>,
     phantom: PhantomData<fn() -> &'d ()>,
 }
 
@@ -19,7 +19,17 @@ impl<'m, 'd, T> From<Elem<'m, T>> for Slot<'d, T> {
     fn from(value: Elem<'m, T>) -> Self {
         Self {
             p: value.as_mut_ptr(),
-            state: State::Empty.into(),
+            state: Rc::new(State::Empty.into()),
+            phantom: PhantomData,
+        }
+    }
+}
+
+impl<'d, T> Clone for Slot<'d, T> {
+    fn clone(&self) -> Self {
+        Self {
+            p: self.p,
+            state: self.state.clone(),
             phantom: PhantomData,
         }
     }

@@ -1,6 +1,6 @@
+use crate::{slot::State, Model, Symbol};
 use alloc::string::String;
-
-use crate::slot::State;
+use core::ops::Deref;
 
 // err
 
@@ -41,5 +41,12 @@ pub trait Validation {
 
     fn assert_slot_bound(state: State) -> Res {
         Self::assert(state == State::Bound, || String::from("slot is empty"))
+    }
+
+    fn assert_same_model<'m, 'd, T>(
+        m: &'m Model<'d>,
+        sym: impl Deref<Target = Symbol<'m, 'd, T>>,
+    ) -> Res {
+        Self::assert(core::ptr::eq(m, sym.m), || String::from("wrong model used"))
     }
 }

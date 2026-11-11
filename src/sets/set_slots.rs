@@ -13,6 +13,7 @@ pub enum SetFun<'d> {
     OrdSet(Box<dyn Fn(&mut Elements<i64>) + 'd>),
 }
 
+#[derive(Clone)]
 pub enum SetSlot<'d> {
     CatSetInt(Slot<'d, Box<dyn Fn(&mut Elements<usize>) + 'd>>),
     CatSetStr(Slot<'d, Box<dyn Fn(&mut Elements<&'d String>) + 'd>>),
