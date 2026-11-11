@@ -1,7 +1,8 @@
 use crate::idxs::{CatIdxInt, CatIdxStr, IdxBag, IdxSlots, OrdIdx};
 use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetBag, SetSlots, SetType};
-use crate::vals::{Int, Num, ValBag, ValSlots, ValType};
+use crate::vals::{Int, Num, ValBag, ValFun};
 use crate::{Res, Symbol, Validation};
+use alloc::boxed::Box;
 
 #[derive(Default)]
 pub struct Model<'d> {
@@ -14,7 +15,6 @@ pub struct Model<'d> {
     idx_bag: IdxBag<'d>,
 
     // vals
-    val_slots: ValSlots<'d>,
     val_bag: ValBag<'d>,
 }
 
@@ -64,15 +64,13 @@ impl<'d> Model<'d> {
 
     // vals
 
-    pub(crate) fn val_int<'m>(&'m self) -> Int<'m, 'd> {
-        let slot = self.val_slots.push(ValType::Int);
-        let el = self.val_bag.push(slot);
+    pub(crate) fn val_int<'m>(&'m self, fun: impl Fn() -> i64 + 'd) -> Int<'m, 'd> {
+        let el = self.val_bag.push(ValFun::Int(Box::new(fun)));
         Symbol::new(self, el).into()
     }
 
-    pub(crate) fn val_num<'m>(&'m self) -> Num<'m, 'd> {
-        let slot = self.val_slots.push(ValType::Num);
-        let el = self.val_bag.push(slot);
+    pub(crate) fn val_num<'m>(&'m self, fun: impl Fn() -> f64 + 'd) -> Num<'m, 'd> {
+        let el = self.val_bag.push(ValFun::Num(Box::new(fun)));
         Symbol::new(self, el).into()
     }
 }
