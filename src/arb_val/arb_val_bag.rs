@@ -1,16 +1,26 @@
 use crate::sets::{SetSlot, SetTyp};
-use crate::{new_bag, Bag};
+use crate::{new_bag, Bag, ValSymSum};
 use alloc::string::String;
 use core::marker::PhantomData;
 use orx_imp_vec::Elem;
 
 #[derive(derive_more::From)]
-pub enum ArbVal {
+pub enum ArbVal<'d> {
     String(String),
+    ValSymSum(ValSymSum<'d, 'd>),
+}
+
+impl<'d> ArbVal<'d> {
+    pub fn as_val_sym_sum(&self) -> &ValSymSum<'d, 'd> {
+        match self {
+            ArbVal::ValSymSum(x) => x,
+            _ => unreachable!(),
+        }
+    }
 }
 
 pub struct ArbValBag<'d> {
-    bag: Bag<ArbVal>,
+    bag: Bag<ArbVal<'d>>,
     p: PhantomData<fn() -> &'d ()>,
 }
 
@@ -24,7 +34,7 @@ impl Default for ArbValBag<'_> {
 }
 
 impl<'d> ArbValBag<'d> {
-    pub fn push<'m>(&'m self, data: impl Into<ArbVal>) -> Elem<'m, ArbVal> {
+    pub fn push<'m>(&'m self, data: impl Into<ArbVal<'d>>) -> Elem<'m, ArbVal<'d>> {
         self.bag.push(data.into())
     }
 }
