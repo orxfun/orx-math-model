@@ -2,8 +2,9 @@ use crate::idxs::{CatIdxInt, CatIdxStr, OrdIdx};
 use crate::par::p1::P1Fun;
 use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetSlot};
 use crate::{idxs::IdxVal, vals::MetaVal};
-use crate::{CatIntIndexer, CatStrIndexer, Idx, OrdIndexer};
+use crate::{CatIntIndexer, CatStrIndexer, Idx, Model, OrdIndexer, Symbol};
 use alloc::{boxed::Box, string::String};
+use orx_imp_vec::Elem;
 
 // enums
 
@@ -23,6 +24,8 @@ pub trait MetaSet: Clone + Copy {
         'd: 'm;
 
     fn set_typ() -> SetTyp;
+
+    fn create_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, SetSlot<'d>>) -> Self::SetSym<'m, 'd>;
 
     // idx
 
@@ -64,6 +67,10 @@ impl MetaSet for MetaCatSetInt {
 
     fn set_typ() -> SetTyp {
         SetTyp::CatSetInt
+    }
+
+    fn create_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, SetSlot<'d>>) -> Self::SetSym<'m, 'd> {
+        Symbol::new(m, el).into()
     }
 
     // idx
@@ -120,6 +127,10 @@ impl MetaSet for MetaCatSetStr {
         SetTyp::CatSetStr
     }
 
+    fn create_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, SetSlot<'d>>) -> Self::SetSym<'m, 'd> {
+        Symbol::new(m, el).into()
+    }
+
     // idx
 
     type IdxRaw<'d> = &'d String;
@@ -172,6 +183,10 @@ impl MetaSet for MetaOrdSet {
 
     fn set_typ() -> SetTyp {
         SetTyp::OrdSet
+    }
+
+    fn create_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, SetSlot<'d>>) -> Self::SetSym<'m, 'd> {
+        Symbol::new(m, el).into()
     }
 
     // idx

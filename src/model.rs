@@ -2,7 +2,10 @@ use crate::idxs::{CatIdxInt, CatIdxStr, IdxBag, IdxSlots, OrdIdx};
 use crate::par::p1::{IntParD1, NumParD1, P1Bag, P1Slots};
 use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetBag, SetSlots};
 use crate::vals::{Int, Num, ValBag, ValFun};
-use crate::{MetaInt, MetaNum, MetaSet, MetaVal, Res, Set, SetTyp, Symbol, Val, Validation};
+use crate::{
+    MetaCatSetInt, MetaCatSetStr, MetaInt, MetaNum, MetaOrdSet, MetaSet, MetaVal, Res, Set, SetTyp,
+    Symbol, Val, Validation,
+};
 use alloc::boxed::Box;
 
 #[derive(Default)]
@@ -27,21 +30,21 @@ impl<'d> Model<'d> {
     // sets
 
     pub fn cat_set_int<'m>(&'m self) -> CatSetInt<'m, 'd> {
-        let slot = self.set_slots.push(SetTyp::CatSetInt);
-        let el = self.set_bag.push(slot);
-        Symbol::new(self, el).into()
+        self.set::<MetaCatSetInt>()
     }
 
     pub fn cat_set_str<'m>(&'m self) -> CatSetStr<'m, 'd> {
-        let slot = self.set_slots.push(SetTyp::CatSetStr);
-        let el = self.set_bag.push(slot);
-        Symbol::new(self, el).into()
+        self.set::<MetaCatSetStr>()
     }
 
     pub fn ord_set<'m>(&'m self) -> OrdSet<'m, 'd> {
-        let slot = self.set_slots.push(SetTyp::OrdSet);
+        self.set::<MetaOrdSet>()
+    }
+
+    fn set<'m, M: MetaSet>(&'m self) -> M::SetSym<'m, 'd> {
+        let slot = self.set_slots.push(M::set_typ());
         let el = self.set_bag.push(slot);
-        Symbol::new(self, el).into()
+        M::create_sym(self, el)
     }
 
     // idxs
