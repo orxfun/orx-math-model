@@ -58,15 +58,15 @@ impl Default for IdxSlots<'_> {
 impl<'d> IdxSlots<'d> {
     pub fn push(&self, t: SetTyp) -> IdxSlot<'d> {
         match t {
-            SetTyp::CatSetInt => {
+            SetTyp::CatInt => {
                 let el = self.cat_idx_int.push(0);
                 IdxSlot::CatIdxInt(el.into())
             }
-            SetTyp::CatSetStr => {
+            SetTyp::CatStr => {
                 let el = self.cat_idx_str.push(unsafe { empty_string() });
                 IdxSlot::CatIdxStr(el.into())
             }
-            SetTyp::OrdSet => {
+            SetTyp::Ord => {
                 let el = self.ord_idx.push(0);
                 IdxSlot::OrdIdx(el.into())
             }

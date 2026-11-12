@@ -12,9 +12,9 @@ use orx_imp_vec::Elem;
 // enums
 
 pub enum SetTyp {
-    CatSetInt,
-    CatSetStr,
-    OrdSet,
+    CatInt,
+    CatStr,
+    Ord,
 }
 
 // meta
@@ -69,7 +69,7 @@ impl MetaSet for MetaCatInt {
         'd: 'm;
 
     fn set_typ() -> SetTyp {
-        SetTyp::CatSetInt
+        SetTyp::CatInt
     }
 
     fn create_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, SetSlot<'d>>) -> Self::SetSym<'m, 'd> {
@@ -129,7 +129,7 @@ impl MetaSet for MetaCatStr {
         'd: 'm;
 
     fn set_typ() -> SetTyp {
-        SetTyp::CatSetStr
+        SetTyp::CatStr
     }
 
     fn create_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, SetSlot<'d>>) -> Self::SetSym<'m, 'd> {
@@ -197,7 +197,7 @@ impl MetaSet for MetaOrd {
         'd: 'm;
 
     fn set_typ() -> SetTyp {
-        SetTyp::OrdSet
+        SetTyp::Ord
     }
 
     fn create_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, SetSlot<'d>>) -> Self::SetSym<'m, 'd> {

@@ -78,15 +78,15 @@ impl Default for SetSlots<'_> {
 impl<'d> SetSlots<'d> {
     pub fn push(&self, t: SetTyp) -> SetSlot<'d> {
         match t {
-            SetTyp::CatSetInt => {
+            SetTyp::CatInt => {
                 let el = self.cat_set_int.push(Box::new(|_| {}));
                 SetSlot::CatSetInt(el.into())
             }
-            SetTyp::CatSetStr => {
+            SetTyp::CatStr => {
                 let el = self.cat_set_str.push(Box::new(|_| {}));
                 SetSlot::CatSetStr(el.into())
             }
-            SetTyp::OrdSet => {
+            SetTyp::Ord => {
                 let el = self.ord_set.push(Box::new(|_| {}));
                 SetSlot::OrdSet(el.into())
             }
