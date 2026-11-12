@@ -10,9 +10,13 @@ use core::mem::transmute;
 #[derive(derive_more::Deref)]
 pub struct P1Fun0<'d, V: MetaVal, I0: MetaSet>(Box<dyn Fn(I0::IdxRaw<'d>) -> V::Val + 'd>);
 
-impl<'d, V: MetaVal, I0: MetaSet> Default for P1Fun0<'d, V, I0> {
-    fn default() -> Self {
+impl<'d, V: MetaVal, I0: MetaSet> P1Fun0<'d, V, I0> {
+    fn empty() -> Self {
         Self(Box::new(|_| Default::default()))
+    }
+
+    fn new(fun: impl Fn(I0::IdxRaw<'d>) -> V::Val + 'd) -> Self {
+        Self(Box::new(fun))
     }
 }
 
@@ -24,19 +28,26 @@ pub enum P1Fun1<'d, V: MetaVal> {
 
 impl<'d, V: MetaVal> P1Fun1<'d, V> {
     fn empty<I0: MetaSet>() -> Self {
-        match I0::set_typ() {
-            SetTyp::CatInt => P1Fun1::CatInt(P1Fun0::default()),
-            SetTyp::CatStr => P1Fun1::CatStr(P1Fun0::default()),
-            SetTyp::Ord => P1Fun1::Ord(P1Fun0::default()),
-        }
+        Self::new::<I0>(P1Fun0::empty())
     }
 
-    pub fn new<I0: MetaSet>(fun: impl Fn(I0::IdxRaw<'d>) -> V::Val + 'd) -> Self {
-        let fun: Box<dyn Fn(I0::IdxRaw<'d>) -> V::Val + 'd> = Box::new(fun);
+    fn new<I0: MetaSet>(fun: P1Fun0<'d, V, I0>) -> Self {
         match I0::set_typ() {
             SetTyp::CatInt => Self::CatInt(P1Fun0(unsafe { transmute(fun) })),
             SetTyp::CatStr => Self::CatStr(P1Fun0(unsafe { transmute(fun) })),
             SetTyp::Ord => Self::Ord(P1Fun0(unsafe { transmute(fun) })),
+        }
+    }
+
+    #[cfg(test)]
+    fn test_at<I0: MetaSet>(&self, i0: I0::IdxRaw<'d>) -> crate::vals::ValVal {
+        use crate::{idxs::IdxVal, vals::ValVal};
+
+        match (self, I0::idx_as_enum(i0)) {
+            (Self::CatInt(f), IdxVal::CatInt(i0)) => V::val_as_enum(f.0(i0)),
+            (Self::CatStr(f), IdxVal::CatStr(i0)) => V::val_as_enum(f.0(i0)),
+            (Self::Ord(f), IdxVal::Ord(i0)) => V::val_as_enum(f.0(i0)),
+            _ => unreachable!(),
         }
     }
 }
@@ -55,42 +66,45 @@ impl<'d, V: MetaVal> P1Data<'d, V> {
             fun: P1Fun1::empty::<I0>(),
         }
     }
+
+    pub fn new<I0: MetaSet>(fun: impl Fn(I0::IdxRaw<'d>) -> V::Val + 'd) -> Self {
+        let fun = P1Fun0::new(fun);
+        let fun = P1Fun1::new::<I0>(fun);
+        Self {
+            i0_typ: I0::set_typ(),
+            fun,
+        }
+    }
+
+    fn debug_assert_set_types<I0: MetaSet>(&self) {
+        debug_assert_eq!(self.i0_typ, I0::set_typ());
+    }
 }
 
 // slot
 
-pub enum P1Slot<'d, V: MetaVal> {
-    CatInt(Slot<'d, P1Fun0<'d, V, MetaCatInt>>),
-    CatStr(Slot<'d, P1Fun0<'d, V, MetaCatStr>>),
-    Ord(Slot<'d, P1Fun0<'d, V, MetaOrd>>),
+pub struct P1Slot<'d, V: MetaVal> {
+    slot: Slot<'d, P1Data<'d, V>>,
 }
 
 impl<'d, V: MetaVal> P1Slot<'d, V> {
-    pub fn bind(&self, fun: P1Fun1<'d, V>) -> Res {
-        match (self, fun) {
-            (Self::CatInt(s), P1Fun1::CatInt(f)) => s.bind(f),
-            (Self::CatStr(s), P1Fun1::CatStr(f)) => s.bind(f),
-            (Self::Ord(s), P1Fun1::Ord(f)) => s.bind(f),
-            _ => unreachable!("TODO: explain why"),
-        }
+    pub fn bind<I0: MetaSet>(&self, fun: impl Fn(I0::IdxRaw<'d>) -> V::Val + 'd) {
+        self.slot.get().debug_assert_set_types::<I0>();
+        let data = P1Data::new::<I0>(fun);
+        self.slot.bind(data).expect("TODO: infallible, why");
     }
 
     #[cfg(test)]
-    pub fn test_at<M: MetaSet>(&self, idx: M::IdxRaw<'d>) -> Res<crate::vals::ValVal> {
-        use crate::idxs::IdxVal;
-        match (self, M::idx_as_enum(idx)) {
-            (Self::CatInt(f), IdxVal::CatIdxInt(i)) => Ok(V::val_as_enum(f.get()(i))),
-            (Self::CatStr(f), IdxVal::CatIdxStr(i)) => Ok(V::val_as_enum(f.get()(i))),
-            (Self::Ord(f), IdxVal::OrdIdx(i)) => Ok(V::val_as_enum(f.get()(i))),
-            _ => Err(String::from("mistmatch in P1 index and argument")),
-        }
+    pub fn test_at<I0: MetaSet>(&self, i0: I0::IdxRaw<'d>) -> crate::vals::ValVal {
+        self.slot.get().fun.test_at::<I0>(i0)
     }
 
     pub fn fun_ptr<I0: MetaSet>(&self) -> Ptr<'d, Box<dyn Fn(I0::IdxRaw<'d>) -> V::Val + 'd>> {
         match self {
-            Self::CatInt(s) => unsafe { transmute(s.ptr()) },
-            Self::CatStr(s) => unsafe { transmute(s.ptr()) },
-            Self::Ord(s) => unsafe { transmute(s.ptr()) },
+            // Self::CatInt(s) => unsafe { transmute(s.ptr()) },
+            // Self::CatStr(s) => unsafe { transmute(s.ptr()) },
+            // Self::Ord(s) => unsafe { transmute(s.ptr()) },
+            _ => todo!(),
         }
     }
 }
@@ -115,20 +129,21 @@ impl<'d, V: MetaVal> Default for P1SlotsOf<'d, V> {
 
 impl<'d, T: MetaVal> P1SlotsOf<'d, T> {
     fn push(&self, m: &Model<'d>, s0_typ: SetTyp) -> P1Slot<'d, T> {
-        match s0_typ {
-            SetTyp::CatInt => {
-                let el = self.cat_int.push(Default::default());
-                P1Slot::CatInt(Slot::new(m, el))
-            }
-            SetTyp::CatStr => {
-                let el = self.cat_str.push(Default::default());
-                P1Slot::CatStr(Slot::new(m, el))
-            }
-            SetTyp::Ord => {
-                let el = self.ord.push(Default::default());
-                P1Slot::Ord(Slot::new(m, el))
-            }
-        }
+        todo!()
+        // match s0_typ {
+        //     SetTyp::CatInt => {
+        //         let el = self.cat_int.push(Default::default());
+        //         P1Slot::CatInt(Slot::new(m, el))
+        //     }
+        //     SetTyp::CatStr => {
+        //         let el = self.cat_str.push(Default::default());
+        //         P1Slot::CatStr(Slot::new(m, el))
+        //     }
+        //     SetTyp::Ord => {
+        //         let el = self.ord.push(Default::default());
+        //         P1Slot::Ord(Slot::new(m, el))
+        //     }
+        // }
     }
 }
 

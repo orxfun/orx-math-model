@@ -13,18 +13,18 @@ pub enum IdxSlot<'d> {
 
 #[derive(Debug, PartialEq)]
 pub enum IdxVal<'d> {
-    CatIdxInt(usize),
-    CatIdxStr(&'d String),
-    OrdIdx(i64),
+    CatInt(usize),
+    CatStr(&'d String),
+    Ord(i64),
 }
 
 impl<'d> IdxSlot<'d> {
     #[cfg(test)]
     pub fn test_value(&self) -> IdxVal<'d> {
         match self {
-            Self::CatIdxInt(x) => IdxVal::CatIdxInt(*x.get()),
-            Self::CatIdxStr(x) => IdxVal::CatIdxStr(*x.get()),
-            Self::OrdIdx(x) => IdxVal::OrdIdx(*x.get()),
+            Self::CatIdxInt(x) => IdxVal::CatInt(*x.get()),
+            Self::CatIdxStr(x) => IdxVal::CatStr(*x.get()),
+            Self::OrdIdx(x) => IdxVal::Ord(*x.get()),
         }
     }
 

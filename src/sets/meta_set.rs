@@ -92,7 +92,7 @@ impl MetaSet for MetaCatInt {
         'd: 'm;
 
     fn idx_as_enum<'d>(idx: Self::IdxRaw<'d>) -> IdxVal<'d> {
-        IdxVal::CatIdxInt(idx)
+        IdxVal::CatInt(idx)
     }
 
     fn create_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
@@ -152,7 +152,7 @@ impl MetaSet for MetaCatStr {
         'd: 'm;
 
     fn idx_as_enum<'d>(idx: Self::IdxRaw<'d>) -> IdxVal<'d> {
-        IdxVal::CatIdxStr(idx)
+        IdxVal::CatStr(idx)
     }
 
     fn create_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
@@ -220,7 +220,7 @@ impl MetaSet for MetaOrd {
         'd: 'm;
 
     fn idx_as_enum<'d>(idx: Self::IdxRaw<'d>) -> IdxVal<'d> {
-        IdxVal::OrdIdx(idx)
+        IdxVal::Ord(idx)
     }
 
     fn create_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {

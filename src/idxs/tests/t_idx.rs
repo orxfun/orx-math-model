@@ -22,7 +22,7 @@ fn idx_cat_int() {
     for (i, _) in iter.enumerate() {
         assert_eq!(
             unsafe { idx.el.get() }.idx.test_value(),
-            IdxVal::CatIdxInt(values[i])
+            IdxVal::CatInt(values[i])
         );
     }
 }
@@ -46,7 +46,7 @@ fn idx_cat_str() {
     for (i, _) in iter.enumerate() {
         assert_eq!(
             unsafe { idx.el.get() }.idx.test_value(),
-            IdxVal::CatIdxStr(&values[i])
+            IdxVal::CatStr(&values[i])
         );
     }
 }
@@ -70,7 +70,7 @@ fn idx_ord() {
     for (i, _) in iter.enumerate() {
         assert_eq!(
             unsafe { idx.el.get() }.idx.test_value(),
-            IdxVal::OrdIdx(values[i])
+            IdxVal::Ord(values[i])
         );
     }
 }

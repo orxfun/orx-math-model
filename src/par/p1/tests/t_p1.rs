@@ -21,7 +21,7 @@ fn int_p1_cat_int() {
 
     // running
     for (i, v) in values.iter().copied().enumerate() {
-        let val = unsafe { par.el.get() }.test_at::<MetaCatInt>(i).unwrap();
+        let val = unsafe { par.el.get() }.test_at::<MetaCatInt>(i);
         assert_eq!(ValVal::Int(v), val);
     }
 }
@@ -45,7 +45,7 @@ fn int_p1_cat_str() {
 
     // running
     for (i, v) in values.iter() {
-        let val = unsafe { par.el.get() }.test_at::<MetaCatStr>(i).unwrap();
+        let val = unsafe { par.el.get() }.test_at::<MetaCatStr>(i);
         assert_eq!(ValVal::Int(*v), val);
     }
 }
@@ -65,9 +65,7 @@ fn int_p1_ord() {
 
     // running
     for (i, v) in (0..4).map(|i| values(i)).enumerate() {
-        let val = unsafe { par.el.get() }
-            .test_at::<MetaOrd>(i as i64)
-            .unwrap();
+        let val = unsafe { par.el.get() }.test_at::<MetaOrd>(i as i64);
         assert_eq!(ValVal::Int(v), val);
     }
 }
@@ -89,7 +87,7 @@ fn num_p1_cat_int() {
 
     // running
     for (i, v) in values.iter().copied().enumerate() {
-        let val = unsafe { par.el.get() }.test_at::<MetaCatInt>(i).unwrap();
+        let val = unsafe { par.el.get() }.test_at::<MetaCatInt>(i);
         assert_eq!(ValVal::Num(v), val);
     }
 }
@@ -113,7 +111,7 @@ fn num_p1_cat_str() {
 
     // running
     for (i, v) in values.iter() {
-        let val = unsafe { par.el.get() }.test_at::<MetaCatStr>(i).unwrap();
+        let val = unsafe { par.el.get() }.test_at::<MetaCatStr>(i);
         assert_eq!(ValVal::Num(*v), val);
     }
 }
@@ -133,9 +131,7 @@ fn num_p1_ord() {
 
     // running
     for (i, v) in (0..4).map(|i| values(i)).enumerate() {
-        let val = unsafe { par.el.get() }
-            .test_at::<MetaOrd>(i as i64)
-            .unwrap();
+        let val = unsafe { par.el.get() }.test_at::<MetaOrd>(i as i64);
         assert_eq!(ValVal::Num(v), val);
     }
 }

@@ -38,8 +38,7 @@ impl<'m, 'd, I0: MetaSet, V: MetaVal> Deref for ParD1<'m, 'd, I0, V> {
 impl<'m, 'd, I0: MetaSet, V: MetaVal> ParD1<'m, 'd, I0, V> {
     pub fn bind(&self, fun: impl Fn(I0::IdxRaw<'d>) -> V::Val + 'd) {
         let slot = &unsafe { self.el.get() }.par;
-        let fun: P1Fun1<'_, V> = P1Fun1::new::<I0>(fun);
-        slot.bind(fun).expect("TODO: it must succeed, why")
+        slot.bind::<I0>(fun);
     }
 
     pub fn at(self, i0: impl Into<I0::IdxSum<'m, 'd>>) -> V::Sym<'m, 'd> {
