@@ -18,6 +18,7 @@ fn int_p1_cat_int() {
     let par = m.par_d1_int(set);
     let idx = set.idx();
     let sca = par.at(idx);
+    let sca2 = par[idx];
 
     // binding
     par.bind(|i| par_data[i]);
@@ -29,6 +30,8 @@ fn int_p1_cat_int() {
     for (i, _) in iter.enumerate() {
         let exp = ValVal::Int(par_data[set_data[i]]);
         let val = unsafe { sca.el.get() }.test_eval();
+        assert_eq!(exp, val);
+        let val = unsafe { sca2.el.get() }.test_eval();
         assert_eq!(exp, val);
     }
 }
