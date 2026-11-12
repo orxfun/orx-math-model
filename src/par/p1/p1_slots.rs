@@ -1,6 +1,6 @@
 use crate::{
-    new_bag, Bag, Elements, MetaCatSetInt, MetaCatSetStr, MetaInt, MetaNum, MetaOrdSet, MetaSet,
-    MetaVal, Ptr, Res, SetTyp, Slot, ValTyp,
+    new_bag, Bag, Elements, MetaCatInt, MetaCatStr, MetaInt, MetaNum, MetaOrd, MetaSet, MetaVal,
+    Ptr, Res, SetTyp, Slot, ValTyp,
 };
 use alloc::{boxed::Box, string::String};
 use core::mem::transmute;
@@ -15,9 +15,9 @@ impl<'d, V: MetaVal, I0: MetaSet> Default for P1Fun<'d, V, I0> {
 }
 
 pub enum P1FunE<'d, V: MetaVal> {
-    CatSetInt(P1Fun<'d, V, MetaCatSetInt>),
-    CatSetStr(P1Fun<'d, V, MetaCatSetStr>),
-    OrdSet(P1Fun<'d, V, MetaOrdSet>),
+    CatSetInt(P1Fun<'d, V, MetaCatInt>),
+    CatSetStr(P1Fun<'d, V, MetaCatStr>),
+    OrdSet(P1Fun<'d, V, MetaOrd>),
 }
 
 impl<'d, V: MetaVal> P1FunE<'d, V> {
@@ -32,9 +32,9 @@ impl<'d, V: MetaVal> P1FunE<'d, V> {
 }
 
 pub enum P1Slot<'d, V: MetaVal> {
-    CatSetInt(Slot<'d, P1Fun<'d, V, MetaCatSetInt>>),
-    CatSetStr(Slot<'d, P1Fun<'d, V, MetaCatSetStr>>),
-    OrdSet(Slot<'d, P1Fun<'d, V, MetaOrdSet>>),
+    CatSetInt(Slot<'d, P1Fun<'d, V, MetaCatInt>>),
+    CatSetStr(Slot<'d, P1Fun<'d, V, MetaCatStr>>),
+    OrdSet(Slot<'d, P1Fun<'d, V, MetaOrd>>),
 }
 
 impl<'d, V: MetaVal> P1Slot<'d, V> {
@@ -70,9 +70,9 @@ impl<'d, V: MetaVal> P1Slot<'d, V> {
 // collection of
 
 pub struct P1SlotsOf<'d, V: MetaVal> {
-    cat_idx_int: Bag<P1Fun<'d, V, MetaCatSetInt>>,
-    cat_idx_str: Bag<P1Fun<'d, V, MetaCatSetStr>>,
-    ord_idx: Bag<P1Fun<'d, V, MetaOrdSet>>,
+    cat_idx_int: Bag<P1Fun<'d, V, MetaCatInt>>,
+    cat_idx_str: Bag<P1Fun<'d, V, MetaCatStr>>,
+    ord_idx: Bag<P1Fun<'d, V, MetaOrd>>,
 }
 
 impl<'d, V: MetaVal> Default for P1SlotsOf<'d, V> {

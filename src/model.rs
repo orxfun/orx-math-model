@@ -4,8 +4,8 @@ use crate::par::p1::{IntParD1, NumParD1, P1Bag, P1Slots};
 use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetBag, SetSlots};
 use crate::vals::{Int, Num, ValBag, ValFun};
 use crate::{
-    MetaCatSetInt, MetaCatSetStr, MetaInt, MetaNum, MetaOrdSet, MetaSet, MetaVal, Res, Set, SetTyp,
-    Symbol, Val, ValSymSum, Validation,
+    MetaCatInt, MetaCatStr, MetaInt, MetaNum, MetaOrd, MetaSet, MetaVal, Res, Set, SetTyp, Symbol,
+    Val, ValSymSum, Validation,
 };
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -33,15 +33,15 @@ impl<'d> Model<'d> {
     // sets
 
     pub fn cat_set_int<'m>(&'m self) -> CatSetInt<'m, 'd> {
-        self.set::<MetaCatSetInt>()
+        self.set::<MetaCatInt>()
     }
 
     pub fn cat_set_str<'m>(&'m self) -> CatSetStr<'m, 'd> {
-        self.set::<MetaCatSetStr>()
+        self.set::<MetaCatStr>()
     }
 
     pub fn ord_set<'m>(&'m self) -> OrdSet<'m, 'd> {
-        self.set::<MetaOrdSet>()
+        self.set::<MetaOrd>()
     }
 
     fn set<'m, M: MetaSet>(&'m self) -> M::SetSym<'m, 'd> {
@@ -53,15 +53,15 @@ impl<'d> Model<'d> {
     // idxs
 
     pub(crate) fn cat_idx_int<'m>(&'m self, set: CatSetInt<'m, 'd>) -> CatIdxInt<'m, 'd> {
-        self.idx::<MetaCatSetInt>(set)
+        self.idx::<MetaCatInt>(set)
     }
 
     pub(crate) fn cat_idx_str<'m>(&'m self, set: CatSetStr<'m, 'd>) -> CatIdxStr<'m, 'd> {
-        self.idx::<MetaCatSetStr>(set)
+        self.idx::<MetaCatStr>(set)
     }
 
     pub(crate) fn ord_idx<'m>(&'m self, set: OrdSet<'m, 'd>) -> OrdIdx<'m, 'd> {
-        self.idx::<MetaOrdSet>(set)
+        self.idx::<MetaOrd>(set)
     }
 
     fn idx<'m, M: MetaSet>(&'m self, set: M::SetSym<'m, 'd>) -> M::IdxSym<'m, 'd> {

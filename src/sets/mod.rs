@@ -6,7 +6,7 @@ mod set_bag;
 mod set_slots;
 mod set_symbols;
 
-pub use meta_set::{MetaCatSetInt, MetaCatSetStr, MetaOrdSet, MetaSet, Set, SetTyp};
+pub use meta_set::{MetaCatInt, MetaCatStr, MetaOrd, MetaSet, Set, SetTyp};
 pub use set_bag::SetBag;
 pub use set_slots::{SetFun, SetSlot, SetSlots};
 pub use set_symbols::{CatSetInt, CatSetStr, OrdSet};

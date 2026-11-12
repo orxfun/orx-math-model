@@ -58,9 +58,9 @@ pub trait MetaSet: Clone + Copy {
 // cat set int
 
 #[derive(Clone, Copy)]
-pub struct MetaCatSetInt;
+pub struct MetaCatInt;
 
-impl MetaSet for MetaCatSetInt {
+impl MetaSet for MetaCatInt {
     // set
 
     type SetSym<'m, 'd>
@@ -108,7 +108,7 @@ impl MetaSet for MetaCatSetInt {
         match i0 {
             CatIntIdxSum::Usize(i0) => Box::new(move || p1.get()(i0)),
             CatIntIdxSum::Idx(i0) => {
-                let i0 = unsafe { i0.el.get() }.idx.val_ptr::<MetaCatSetInt>();
+                let i0 = unsafe { i0.el.get() }.idx.val_ptr::<MetaCatInt>();
                 Box::new(move || p1.get()(i0.val()))
             }
         }
@@ -118,9 +118,9 @@ impl MetaSet for MetaCatSetInt {
 // cat set str
 
 #[derive(Clone, Copy)]
-pub struct MetaCatSetStr;
+pub struct MetaCatStr;
 
-impl MetaSet for MetaCatSetStr {
+impl MetaSet for MetaCatStr {
     // set
 
     type SetSym<'m, 'd>
@@ -176,7 +176,7 @@ impl MetaSet for MetaCatSetStr {
                 Box::new(move || p1.get()(unsafe { &*i0 }))
             }
             CatStrIdxSum::Idx(i0) => {
-                let i0 = unsafe { i0.el.get() }.idx.val_ptr::<MetaCatSetStr>();
+                let i0 = unsafe { i0.el.get() }.idx.val_ptr::<MetaCatStr>();
                 Box::new(move || p1.get()(i0.val()))
             }
         }
@@ -186,9 +186,9 @@ impl MetaSet for MetaCatSetStr {
 // ord set
 
 #[derive(Clone, Copy)]
-pub struct MetaOrdSet;
+pub struct MetaOrd;
 
-impl MetaSet for MetaOrdSet {
+impl MetaSet for MetaOrd {
     // set
 
     type SetSym<'m, 'd>
@@ -236,7 +236,7 @@ impl MetaSet for MetaOrdSet {
         match i0 {
             OrdIdxSum::Raw(i0) => Box::new(move || p1.get()(i0)),
             OrdIdxSum::Idx(i0) => {
-                let i0 = unsafe { i0.el.get() }.idx.val_ptr::<MetaOrdSet>();
+                let i0 = unsafe { i0.el.get() }.idx.val_ptr::<MetaOrd>();
                 Box::new(move || p1.get()(i0.val()))
             }
             OrdIdxSum::Int(i0) => {
@@ -259,7 +259,7 @@ where
 }
 
 impl<'m, 'd> Set<'m, 'd> for CatSetInt<'m, 'd> {
-    type Meta = MetaCatSetInt;
+    type Meta = MetaCatInt;
 
     fn slot(self) -> SetSlot<'d> {
         unsafe { self.el.get() }.clone()
@@ -267,7 +267,7 @@ impl<'m, 'd> Set<'m, 'd> for CatSetInt<'m, 'd> {
 }
 
 impl<'m, 'd> Set<'m, 'd> for CatSetStr<'m, 'd> {
-    type Meta = MetaCatSetStr;
+    type Meta = MetaCatStr;
 
     fn slot(self) -> SetSlot<'d> {
         unsafe { self.el.get() }.clone()
@@ -275,7 +275,7 @@ impl<'m, 'd> Set<'m, 'd> for CatSetStr<'m, 'd> {
 }
 
 impl<'m, 'd> Set<'m, 'd> for OrdSet<'m, 'd> {
-    type Meta = MetaOrdSet;
+    type Meta = MetaOrd;
 
     fn slot(self) -> SetSlot<'d> {
         unsafe { self.el.get() }.clone()

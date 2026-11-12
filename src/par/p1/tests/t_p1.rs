@@ -1,5 +1,5 @@
 use crate::vals::ValVal;
-use crate::{MetaCatSetInt, MetaCatSetStr, MetaInt, MetaOrdSet, Model};
+use crate::{MetaCatInt, MetaCatStr, MetaInt, MetaOrd, Model};
 use alloc::string::{String, ToString};
 use alloc::{vec, vec::Vec};
 use std::collections::HashMap;
@@ -21,7 +21,7 @@ fn int_p1_cat_int() {
 
     // running
     for (i, v) in values.iter().copied().enumerate() {
-        let val = unsafe { par.el.get() }.test_at::<MetaCatSetInt>(i).unwrap();
+        let val = unsafe { par.el.get() }.test_at::<MetaCatInt>(i).unwrap();
         assert_eq!(ValVal::Int(v), val);
     }
 }
@@ -45,7 +45,7 @@ fn int_p1_cat_str() {
 
     // running
     for (i, v) in values.iter() {
-        let val = unsafe { par.el.get() }.test_at::<MetaCatSetStr>(i).unwrap();
+        let val = unsafe { par.el.get() }.test_at::<MetaCatStr>(i).unwrap();
         assert_eq!(ValVal::Int(*v), val);
     }
 }
@@ -66,7 +66,7 @@ fn int_p1_ord() {
     // running
     for (i, v) in (0..4).map(|i| values(i)).enumerate() {
         let val = unsafe { par.el.get() }
-            .test_at::<MetaOrdSet>(i as i64)
+            .test_at::<MetaOrd>(i as i64)
             .unwrap();
         assert_eq!(ValVal::Int(v), val);
     }
@@ -89,7 +89,7 @@ fn num_p1_cat_int() {
 
     // running
     for (i, v) in values.iter().copied().enumerate() {
-        let val = unsafe { par.el.get() }.test_at::<MetaCatSetInt>(i).unwrap();
+        let val = unsafe { par.el.get() }.test_at::<MetaCatInt>(i).unwrap();
         assert_eq!(ValVal::Num(v), val);
     }
 }
@@ -113,7 +113,7 @@ fn num_p1_cat_str() {
 
     // running
     for (i, v) in values.iter() {
-        let val = unsafe { par.el.get() }.test_at::<MetaCatSetStr>(i).unwrap();
+        let val = unsafe { par.el.get() }.test_at::<MetaCatStr>(i).unwrap();
         assert_eq!(ValVal::Num(*v), val);
     }
 }
@@ -134,7 +134,7 @@ fn num_p1_ord() {
     // running
     for (i, v) in (0..4).map(|i| values(i)).enumerate() {
         let val = unsafe { par.el.get() }
-            .test_at::<MetaOrdSet>(i as i64)
+            .test_at::<MetaOrd>(i as i64)
             .unwrap();
         assert_eq!(ValVal::Num(v), val);
     }
