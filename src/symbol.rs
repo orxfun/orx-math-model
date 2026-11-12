@@ -1,3 +1,5 @@
+use core::mem::transmute;
+
 use crate::Model;
 use orx_imp_vec::Elem;
 
@@ -15,3 +17,10 @@ impl<'m, 'd, T> Clone for Symbol<'m, 'd, T> {
 }
 
 impl<'m, 'd, T> Copy for Symbol<'m, 'd, T> {}
+
+impl<'m, 'd, T> Symbol<'m, 'd, T> {
+    pub unsafe fn create_sym_ref(self) -> Symbol<'d, 'd, T> {
+        // TODO: this is dangerous
+        unsafe { transmute(Self::new(self.m, self.el)) }
+    }
+}
