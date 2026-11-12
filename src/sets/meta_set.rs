@@ -1,3 +1,4 @@
+use crate::idxs::{CatIdxInt, CatIdxStr, OrdIdx};
 use crate::par::p1::P1Fun;
 use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetSlot};
 use crate::{idxs::IdxVal, vals::MetaVal};
@@ -16,7 +17,11 @@ pub enum SetTyp {
 pub trait MetaSet {
     type Idx<'d>;
 
-    type Set<'m, 'd>
+    type SetSym<'m, 'd>
+    where
+        'd: 'm;
+
+    type IdxSym<'m, 'd>
     where
         'd: 'm;
 
@@ -40,10 +45,16 @@ pub struct MetaCatSetInt;
 impl MetaSet for MetaCatSetInt {
     type Idx<'d> = usize;
 
-    type Set<'m, 'd>
+    type SetSym<'m, 'd>
         = CatSetInt<'m, 'd>
     where
         'd: 'm;
+
+    type IdxSym<'m, 'd>
+        = CatIdxInt<'m, 'd>
+    where
+        'd: 'm;
+
     // set
 
     fn set_typ() -> SetTyp {
@@ -70,10 +81,16 @@ pub struct MetaCatSetStr;
 impl MetaSet for MetaCatSetStr {
     type Idx<'d> = &'d String;
 
-    type Set<'m, 'd>
+    type SetSym<'m, 'd>
         = CatSetStr<'m, 'd>
     where
         'd: 'm;
+
+    type IdxSym<'m, 'd>
+        = CatIdxStr<'m, 'd>
+    where
+        'd: 'm;
+
     // set
 
     fn set_typ() -> SetTyp {
@@ -100,10 +117,16 @@ pub struct MetaOrdSet;
 impl MetaSet for MetaOrdSet {
     type Idx<'d> = i64;
 
-    type Set<'m, 'd>
+    type SetSym<'m, 'd>
         = OrdSet<'m, 'd>
     where
         'd: 'm;
+
+    type IdxSym<'m, 'd>
+        = OrdIdx<'m, 'd>
+    where
+        'd: 'm;
+
     // set
 
     fn set_typ() -> SetTyp {

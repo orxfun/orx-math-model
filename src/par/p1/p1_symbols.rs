@@ -39,6 +39,12 @@ impl<'m, 'd, I0: MetaSet, V: MetaVal> ParD1<'m, 'd, I0, V> {
 
 pub type IntParD1<'m, 'd, I0> = ParD1<'m, 'd, I0, MetaInt>;
 
+impl<'m, 'd, I0: MetaSet> IntParD1<'m, 'd, I0> {
+    pub fn at(self, idx: I0::Idx<'d>) {
+        todo!()
+    }
+}
+
 // num
 
 pub type NumParD1<'m, 'd, I0> = ParD1<'m, 'd, I0, MetaNum>;
