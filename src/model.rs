@@ -1,8 +1,8 @@
 use crate::idxs::{CatIdxInt, CatIdxStr, IdxBag, IdxSlots, OrdIdx};
 use crate::par::p1::{IntParD1, P1Bag, P1Slots};
-use crate::sets::{CatSetInt, CatSetStr, MetaSet, OrdSet, SetBag, SetSlots, SetTyp};
+use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetBag, SetSlots};
 use crate::vals::{Int, Num, ValBag, ValFun};
-use crate::{Res, Symbol, Validation};
+use crate::{MetaInt, MetaSet, Res, SetTyp, Symbol, Validation};
 use alloc::boxed::Box;
 
 #[derive(Default)]
@@ -82,7 +82,8 @@ impl<'d> Model<'d> {
     // p1
 
     pub fn par_d1_int<'m, I0: MetaSet>(&'m self, s0: I0::Set<'m, 'd>) -> IntParD1<'m, 'd, I0> {
-        // self.p1_slots.push_int();
+        let slot = self.p1_slots.push::<I0, MetaInt>();
+        // let x = self.p1_bag.push(s0, slot);
         todo!()
     }
 }

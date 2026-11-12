@@ -1,10 +1,11 @@
 use crate::idxs::IdxSlot;
 use crate::par::p1::P1Slot;
 use crate::sets::SetSlot;
-use crate::{new_bag, Bag};
-use crate::{MetaInt, MetaNum, MetaVal, SetTyp};
+use crate::{new_bag, Bag, MetaInt, MetaNum, MetaVal, SetTyp, ValTyp};
+use core::mem::transmute;
 use orx_imp_vec::Elem;
 
+#[derive(derive_new::new)]
 pub struct DP1<'d, V: MetaVal> {
     pub set: SetSlot<'d>,
     pub par: P1Slot<'d, V>,
@@ -27,19 +28,14 @@ impl Default for P1Bag<'_> {
 }
 
 impl<'d> P1Bag<'d> {
-    pub fn push_int<'m>(
+    pub fn push<'m, V: MetaVal>(
         &'m self,
         set: SetSlot<'d>,
-        par: P1Slot<'d, MetaInt>,
-    ) -> Elem<'m, DP1<'d, MetaInt>> {
-        self.int.push(DP1 { set, par })
-    }
-
-    pub fn push_num<'m>(
-        &'m self,
-        set: SetSlot<'d>,
-        par: P1Slot<'d, MetaNum>,
-    ) -> Elem<'m, DP1<'d, MetaNum>> {
-        self.num.push(DP1 { set, par })
+        par: P1Slot<'d, V>,
+    ) -> Elem<'m, DP1<'d, V>> {
+        match V::val_typ() {
+            ValTyp::Int => unsafe { transmute(self.int.push(DP1::new(set, transmute(par)))) },
+            ValTyp::Num => unsafe { transmute(self.num.push(DP1::new(set, transmute(par)))) },
+        }
     }
 }
