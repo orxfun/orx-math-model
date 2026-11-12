@@ -63,9 +63,13 @@ pub enum P2Slot0<'d, V: MetaVal, I0: MetaSet> {
 }
 
 impl<'d, V: MetaVal, I0: MetaSet> P2Slot0<'d, V, I0> {
-    fn bind(fun: P2FunE0<'d, V, I0>) -> Res {
-        //
-        todo!()
+    fn bind(&self, fun: P2FunE0<'d, V, I0>) {
+        match self {
+            P2Slot0::CatInt(s) => s.bind(fun),
+            P2Slot0::CatStr(s) => s.bind(fun),
+            P2Slot0::Ord(s) => s.bind(fun),
+        }
+        .expect("TODO: infallible, why")
     }
 }
 
@@ -73,4 +77,14 @@ pub enum P2Slot<'d, V: MetaVal> {
     CatInt(P2Slot0<'d, V, MetaCatInt>),
     CatStr(P2Slot0<'d, V, MetaCatStr>),
     Ord(P2Slot0<'d, V, MetaOrd>),
+}
+
+impl<'d, V: MetaVal> P2Slot<'d, V> {
+    pub fn bind<I0, I1>(&self, fun: impl Fn(I0::IdxRaw<'d>, I1::IdxRaw<'d>) -> V::Val + 'd)
+    where
+        I0: MetaSet,
+        I1: MetaSet,
+    {
+        todo!()
+    }
 }
