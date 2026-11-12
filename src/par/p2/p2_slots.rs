@@ -3,8 +3,13 @@ use crate::{vals::MetaNum, ValTyp};
 use alloc::{boxed::Box, string::String};
 use core::mem::transmute;
 
-pub enum P2Fun<'d, V: MetaVal> {
-    CatSetInt(Box<dyn Fn(usize) -> V::Val + 'd>),
-    CatSetStr(Box<dyn Fn(&'d String) -> V::Val + 'd>),
-    OrdSet(Box<dyn Fn(i64) -> V::Val + 'd>),
+#[derive(derive_more::Deref)]
+pub struct P2Fun<'d, I0: MetaSet, I1: MetaSet, V: MetaVal>(
+    Box<dyn Fn(I0::IdxRaw<'d>, I1::IdxRaw<'d>) -> V::Val + 'd>,
+);
+
+impl<'d, I0: MetaSet, I1: MetaSet, V: MetaVal> Default for P2Fun<'d, I0, I1, V> {
+    fn default() -> Self {
+        Self(Box::new(|_, _| Default::default()))
+    }
 }
