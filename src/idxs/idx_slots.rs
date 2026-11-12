@@ -3,6 +3,7 @@ use alloc::string::String;
 use core::mem::MaybeUninit;
 use core::sync::atomic::{AtomicBool, Ordering};
 
+#[derive(Clone)]
 pub enum IdxSlot<'d> {
     CatIdxInt(Slot<'d, usize>),
     CatIdxStr(Slot<'d, &'d String>),

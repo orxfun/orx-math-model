@@ -2,6 +2,7 @@ use crate::idxs::IdxSlot;
 use crate::par::p1::p1_bag::DP1;
 use crate::par::p1::P1Fun;
 use crate::sets::SetSlot;
+use crate::vals::Int;
 use crate::{Elements, ElementsIter, MetaInt, MetaNum, MetaSet, MetaVal, Symbol};
 use alloc::{boxed::Box, string::String};
 use core::marker::PhantomData;
@@ -40,7 +41,7 @@ impl<'m, 'd, I0: MetaSet, V: MetaVal> ParD1<'m, 'd, I0, V> {
 pub type IntParD1<'m, 'd, I0> = ParD1<'m, 'd, I0, MetaInt>;
 
 impl<'m, 'd, I0: MetaSet> IntParD1<'m, 'd, I0> {
-    pub fn at(self, idx: I0::Idx<'d>) {
+    pub fn at(self, idx: I0::IdxSym<'m, 'd>) -> Int<'m, 'd> {
         todo!()
     }
 }
