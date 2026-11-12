@@ -50,14 +50,6 @@ impl<'d, V: MetaVal> P1Fun1<'d, V> {
             _ => unreachable!(),
         }
     }
-
-    fn fun_ptr<I0: MetaSet>(&self) -> *mut Box<dyn Fn(I0::IdxRaw<'d>) -> V::Val + 'd> {
-        match self {
-            P1Fun1::CatInt(f) => unsafe { transmute(&f.0) },
-            P1Fun1::CatStr(f) => unsafe { transmute(&f.0) },
-            P1Fun1::Ord(f) => unsafe { transmute(&f.0) },
-        }
-    }
 }
 
 // data
@@ -108,45 +100,8 @@ impl<'d, V: MetaVal> P1Slot<'d, V> {
     }
 
     pub fn fun_ptr<I0: MetaSet>(&self) -> Ptr<'d, Box<dyn Fn(I0::IdxRaw<'d>) -> V::Val + 'd>> {
-        Ptr::new(self.slot.get().fun.fun_ptr::<I0>())
-    }
-}
-
-// collection of
-
-pub struct P1SlotsOf<'d, V: MetaVal> {
-    cat_int: Bag<P1Fun0<'d, V, MetaCatInt>>,
-    cat_str: Bag<P1Fun0<'d, V, MetaCatStr>>,
-    ord: Bag<P1Fun0<'d, V, MetaOrd>>,
-}
-
-impl<'d, V: MetaVal> Default for P1SlotsOf<'d, V> {
-    fn default() -> Self {
-        Self {
-            cat_int: new_bag(),
-            cat_str: new_bag(),
-            ord: new_bag(),
-        }
-    }
-}
-
-impl<'d, T: MetaVal> P1SlotsOf<'d, T> {
-    fn push(&self, m: &Model<'d>, s0_typ: SetTyp) -> P1Slot<'d, T> {
+        // Ptr::new(self.slot.get().fun.fun_ptr::<I0>())
         todo!()
-        // match s0_typ {
-        //     SetTyp::CatInt => {
-        //         let el = self.cat_int.push(Default::default());
-        //         P1Slot::CatInt(Slot::new(m, el))
-        //     }
-        //     SetTyp::CatStr => {
-        //         let el = self.cat_str.push(Default::default());
-        //         P1Slot::CatStr(Slot::new(m, el))
-        //     }
-        //     SetTyp::Ord => {
-        //         let el = self.ord.push(Default::default());
-        //         P1Slot::Ord(Slot::new(m, el))
-        //     }
-        // }
     }
 }
 
@@ -154,16 +109,22 @@ impl<'d, T: MetaVal> P1SlotsOf<'d, T> {
 
 #[derive(Default)]
 pub struct P1Slots<'d> {
-    int: P1SlotsOf<'d, MetaInt>,
-    num: P1SlotsOf<'d, MetaNum>,
+    int: Bag<P1Data<'d, MetaInt>>,
+    num: Bag<P1Data<'d, MetaNum>>,
 }
 
 impl<'d> P1Slots<'d> {
     pub fn push<I0: MetaSet, V: MetaVal>(&self, m: &Model<'d>) -> P1Slot<'d, V> {
-        let set_typ = I0::set_typ();
+        let data = P1Data::<V>::empty::<I0>();
         match V::val_typ() {
-            ValTyp::Int => unsafe { transmute(self.int.push(m, set_typ)) },
-            ValTyp::Num => unsafe { transmute(self.num.push(m, set_typ)) },
+            ValTyp::Int => {
+                let el = self.int.push(unsafe { transmute(data) });
+                unsafe { transmute(Slot::new(m, el)) }
+            }
+            ValTyp::Num => {
+                let el = self.num.push(unsafe { transmute(data) });
+                unsafe { transmute(Slot::new(m, el)) }
+            }
         }
     }
 }

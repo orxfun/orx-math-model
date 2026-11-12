@@ -30,7 +30,7 @@ impl SlotStates {
 // slot
 
 pub struct Slot<'d, T> {
-    state: Ptr<'d, State>,
+    state: *mut State,
     p: *mut T,
     phantom: PhantomData<fn() -> &'d ()>,
 }
@@ -38,7 +38,7 @@ pub struct Slot<'d, T> {
 impl<'d, T> Slot<'d, T> {
     pub fn new<'m>(m: &'m Model<'d>, elem: Elem<'m, T>) -> Self {
         Self {
-            state: Ptr::new(m.slot_state().as_mut_ptr()),
+            state: m.slot_state().as_mut_ptr(),
             p: elem.as_mut_ptr(),
             phantom: PhantomData,
         }
@@ -54,19 +54,15 @@ impl<'d, T> Clone for Slot<'d, T> {
 impl<'d, T> Copy for Slot<'d, T> {}
 
 impl<'d, T> Slot<'d, T> {
-    fn state(&self) -> State {
-        *self.state.get()
-    }
-
     pub fn bind(&self, value: T) -> Res {
-        Res::assert_slot_empty(self.state())?;
-        *unsafe { &mut *self.state.p } = State::Bound;
+        Res::assert_slot_empty(*unsafe { &*self.state })?;
+        *unsafe { &mut *(self.state) } = State::Bound;
         *unsafe { &mut *self.p } = value;
         Ok(())
     }
 
     pub fn assert_is_bound(&self) -> Res {
-        Res::assert_slot_bound(self.state())
+        Res::assert_slot_bound(*unsafe { &*self.state })
     }
 
     pub fn get(&self) -> &T {
@@ -89,7 +85,7 @@ impl<'d, T> Slot<'d, T> {
 
 #[derive(derive_new::new)]
 pub struct Ptr<'d, T> {
-    p: *mut T,
+    p: *const T,
     phantom: PhantomData<fn() -> &'d ()>,
 }
 
