@@ -5,7 +5,7 @@ use crate::sets::SetSlot;
 use crate::vals::{Int, ValFun};
 use crate::{
     CatIntIndexer, CatStrIndexer, Elements, ElementsIter, Idx, MetaInt, MetaNum, MetaSet, MetaVal,
-    SetTyp, Symbol,
+    OrdIndexer, SetTyp, Symbol,
 };
 use alloc::{boxed::Box, string::String};
 use core::marker::PhantomData;
@@ -73,6 +73,31 @@ impl<'m, 'd, I0: MetaSet> IntParD1<'m, 'd, I0> {
                     IdxSlot::CatIdxStr(i0) => {
                         let (par, i0) = (par.ptr(), i0.ptr());
                         self.m.val_int(move || par.get()(i0.val()))
+                    }
+                    _ => unreachable!(),
+                },
+            },
+
+            P1Slot::OrdSet(par) => match I0::idx_sum_into_ord(i0.into()) {
+                OrdIndexer::Raw(i0) => {
+                    let par = par.ptr();
+                    self.m.val_int(move || par.get()(i0))
+                }
+                OrdIndexer::Idx(i0) => match &unsafe { i0.el.get() }.idx {
+                    IdxSlot::OrdIdx(i0) => {
+                        let (par, i0) = (par.ptr(), i0.ptr());
+                        self.m.val_int(move || par.get()(i0.val()))
+                    }
+                    _ => unreachable!(),
+                },
+                OrdIndexer::Int(i0) => match unsafe { i0.el.get() } {
+                    ValFun::Int(i0) => {
+                        let par = par.ptr();
+                        let i0: *const dyn Fn() -> i64 = i0;
+                        self.m.val_int(move || {
+                            let i0 = unsafe { &*i0 }();
+                            par.get()(i0)
+                        })
                     }
                     _ => unreachable!(),
                 },
