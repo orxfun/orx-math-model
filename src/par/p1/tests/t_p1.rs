@@ -1,6 +1,5 @@
 use crate::vals::ValVal;
-use crate::{elements::Elements, Model};
-use crate::{MetaCatSetInt, MetaCatSetStr, MetaInt, MetaOrdSet};
+use crate::{MetaCatSetInt, MetaCatSetStr, MetaInt, MetaOrdSet, Model};
 use alloc::string::{String, ToString};
 use alloc::{vec, vec::Vec};
 use std::collections::HashMap;

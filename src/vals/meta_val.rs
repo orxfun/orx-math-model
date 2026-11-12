@@ -13,7 +13,7 @@ pub enum ValVal {
 
 // trait
 
-pub trait MetaVal {
+pub trait MetaVal: Clone + Copy {
     type Val: Default + Clone + Copy;
 
     fn val_typ() -> ValTyp;
@@ -23,6 +23,7 @@ pub trait MetaVal {
 
 // int
 
+#[derive(Clone, Copy)]
 pub struct MetaInt;
 
 impl MetaVal for MetaInt {
@@ -39,6 +40,7 @@ impl MetaVal for MetaInt {
 
 // num
 
+#[derive(Clone, Copy)]
 pub struct MetaNum;
 
 impl MetaVal for MetaNum {

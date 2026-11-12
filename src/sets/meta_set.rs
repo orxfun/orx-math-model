@@ -15,7 +15,7 @@ pub enum SetTyp {
 
 // meta
 
-pub trait MetaSet {
+pub trait MetaSet: Clone + Copy {
     // set
 
     type SetSym<'m, 'd>
@@ -51,6 +51,7 @@ pub trait MetaSet {
 
 // cat set int
 
+#[derive(Clone, Copy)]
 pub struct MetaCatSetInt;
 
 impl MetaSet for MetaCatSetInt {
@@ -104,6 +105,7 @@ impl MetaSet for MetaCatSetInt {
 
 // cat set str
 
+#[derive(Clone, Copy)]
 pub struct MetaCatSetStr;
 
 impl MetaSet for MetaCatSetStr {
@@ -157,6 +159,7 @@ impl MetaSet for MetaCatSetStr {
 
 // ord set
 
+#[derive(Clone, Copy)]
 pub struct MetaOrdSet;
 
 impl MetaSet for MetaOrdSet {
