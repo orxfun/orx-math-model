@@ -44,12 +44,6 @@ pub trait MetaSet: Clone + Copy {
 
     fn idx_as_enum<'d>(idx: Self::IdxRaw<'d>) -> IdxVal<'d>;
 
-    fn idx_sum_into_cat_int<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> CatIntIdxSum<'m, 'd>;
-
-    fn idx_sum_into_cat_str<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> CatStrIdxSum<'m, 'd>;
-
-    fn idx_sum_into_ord<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> OrdIdxSum<'m, 'd>;
-
     fn create_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd>;
 
     // par
@@ -102,18 +96,6 @@ impl MetaSet for MetaCatSetInt {
 
     fn idx_as_enum<'d>(idx: Self::IdxRaw<'d>) -> IdxVal<'d> {
         IdxVal::CatIdxInt(idx)
-    }
-
-    fn idx_sum_into_cat_int<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> CatIntIdxSum<'m, 'd> {
-        idx_sum
-    }
-
-    fn idx_sum_into_cat_str<'m, 'd>(_: Self::IdxSum<'m, 'd>) -> CatStrIdxSum<'m, 'd> {
-        unreachable!()
-    }
-
-    fn idx_sum_into_ord<'m, 'd>(_: Self::IdxSum<'m, 'd>) -> OrdIdxSum<'m, 'd> {
-        unreachable!()
     }
 
     fn create_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
@@ -180,18 +162,6 @@ impl MetaSet for MetaCatSetStr {
 
     fn idx_as_enum<'d>(idx: Self::IdxRaw<'d>) -> IdxVal<'d> {
         IdxVal::CatIdxStr(idx)
-    }
-
-    fn idx_sum_into_cat_int<'m, 'd>(_: Self::IdxSum<'m, 'd>) -> CatIntIdxSum<'m, 'd> {
-        unreachable!()
-    }
-
-    fn idx_sum_into_cat_str<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> CatStrIdxSum<'m, 'd> {
-        idx_sum
-    }
-
-    fn idx_sum_into_ord<'m, 'd>(_: Self::IdxSum<'m, 'd>) -> OrdIdxSum<'m, 'd> {
-        unreachable!()
     }
 
     fn create_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
@@ -266,18 +236,6 @@ impl MetaSet for MetaOrdSet {
 
     fn idx_as_enum<'d>(idx: Self::IdxRaw<'d>) -> IdxVal<'d> {
         IdxVal::OrdIdx(idx)
-    }
-
-    fn idx_sum_into_cat_int<'m, 'd>(_: Self::IdxSum<'m, 'd>) -> CatIntIdxSum<'m, 'd> {
-        unreachable!()
-    }
-
-    fn idx_sum_into_cat_str<'m, 'd>(_: Self::IdxSum<'m, 'd>) -> CatStrIdxSum<'m, 'd> {
-        unreachable!()
-    }
-
-    fn idx_sum_into_ord<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> OrdIdxSum<'m, 'd> {
-        idx_sum
     }
 
     fn create_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
