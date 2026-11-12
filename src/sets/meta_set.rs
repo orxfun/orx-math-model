@@ -20,7 +20,7 @@ pub trait MetaSet {
 
     fn set_typ() -> SetTyp;
 
-    // fn set_slot<'d>(set: Self::Set<'_, 'd>) -> SetSlot<'d>;
+    fn set_slot<'d>(set: Self::Set<'_, 'd>) -> SetSlot<'d>;
 
     // idx
 
@@ -48,9 +48,9 @@ impl MetaSet for MetaCatSetInt {
         SetTyp::CatSetInt
     }
 
-    // fn set_slot<'d>(set: Self::Set<'_, 'd>) -> SetSlot<'d> {
-    //     unsafe { set.el.get() }.clone()
-    // }
+    fn set_slot<'d>(set: Self::Set<'_, 'd>) -> SetSlot<'d> {
+        unsafe { set.el.get() }.clone()
+    }
 
     // idx
 
@@ -82,6 +82,10 @@ impl MetaSet for MetaCatSetStr {
         SetTyp::CatSetStr
     }
 
+    fn set_slot<'d>(set: Self::Set<'_, 'd>) -> SetSlot<'d> {
+        unsafe { set.el.get() }.clone()
+    }
+
     // idx
 
     fn idx_as_enum<'d>(idx: Self::Idx<'d>) -> IdxVal<'d> {
@@ -110,6 +114,10 @@ impl MetaSet for MetaOrdSet {
 
     fn set_typ() -> SetTyp {
         SetTyp::OrdSet
+    }
+
+    fn set_slot<'d>(set: Self::Set<'_, 'd>) -> SetSlot<'d> {
+        unsafe { set.el.get() }.clone()
     }
 
     // idx

@@ -1,5 +1,5 @@
 use crate::{Res, Validation};
-use alloc::{format, rc::Rc, string::String};
+use alloc::{boxed::Box, format, rc::Rc, string::String};
 use core::{cell::UnsafeCell, marker::PhantomData};
 use orx_imp_vec::Elem;
 

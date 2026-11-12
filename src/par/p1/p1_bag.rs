@@ -30,12 +30,12 @@ impl Default for P1Bag<'_> {
 impl<'d> P1Bag<'d> {
     pub fn push<'m, V: MetaVal>(
         &'m self,
-        set: SetSlot<'d>,
         par: P1Slot<'d, V>,
+        s0: SetSlot<'d>,
     ) -> Elem<'m, DP1<'d, V>> {
         match V::val_typ() {
-            ValTyp::Int => unsafe { transmute(self.int.push(DP1::new(set, transmute(par)))) },
-            ValTyp::Num => unsafe { transmute(self.num.push(DP1::new(set, transmute(par)))) },
+            ValTyp::Int => unsafe { transmute(self.int.push(DP1::new(s0, transmute(par)))) },
+            ValTyp::Num => unsafe { transmute(self.num.push(DP1::new(s0, transmute(par)))) },
         }
     }
 }
