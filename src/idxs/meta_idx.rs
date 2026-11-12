@@ -34,6 +34,7 @@ pub enum CatStrIdxSum<'m, 'd> {
     Idx(CatIdxStr<'m, 'd>),
     RefString(&'d String),
     String(String),
+    Str(&'d str),
 }
 
 impl<'m, 'd> Idx<'m, 'd> for CatIdxStr<'m, 'd> {

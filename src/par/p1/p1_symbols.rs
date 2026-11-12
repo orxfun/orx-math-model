@@ -8,6 +8,7 @@ use crate::{
     CatIntIdxSum, CatStrIdxSum, Elements, ElementsIter, Idx, MetaInt, MetaNum, MetaSet, MetaVal,
     OrdIdxSum, SetTyp, Symbol,
 };
+use alloc::string::ToString;
 use alloc::{boxed::Box, string::String};
 use core::marker::PhantomData;
 use core::mem::transmute;
@@ -74,12 +75,14 @@ impl<'m, 'd, I0: MetaSet, V: MetaVal> ParD1<'m, 'd, I0, V> {
                     self.m.val::<V>(move || par.get()(i0))
                 }
                 CatStrIdxSum::String(i0) => {
-                    let ptr_i0 = unsafe { self.m.arb_val(i0).get() }.as_string_ptr();
-                    let x = self.m.val::<V>(move || {
-                        let i0 = unsafe { &*ptr_i0 };
-                        par.get()(i0);
-                    });
-                    x
+                    let par = par.ptr();
+                    let i0 = unsafe { self.m.arb_val(i0).get() }.as_string_ptr();
+                    self.m.val::<V>(move || par.get()(unsafe { &*i0 }))
+                }
+                CatStrIdxSum::Str(i0) => {
+                    let par = par.ptr();
+                    let i0 = unsafe { self.m.arb_val(i0.to_string()).get() }.as_string_ptr();
+                    self.m.val::<V>(move || par.get()(unsafe { &*i0 }))
                 }
                 CatStrIdxSum::Idx(i0) => match &unsafe { i0.el.get() }.idx {
                     IdxSlot::CatIdxStr(i0) => {

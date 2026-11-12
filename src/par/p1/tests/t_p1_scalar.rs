@@ -57,6 +57,7 @@ fn int_p1_cat_str() {
     let sca = par.at(idx);
     let sca2 = par[idx];
     let sca3 = par["2".to_string()];
+    let sca4 = par["2"];
 
     // binding
     par.bind(|i| par_data[i]);
@@ -72,32 +73,9 @@ fn int_p1_cat_str() {
         let val = unsafe { sca2.el.get() }.test_eval();
         assert_eq!(exp, val);
     }
-    let val = unsafe { sca3.el.get() }.test_eval();
-    assert_eq!(ValVal::Int(par_data[&"2".to_string()]), val);
-}
-
-#[test]
-fn abc() {
-    // data
-    let set_data: Vec<_> = [0, 2, 3].map(|x| x.to_string()).into_iter().collect();
-    let par_data: HashMap<_, _> = [1i64, 2, 7, 9]
-        .into_iter()
-        .enumerate()
-        .map(|(i, v)| (i.to_string(), v))
-        .collect();
-
-    // modeling
-    let m = Model::default();
-    let set = m.cat_set_str();
-    let par = m.par_d1_int(set);
-    let sca3 = par["2".to_string()];
-
-    // binding
-    par.bind(|i| par_data[i]);
-    set.bind(|| &set_data).unwrap();
-
-    // run
-    let val = unsafe { sca3.el.get() }.test_eval();
+    let exp = ValVal::Int(par_data[&"2".to_string()]);
+    assert_eq!(exp, unsafe { sca3.el.get() }.test_eval());
+    assert_eq!(exp, unsafe { sca4.el.get() }.test_eval());
 }
 
 #[test]
