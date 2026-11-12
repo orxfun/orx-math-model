@@ -1,7 +1,3 @@
-#[cfg(test)]
-use crate::idxs::IdxVal;
-#[cfg(test)]
-use crate::vals::ValVal;
 use crate::{new_bag, Bag, Elements, MetaInt, MetaSet, MetaVal, Ptr, Res, SetTyp, Slot};
 use crate::{vals::MetaNum, ValTyp};
 use alloc::{boxed::Box, string::String};
@@ -30,7 +26,8 @@ impl<'d, V: MetaVal> P1Slot<'d, V> {
     }
 
     #[cfg(test)]
-    pub fn test_at<M: MetaSet>(&self, idx: M::IdxRaw<'d>) -> Res<ValVal> {
+    pub fn test_at<M: MetaSet>(&self, idx: M::IdxRaw<'d>) -> Res<crate::vals::ValVal> {
+        use crate::idxs::IdxVal;
         match (self, M::idx_as_enum(idx)) {
             (Self::CatSetInt(f), IdxVal::CatIdxInt(i)) => Ok(V::val_as_enum(f.get()(i))),
             (Self::CatSetStr(f), IdxVal::CatIdxStr(i)) => Ok(V::val_as_enum(f.get()(i))),
