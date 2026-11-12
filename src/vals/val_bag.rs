@@ -20,6 +20,10 @@ impl<'d> ValFun<'d> {
             Self::Num(f) => ValVal::Num(f()),
         }
     }
+
+    pub fn fun_ptr<V: MetaVal>(&self) -> &Box<dyn Fn() -> V::Val + 'd> {
+        V::unpack_val_fun(self)
+    }
 }
 
 // bag

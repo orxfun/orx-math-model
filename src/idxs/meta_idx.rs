@@ -1,6 +1,7 @@
 use crate::idxs::{CatIdxInt, CatIdxStr, IdxSlot, OrdIdx};
 use crate::vals::Int;
-use crate::{MetaCatSetInt, MetaCatSetStr, MetaOrdSet, MetaSet};
+use crate::{MetaCatSetInt, MetaCatSetStr, MetaOrdSet, MetaSet, MetaVal, Model, Ptr};
+use alloc::boxed::Box;
 use alloc::string::String;
 
 // symbols
@@ -13,10 +14,25 @@ pub trait Idx<'m, 'd> {
 
 // cat int
 
-#[derive(derive_more::From)]
+#[derive(derive_more::From, Clone, Copy)]
 pub enum CatIntIdxSum<'m, 'd> {
-    Idx(CatIdxInt<'m, 'd>),
+    Usize(CatIdxInt<'m, 'd>),
     Raw(usize),
+}
+
+impl<'m, 'd> CatIntIdxSum<'m, 'd> {
+    pub fn p1_scalar_fun<V: MetaVal>(
+        self,
+        p1: Ptr<'d, Box<dyn Fn(usize) -> V::Val>>,
+    ) -> Box<dyn Fn() -> V::Val + 'd> {
+        match self {
+            CatIntIdxSum::Raw(i0) => Box::new(move || p1.get()(i0)),
+            CatIntIdxSum::Usize(i0) => {
+                let i0 = unsafe { i0.el.get() }.idx.val_ptr::<MetaCatSetInt>();
+                Box::new(move || p1.get()(i0.val()))
+            }
+        }
+    }
 }
 
 impl<'m, 'd> Idx<'m, 'd> for CatIdxInt<'m, 'd> {

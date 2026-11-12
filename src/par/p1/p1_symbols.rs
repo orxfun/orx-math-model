@@ -45,9 +45,10 @@ impl<'m, 'd, I0: MetaSet, V: MetaVal> ParD1<'m, 'd, I0, V> {
     pub fn at2(self, i0: impl Into<I0::IdxSum<'m, 'd>>) -> V::Sym<'m, 'd> {
         // TODO: check if i0 and set of the par agrees
         let par = unsafe { self.el.get() }.par.fun_ptr::<I0>();
-        match i0.into() {
-            _ => todo!(),
-        }
+        let x = I0::p1_scalar_fun::<'m, 'd, V>(self.m, i0.into(), par);
+        // match i0.into() {
+        //     _ => todo!(),
+        // }
 
         //
         todo!()
@@ -63,7 +64,7 @@ impl<'m, 'd, I0: MetaSet, V: MetaVal> ParD1<'m, 'd, I0, V> {
                     let par = par.ptr();
                     self.m.val::<V>(move || par.get()(i0))
                 }
-                CatIntIdxSum::Idx(i0) => match &unsafe { i0.el.get() }.idx {
+                CatIntIdxSum::Usize(i0) => match &unsafe { i0.el.get() }.idx {
                     IdxSlot::CatIdxInt(i0) => {
                         let (par, i0) = (par.ptr(), i0.ptr());
                         self.m.val::<V>(move || par.get()(i0.val()))

@@ -2,7 +2,8 @@ use crate::idxs::{CatIdxInt, CatIdxStr, DIdx, OrdIdx};
 use crate::par::p1::P1Fun;
 use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetSlot};
 use crate::{idxs::IdxVal, vals::MetaVal};
-use crate::{CatIntIdxSum, CatStrIdxSum, Idx, Model, OrdIdxSum, Symbol};
+use crate::{CatIntIdxSum, CatStrIdxSum, Idx, MetaInt, Model, OrdIdxSum, Ptr, Symbol};
+use alloc::string::ToString;
 use alloc::{boxed::Box, string::String};
 use core::ops::Deref;
 use orx_imp_vec::Elem;
@@ -53,6 +54,14 @@ pub trait MetaSet: Clone + Copy {
     // par
 
     fn into_p1_fun<'d, V: MetaVal>(fun: impl Fn(Self::IdxRaw<'d>) -> V::Val + 'd) -> P1Fun<'d, V>;
+
+    // par-sca
+
+    fn p1_scalar_fun<'d, 'm: 'd, V: MetaVal>(
+        m: &'m Model<'d>,
+        i0: Self::IdxSum<'m, 'd>,
+        p1: Ptr<'d, Box<dyn Fn(Self::IdxRaw<'d>) -> V::Val + 'd>>,
+    ) -> Box<dyn Fn() -> V::Val + 'd>;
 }
 
 // cat set int
@@ -114,6 +123,22 @@ impl MetaSet for MetaCatSetInt {
 
     fn into_p1_fun<'d, V: MetaVal>(fun: impl Fn(Self::IdxRaw<'d>) -> V::Val + 'd) -> P1Fun<'d, V> {
         P1Fun::CatSetInt(Box::new(fun))
+    }
+
+    // par-sca
+
+    fn p1_scalar_fun<'d, 'm: 'd, V: MetaVal>(
+        _: &'m Model<'d>,
+        i0: Self::IdxSum<'m, 'd>,
+        p1: Ptr<'d, Box<dyn Fn(Self::IdxRaw<'d>) -> V::Val + 'd>>,
+    ) -> Box<dyn Fn() -> V::Val + 'd> {
+        match i0 {
+            CatIntIdxSum::Raw(i0) => Box::new(move || p1.get()(i0)),
+            CatIntIdxSum::Usize(i0) => {
+                let i0 = unsafe { i0.el.get() }.idx.val_ptr::<MetaCatSetInt>();
+                Box::new(move || p1.get()(i0.val()))
+            }
+        }
     }
 }
 
@@ -177,6 +202,30 @@ impl MetaSet for MetaCatSetStr {
     fn into_p1_fun<'d, V: MetaVal>(fun: impl Fn(Self::IdxRaw<'d>) -> V::Val + 'd) -> P1Fun<'d, V> {
         P1Fun::CatSetStr(Box::new(fun))
     }
+
+    // par-sca
+
+    fn p1_scalar_fun<'d, 'm: 'd, V: MetaVal>(
+        m: &'m Model<'d>,
+        i0: Self::IdxSum<'m, 'd>,
+        p1: Ptr<'d, Box<dyn Fn(Self::IdxRaw<'d>) -> V::Val + 'd>>,
+    ) -> Box<dyn Fn() -> V::Val + 'd> {
+        match i0 {
+            CatStrIdxSum::RefString(i0) => Box::new(move || p1.get()(i0)),
+            CatStrIdxSum::String(i0) => {
+                let i0 = unsafe { m.arb_val(i0).get() }.as_string_ptr();
+                Box::new(move || p1.get()(unsafe { &*i0 }))
+            }
+            CatStrIdxSum::Str(i0) => {
+                let i0 = unsafe { m.arb_val(i0.to_string()).get() }.as_string_ptr();
+                Box::new(move || p1.get()(unsafe { &*i0 }))
+            }
+            CatStrIdxSum::Idx(i0) => {
+                let i0 = unsafe { i0.el.get() }.idx.val_ptr::<MetaCatSetStr>();
+                Box::new(move || p1.get()(i0.val()))
+            }
+        }
+    }
 }
 
 // ord set
@@ -238,6 +287,26 @@ impl MetaSet for MetaOrdSet {
 
     fn into_p1_fun<'d, V: MetaVal>(fun: impl Fn(Self::IdxRaw<'d>) -> V::Val + 'd) -> P1Fun<'d, V> {
         P1Fun::OrdSet(Box::new(fun))
+    }
+
+    // par-sca
+
+    fn p1_scalar_fun<'d, 'm: 'd, V: MetaVal>(
+        _: &'m Model<'d>,
+        i0: Self::IdxSum<'m, 'd>,
+        p1: Ptr<'d, Box<dyn Fn(Self::IdxRaw<'d>) -> V::Val + 'd>>,
+    ) -> Box<dyn Fn() -> V::Val + 'd> {
+        match i0 {
+            OrdIdxSum::Raw(i0) => Box::new(move || p1.get()(i0)),
+            OrdIdxSum::Idx(i0) => {
+                let i0 = unsafe { i0.el.get() }.idx.val_ptr::<MetaOrdSet>();
+                Box::new(move || p1.get()(i0.val()))
+            }
+            OrdIdxSum::Int(i0) => {
+                let i0 = unsafe { i0.el.get() }.fun_ptr::<MetaInt>();
+                Box::new(move || p1.get()(i0()))
+            }
+        }
     }
 }
 

@@ -24,7 +24,7 @@ pub enum ValSymSum<'m, 'd> {
 // trait
 
 pub trait MetaVal: Clone + Copy + 'static {
-    type Val: Default + Clone + Copy;
+    type Val: Default + Clone + Copy + 'static;
 
     type Sym<'m, 'd>: Val<'m, 'd>
     where
@@ -35,6 +35,8 @@ pub trait MetaVal: Clone + Copy + 'static {
     fn val_as_enum(idx: Self::Val) -> ValVal;
 
     fn create_val_fun<'d>(fun: impl Fn() -> Self::Val + 'd) -> ValFun<'d>;
+
+    fn unpack_val_fun<'a, 'd>(fun: &'a ValFun<'d>) -> &'a Box<dyn Fn() -> Self::Val + 'd>;
 
     fn create_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, ValFun<'d>>) -> Self::Sym<'m, 'd>;
 }
@@ -62,6 +64,13 @@ impl MetaVal for MetaInt {
 
     fn create_val_fun<'d>(fun: impl Fn() -> Self::Val + 'd) -> ValFun<'d> {
         ValFun::Int(Box::new(fun))
+    }
+
+    fn unpack_val_fun<'a, 'd>(fun: &'a ValFun<'d>) -> &'a Box<dyn Fn() -> Self::Val + 'd> {
+        match fun {
+            ValFun::Int(x) => x,
+            _ => unreachable!(),
+        }
     }
 
     fn create_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, ValFun<'d>>) -> Self::Sym<'m, 'd> {
@@ -92,6 +101,13 @@ impl MetaVal for MetaNum {
 
     fn create_val_fun<'d>(fun: impl Fn() -> Self::Val + 'd) -> ValFun<'d> {
         ValFun::Num(Box::new(fun))
+    }
+
+    fn unpack_val_fun<'a, 'd>(fun: &'a ValFun<'d>) -> &'a Box<dyn Fn() -> Self::Val + 'd> {
+        match fun {
+            ValFun::Num(x) => x,
+            _ => unreachable!(),
+        }
     }
 
     fn create_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, ValFun<'d>>) -> Self::Sym<'m, 'd> {
