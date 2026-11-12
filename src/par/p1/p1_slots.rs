@@ -1,24 +1,23 @@
 use crate::{
-    new_bag, Bag, Elements, MetaCatSetInt, MetaCatSetStr, MetaInt, MetaOrdSet, MetaSet, MetaVal,
-    Ptr, Res, SetTyp, Slot,
+    new_bag, Bag, Elements, MetaCatSetInt, MetaCatSetStr, MetaInt, MetaNum, MetaOrdSet, MetaSet,
+    MetaVal, Ptr, Res, SetTyp, Slot, ValTyp,
 };
-use crate::{vals::MetaNum, ValTyp};
 use alloc::{boxed::Box, string::String};
 use core::mem::transmute;
 
 #[derive(derive_more::Deref)]
-pub struct P1Fun<'d, I0: MetaSet, V: MetaVal>(Box<dyn Fn(I0::IdxRaw<'d>) -> V::Val + 'd>);
+pub struct P1Fun<'d, V: MetaVal, I0: MetaSet>(Box<dyn Fn(I0::IdxRaw<'d>) -> V::Val + 'd>);
 
-impl<'d, I0: MetaSet, V: MetaVal> Default for P1Fun<'d, I0, V> {
+impl<'d, V: MetaVal, I0: MetaSet> Default for P1Fun<'d, V, I0> {
     fn default() -> Self {
         Self(Box::new(|_| Default::default()))
     }
 }
 
 pub enum P1FunE<'d, V: MetaVal> {
-    CatSetInt(P1Fun<'d, MetaCatSetInt, V>),
-    CatSetStr(P1Fun<'d, MetaCatSetStr, V>),
-    OrdSet(P1Fun<'d, MetaOrdSet, V>),
+    CatSetInt(P1Fun<'d, V, MetaCatSetInt>),
+    CatSetStr(P1Fun<'d, V, MetaCatSetStr>),
+    OrdSet(P1Fun<'d, V, MetaOrdSet>),
 }
 
 impl<'d, V: MetaVal> P1FunE<'d, V> {
@@ -33,9 +32,9 @@ impl<'d, V: MetaVal> P1FunE<'d, V> {
 }
 
 pub enum P1Slot<'d, V: MetaVal> {
-    CatSetInt(Slot<'d, P1Fun<'d, MetaCatSetInt, V>>),
-    CatSetStr(Slot<'d, P1Fun<'d, MetaCatSetStr, V>>),
-    OrdSet(Slot<'d, P1Fun<'d, MetaOrdSet, V>>),
+    CatSetInt(Slot<'d, P1Fun<'d, V, MetaCatSetInt>>),
+    CatSetStr(Slot<'d, P1Fun<'d, V, MetaCatSetStr>>),
+    OrdSet(Slot<'d, P1Fun<'d, V, MetaOrdSet>>),
 }
 
 impl<'d, V: MetaVal> P1Slot<'d, V> {
@@ -71,9 +70,9 @@ impl<'d, V: MetaVal> P1Slot<'d, V> {
 // collection of
 
 pub struct P1SlotsOf<'d, V: MetaVal> {
-    cat_idx_int: Bag<P1Fun<'d, MetaCatSetInt, V>>,
-    cat_idx_str: Bag<P1Fun<'d, MetaCatSetStr, V>>,
-    ord_idx: Bag<P1Fun<'d, MetaOrdSet, V>>,
+    cat_idx_int: Bag<P1Fun<'d, V, MetaCatSetInt>>,
+    cat_idx_str: Bag<P1Fun<'d, V, MetaCatSetStr>>,
+    ord_idx: Bag<P1Fun<'d, V, MetaOrdSet>>,
 }
 
 impl<'d, V: MetaVal> Default for P1SlotsOf<'d, V> {
