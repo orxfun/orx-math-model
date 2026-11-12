@@ -5,6 +5,8 @@ use crate::{
 use alloc::{boxed::Box, string::String};
 use core::mem::transmute;
 
+// fun
+
 #[derive(derive_more::Deref)]
 pub struct P2Fun<'d, V: MetaVal, I0: MetaSet, I1: MetaSet>(
     Box<dyn Fn(I0::IdxRaw<'d>, I1::IdxRaw<'d>) -> V::Val + 'd>,
@@ -50,4 +52,25 @@ impl<'d, V: MetaVal> P2FunE<'d, V> {
             SetTyp::Ord => Self::Ord(unsafe { transmute(fun) }),
         }
     }
+}
+
+// slot
+
+pub enum P2Slot0<'d, V: MetaVal, I0: MetaSet> {
+    CatInt(Slot<'d, P2FunE0<'d, V, I0>>),
+    CatStr(Slot<'d, P2FunE0<'d, V, I0>>),
+    Ord(Slot<'d, P2FunE0<'d, V, I0>>),
+}
+
+impl<'d, V: MetaVal, I0: MetaSet> P2Slot0<'d, V, I0> {
+    fn bind(fun: P2FunE0<'d, V, I0>) -> Res {
+        //
+        todo!()
+    }
+}
+
+pub enum P2Slot<'d, V: MetaVal> {
+    CatInt(P2Slot0<'d, V, MetaCatInt>),
+    CatStr(P2Slot0<'d, V, MetaCatStr>),
+    Ord(P2Slot0<'d, V, MetaOrd>),
 }

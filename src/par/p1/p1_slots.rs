@@ -5,6 +5,8 @@ use crate::{
 use alloc::{boxed::Box, string::String};
 use core::mem::transmute;
 
+// fun
+
 #[derive(derive_more::Deref)]
 pub struct P1Fun<'d, V: MetaVal, I0: MetaSet>(Box<dyn Fn(I0::IdxRaw<'d>) -> V::Val + 'd>);
 
@@ -30,6 +32,8 @@ impl<'d, V: MetaVal> P1FunE<'d, V> {
         }
     }
 }
+
+// slot
 
 pub enum P1Slot<'d, V: MetaVal> {
     CatInt(Slot<'d, P1Fun<'d, V, MetaCatInt>>),
