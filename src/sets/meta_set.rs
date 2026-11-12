@@ -1,4 +1,6 @@
-use crate::idxs::{CatIdxInt, CatIdxStr, OrdIdx};
+use core::ops::Deref;
+
+use crate::idxs::{CatIdxInt, CatIdxStr, DIdx, OrdIdx};
 use crate::par::p1::P1Fun;
 use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetSlot};
 use crate::{idxs::IdxVal, vals::MetaVal};
@@ -19,13 +21,13 @@ pub enum SetTyp {
 pub trait MetaSet: Clone + Copy {
     // set
 
-    type SetSym<'m, 'd>
+    type SetSym<'m, 'd>: Set<'m, 'd, Meta = Self>
     where
         'd: 'm;
 
     fn set_typ() -> SetTyp;
 
-    fn create_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, SetSlot<'d>>) -> Self::SetSym<'m, 'd>;
+    fn create_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, SetSlot<'d>>) -> Self::SetSym<'m, 'd>;
 
     // idx
 
@@ -46,6 +48,8 @@ pub trait MetaSet: Clone + Copy {
     fn idx_sum_into_cat_str<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> CatStrIndexer<'m, 'd>;
 
     fn idx_sum_into_ord<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> OrdIndexer<'m, 'd>;
+
+    fn create_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd>;
 
     // par
 
@@ -69,7 +73,7 @@ impl MetaSet for MetaCatSetInt {
         SetTyp::CatSetInt
     }
 
-    fn create_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, SetSlot<'d>>) -> Self::SetSym<'m, 'd> {
+    fn create_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, SetSlot<'d>>) -> Self::SetSym<'m, 'd> {
         Symbol::new(m, el).into()
     }
 
@@ -103,6 +107,10 @@ impl MetaSet for MetaCatSetInt {
         unreachable!()
     }
 
+    fn create_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
+        Symbol::new(m, el).into()
+    }
+
     // par
 
     fn into_p1_fun<'d, V: MetaVal>(fun: impl Fn(Self::IdxRaw<'d>) -> V::Val + 'd) -> P1Fun<'d, V> {
@@ -127,7 +135,7 @@ impl MetaSet for MetaCatSetStr {
         SetTyp::CatSetStr
     }
 
-    fn create_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, SetSlot<'d>>) -> Self::SetSym<'m, 'd> {
+    fn create_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, SetSlot<'d>>) -> Self::SetSym<'m, 'd> {
         Symbol::new(m, el).into()
     }
 
@@ -161,6 +169,10 @@ impl MetaSet for MetaCatSetStr {
         unreachable!()
     }
 
+    fn create_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
+        Symbol::new(m, el).into()
+    }
+
     // par
 
     fn into_p1_fun<'d, V: MetaVal>(fun: impl Fn(Self::IdxRaw<'d>) -> V::Val + 'd) -> P1Fun<'d, V> {
@@ -185,7 +197,7 @@ impl MetaSet for MetaOrdSet {
         SetTyp::OrdSet
     }
 
-    fn create_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, SetSlot<'d>>) -> Self::SetSym<'m, 'd> {
+    fn create_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, SetSlot<'d>>) -> Self::SetSym<'m, 'd> {
         Symbol::new(m, el).into()
     }
 
@@ -219,6 +231,10 @@ impl MetaSet for MetaOrdSet {
         idx_sum
     }
 
+    fn create_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
+        Symbol::new(m, el).into()
+    }
+
     // par
 
     fn into_p1_fun<'d, V: MetaVal>(fun: impl Fn(Self::IdxRaw<'d>) -> V::Val + 'd) -> P1Fun<'d, V> {
@@ -228,7 +244,10 @@ impl MetaSet for MetaOrdSet {
 
 // symbols
 
-pub trait Set<'m, 'd> {
+pub trait Set<'m, 'd>: Deref<Target = Symbol<'m, 'd, SetSlot<'d>>> + Clone + Copy
+where
+    'd: 'm,
+{
     type Meta: MetaSet;
 
     fn slot(self) -> SetSlot<'d>;

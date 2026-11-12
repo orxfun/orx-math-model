@@ -44,30 +44,29 @@ impl<'d> Model<'d> {
     fn set<'m, M: MetaSet>(&'m self) -> M::SetSym<'m, 'd> {
         let slot = self.set_slots.push(M::set_typ());
         let el = self.set_bag.push(slot);
-        M::create_sym(self, el)
+        M::create_set_sym(self, el)
     }
 
     // idxs
 
     pub(crate) fn cat_idx_int<'m>(&'m self, set: CatSetInt<'m, 'd>) -> CatIdxInt<'m, 'd> {
-        Res::dbg_assert_same_model(self, set);
-        let slot = self.idx_slots.push(SetTyp::CatSetInt);
-        let el = self.idx_bag.push(unsafe { set.el.get() }.clone(), slot);
-        Symbol::new(self, el).into()
+        self.idx::<MetaCatSetInt>(set)
     }
 
     pub(crate) fn cat_idx_str<'m>(&'m self, set: CatSetStr<'m, 'd>) -> CatIdxStr<'m, 'd> {
-        Res::dbg_assert_same_model(self, set);
-        let slot = self.idx_slots.push(SetTyp::CatSetStr);
-        let el = self.idx_bag.push(unsafe { set.el.get() }.clone(), slot);
-        Symbol::new(self, el).into()
+        self.idx::<MetaCatSetStr>(set)
     }
 
     pub(crate) fn ord_idx<'m>(&'m self, set: OrdSet<'m, 'd>) -> OrdIdx<'m, 'd> {
+        self.idx::<MetaOrdSet>(set)
+    }
+
+    fn idx<'m, M: MetaSet>(&'m self, set: M::SetSym<'m, 'd>) -> M::IdxSym<'m, 'd> {
         Res::dbg_assert_same_model(self, set);
-        let slot = self.idx_slots.push(SetTyp::OrdSet);
-        let el = self.idx_bag.push(unsafe { set.el.get() }.clone(), slot);
-        Symbol::new(self, el).into()
+        let idx = self.idx_slots.push(M::set_typ());
+        let set = set.slot();
+        let el = self.idx_bag.push(set, idx);
+        M::create_idx_sym(self, el)
     }
 
     // vals
