@@ -1,13 +1,33 @@
-use crate::{Res, Validation};
+use crate::{new_bag, Bag, Res, Validation};
 use alloc::{boxed::Box, format, rc::Rc, string::String};
 use core::{cell::UnsafeCell, marker::PhantomData};
 use orx_imp_vec::Elem;
+
+// state
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum State {
     Empty,
     Bound,
 }
+
+pub struct SlotStates {
+    bag: Bag<State>,
+}
+
+impl Default for SlotStates {
+    fn default() -> Self {
+        Self { bag: new_bag() }
+    }
+}
+
+impl SlotStates {
+    pub fn push(&self) -> Elem<'_, State> {
+        self.bag.push(State::Empty)
+    }
+}
+
+// slot
 
 pub struct Slot<'d, T> {
     state: Rc<UnsafeCell<State>>,

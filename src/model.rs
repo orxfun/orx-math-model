@@ -2,6 +2,7 @@ use crate::arb_val::{ArbVal, ArbValBag};
 use crate::idxs::{CatIdxInt, CatIdxStr, IdxBag, IdxSlots, OrdIdx};
 use crate::par::p1::{IntParD1, NumParD1, P1Bag, P1Slots};
 use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetBag, SetSlots};
+use crate::slot::SlotStates;
 use crate::vals::{Int, Num, ValBag, ValFun};
 use crate::{
     MetaCatInt, MetaCatStr, MetaInt, MetaNum, MetaOrd, MetaSet, MetaVal, Res, Set, SetTyp, Symbol,
@@ -12,6 +13,8 @@ use orx_imp_vec::Elem;
 
 #[derive(Default)]
 pub struct Model<'d> {
+    slot_states: SlotStates,
+
     // sets
     set_slots: SetSlots<'d>,
     set_bag: SetBag<'d>,
