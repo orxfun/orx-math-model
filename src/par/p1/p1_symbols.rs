@@ -4,8 +4,8 @@ use crate::par::p1::{P1Fun, P1Slot};
 use crate::sets::SetSlot;
 use crate::vals::{Int, ValFun};
 use crate::{
-    CatIntIndexer, CatStrIndexer, Elements, ElementsIter, Idx, MetaInt, MetaNum, MetaSet, MetaVal,
-    OrdIndexer, SetTyp, Symbol,
+    CatIntIdxSum, CatStrIdxSum, Elements, ElementsIter, Idx, MetaInt, MetaNum, MetaSet, MetaVal,
+    OrdIdxSum, SetTyp, Symbol,
 };
 use alloc::{boxed::Box, string::String};
 use core::marker::PhantomData;
@@ -45,11 +45,11 @@ impl<'m, 'd, I0: MetaSet, V: MetaVal> ParD1<'m, 'd, I0, V> {
 
         match par_slot {
             P1Slot::CatSetInt(par) => match I0::idx_sum_into_cat_int(i0.into()) {
-                CatIntIndexer::Raw(i0) => {
+                CatIntIdxSum::Raw(i0) => {
                     let par = par.ptr();
                     self.m.val::<V>(move || par.get()(i0))
                 }
-                CatIntIndexer::Idx(i0) => match &unsafe { i0.el.get() }.idx {
+                CatIntIdxSum::Idx(i0) => match &unsafe { i0.el.get() }.idx {
                     IdxSlot::CatIdxInt(i0) => {
                         let (par, i0) = (par.ptr(), i0.ptr());
                         self.m.val::<V>(move || par.get()(i0.val()))
@@ -59,11 +59,11 @@ impl<'m, 'd, I0: MetaSet, V: MetaVal> ParD1<'m, 'd, I0, V> {
             },
 
             P1Slot::CatSetStr(par) => match I0::idx_sum_into_cat_str(i0.into()) {
-                CatStrIndexer::Raw(i0) => {
+                CatStrIdxSum::Raw(i0) => {
                     let par = par.ptr();
                     self.m.val::<V>(move || par.get()(i0))
                 }
-                CatStrIndexer::Idx(i0) => match &unsafe { i0.el.get() }.idx {
+                CatStrIdxSum::Idx(i0) => match &unsafe { i0.el.get() }.idx {
                     IdxSlot::CatIdxStr(i0) => {
                         let (par, i0) = (par.ptr(), i0.ptr());
                         self.m.val::<V>(move || par.get()(i0.val()))
@@ -73,18 +73,18 @@ impl<'m, 'd, I0: MetaSet, V: MetaVal> ParD1<'m, 'd, I0, V> {
             },
 
             P1Slot::OrdSet(par) => match I0::idx_sum_into_ord(i0.into()) {
-                OrdIndexer::Raw(i0) => {
+                OrdIdxSum::Raw(i0) => {
                     let par = par.ptr();
                     self.m.val::<V>(move || par.get()(i0))
                 }
-                OrdIndexer::Idx(i0) => match &unsafe { i0.el.get() }.idx {
+                OrdIdxSum::Idx(i0) => match &unsafe { i0.el.get() }.idx {
                     IdxSlot::OrdIdx(i0) => {
                         let (par, i0) = (par.ptr(), i0.ptr());
                         self.m.val::<V>(move || par.get()(i0.val()))
                     }
                     _ => unreachable!(),
                 },
-                OrdIndexer::Int(i0) => match unsafe { i0.el.get() } {
+                OrdIdxSum::Int(i0) => match unsafe { i0.el.get() } {
                     ValFun::Int(i0) => {
                         let par = par.ptr();
                         let i0: *const dyn Fn() -> i64 = i0;

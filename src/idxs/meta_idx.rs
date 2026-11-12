@@ -14,7 +14,7 @@ pub trait Idx<'m, 'd> {
 // cat int
 
 #[derive(derive_more::From)]
-pub enum CatIntIndexer<'m, 'd> {
+pub enum CatIntIdxSum<'m, 'd> {
     Idx(CatIdxInt<'m, 'd>),
     Raw(usize),
 }
@@ -30,7 +30,7 @@ impl<'m, 'd> Idx<'m, 'd> for CatIdxInt<'m, 'd> {
 // cat str
 
 #[derive(derive_more::From)]
-pub enum CatStrIndexer<'m, 'd> {
+pub enum CatStrIdxSum<'m, 'd> {
     Idx(CatIdxStr<'m, 'd>),
     Raw(&'d String),
 }
@@ -46,7 +46,7 @@ impl<'m, 'd> Idx<'m, 'd> for CatIdxStr<'m, 'd> {
 // ord
 
 #[derive(derive_more::From)]
-pub enum OrdIndexer<'m, 'd> {
+pub enum OrdIdxSum<'m, 'd> {
     Idx(OrdIdx<'m, 'd>),
     Int(Int<'m, 'd>),
     Raw(i64),

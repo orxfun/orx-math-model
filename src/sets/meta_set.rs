@@ -1,11 +1,10 @@
-use core::ops::Deref;
-
 use crate::idxs::{CatIdxInt, CatIdxStr, DIdx, OrdIdx};
 use crate::par::p1::P1Fun;
 use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetSlot};
 use crate::{idxs::IdxVal, vals::MetaVal};
-use crate::{CatIntIndexer, CatStrIndexer, Idx, Model, OrdIndexer, Symbol};
+use crate::{CatIntIdxSum, CatStrIdxSum, Idx, Model, OrdIdxSum, Symbol};
 use alloc::{boxed::Box, string::String};
+use core::ops::Deref;
 use orx_imp_vec::Elem;
 
 // enums
@@ -43,11 +42,11 @@ pub trait MetaSet: Clone + Copy {
 
     fn idx_as_enum<'d>(idx: Self::IdxRaw<'d>) -> IdxVal<'d>;
 
-    fn idx_sum_into_cat_int<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> CatIntIndexer<'m, 'd>;
+    fn idx_sum_into_cat_int<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> CatIntIdxSum<'m, 'd>;
 
-    fn idx_sum_into_cat_str<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> CatStrIndexer<'m, 'd>;
+    fn idx_sum_into_cat_str<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> CatStrIdxSum<'m, 'd>;
 
-    fn idx_sum_into_ord<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> OrdIndexer<'m, 'd>;
+    fn idx_sum_into_ord<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> OrdIdxSum<'m, 'd>;
 
     fn create_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd>;
 
@@ -87,7 +86,7 @@ impl MetaSet for MetaCatSetInt {
         'd: 'm;
 
     type IdxSum<'m, 'd>
-        = CatIntIndexer<'m, 'd>
+        = CatIntIdxSum<'m, 'd>
     where
         'd: 'm;
 
@@ -95,15 +94,15 @@ impl MetaSet for MetaCatSetInt {
         IdxVal::CatIdxInt(idx)
     }
 
-    fn idx_sum_into_cat_int<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> CatIntIndexer<'m, 'd> {
+    fn idx_sum_into_cat_int<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> CatIntIdxSum<'m, 'd> {
         idx_sum
     }
 
-    fn idx_sum_into_cat_str<'m, 'd>(_: Self::IdxSum<'m, 'd>) -> CatStrIndexer<'m, 'd> {
+    fn idx_sum_into_cat_str<'m, 'd>(_: Self::IdxSum<'m, 'd>) -> CatStrIdxSum<'m, 'd> {
         unreachable!()
     }
 
-    fn idx_sum_into_ord<'m, 'd>(_: Self::IdxSum<'m, 'd>) -> OrdIndexer<'m, 'd> {
+    fn idx_sum_into_ord<'m, 'd>(_: Self::IdxSum<'m, 'd>) -> OrdIdxSum<'m, 'd> {
         unreachable!()
     }
 
@@ -149,7 +148,7 @@ impl MetaSet for MetaCatSetStr {
         'd: 'm;
 
     type IdxSum<'m, 'd>
-        = CatStrIndexer<'m, 'd>
+        = CatStrIdxSum<'m, 'd>
     where
         'd: 'm;
 
@@ -157,15 +156,15 @@ impl MetaSet for MetaCatSetStr {
         IdxVal::CatIdxStr(idx)
     }
 
-    fn idx_sum_into_cat_int<'m, 'd>(_: Self::IdxSum<'m, 'd>) -> CatIntIndexer<'m, 'd> {
+    fn idx_sum_into_cat_int<'m, 'd>(_: Self::IdxSum<'m, 'd>) -> CatIntIdxSum<'m, 'd> {
         unreachable!()
     }
 
-    fn idx_sum_into_cat_str<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> CatStrIndexer<'m, 'd> {
+    fn idx_sum_into_cat_str<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> CatStrIdxSum<'m, 'd> {
         idx_sum
     }
 
-    fn idx_sum_into_ord<'m, 'd>(_: Self::IdxSum<'m, 'd>) -> OrdIndexer<'m, 'd> {
+    fn idx_sum_into_ord<'m, 'd>(_: Self::IdxSum<'m, 'd>) -> OrdIdxSum<'m, 'd> {
         unreachable!()
     }
 
@@ -211,7 +210,7 @@ impl MetaSet for MetaOrdSet {
         'd: 'm;
 
     type IdxSum<'m, 'd>
-        = OrdIndexer<'m, 'd>
+        = OrdIdxSum<'m, 'd>
     where
         'd: 'm;
 
@@ -219,15 +218,15 @@ impl MetaSet for MetaOrdSet {
         IdxVal::OrdIdx(idx)
     }
 
-    fn idx_sum_into_cat_int<'m, 'd>(_: Self::IdxSum<'m, 'd>) -> CatIntIndexer<'m, 'd> {
+    fn idx_sum_into_cat_int<'m, 'd>(_: Self::IdxSum<'m, 'd>) -> CatIntIdxSum<'m, 'd> {
         unreachable!()
     }
 
-    fn idx_sum_into_cat_str<'m, 'd>(_: Self::IdxSum<'m, 'd>) -> CatStrIndexer<'m, 'd> {
+    fn idx_sum_into_cat_str<'m, 'd>(_: Self::IdxSum<'m, 'd>) -> CatStrIdxSum<'m, 'd> {
         unreachable!()
     }
 
-    fn idx_sum_into_ord<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> OrdIndexer<'m, 'd> {
+    fn idx_sum_into_ord<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> OrdIdxSum<'m, 'd> {
         idx_sum
     }
 
