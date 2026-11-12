@@ -1,5 +1,5 @@
 use crate::idxs::{CatIdxInt, CatIdxStr, DIdx, OrdIdx};
-use crate::par::p1::P1FunE;
+use crate::par::p1::P1Fun1;
 use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetSlot};
 use crate::{idxs::IdxVal, vals::MetaVal};
 use crate::{CatIntIdxSum, CatStrIdxSum, Idx, MetaInt, Model, OrdIdxSum, Ptr, Symbol};

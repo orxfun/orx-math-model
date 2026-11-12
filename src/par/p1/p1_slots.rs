@@ -8,27 +8,51 @@ use core::mem::transmute;
 // fun
 
 #[derive(derive_more::Deref)]
-pub struct P1Fun<'d, V: MetaVal, I0: MetaSet>(Box<dyn Fn(I0::IdxRaw<'d>) -> V::Val + 'd>);
+pub struct P1Fun0<'d, V: MetaVal, I0: MetaSet>(Box<dyn Fn(I0::IdxRaw<'d>) -> V::Val + 'd>);
 
-impl<'d, V: MetaVal, I0: MetaSet> Default for P1Fun<'d, V, I0> {
+impl<'d, V: MetaVal, I0: MetaSet> Default for P1Fun0<'d, V, I0> {
     fn default() -> Self {
         Self(Box::new(|_| Default::default()))
     }
 }
 
-pub enum P1FunE<'d, V: MetaVal> {
-    CatInt(P1Fun<'d, V, MetaCatInt>),
-    CatStr(P1Fun<'d, V, MetaCatStr>),
-    Ord(P1Fun<'d, V, MetaOrd>),
+pub enum P1Fun1<'d, V: MetaVal> {
+    CatInt(P1Fun0<'d, V, MetaCatInt>),
+    CatStr(P1Fun0<'d, V, MetaCatStr>),
+    Ord(P1Fun0<'d, V, MetaOrd>),
 }
 
-impl<'d, V: MetaVal> P1FunE<'d, V> {
+impl<'d, V: MetaVal> P1Fun1<'d, V> {
+    fn empty<I0: MetaSet>() -> Self {
+        match I0::set_typ() {
+            SetTyp::CatInt => P1Fun1::CatInt(P1Fun0::default()),
+            SetTyp::CatStr => P1Fun1::CatStr(P1Fun0::default()),
+            SetTyp::Ord => P1Fun1::Ord(P1Fun0::default()),
+        }
+    }
+
     pub fn new<I0: MetaSet>(fun: impl Fn(I0::IdxRaw<'d>) -> V::Val + 'd) -> Self {
         let fun: Box<dyn Fn(I0::IdxRaw<'d>) -> V::Val + 'd> = Box::new(fun);
         match I0::set_typ() {
-            SetTyp::CatInt => Self::CatInt(P1Fun(unsafe { transmute(fun) })),
-            SetTyp::CatStr => Self::CatStr(P1Fun(unsafe { transmute(fun) })),
-            SetTyp::Ord => Self::Ord(P1Fun(unsafe { transmute(fun) })),
+            SetTyp::CatInt => Self::CatInt(P1Fun0(unsafe { transmute(fun) })),
+            SetTyp::CatStr => Self::CatStr(P1Fun0(unsafe { transmute(fun) })),
+            SetTyp::Ord => Self::Ord(P1Fun0(unsafe { transmute(fun) })),
+        }
+    }
+}
+
+// data
+
+pub struct P1Data<'d, V: MetaVal> {
+    i0_typ: SetTyp,
+    fun: P1Fun1<'d, V>,
+}
+
+impl<'d, V: MetaVal> P1Data<'d, V> {
+    pub fn empty<I0: MetaSet>() -> Self {
+        Self {
+            i0_typ: I0::set_typ(),
+            fun: P1Fun1::empty::<I0>(),
         }
     }
 }
@@ -36,17 +60,17 @@ impl<'d, V: MetaVal> P1FunE<'d, V> {
 // slot
 
 pub enum P1Slot<'d, V: MetaVal> {
-    CatInt(Slot<'d, P1Fun<'d, V, MetaCatInt>>),
-    CatStr(Slot<'d, P1Fun<'d, V, MetaCatStr>>),
-    Ord(Slot<'d, P1Fun<'d, V, MetaOrd>>),
+    CatInt(Slot<'d, P1Fun0<'d, V, MetaCatInt>>),
+    CatStr(Slot<'d, P1Fun0<'d, V, MetaCatStr>>),
+    Ord(Slot<'d, P1Fun0<'d, V, MetaOrd>>),
 }
 
 impl<'d, V: MetaVal> P1Slot<'d, V> {
-    pub fn bind(&self, fun: P1FunE<'d, V>) -> Res {
+    pub fn bind(&self, fun: P1Fun1<'d, V>) -> Res {
         match (self, fun) {
-            (Self::CatInt(s), P1FunE::CatInt(f)) => s.bind(f),
-            (Self::CatStr(s), P1FunE::CatStr(f)) => s.bind(f),
-            (Self::Ord(s), P1FunE::Ord(f)) => s.bind(f),
+            (Self::CatInt(s), P1Fun1::CatInt(f)) => s.bind(f),
+            (Self::CatStr(s), P1Fun1::CatStr(f)) => s.bind(f),
+            (Self::Ord(s), P1Fun1::Ord(f)) => s.bind(f),
             _ => unreachable!("TODO: explain why"),
         }
     }
@@ -74,9 +98,9 @@ impl<'d, V: MetaVal> P1Slot<'d, V> {
 // collection of
 
 pub struct P1SlotsOf<'d, V: MetaVal> {
-    cat_int: Bag<P1Fun<'d, V, MetaCatInt>>,
-    cat_str: Bag<P1Fun<'d, V, MetaCatStr>>,
-    ord: Bag<P1Fun<'d, V, MetaOrd>>,
+    cat_int: Bag<P1Fun0<'d, V, MetaCatInt>>,
+    cat_str: Bag<P1Fun0<'d, V, MetaCatStr>>,
+    ord: Bag<P1Fun0<'d, V, MetaOrd>>,
 }
 
 impl<'d, V: MetaVal> Default for P1SlotsOf<'d, V> {
