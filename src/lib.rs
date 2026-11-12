@@ -11,17 +11,33 @@
     clippy::todo
 )]
 #![no_std]
+// TODO: clean up this
+#![allow(dead_code, unused_imports)]
 
 extern crate alloc;
 
 #[cfg(any(test, feature = "std"))]
 extern crate std;
 
-mod idx_scalars;
+mod bag;
+mod elements;
+mod err;
+mod idxs;
 mod model;
-mod numbers;
-mod par_d1;
-mod ptr;
+mod par;
 mod sets;
+mod slot;
+mod symbol;
+mod vals;
 
+// crate
+pub(crate) use bag::{new_bag, Bag};
+pub(crate) use elements::{Elements, ElementsIter};
+pub(crate) use err::{Err, Res, Validation};
+pub(crate) use sets::{MetaCatSetInt, MetaCatSetStr, MetaOrdSet, MetaSet, Set, SetTyp};
+pub(crate) use slot::Slot;
+pub(crate) use symbol::Symbol;
+pub(crate) use vals::{MetaInt, MetaNum, MetaVal, ValTyp};
+
+// api
 pub use model::Model;

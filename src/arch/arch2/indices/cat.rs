@@ -1,0 +1,36 @@
+use crate::ptr::RefPtr;
+use crate::sets::{CatSet, CatSetFun};
+use crate::Model;
+use orx_imp_vec::Elem;
+
+// data
+
+pub struct CatIdxData<'d, K: Copy + Default> {
+    s0: RefPtr<CatSetFun<'d, K>>,
+    value: K,
+}
+
+impl<'d, K: Copy + Default> CatIdxData<'d, K> {
+    pub fn new(set: CatSet<'_, 'd, K>) -> Self {
+        let s0 = set.fun_ptr();
+        let value = K::default();
+        Self { s0, value }
+    }
+
+    pub fn read(&self) -> K {
+        self.value
+    }
+
+    pub fn write(&mut self, value: K) {
+        self.value = value;
+    }
+}
+
+// symbol
+
+#[derive(derive_new::new)]
+#[new(visibility = "pub(crate)")]
+pub struct CatIdx<'m, 'd, K: Copy + Default> {
+    pub(crate) m: &'m Model<'d>,
+    pub(crate) el: Elem<'m, CatIdxData<'d, K>>,
+}
