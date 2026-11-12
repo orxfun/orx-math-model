@@ -30,7 +30,7 @@ impl<'d, V: MetaVal> P1Slot<'d, V> {
     }
 
     #[cfg(test)]
-    fn test_at<M: MetaSet>(&self, idx: M::Idx<'d>) -> Res<ValVal> {
+    pub fn test_at<M: MetaSet>(&self, idx: M::Idx<'d>) -> Res<ValVal> {
         match (self, M::idx_as_enum(idx)) {
             (Self::CatSetInt(f), IdxVal::CatIdxInt(i)) => Ok(V::val_as_enum(f.get()(i))),
             (Self::CatSetStr(f), IdxVal::CatIdxStr(i)) => Ok(V::val_as_enum(f.get()(i))),

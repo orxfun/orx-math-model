@@ -2,6 +2,8 @@ use crate::idxs::IdxSlot;
 use crate::par::p1::P1Slot;
 use crate::sets::SetSlot;
 use crate::{new_bag, Bag, MetaInt, MetaNum, MetaVal, SetTyp, ValTyp};
+#[cfg(test)]
+use crate::{vals::ValVal, MetaSet, Res};
 use core::mem::transmute;
 use orx_imp_vec::Elem;
 
@@ -9,6 +11,13 @@ use orx_imp_vec::Elem;
 pub struct DP1<'d, V: MetaVal> {
     pub set: SetSlot<'d>,
     pub par: P1Slot<'d, V>,
+}
+
+impl<'d, V: MetaVal> DP1<'d, V> {
+    #[cfg(test)]
+    pub fn test_at<M: MetaSet>(&self, idx: M::Idx<'d>) -> Res<ValVal> {
+        self.par.test_at::<M>(idx)
+    }
 }
 
 // collection
