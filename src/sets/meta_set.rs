@@ -5,6 +5,7 @@ use crate::{idxs::IdxVal, vals::MetaVal};
 use crate::{CatIntIdxSum, CatStrIdxSum, Idx, MetaInt, Model, OrdIdxSum, Ptr, Symbol};
 use alloc::string::ToString;
 use alloc::{boxed::Box, string::String};
+use core::mem::transmute;
 use core::ops::Deref;
 use orx_imp_vec::Elem;
 
@@ -57,7 +58,7 @@ pub trait MetaSet: Clone + Copy {
 
     // par-sca
 
-    fn p1_scalar_fun<'d, 'm: 'd, V: MetaVal>(
+    fn p1_scalar_fun<'m, 'd: 'm, V: MetaVal>(
         m: &'m Model<'d>,
         i0: Self::IdxSum<'m, 'd>,
         p1: Ptr<'d, Box<dyn Fn(Self::IdxRaw<'d>) -> V::Val + 'd>>,
@@ -127,14 +128,14 @@ impl MetaSet for MetaCatSetInt {
 
     // par-sca
 
-    fn p1_scalar_fun<'d, 'm: 'd, V: MetaVal>(
+    fn p1_scalar_fun<'m, 'd: 'm, V: MetaVal>(
         _: &'m Model<'d>,
         i0: Self::IdxSum<'m, 'd>,
         p1: Ptr<'d, Box<dyn Fn(Self::IdxRaw<'d>) -> V::Val + 'd>>,
     ) -> Box<dyn Fn() -> V::Val + 'd> {
         match i0 {
-            CatIntIdxSum::Raw(i0) => Box::new(move || p1.get()(i0)),
-            CatIntIdxSum::Usize(i0) => {
+            CatIntIdxSum::Usize(i0) => Box::new(move || p1.get()(i0)),
+            CatIntIdxSum::Idx(i0) => {
                 let i0 = unsafe { i0.el.get() }.idx.val_ptr::<MetaCatSetInt>();
                 Box::new(move || p1.get()(i0.val()))
             }
@@ -205,7 +206,7 @@ impl MetaSet for MetaCatSetStr {
 
     // par-sca
 
-    fn p1_scalar_fun<'d, 'm: 'd, V: MetaVal>(
+    fn p1_scalar_fun<'m, 'd: 'm, V: MetaVal>(
         m: &'m Model<'d>,
         i0: Self::IdxSum<'m, 'd>,
         p1: Ptr<'d, Box<dyn Fn(Self::IdxRaw<'d>) -> V::Val + 'd>>,
@@ -291,7 +292,7 @@ impl MetaSet for MetaOrdSet {
 
     // par-sca
 
-    fn p1_scalar_fun<'d, 'm: 'd, V: MetaVal>(
+    fn p1_scalar_fun<'m, 'd: 'm, V: MetaVal>(
         _: &'m Model<'d>,
         i0: Self::IdxSum<'m, 'd>,
         p1: Ptr<'d, Box<dyn Fn(Self::IdxRaw<'d>) -> V::Val + 'd>>,
@@ -303,8 +304,8 @@ impl MetaSet for MetaOrdSet {
                 Box::new(move || p1.get()(i0.val()))
             }
             OrdIdxSum::Int(i0) => {
-                let i0 = unsafe { i0.el.get() }.fun_ptr::<MetaInt>();
-                Box::new(move || p1.get()(i0()))
+                let i0 = unsafe { i0.el.get() }.fun_ptr::<MetaInt>() as *const Box<dyn Fn() -> i64>;
+                Box::new(move || p1.get()(unsafe { &*i0 }()))
             }
         }
     }

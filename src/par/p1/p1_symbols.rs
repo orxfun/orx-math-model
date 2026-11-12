@@ -60,11 +60,11 @@ impl<'m, 'd, I0: MetaSet, V: MetaVal> ParD1<'m, 'd, I0, V> {
 
         match par_slot {
             P1Slot::CatSetInt(par) => match I0::idx_sum_into_cat_int(i0.into()) {
-                CatIntIdxSum::Raw(i0) => {
+                CatIntIdxSum::Usize(i0) => {
                     let par = par.ptr();
                     self.m.val::<V>(move || par.get()(i0))
                 }
-                CatIntIdxSum::Usize(i0) => match &unsafe { i0.el.get() }.idx {
+                CatIntIdxSum::Idx(i0) => match &unsafe { i0.el.get() }.idx {
                     IdxSlot::CatIdxInt(i0) => {
                         let (par, i0) = (par.ptr(), i0.ptr());
                         self.m.val::<V>(move || par.get()(i0.val()))

@@ -16,8 +16,8 @@ pub trait Idx<'m, 'd> {
 
 #[derive(derive_more::From, Clone, Copy)]
 pub enum CatIntIdxSum<'m, 'd> {
-    Usize(CatIdxInt<'m, 'd>),
-    Raw(usize),
+    Idx(CatIdxInt<'m, 'd>),
+    Usize(usize),
 }
 
 impl<'m, 'd> CatIntIdxSum<'m, 'd> {
@@ -26,8 +26,8 @@ impl<'m, 'd> CatIntIdxSum<'m, 'd> {
         p1: Ptr<'d, Box<dyn Fn(usize) -> V::Val>>,
     ) -> Box<dyn Fn() -> V::Val + 'd> {
         match self {
-            CatIntIdxSum::Raw(i0) => Box::new(move || p1.get()(i0)),
-            CatIntIdxSum::Usize(i0) => {
+            CatIntIdxSum::Usize(i0) => Box::new(move || p1.get()(i0)),
+            CatIntIdxSum::Idx(i0) => {
                 let i0 = unsafe { i0.el.get() }.idx.val_ptr::<MetaCatSetInt>();
                 Box::new(move || p1.get()(i0.val()))
             }
