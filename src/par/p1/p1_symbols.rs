@@ -3,7 +3,7 @@ use crate::par::p1::p1_bag::DP1;
 use crate::par::p1::P1Fun;
 use crate::sets::SetSlot;
 use crate::vals::Int;
-use crate::{Elements, ElementsIter, MetaInt, MetaNum, MetaSet, MetaVal, Symbol};
+use crate::{Elements, ElementsIter, Idx, MetaInt, MetaNum, MetaSet, MetaVal, SetTyp, Symbol};
 use alloc::{boxed::Box, string::String};
 use core::marker::PhantomData;
 use core::ops::Deref;
@@ -42,8 +42,19 @@ pub type IntParD1<'m, 'd, I0> = ParD1<'m, 'd, I0, MetaInt>;
 
 impl<'m, 'd, I0: MetaSet> IntParD1<'m, 'd, I0> {
     pub fn at(self, idx: I0::IdxSym<'m, 'd>) -> Int<'m, 'd> {
-        // let idx =
-        todo!()
+        match idx.slot() {
+            IdxSlot::CatIdxInt(idx) => {
+                // Box<dyn Fn() -> i64 + 'd>
+                //
+                let fun: Box<dyn Fn() -> i64 + 'd> = Box::new(move || {
+                    let x = idx.val();
+                    0i64
+                });
+                todo!()
+            }
+            IdxSlot::CatIdxStr(idx) => todo!(),
+            IdxSlot::OrdIdx(idx) => todo!(),
+        }
     }
 }
 

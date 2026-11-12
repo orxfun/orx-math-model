@@ -55,7 +55,14 @@ impl<'d, T> Slot<'d, T> {
         unsafe { &*self.p }
     }
 
-    pub fn get_mut_ptr(&self) -> *mut T {
+    pub fn val(&self) -> T
+    where
+        T: Copy,
+    {
+        *unsafe { &*self.p }
+    }
+
+    pub fn mut_ptr(&self) -> *mut T {
         self.p
     }
 }
