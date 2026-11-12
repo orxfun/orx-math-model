@@ -42,86 +42,11 @@ impl<'m, 'd, I0: MetaSet, V: MetaVal> ParD1<'m, 'd, I0, V> {
         slot.bind(fun).expect("TODO: it must succeed, why")
     }
 
-    pub fn at2(self, i0: impl Into<I0::IdxSum<'m, 'd>>) -> V::Sym<'m, 'd> {
-        // TODO: check if i0 and set of the par agrees
-        let par = unsafe { self.el.get() }.par.fun_ptr::<I0>();
-        let x = I0::p1_scalar_fun::<'m, 'd, V>(self.m, i0.into(), par);
-        // match i0.into() {
-        //     _ => todo!(),
-        // }
-
-        //
-        todo!()
-    }
-
     pub fn at(self, i0: impl Into<I0::IdxSum<'m, 'd>>) -> V::Sym<'m, 'd> {
         // TODO: check if i0 and set of the par agrees
-        let par_slot = &unsafe { self.el.get() }.par;
-
-        match par_slot {
-            P1Slot::CatSetInt(par) => match I0::idx_sum_into_cat_int(i0.into()) {
-                CatIntIdxSum::Usize(i0) => {
-                    let par = par.ptr();
-                    self.m.val::<V>(move || par.get()(i0))
-                }
-                CatIntIdxSum::Idx(i0) => match &unsafe { i0.el.get() }.idx {
-                    IdxSlot::CatIdxInt(i0) => {
-                        let (par, i0) = (par.ptr(), i0.ptr());
-                        self.m.val::<V>(move || par.get()(i0.val()))
-                    }
-                    _ => unreachable!(),
-                },
-            },
-
-            P1Slot::CatSetStr(par) => match I0::idx_sum_into_cat_str(i0.into()) {
-                CatStrIdxSum::RefString(i0) => {
-                    let par = par.ptr();
-                    self.m.val::<V>(move || par.get()(i0))
-                }
-                CatStrIdxSum::String(i0) => {
-                    let par = par.ptr();
-                    let i0 = unsafe { self.m.arb_val(i0).get() }.as_string_ptr();
-                    self.m.val::<V>(move || par.get()(unsafe { &*i0 }))
-                }
-                CatStrIdxSum::Str(i0) => {
-                    let par = par.ptr();
-                    let i0 = unsafe { self.m.arb_val(i0.to_string()).get() }.as_string_ptr();
-                    self.m.val::<V>(move || par.get()(unsafe { &*i0 }))
-                }
-                CatStrIdxSum::Idx(i0) => match &unsafe { i0.el.get() }.idx {
-                    IdxSlot::CatIdxStr(i0) => {
-                        let (par, i0) = (par.ptr(), i0.ptr());
-                        self.m.val::<V>(move || par.get()(i0.val()))
-                    }
-                    _ => unreachable!(),
-                },
-            },
-
-            P1Slot::OrdSet(par) => match I0::idx_sum_into_ord(i0.into()) {
-                OrdIdxSum::Raw(i0) => {
-                    let par = par.ptr();
-                    self.m.val::<V>(move || par.get()(i0))
-                }
-                OrdIdxSum::Idx(i0) => match &unsafe { i0.el.get() }.idx {
-                    IdxSlot::OrdIdx(i0) => {
-                        let (par, i0) = (par.ptr(), i0.ptr());
-                        self.m.val::<V>(move || par.get()(i0.val()))
-                    }
-                    _ => unreachable!(),
-                },
-                OrdIdxSum::Int(i0) => match unsafe { i0.el.get() } {
-                    ValFun::Int(i0) => {
-                        let par = par.ptr();
-                        let i0: *const dyn Fn() -> i64 = i0;
-                        self.m.val::<V>(move || {
-                            let i0 = unsafe { &*i0 }();
-                            par.get()(i0)
-                        })
-                    }
-                    _ => unreachable!(),
-                },
-            },
-        }
+        let par = unsafe { self.el.get() }.par.fun_ptr::<I0>();
+        let fun = I0::p1_scalar_fun::<'m, 'd, V>(self.m, i0.into(), par);
+        self.m.val::<V>(fun)
     }
 }
 
