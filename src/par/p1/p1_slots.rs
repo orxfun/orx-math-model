@@ -2,7 +2,7 @@
 use crate::idxs::IdxVal;
 #[cfg(test)]
 use crate::vals::ValVal;
-use crate::{new_bag, Bag, Elements, MetaInt, MetaSet, MetaVal, Res, SetTyp, Slot};
+use crate::{new_bag, Bag, Elements, MetaInt, MetaSet, MetaVal, Ptr, Res, SetTyp, Slot};
 use crate::{vals::MetaNum, ValTyp};
 use alloc::{boxed::Box, string::String};
 use core::mem::transmute;
@@ -36,6 +36,14 @@ impl<'d, V: MetaVal> P1Slot<'d, V> {
             (Self::CatSetStr(f), IdxVal::CatIdxStr(i)) => Ok(V::val_as_enum(f.get()(i))),
             (Self::OrdSet(f), IdxVal::OrdIdx(i)) => Ok(V::val_as_enum(f.get()(i))),
             _ => Err(String::from("mistmatch in P1 index and argument")),
+        }
+    }
+
+    pub fn fun_ptr<I0: MetaSet>(&self) -> Ptr<'d, Box<dyn Fn(I0::IdxRaw<'d>) -> V::Val + 'd>> {
+        match self {
+            Self::CatSetInt(s) => unsafe { transmute(s.ptr()) },
+            Self::CatSetStr(s) => unsafe { transmute(s.ptr()) },
+            Self::OrdSet(s) => unsafe { transmute(s.ptr()) },
         }
     }
 }

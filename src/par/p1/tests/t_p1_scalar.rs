@@ -19,10 +19,11 @@ fn int_p1_cat_int() {
     let idx = set.idx();
     let sca = par.at(idx);
     let sca2 = par[idx];
+    let sca3 = par[2];
 
     // binding
     par.bind(|i| par_data[i]);
-    set.bind(|| set_data.iter().copied()).unwrap();
+    set.bind(|| set_data.iter().copied());
 
     // running
     let mut elements: Elements<usize> = vec![].into();
@@ -34,6 +35,8 @@ fn int_p1_cat_int() {
         let val = unsafe { sca2.el.get() }.test_eval();
         assert_eq!(exp, val);
     }
+    let val = unsafe { sca3.el.get() }.test_eval();
+    assert_eq!(ValVal::Int(par_data[2]), val);
 }
 
 #[test]
@@ -53,10 +56,12 @@ fn int_p1_cat_str() {
     let idx = set.idx();
     let sca = par.at(idx);
     let sca2 = par[idx];
+    let sca3 = par["2".to_string()];
+    let sca4 = par["2"];
 
     // binding
     par.bind(|i| par_data[i]);
-    set.bind(|| &set_data).unwrap();
+    set.bind(|| &set_data);
 
     // running
     let mut elements: Elements<&String> = vec![].into();
@@ -68,6 +73,9 @@ fn int_p1_cat_str() {
         let val = unsafe { sca2.el.get() }.test_eval();
         assert_eq!(exp, val);
     }
+    let exp = ValVal::Int(par_data[&"2".to_string()]);
+    assert_eq!(exp, unsafe { sca3.el.get() }.test_eval());
+    assert_eq!(exp, unsafe { sca4.el.get() }.test_eval());
 }
 
 #[test]
@@ -86,7 +94,7 @@ fn int_p1_ord() {
 
     // binding
     par.bind(|i| par_data(i));
-    set.bind(|| set_data.iter().copied()).unwrap();
+    set.bind(|| set_data.iter().copied());
 
     // running
     let mut elements: Elements<i64> = vec![].into();
@@ -118,7 +126,7 @@ fn num_p1_cat_int() {
 
     // binding
     par.bind(|i| par_data[i]);
-    set.bind(|| set_data.iter().copied()).unwrap();
+    set.bind(|| set_data.iter().copied());
 
     // running
     let mut elements: Elements<usize> = vec![].into();
@@ -152,7 +160,7 @@ fn num_p1_cat_str() {
 
     // binding
     par.bind(|i| par_data[i]);
-    set.bind(|| &set_data).unwrap();
+    set.bind(|| &set_data);
 
     // running
     let mut elements: Elements<&String> = vec![].into();
@@ -182,7 +190,7 @@ fn num_p1_ord() {
 
     // binding
     par.bind(|i| par_data(i));
-    set.bind(|| set_data.iter().copied()).unwrap();
+    set.bind(|| set_data.iter().copied());
 
     // running
     let mut elements: Elements<i64> = vec![].into();

@@ -1,9 +1,14 @@
+use crate::arb_val::{ArbVal, ArbValBag};
 use crate::idxs::{CatIdxInt, CatIdxStr, IdxBag, IdxSlots, OrdIdx};
 use crate::par::p1::{IntParD1, NumParD1, P1Bag, P1Slots};
 use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetBag, SetSlots};
 use crate::vals::{Int, Num, ValBag, ValFun};
-use crate::{MetaInt, MetaNum, MetaSet, MetaVal, Res, Set, SetTyp, Symbol, Val, Validation};
+use crate::{
+    MetaCatSetInt, MetaCatSetStr, MetaInt, MetaNum, MetaOrdSet, MetaSet, MetaVal, Res, Set, SetTyp,
+    Symbol, Val, ValSymSum, Validation,
+};
 use alloc::boxed::Box;
+use orx_imp_vec::Elem;
 
 #[derive(Default)]
 pub struct Model<'d> {
@@ -17,6 +22,7 @@ pub struct Model<'d> {
 
     // vals
     val_bag: ValBag<'d>,
+    arb_val_bag: ArbValBag<'d>,
 
     // pars
     p1_slots: P1Slots<'d>,
@@ -27,44 +33,43 @@ impl<'d> Model<'d> {
     // sets
 
     pub fn cat_set_int<'m>(&'m self) -> CatSetInt<'m, 'd> {
-        let slot = self.set_slots.push(SetTyp::CatSetInt);
-        let el = self.set_bag.push(slot);
-        Symbol::new(self, el).into()
+        self.set::<MetaCatSetInt>()
     }
 
     pub fn cat_set_str<'m>(&'m self) -> CatSetStr<'m, 'd> {
-        let slot = self.set_slots.push(SetTyp::CatSetStr);
-        let el = self.set_bag.push(slot);
-        Symbol::new(self, el).into()
+        self.set::<MetaCatSetStr>()
     }
 
     pub fn ord_set<'m>(&'m self) -> OrdSet<'m, 'd> {
-        let slot = self.set_slots.push(SetTyp::OrdSet);
+        self.set::<MetaOrdSet>()
+    }
+
+    fn set<'m, M: MetaSet>(&'m self) -> M::SetSym<'m, 'd> {
+        let slot = self.set_slots.push(M::set_typ());
         let el = self.set_bag.push(slot);
-        Symbol::new(self, el).into()
+        M::create_set_sym(self, el)
     }
 
     // idxs
 
     pub(crate) fn cat_idx_int<'m>(&'m self, set: CatSetInt<'m, 'd>) -> CatIdxInt<'m, 'd> {
-        Res::dbg_assert_same_model(self, set);
-        let slot = self.idx_slots.push(SetTyp::CatSetInt);
-        let el = self.idx_bag.push(unsafe { set.el.get() }.clone(), slot);
-        Symbol::new(self, el).into()
+        self.idx::<MetaCatSetInt>(set)
     }
 
     pub(crate) fn cat_idx_str<'m>(&'m self, set: CatSetStr<'m, 'd>) -> CatIdxStr<'m, 'd> {
-        Res::dbg_assert_same_model(self, set);
-        let slot = self.idx_slots.push(SetTyp::CatSetStr);
-        let el = self.idx_bag.push(unsafe { set.el.get() }.clone(), slot);
-        Symbol::new(self, el).into()
+        self.idx::<MetaCatSetStr>(set)
     }
 
     pub(crate) fn ord_idx<'m>(&'m self, set: OrdSet<'m, 'd>) -> OrdIdx<'m, 'd> {
+        self.idx::<MetaOrdSet>(set)
+    }
+
+    fn idx<'m, M: MetaSet>(&'m self, set: M::SetSym<'m, 'd>) -> M::IdxSym<'m, 'd> {
         Res::dbg_assert_same_model(self, set);
-        let slot = self.idx_slots.push(SetTyp::OrdSet);
-        let el = self.idx_bag.push(unsafe { set.el.get() }.clone(), slot);
-        Symbol::new(self, el).into()
+        let idx = self.idx_slots.push(M::set_typ());
+        let set = set.slot();
+        let el = self.idx_bag.push(set, idx);
+        M::create_idx_sym(self, el)
     }
 
     // vals
@@ -75,8 +80,16 @@ impl<'d> Model<'d> {
     }
 
     pub(crate) fn val_sym<'m, V: MetaVal>(&'m self, sym: V::Sym<'m, 'd>) -> &'m V::Sym<'m, 'd> {
-        let el = self.val_bag.push_sym(sym);
-        <V::Sym<'m, 'd> as Val<'m, 'd>>::from_sum_to_self(unsafe { el.get() })
+        let sym: ValSymSum<'d, 'd> = match sym.into_sym_sum() {
+            ValSymSum::Int(x) => ValSymSum::Int(unsafe { x.create_sym_ref() }.into()),
+            ValSymSum::Num(x) => ValSymSum::Num(unsafe { x.create_sym_ref() }.into()),
+        };
+        let el = self.arb_val_bag.push(sym);
+        <V::Sym<'m, 'd> as Val<'m, 'd>>::from_sum_to_self(unsafe { el.get() }.as_val_sym_sum())
+    }
+
+    pub(crate) fn arb_val<'m>(&'m self, val: impl Into<ArbVal<'d>>) -> Elem<'m, ArbVal<'d>> {
+        self.arb_val_bag.push(val)
     }
 
     // p1

@@ -12,7 +12,7 @@ fn set_cat_int() {
     let set = m.cat_set_int();
 
     // binding
-    set.bind(|| values.iter().copied()).unwrap();
+    set.bind(|| values.iter().copied());
 
     // running
     let mut elements: Elements<usize> = vec![].into();
@@ -30,7 +30,7 @@ fn set_cat_str() {
     let set = m.cat_set_str();
 
     // binding
-    set.bind(|| &values).unwrap();
+    set.bind(|| &values);
 
     // running
     let mut elements: Elements<&String> = vec![].into();
@@ -48,7 +48,7 @@ fn set_ord() {
     let set = m.ord_set();
 
     // binding
-    set.bind(|| values.iter().copied()).unwrap();
+    set.bind(|| values.iter().copied());
 
     // running
     let mut elements: Elements<i64> = vec![].into();

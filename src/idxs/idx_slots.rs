@@ -1,6 +1,7 @@
 use crate::{new_bag, sets::SetTyp, Bag, Elements, Res, Slot};
+use crate::{MetaSet, Ptr};
 use alloc::string::String;
-use core::mem::MaybeUninit;
+use core::mem::{transmute, MaybeUninit};
 use core::sync::atomic::{AtomicBool, Ordering};
 
 #[derive(Clone)]
@@ -24,6 +25,14 @@ impl<'d> IdxSlot<'d> {
             Self::CatIdxInt(x) => IdxVal::CatIdxInt(*x.get()),
             Self::CatIdxStr(x) => IdxVal::CatIdxStr(*x.get()),
             Self::OrdIdx(x) => IdxVal::OrdIdx(*x.get()),
+        }
+    }
+
+    pub fn val_ptr<I: MetaSet>(&self) -> Ptr<'d, I::IdxRaw<'d>> {
+        match self {
+            IdxSlot::CatIdxInt(s) => unsafe { transmute(s.ptr()) },
+            IdxSlot::CatIdxStr(s) => unsafe { transmute(s.ptr()) },
+            IdxSlot::OrdIdx(s) => unsafe { transmute(s.ptr()) },
         }
     }
 }
