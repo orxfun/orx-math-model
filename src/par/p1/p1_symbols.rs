@@ -1,8 +1,8 @@
 use crate::idxs::IdxSlot;
 use crate::par::p1::p1_bag::DP1;
-use crate::par::p1::P1Fun;
+use crate::par::p1::{P1Fun, P1Slot};
 use crate::sets::SetSlot;
-use crate::vals::Int;
+use crate::vals::{Int, ValFun};
 use crate::{Elements, ElementsIter, Idx, MetaInt, MetaNum, MetaSet, MetaVal, SetTyp, Symbol};
 use alloc::{boxed::Box, string::String};
 use core::marker::PhantomData;
@@ -41,19 +41,20 @@ impl<'m, 'd, I0: MetaSet, V: MetaVal> ParD1<'m, 'd, I0, V> {
 pub type IntParD1<'m, 'd, I0> = ParD1<'m, 'd, I0, MetaInt>;
 
 impl<'m, 'd, I0: MetaSet> IntParD1<'m, 'd, I0> {
-    pub fn at(self, idx: I0::IdxSym<'m, 'd>) -> Int<'m, 'd> {
-        match idx.slot() {
-            IdxSlot::CatIdxInt(idx) => {
-                // Box<dyn Fn() -> i64 + 'd>
-                //
-                let fun: Box<dyn Fn() -> i64 + 'd> = Box::new(move || {
-                    let x = idx.val();
-                    0i64
-                });
-                todo!()
+    pub fn at(self, i0: I0::IdxSym<'m, 'd>) -> Int<'m, 'd> {
+        // TODO: check if i0 and set of the par agrees
+        let par_slot = &unsafe { self.el.get() }.par;
+        match (par_slot, i0.slot()) {
+            (P1Slot::CatSetInt(par), IdxSlot::CatIdxInt(i0)) => {
+                let (par, i0) = (par.ptr(), i0.ptr());
+                self.m.val_int(move || par.get()(i0.val()))
             }
-            IdxSlot::CatIdxStr(idx) => todo!(),
-            IdxSlot::OrdIdx(idx) => todo!(),
+            (P1Slot::CatSetStr(par), IdxSlot::CatIdxStr(i0)) => {
+                let (par, i0) = (par.ptr(), i0.ptr());
+                self.m.val_int(move || par.get()(i0.val()))
+            }
+            (P1Slot::OrdSet(par), IdxSlot::OrdIdx(i0)) => todo!(),
+            _ => todo!(),
         }
     }
 }

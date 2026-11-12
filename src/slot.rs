@@ -10,16 +10,16 @@ pub enum State {
 }
 
 pub struct Slot<'d, T> {
-    p: *mut T,
     state: Rc<UnsafeCell<State>>,
+    p: *mut T,
     phantom: PhantomData<fn() -> &'d ()>,
 }
 
 impl<'m, 'd, T> From<Elem<'m, T>> for Slot<'d, T> {
     fn from(value: Elem<'m, T>) -> Self {
         Self {
-            p: value.as_mut_ptr(),
             state: Rc::new(State::Empty.into()),
+            p: value.as_mut_ptr(),
             phantom: PhantomData,
         }
     }
@@ -55,14 +55,45 @@ impl<'d, T> Slot<'d, T> {
         unsafe { &*self.p }
     }
 
+    pub fn mut_ptr(&self) -> *mut T {
+        self.p
+    }
+
+    pub fn ptr(&self) -> Ptr<'d, T> {
+        Ptr {
+            p: self.p,
+            phantom: PhantomData,
+        }
+    }
+}
+
+// ptr
+
+pub struct Ptr<'d, T> {
+    p: *mut T,
+    phantom: PhantomData<fn() -> &'d ()>,
+}
+
+impl<'d, T> Clone for Ptr<'d, T> {
+    fn clone(&self) -> Self {
+        Self {
+            p: self.p,
+            phantom: PhantomData,
+        }
+    }
+}
+
+impl<'d, T> Copy for Ptr<'d, T> {}
+
+impl<'d, T> Ptr<'d, T> {
+    pub fn get(&self) -> &T {
+        unsafe { &*self.p }
+    }
+
     pub fn val(&self) -> T
     where
         T: Copy,
     {
         *unsafe { &*self.p }
-    }
-
-    pub fn mut_ptr(&self) -> *mut T {
-        self.p
     }
 }

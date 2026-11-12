@@ -36,7 +36,7 @@ pub(crate) use elements::{Elements, ElementsIter};
 pub(crate) use err::{Err, Res, Validation};
 pub(crate) use idxs::Idx;
 pub(crate) use sets::{MetaCatSetInt, MetaCatSetStr, MetaOrdSet, MetaSet, Set, SetTyp};
-pub(crate) use slot::Slot;
+pub(crate) use slot::{Ptr, Slot};
 pub(crate) use symbol::Symbol;
 pub(crate) use vals::{MetaInt, MetaNum, MetaVal, ValTyp};
 
