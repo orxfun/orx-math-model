@@ -109,8 +109,7 @@ where
     type Output = V::Sym<'m, 'd>;
 
     fn index(&self, i0: X) -> &Self::Output {
-        let a = self.at(i0);
-        todo!()
+        self.m.val_sym::<V>(self.at(i0))
     }
 }
 
