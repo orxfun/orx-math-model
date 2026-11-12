@@ -16,8 +16,38 @@ impl<'d, V: MetaVal, I0: MetaSet, I1: MetaSet> Default for P2Fun<'d, V, I0, I1> 
     }
 }
 
+pub enum P2FunE0<'d, V: MetaVal, I0: MetaSet> {
+    CatInt(P2Fun<'d, V, I0, MetaCatInt>),
+    CatStr(P2Fun<'d, V, I0, MetaCatStr>),
+    Ord(P2Fun<'d, V, I0, MetaOrd>),
+}
+
+impl<'d, V: MetaVal, I0: MetaSet> P2FunE0<'d, V, I0> {
+    fn new<I1: MetaSet>(fun: impl Fn(I0::IdxRaw<'d>, I1::IdxRaw<'d>) -> V::Val + 'd) -> Self {
+        let fun: Box<dyn Fn(I0::IdxRaw<'d>, I1::IdxRaw<'d>) -> V::Val + 'd> = Box::new(fun);
+        match I1::set_typ() {
+            SetTyp::CatInt => Self::CatInt(P2Fun(unsafe { transmute(fun) })),
+            SetTyp::CatStr => Self::CatStr(P2Fun(unsafe { transmute(fun) })),
+            SetTyp::Ord => Self::Ord(P2Fun(unsafe { transmute(fun) })),
+        }
+    }
+}
+
 pub enum P2FunE<'d, V: MetaVal> {
-    CatSetInt(P2Fun<'d, V, MetaCatInt, MetaCatInt>),
-    CatSetStr(P2Fun<'d, V, MetaCatInt, MetaCatStr>),
-    OrdSet(P2Fun<'d, V, MetaCatInt, MetaOrd>),
+    CatInt(P2FunE0<'d, V, MetaCatInt>),
+    CatStr(P2FunE0<'d, V, MetaCatStr>),
+    Ord(P2FunE0<'d, V, MetaOrd>),
+}
+
+impl<'d, V: MetaVal> P2FunE<'d, V> {
+    pub fn new<I0: MetaSet, I1: MetaSet>(
+        fun: impl Fn(I0::IdxRaw<'d>, I1::IdxRaw<'d>) -> V::Val + 'd,
+    ) -> Self {
+        let fun: P2FunE0<'d, V, I0> = P2FunE0::new::<I1>(fun);
+        match I0::set_typ() {
+            SetTyp::CatInt => Self::CatInt(unsafe { transmute(fun) }),
+            SetTyp::CatStr => Self::CatStr(unsafe { transmute(fun) }),
+            SetTyp::Ord => Self::Ord(unsafe { transmute(fun) }),
+        }
+    }
 }
