@@ -1,4 +1,4 @@
-use crate::{new_bag, sets::SetTyp, Bag, Elements, Res, Slot};
+use crate::{new_bag, sets::SetTyp, Bag, Elements, Model, Res, Slot};
 use alloc::{boxed::Box, string::String};
 
 pub enum SetFun<'d> {
@@ -76,19 +76,19 @@ impl Default for SetSlots<'_> {
 }
 
 impl<'d> SetSlots<'d> {
-    pub fn push(&self, t: SetTyp) -> SetSlot<'d> {
+    pub fn push(&self, m: &Model<'d>, t: SetTyp) -> SetSlot<'d> {
         match t {
             SetTyp::CatInt => {
                 let el = self.cat_set_int.push(Box::new(|_| {}));
-                SetSlot::CatSetInt(el.into())
+                SetSlot::CatSetInt(Slot::new(m, el))
             }
             SetTyp::CatStr => {
                 let el = self.cat_set_str.push(Box::new(|_| {}));
-                SetSlot::CatSetStr(el.into())
+                SetSlot::CatSetStr(Slot::new(m, el))
             }
             SetTyp::Ord => {
                 let el = self.ord_set.push(Box::new(|_| {}));
-                SetSlot::OrdSet(el.into())
+                SetSlot::OrdSet(Slot::new(m, el))
             }
         }
     }

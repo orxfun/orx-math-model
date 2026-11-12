@@ -2,17 +2,18 @@ use crate::arb_val::{ArbVal, ArbValBag};
 use crate::idxs::{CatIdxInt, CatIdxStr, IdxBag, IdxSlots, OrdIdx};
 use crate::par::p1::{IntParD1, NumParD1, P1Bag, P1Slots};
 use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetBag, SetSlots};
-use crate::slot::SlotStates;
+use crate::slot::{SlotStates, State};
 use crate::vals::{Int, Num, ValBag, ValFun};
 use crate::{
-    MetaCatInt, MetaCatStr, MetaInt, MetaNum, MetaOrd, MetaSet, MetaVal, Res, Set, SetTyp, Symbol,
-    Val, ValSymSum, Validation,
+    MetaCatInt, MetaCatStr, MetaInt, MetaNum, MetaOrd, MetaSet, MetaVal, Ptr, Res, Set, SetTyp,
+    Symbol, Val, ValSymSum, Validation,
 };
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 
 #[derive(Default)]
 pub struct Model<'d> {
+    // states
     slot_states: SlotStates,
 
     // sets
@@ -33,6 +34,12 @@ pub struct Model<'d> {
 }
 
 impl<'d> Model<'d> {
+    // states
+
+    pub(crate) fn slot_state(&self) -> Elem<'_, State> {
+        self.slot_states.push()
+    }
+
     // sets
 
     pub fn cat_set_int<'m>(&'m self) -> CatSetInt<'m, 'd> {
@@ -48,7 +55,7 @@ impl<'d> Model<'d> {
     }
 
     fn set<'m, M: MetaSet>(&'m self) -> M::SetSym<'m, 'd> {
-        let slot = self.set_slots.push(M::set_typ());
+        let slot = self.set_slots.push(self, M::set_typ());
         let el = self.set_bag.push(slot);
         M::create_set_sym(self, el)
     }
@@ -69,7 +76,7 @@ impl<'d> Model<'d> {
 
     fn idx<'m, M: MetaSet>(&'m self, set: M::SetSym<'m, 'd>) -> M::IdxSym<'m, 'd> {
         Res::dbg_assert_same_model(self, set);
-        let idx = self.idx_slots.push(M::set_typ());
+        let idx = self.idx_slots.push(self, M::set_typ());
         let set = set.slot();
         let el = self.idx_bag.push(set, idx);
         M::create_idx_sym(self, el)
@@ -98,13 +105,13 @@ impl<'d> Model<'d> {
     // p1
 
     pub fn par_d1_int<'m, S0: Set<'m, 'd>>(&'m self, s0: S0) -> IntParD1<'m, 'd, S0::Meta> {
-        let par = self.p1_slots.push::<S0::Meta, MetaInt>();
+        let par = self.p1_slots.push::<S0::Meta, MetaInt>(self);
         let el = self.p1_bag.push(par, s0.slot());
         Symbol::new(self, el).into()
     }
 
     pub fn par_d1_num<'m, S0: Set<'m, 'd>>(&'m self, s0: S0) -> NumParD1<'m, 'd, S0::Meta> {
-        let par = self.p1_slots.push::<S0::Meta, MetaNum>();
+        let par = self.p1_slots.push::<S0::Meta, MetaNum>(self);
         let el = self.p1_bag.push(par, s0.slot());
         Symbol::new(self, el).into()
     }

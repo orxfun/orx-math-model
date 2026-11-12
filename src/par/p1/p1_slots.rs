@@ -1,6 +1,6 @@
 use crate::{
     new_bag, Bag, Elements, MetaCatInt, MetaCatStr, MetaInt, MetaNum, MetaOrd, MetaSet, MetaVal,
-    Ptr, Res, SetTyp, Slot, ValTyp,
+    Model, Ptr, Res, SetTyp, Slot, ValTyp,
 };
 use alloc::{boxed::Box, string::String};
 use core::mem::transmute;
@@ -90,19 +90,19 @@ impl<'d, V: MetaVal> Default for P1SlotsOf<'d, V> {
 }
 
 impl<'d, T: MetaVal> P1SlotsOf<'d, T> {
-    fn push(&self, s0_type: SetTyp) -> P1Slot<'d, T> {
-        match s0_type {
+    fn push(&self, m: &Model<'d>, s0_typ: SetTyp) -> P1Slot<'d, T> {
+        match s0_typ {
             SetTyp::CatInt => {
                 let el = self.cat_int.push(Default::default());
-                P1Slot::CatInt(el.into())
+                P1Slot::CatInt(Slot::new(m, el))
             }
             SetTyp::CatStr => {
                 let el = self.cat_str.push(Default::default());
-                P1Slot::CatStr(el.into())
+                P1Slot::CatStr(Slot::new(m, el))
             }
             SetTyp::Ord => {
                 let el = self.ord.push(Default::default());
-                P1Slot::Ord(el.into())
+                P1Slot::Ord(Slot::new(m, el))
             }
         }
     }
@@ -117,11 +117,11 @@ pub struct P1Slots<'d> {
 }
 
 impl<'d> P1Slots<'d> {
-    pub fn push<I0: MetaSet, V: MetaVal>(&self) -> P1Slot<'d, V> {
+    pub fn push<I0: MetaSet, V: MetaVal>(&self, m: &Model<'d>) -> P1Slot<'d, V> {
         let set_typ = I0::set_typ();
         match V::val_typ() {
-            ValTyp::Int => unsafe { transmute(self.int.push(set_typ)) },
-            ValTyp::Num => unsafe { transmute(self.num.push(set_typ)) },
+            ValTyp::Int => unsafe { transmute(self.int.push(m, set_typ)) },
+            ValTyp::Num => unsafe { transmute(self.num.push(m, set_typ)) },
         }
     }
 }

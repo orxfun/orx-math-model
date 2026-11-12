@@ -1,4 +1,4 @@
-use crate::{new_bag, Bag, Res, Validation};
+use crate::{new_bag, Bag, Model, Res, Validation};
 use alloc::{boxed::Box, format, rc::Rc, string::String};
 use core::{cell::UnsafeCell, marker::PhantomData};
 use orx_imp_vec::Elem;
@@ -30,16 +30,16 @@ impl SlotStates {
 // slot
 
 pub struct Slot<'d, T> {
-    state: Rc<UnsafeCell<State>>,
+    state: Ptr<'d, State>,
     p: *mut T,
     phantom: PhantomData<fn() -> &'d ()>,
 }
 
-impl<'m, 'd, T> From<Elem<'m, T>> for Slot<'d, T> {
-    fn from(value: Elem<'m, T>) -> Self {
+impl<'d, T> Slot<'d, T> {
+    pub fn new<'m>(m: &'m Model<'d>, elem: Elem<'m, T>) -> Self {
         Self {
-            state: Rc::new(State::Empty.into()),
-            p: value.as_mut_ptr(),
+            state: Ptr::new(m.slot_state().as_mut_ptr()),
+            p: elem.as_mut_ptr(),
             phantom: PhantomData,
         }
     }
@@ -47,22 +47,20 @@ impl<'m, 'd, T> From<Elem<'m, T>> for Slot<'d, T> {
 
 impl<'d, T> Clone for Slot<'d, T> {
     fn clone(&self) -> Self {
-        Self {
-            p: self.p,
-            state: self.state.clone(),
-            phantom: PhantomData,
-        }
+        *self
     }
 }
 
+impl<'d, T> Copy for Slot<'d, T> {}
+
 impl<'d, T> Slot<'d, T> {
     fn state(&self) -> State {
-        *unsafe { &*self.state.get() }
+        *self.state.get()
     }
 
     pub fn bind(&self, value: T) -> Res {
         Res::assert_slot_empty(self.state())?;
-        *unsafe { &mut *self.state.get() } = State::Bound;
+        *unsafe { &mut *self.state.p } = State::Bound;
         *unsafe { &mut *self.p } = value;
         Ok(())
     }
@@ -89,6 +87,7 @@ impl<'d, T> Slot<'d, T> {
 
 // ptr
 
+#[derive(derive_new::new)]
 pub struct Ptr<'d, T> {
     p: *mut T,
     phantom: PhantomData<fn() -> &'d ()>,

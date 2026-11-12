@@ -1,5 +1,5 @@
 use crate::{new_bag, sets::SetTyp, Bag, Elements, Res, Slot};
-use crate::{MetaSet, Ptr};
+use crate::{MetaSet, Model, Ptr};
 use alloc::string::String;
 use core::mem::{transmute, MaybeUninit};
 use core::sync::atomic::{AtomicBool, Ordering};
@@ -56,19 +56,19 @@ impl Default for IdxSlots<'_> {
 }
 
 impl<'d> IdxSlots<'d> {
-    pub fn push(&self, t: SetTyp) -> IdxSlot<'d> {
+    pub fn push(&self, m: &Model<'d>, t: SetTyp) -> IdxSlot<'d> {
         match t {
             SetTyp::CatInt => {
                 let el = self.cat_idx_int.push(0);
-                IdxSlot::CatIdxInt(el.into())
+                IdxSlot::CatIdxInt(Slot::new(m, el))
             }
             SetTyp::CatStr => {
                 let el = self.cat_idx_str.push(unsafe { empty_string() });
-                IdxSlot::CatIdxStr(el.into())
+                IdxSlot::CatIdxStr(Slot::new(m, el))
             }
             SetTyp::Ord => {
                 let el = self.ord_idx.push(0);
-                IdxSlot::OrdIdx(el.into())
+                IdxSlot::OrdIdx(Slot::new(m, el))
             }
         }
     }
