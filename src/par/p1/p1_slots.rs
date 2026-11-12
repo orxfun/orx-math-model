@@ -6,7 +6,7 @@ use crate::{vals::MetaNum, ValTyp};
 use alloc::{boxed::Box, string::String};
 use core::mem::transmute;
 
-#[derive(derive_more::Deref, derive_more::From)]
+#[derive(derive_more::Deref)]
 pub struct P1Fun<'d, I0: MetaSet, V: MetaVal>(Box<dyn Fn(I0::IdxRaw<'d>) -> V::Val + 'd>);
 
 impl<'d, I0: MetaSet, V: MetaVal> Default for P1Fun<'d, I0, V> {
