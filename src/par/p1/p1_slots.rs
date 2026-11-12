@@ -1,10 +1,11 @@
 #[cfg(test)]
 use crate::idxs::IdxVal;
-use crate::vals::MetaNum;
 #[cfg(test)]
 use crate::vals::ValVal;
 use crate::{new_bag, Bag, Elements, MetaInt, MetaSet, MetaVal, Res, SetTyp, Slot};
+use crate::{vals::MetaNum, ValTyp};
 use alloc::{boxed::Box, string::String};
+use core::mem::transmute;
 
 pub enum P1Fun<'d, V: MetaVal> {
     CatSetInt(Box<dyn Fn(usize) -> V::Val + 'd>),
@@ -86,16 +87,10 @@ pub struct P1Slots<'d> {
 
 impl<'d> P1Slots<'d> {
     pub fn push<I0: MetaSet, V: MetaVal>(&self) -> P1Slot<'d, V> {
+        let set_typ = I0::set_typ();
         match V::val_typ() {
-            _ => todo!(),
+            ValTyp::Int => unsafe { transmute(self.int.push(set_typ)) },
+            ValTyp::Num => unsafe { transmute(self.num.push(set_typ)) },
         }
-    }
-
-    pub fn push_int(&self, s0_type: SetTyp) -> P1Slot<'d, MetaInt> {
-        self.int.push(s0_type)
-    }
-
-    pub fn push_num(&self, s0_type: SetTyp) -> P1Slot<'d, MetaNum> {
-        self.num.push(s0_type)
     }
 }

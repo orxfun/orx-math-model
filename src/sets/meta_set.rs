@@ -16,7 +16,7 @@ pub trait MetaSet {
     where
         'd: 'm;
 
-    fn set_type() -> SetTyp;
+    fn set_typ() -> SetTyp;
 
     fn idx_as_enum<'d>(idx: Self::Idx<'d>) -> IdxVal<'d>;
 
@@ -37,7 +37,7 @@ impl MetaSet for MetaCatSetInt {
     where
         'd: 'm;
 
-    fn set_type() -> SetTyp {
+    fn set_typ() -> SetTyp {
         SetTyp::CatSetInt
     }
 
@@ -64,7 +64,7 @@ impl MetaSet for MetaCatSetStr {
     where
         'd: 'm;
 
-    fn set_type() -> SetTyp {
+    fn set_typ() -> SetTyp {
         SetTyp::CatSetStr
     }
 
@@ -91,7 +91,7 @@ impl MetaSet for MetaOrdSet {
     where
         'd: 'm;
 
-    fn set_type() -> SetTyp {
+    fn set_typ() -> SetTyp {
         SetTyp::OrdSet
     }
 
