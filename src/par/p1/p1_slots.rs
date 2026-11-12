@@ -16,12 +16,6 @@ pub enum P1Fun<'d, V: MetaVal> {
     OrdSet(Box<dyn Fn(i64) -> V::Val + 'd>),
 }
 
-impl<'d, T: MetaVal, I0: MetaSet, F: Fn(I0::Idx<'d>) -> T + 'd> From<(I0, F)> for P1Fun<'d, T> {
-    fn from(value: (I0, F)) -> Self {
-        todo!()
-    }
-}
-
 pub enum P1Slot<'d, V: MetaVal> {
     CatSetInt(Slot<'d, Box<dyn Fn(usize) -> V::Val + 'd>>),
     CatSetStr(Slot<'d, Box<dyn Fn(&'d String) -> V::Val + 'd>>),
@@ -57,6 +51,16 @@ pub struct P1SlotsOf<'d, V: MetaVal> {
     ord_idx: Bag<Box<dyn Fn(i64) -> V::Val + 'd>>,
 }
 
+impl<'d, V: MetaVal> Default for P1SlotsOf<'d, V> {
+    fn default() -> Self {
+        Self {
+            cat_idx_int: new_bag(),
+            cat_idx_str: new_bag(),
+            ord_idx: new_bag(),
+        }
+    }
+}
+
 impl<'d, T: MetaVal> P1SlotsOf<'d, T> {
     fn push(&self, s0_type: SetType) -> P1Slot<'d, T> {
         match s0_type {
@@ -78,6 +82,7 @@ impl<'d, T: MetaVal> P1SlotsOf<'d, T> {
 
 // collection
 
+#[derive(Default)]
 pub struct P1Slots<'d> {
     int: P1SlotsOf<'d, MetaInt>,
     num: P1SlotsOf<'d, MetaNum>,

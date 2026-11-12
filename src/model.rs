@@ -1,4 +1,5 @@
 use crate::idxs::{CatIdxInt, CatIdxStr, IdxBag, IdxSlots, OrdIdx};
+use crate::par::p1::{P1Bag, P1Slots};
 use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetBag, SetSlots, SetType};
 use crate::vals::{Int, Num, ValBag, ValFun};
 use crate::{Res, Symbol, Validation};
@@ -16,6 +17,10 @@ pub struct Model<'d> {
 
     // vals
     val_bag: ValBag<'d>,
+
+    // pars
+    p1_slots: P1Slots<'d>,
+    p1_bag: P1Bag<'d>,
 }
 
 impl<'d> Model<'d> {
