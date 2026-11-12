@@ -102,8 +102,6 @@ impl<'m, 'd, I0: MetaSet> IntParD1<'m, 'd, I0> {
                     _ => unreachable!(),
                 },
             },
-
-            _ => todo!(),
         }
 
         // match (par_slot, i0) {
