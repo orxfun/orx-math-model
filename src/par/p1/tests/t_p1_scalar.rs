@@ -19,6 +19,7 @@ fn int_p1_cat_int() {
     let idx = set.idx();
     let sca = par.at(idx);
     let sca2 = par[idx];
+    let sca3 = par[2];
 
     // binding
     par.bind(|i| par_data[i]);
@@ -34,6 +35,8 @@ fn int_p1_cat_int() {
         let val = unsafe { sca2.el.get() }.test_eval();
         assert_eq!(exp, val);
     }
+    let val = unsafe { sca3.el.get() }.test_eval();
+    assert_eq!(ValVal::Int(par_data[2]), val);
 }
 
 #[test]
@@ -45,6 +48,7 @@ fn int_p1_cat_str() {
         .enumerate()
         .map(|(i, v)| (i.to_string(), v))
         .collect();
+    let two = "2".to_string();
 
     // modeling
     let m = Model::default();
@@ -53,6 +57,7 @@ fn int_p1_cat_str() {
     let idx = set.idx();
     let sca = par.at(idx);
     let sca2 = par[idx];
+    let sca3 = par[&two];
 
     // binding
     par.bind(|i| par_data[i]);

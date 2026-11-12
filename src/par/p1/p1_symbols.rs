@@ -39,6 +39,14 @@ impl<'m, 'd, I0: MetaSet, V: MetaVal> ParD1<'m, 'd, I0, V> {
         slot.bind(fun).expect("TODO: it must succeed, why")
     }
 
+    pub fn at2(self, i0: impl Into<I0::IdxSum<'m, 'd>>) -> V::Sym<'m, 'd> {
+        // TODO: check if i0 and set of the par agrees
+        let par_slot = &unsafe { self.el.get() }.par;
+
+        //
+        todo!()
+    }
+
     pub fn at(self, i0: impl Into<I0::IdxSum<'m, 'd>>) -> V::Sym<'m, 'd> {
         // TODO: check if i0 and set of the par agrees
         let par_slot = &unsafe { self.el.get() }.par;
