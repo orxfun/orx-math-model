@@ -50,6 +50,14 @@ impl<'d, V: MetaVal> P1Fun1<'d, V> {
             _ => unreachable!(),
         }
     }
+
+    fn fun_ptr<I0: MetaSet>(&self) -> *mut Box<dyn Fn(I0::IdxRaw<'d>) -> V::Val + 'd> {
+        match self {
+            P1Fun1::CatInt(f) => unsafe { transmute(&f.0) },
+            P1Fun1::CatStr(f) => unsafe { transmute(&f.0) },
+            P1Fun1::Ord(f) => unsafe { transmute(&f.0) },
+        }
+    }
 }
 
 // data
@@ -100,12 +108,7 @@ impl<'d, V: MetaVal> P1Slot<'d, V> {
     }
 
     pub fn fun_ptr<I0: MetaSet>(&self) -> Ptr<'d, Box<dyn Fn(I0::IdxRaw<'d>) -> V::Val + 'd>> {
-        match self {
-            // Self::CatInt(s) => unsafe { transmute(s.ptr()) },
-            // Self::CatStr(s) => unsafe { transmute(s.ptr()) },
-            // Self::Ord(s) => unsafe { transmute(s.ptr()) },
-            _ => todo!(),
-        }
+        Ptr::new(self.slot.get().fun.fun_ptr::<I0>())
     }
 }
 
