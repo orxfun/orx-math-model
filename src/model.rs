@@ -74,21 +74,6 @@ impl<'d> Model<'d> {
         V::create_sym(self, el)
     }
 
-    pub(crate) fn val_int<'m>(&'m self, fun: impl Fn() -> i64 + 'd) -> Int<'m, 'd> {
-        let el = self.val_bag.push(ValFun::Int(Box::new(fun)));
-        Symbol::new(self, el).into()
-    }
-
-    pub(crate) fn val_int2<'m>(&'m self, fun: Box<dyn Fn() -> i64 + 'd>) -> Int<'m, 'd> {
-        let el = self.val_bag.push(ValFun::Int(fun));
-        Symbol::new(self, el).into()
-    }
-
-    pub(crate) fn val_num<'m>(&'m self, fun: impl Fn() -> f64 + 'd) -> Num<'m, 'd> {
-        let el = self.val_bag.push(ValFun::Num(Box::new(fun)));
-        Symbol::new(self, el).into()
-    }
-
     // p1
 
     pub fn par_d1_int<'m, S0: Set<'m, 'd>>(&'m self, s0: S0) -> IntParD1<'m, 'd, S0::Meta> {
