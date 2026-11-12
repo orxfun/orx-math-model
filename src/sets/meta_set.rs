@@ -1,6 +1,7 @@
 use crate::idxs::{CatIdxInt, CatIdxStr, OrdIdx};
 use crate::par::p1::P1Fun;
 use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetSlot};
+use crate::Idx;
 use crate::{idxs::IdxVal, vals::MetaVal};
 use alloc::{boxed::Box, string::String};
 
@@ -21,7 +22,7 @@ pub trait MetaSet {
     where
         'd: 'm;
 
-    type IdxSym<'m, 'd>
+    type IdxSym<'m, 'd>: Idx<'m, 'd, Meta = Self>
     where
         'd: 'm;
 

@@ -42,6 +42,7 @@ pub type IntParD1<'m, 'd, I0> = ParD1<'m, 'd, I0, MetaInt>;
 
 impl<'m, 'd, I0: MetaSet> IntParD1<'m, 'd, I0> {
     pub fn at(self, idx: I0::IdxSym<'m, 'd>) -> Int<'m, 'd> {
+        // let idx =
         todo!()
     }
 }
