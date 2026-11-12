@@ -38,6 +38,71 @@ impl<'m, 'd, I0: MetaSet, V: MetaVal> ParD1<'m, 'd, I0, V> {
         let fun: P1Fun<'_, V> = I0::into_p1_fun(fun);
         slot.bind(fun).expect("TODO: it must succeed, why")
     }
+
+    pub fn at2(self, i0: impl Into<I0::IdxSum<'m, 'd>>) -> V::Sym<'m, 'd> {
+        // TODO: check if i0 and set of the par agrees
+        let par_slot = &unsafe { self.el.get() }.par;
+
+        match par_slot {
+            P1Slot::CatSetInt(par) => match I0::idx_sum_into_cat_int(i0.into()) {
+                CatIntIndexer::Raw(i0) => {
+                    let par = par.ptr();
+                    let fun: Box<dyn Fn() -> <V as MetaVal>::Val> = Box::new(move || par.get()(i0));
+                    let fun: Box<dyn Fn() -> i64> = unsafe { transmute(fun) };
+                    // self.m.val_int(fun)
+                    todo!()
+                }
+                // CatIntIndexer::Idx(i0) => match &unsafe { i0.el.get() }.idx {
+                //     IdxSlot::CatIdxInt(i0) => {
+                //         let (par, i0) = (par.ptr(), i0.ptr());
+                //         self.m.val_int(move || par.get()(i0.val()))
+                //     }
+                //     _ => unreachable!(),
+                // },
+                _ => todo!(),
+            },
+
+            // P1Slot::CatSetStr(par) => match I0::idx_sum_into_cat_str(i0.into()) {
+            //     CatStrIndexer::Raw(i0) => {
+            //         let par = par.ptr();
+            //         self.m.val_int(move || par.get()(i0))
+            //     }
+            //     CatStrIndexer::Idx(i0) => match &unsafe { i0.el.get() }.idx {
+            //         IdxSlot::CatIdxStr(i0) => {
+            //             let (par, i0) = (par.ptr(), i0.ptr());
+            //             self.m.val_int(move || par.get()(i0.val()))
+            //         }
+            //         _ => unreachable!(),
+            //     },
+            // },
+
+            // P1Slot::OrdSet(par) => match I0::idx_sum_into_ord(i0.into()) {
+            //     OrdIndexer::Raw(i0) => {
+            //         let par = par.ptr();
+            //         self.m.val_int(move || par.get()(i0))
+            //     }
+            //     OrdIndexer::Idx(i0) => match &unsafe { i0.el.get() }.idx {
+            //         IdxSlot::OrdIdx(i0) => {
+            //             let (par, i0) = (par.ptr(), i0.ptr());
+            //             self.m.val_int(move || par.get()(i0.val()))
+            //         }
+            //         _ => unreachable!(),
+            //     },
+            //     OrdIndexer::Int(i0) => match unsafe { i0.el.get() } {
+            //         ValFun::Int(i0) => {
+            //             let par = par.ptr();
+            //             let i0: *const dyn Fn() -> i64 = i0;
+            //             self.m.val_int(move || {
+            //                 let i0 = unsafe { &*i0 }();
+            //                 par.get()(i0)
+            //             })
+            //         }
+            //         _ => unreachable!(),
+            //     },
+            // },
+            _ => todo!(),
+        }
+    }
 }
 
 // int
@@ -103,21 +168,6 @@ impl<'m, 'd, I0: MetaSet> IntParD1<'m, 'd, I0> {
                 },
             },
         }
-
-        // match (par_slot, i0) {
-        //     // (P1Slot::CatSetInt(par), IdxSlot::CatIdxInt(i0)) => {
-        //     //     let (par, i0) = (par.ptr(), i0.ptr());
-        //     //     self.m.val_int(move || par.get()(i0.val()))
-        //     // }
-        //     // (P1Slot::CatSetStr(par), IdxSlot::CatIdxStr(i0)) => {
-        //     //     let (par, i0) = (par.ptr(), i0.ptr());
-        //     //     self.m.val_int(move || par.get()(i0.val()))
-        //     // }
-        //     // (P1Slot::OrdSet(par), IdxSlot::OrdIdx(i0)) => todo!(),
-
-        //     //
-        //     _ => todo!(),
-        // }
     }
 }
 

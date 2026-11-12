@@ -2,7 +2,7 @@ use crate::idxs::{CatIdxInt, CatIdxStr, IdxBag, IdxSlots, OrdIdx};
 use crate::par::p1::{IntParD1, NumParD1, P1Bag, P1Slots};
 use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetBag, SetSlots};
 use crate::vals::{Int, Num, ValBag, ValFun};
-use crate::{MetaInt, MetaNum, MetaSet, Res, Set, SetTyp, Symbol, Validation};
+use crate::{MetaInt, MetaNum, MetaSet, MetaVal, Res, Set, SetTyp, Symbol, Validation};
 use alloc::boxed::Box;
 
 #[derive(Default)]
@@ -69,8 +69,18 @@ impl<'d> Model<'d> {
 
     // vals
 
+    pub(crate) fn val<'m, V: MetaVal>(&'m self, fun: impl Fn() -> V::Val + 'd) -> V::Sym<'m, 'd> {
+        let el = self.val_bag.push(V::create_val_fun(fun));
+        V::create_sym(self, el)
+    }
+
     pub(crate) fn val_int<'m>(&'m self, fun: impl Fn() -> i64 + 'd) -> Int<'m, 'd> {
         let el = self.val_bag.push(ValFun::Int(Box::new(fun)));
+        Symbol::new(self, el).into()
+    }
+
+    pub(crate) fn val_int2<'m>(&'m self, fun: Box<dyn Fn() -> i64 + 'd>) -> Int<'m, 'd> {
+        let el = self.val_bag.push(ValFun::Int(fun));
         Symbol::new(self, el).into()
     }
 
