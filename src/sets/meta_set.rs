@@ -1,6 +1,8 @@
+use crate::idxs::{CatIdxInt, CatIdxStr, OrdIdx};
 use crate::par::p1::P1Fun;
 use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetSlot};
 use crate::{idxs::IdxVal, vals::MetaVal};
+use crate::{CatIntIndexer, CatStrIndexer, Idx, OrdIndexer};
 use alloc::{boxed::Box, string::String};
 
 // enums
@@ -13,38 +15,52 @@ pub enum SetTyp {
 
 // meta
 
-pub trait MetaSet {
-    type Idx<'d>;
+pub trait MetaSet: Clone + Copy {
+    // set
 
-    type Set<'m, 'd>
+    type SetSym<'m, 'd>
     where
         'd: 'm;
-
-    // set
 
     fn set_typ() -> SetTyp;
 
     // idx
 
-    fn idx_as_enum<'d>(idx: Self::Idx<'d>) -> IdxVal<'d>;
+    type IdxRaw<'d>;
+
+    type IdxSym<'m, 'd>: Idx<'m, 'd, Meta = Self>
+    where
+        'd: 'm;
+
+    type IdxSum<'m, 'd>
+    where
+        'd: 'm;
+
+    fn idx_as_enum<'d>(idx: Self::IdxRaw<'d>) -> IdxVal<'d>;
+
+    fn idx_sum_into_cat_int<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> CatIntIndexer<'m, 'd>;
+
+    fn idx_sum_into_cat_str<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> CatStrIndexer<'m, 'd>;
+
+    fn idx_sum_into_ord<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> OrdIndexer<'m, 'd>;
 
     // par
 
-    fn into_p1_fun<'d, V: MetaVal>(fun: impl Fn(Self::Idx<'d>) -> V::Val + 'd) -> P1Fun<'d, V>;
+    fn into_p1_fun<'d, V: MetaVal>(fun: impl Fn(Self::IdxRaw<'d>) -> V::Val + 'd) -> P1Fun<'d, V>;
 }
 
 // cat set int
 
+#[derive(Clone, Copy)]
 pub struct MetaCatSetInt;
 
 impl MetaSet for MetaCatSetInt {
-    type Idx<'d> = usize;
+    // set
 
-    type Set<'m, 'd>
+    type SetSym<'m, 'd>
         = CatSetInt<'m, 'd>
     where
         'd: 'm;
-    // set
 
     fn set_typ() -> SetTyp {
         SetTyp::CatSetInt
@@ -52,29 +68,53 @@ impl MetaSet for MetaCatSetInt {
 
     // idx
 
-    fn idx_as_enum<'d>(idx: Self::Idx<'d>) -> IdxVal<'d> {
+    type IdxRaw<'d> = usize;
+
+    type IdxSym<'m, 'd>
+        = CatIdxInt<'m, 'd>
+    where
+        'd: 'm;
+
+    type IdxSum<'m, 'd>
+        = CatIntIndexer<'m, 'd>
+    where
+        'd: 'm;
+
+    fn idx_as_enum<'d>(idx: Self::IdxRaw<'d>) -> IdxVal<'d> {
         IdxVal::CatIdxInt(idx)
+    }
+
+    fn idx_sum_into_cat_int<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> CatIntIndexer<'m, 'd> {
+        idx_sum
+    }
+
+    fn idx_sum_into_cat_str<'m, 'd>(_: Self::IdxSum<'m, 'd>) -> CatStrIndexer<'m, 'd> {
+        unreachable!()
+    }
+
+    fn idx_sum_into_ord<'m, 'd>(_: Self::IdxSum<'m, 'd>) -> OrdIndexer<'m, 'd> {
+        unreachable!()
     }
 
     // par
 
-    fn into_p1_fun<'d, V: MetaVal>(fun: impl Fn(Self::Idx<'d>) -> V::Val + 'd) -> P1Fun<'d, V> {
+    fn into_p1_fun<'d, V: MetaVal>(fun: impl Fn(Self::IdxRaw<'d>) -> V::Val + 'd) -> P1Fun<'d, V> {
         P1Fun::CatSetInt(Box::new(fun))
     }
 }
 
 // cat set str
 
+#[derive(Clone, Copy)]
 pub struct MetaCatSetStr;
 
 impl MetaSet for MetaCatSetStr {
-    type Idx<'d> = &'d String;
+    // set
 
-    type Set<'m, 'd>
+    type SetSym<'m, 'd>
         = CatSetStr<'m, 'd>
     where
         'd: 'm;
-    // set
 
     fn set_typ() -> SetTyp {
         SetTyp::CatSetStr
@@ -82,29 +122,53 @@ impl MetaSet for MetaCatSetStr {
 
     // idx
 
-    fn idx_as_enum<'d>(idx: Self::Idx<'d>) -> IdxVal<'d> {
+    type IdxRaw<'d> = &'d String;
+
+    type IdxSym<'m, 'd>
+        = CatIdxStr<'m, 'd>
+    where
+        'd: 'm;
+
+    type IdxSum<'m, 'd>
+        = CatStrIndexer<'m, 'd>
+    where
+        'd: 'm;
+
+    fn idx_as_enum<'d>(idx: Self::IdxRaw<'d>) -> IdxVal<'d> {
         IdxVal::CatIdxStr(idx)
+    }
+
+    fn idx_sum_into_cat_int<'m, 'd>(_: Self::IdxSum<'m, 'd>) -> CatIntIndexer<'m, 'd> {
+        unreachable!()
+    }
+
+    fn idx_sum_into_cat_str<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> CatStrIndexer<'m, 'd> {
+        idx_sum
+    }
+
+    fn idx_sum_into_ord<'m, 'd>(_: Self::IdxSum<'m, 'd>) -> OrdIndexer<'m, 'd> {
+        unreachable!()
     }
 
     // par
 
-    fn into_p1_fun<'d, V: MetaVal>(fun: impl Fn(Self::Idx<'d>) -> V::Val + 'd) -> P1Fun<'d, V> {
+    fn into_p1_fun<'d, V: MetaVal>(fun: impl Fn(Self::IdxRaw<'d>) -> V::Val + 'd) -> P1Fun<'d, V> {
         P1Fun::CatSetStr(Box::new(fun))
     }
 }
 
 // ord set
 
+#[derive(Clone, Copy)]
 pub struct MetaOrdSet;
 
 impl MetaSet for MetaOrdSet {
-    type Idx<'d> = i64;
+    // set
 
-    type Set<'m, 'd>
+    type SetSym<'m, 'd>
         = OrdSet<'m, 'd>
     where
         'd: 'm;
-    // set
 
     fn set_typ() -> SetTyp {
         SetTyp::OrdSet
@@ -112,13 +176,37 @@ impl MetaSet for MetaOrdSet {
 
     // idx
 
-    fn idx_as_enum<'d>(idx: Self::Idx<'d>) -> IdxVal<'d> {
+    type IdxRaw<'d> = i64;
+
+    type IdxSym<'m, 'd>
+        = OrdIdx<'m, 'd>
+    where
+        'd: 'm;
+
+    type IdxSum<'m, 'd>
+        = OrdIndexer<'m, 'd>
+    where
+        'd: 'm;
+
+    fn idx_as_enum<'d>(idx: Self::IdxRaw<'d>) -> IdxVal<'d> {
         IdxVal::OrdIdx(idx)
+    }
+
+    fn idx_sum_into_cat_int<'m, 'd>(_: Self::IdxSum<'m, 'd>) -> CatIntIndexer<'m, 'd> {
+        unreachable!()
+    }
+
+    fn idx_sum_into_cat_str<'m, 'd>(_: Self::IdxSum<'m, 'd>) -> CatStrIndexer<'m, 'd> {
+        unreachable!()
+    }
+
+    fn idx_sum_into_ord<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> OrdIndexer<'m, 'd> {
+        idx_sum
     }
 
     // par
 
-    fn into_p1_fun<'d, V: MetaVal>(fun: impl Fn(Self::Idx<'d>) -> V::Val + 'd) -> P1Fun<'d, V> {
+    fn into_p1_fun<'d, V: MetaVal>(fun: impl Fn(Self::IdxRaw<'d>) -> V::Val + 'd) -> P1Fun<'d, V> {
         P1Fun::OrdSet(Box::new(fun))
     }
 }

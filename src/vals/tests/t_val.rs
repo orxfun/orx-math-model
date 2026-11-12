@@ -1,4 +1,4 @@
-use crate::{vals::ValVal, Model};
+use crate::{vals::ValVal, MetaInt, MetaNum, Model};
 use alloc::vec;
 
 #[test]
@@ -10,7 +10,7 @@ fn val_int() {
     let m = Model::default();
 
     // modeling & binding
-    let val = m.val_int(|| values[2]);
+    let val = m.val::<MetaInt>(|| values[2]);
 
     // running
     assert_eq!(ValVal::Int(values[2]), unsafe { val.el.get() }.test_eval());
@@ -25,7 +25,7 @@ fn val_num() {
     let m = Model::default();
 
     // modeling & binding
-    let val = m.val_num(|| values[2]);
+    let val = m.val::<MetaNum>(|| values[2]);
 
     // running
     assert_eq!(ValVal::Num(values[2]), unsafe { val.el.get() }.test_eval());

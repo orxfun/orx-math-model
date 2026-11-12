@@ -16,7 +16,7 @@ impl<'m, 'd> CatIdxInt<'m, 'd> {
             (SetSlot::CatSetInt(set), IdxSlot::CatIdxInt(idx)) => {
                 let set_fun = set.get();
                 set_fun(elements);
-                ElementsIter::new(elements.iter(), idx.get_mut_ptr())
+                ElementsIter::new(elements.iter(), idx.mut_ptr())
             }
             _ => unreachable!("TODO: explain"),
         }
@@ -38,7 +38,7 @@ impl<'m, 'd> CatIdxStr<'m, 'd> {
             (SetSlot::CatSetStr(set), IdxSlot::CatIdxStr(idx)) => {
                 let set_fun = set.get();
                 set_fun(elements);
-                ElementsIter::new(elements.iter(), idx.get_mut_ptr())
+                ElementsIter::new(elements.iter(), idx.mut_ptr())
             }
             _ => unreachable!("TODO: explain"),
         }
@@ -57,7 +57,7 @@ impl<'m, 'd> OrdIdx<'m, 'd> {
             (SetSlot::OrdSet(set), IdxSlot::OrdIdx(idx)) => {
                 let set_fun = set.get();
                 set_fun(elements);
-                ElementsIter::new(elements.iter(), idx.get_mut_ptr())
+                ElementsIter::new(elements.iter(), idx.mut_ptr())
             }
             _ => unreachable!("TODO: explain"),
         }
