@@ -3,11 +3,15 @@ use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetSlot};
 use crate::{idxs::IdxVal, vals::MetaVal};
 use alloc::{boxed::Box, string::String};
 
+// enums
+
 pub enum SetTyp {
     CatSetInt,
     CatSetStr,
     OrdSet,
 }
+
+// meta
 
 pub trait MetaSet {
     type Idx<'d>;
@@ -19,8 +23,6 @@ pub trait MetaSet {
     // set
 
     fn set_typ() -> SetTyp;
-
-    fn set_slot<'d>(set: Self::Set<'_, 'd>) -> SetSlot<'d>;
 
     // idx
 
@@ -46,10 +48,6 @@ impl MetaSet for MetaCatSetInt {
 
     fn set_typ() -> SetTyp {
         SetTyp::CatSetInt
-    }
-
-    fn set_slot<'d>(set: Self::Set<'_, 'd>) -> SetSlot<'d> {
-        unsafe { set.el.get() }.clone()
     }
 
     // idx
@@ -82,10 +80,6 @@ impl MetaSet for MetaCatSetStr {
         SetTyp::CatSetStr
     }
 
-    fn set_slot<'d>(set: Self::Set<'_, 'd>) -> SetSlot<'d> {
-        unsafe { set.el.get() }.clone()
-    }
-
     // idx
 
     fn idx_as_enum<'d>(idx: Self::Idx<'d>) -> IdxVal<'d> {
@@ -116,10 +110,6 @@ impl MetaSet for MetaOrdSet {
         SetTyp::OrdSet
     }
 
-    fn set_slot<'d>(set: Self::Set<'_, 'd>) -> SetSlot<'d> {
-        unsafe { set.el.get() }.clone()
-    }
-
     // idx
 
     fn idx_as_enum<'d>(idx: Self::Idx<'d>) -> IdxVal<'d> {
@@ -130,5 +120,37 @@ impl MetaSet for MetaOrdSet {
 
     fn into_p1_fun<'d, V: MetaVal>(fun: impl Fn(Self::Idx<'d>) -> V::Val + 'd) -> P1Fun<'d, V> {
         P1Fun::OrdSet(Box::new(fun))
+    }
+}
+
+// symbols
+
+pub trait Set<'m, 'd> {
+    type Meta: MetaSet;
+
+    fn slot(self) -> SetSlot<'d>;
+}
+
+impl<'m, 'd> Set<'m, 'd> for CatSetInt<'m, 'd> {
+    type Meta = MetaCatSetInt;
+
+    fn slot(self) -> SetSlot<'d> {
+        unsafe { self.el.get() }.clone()
+    }
+}
+
+impl<'m, 'd> Set<'m, 'd> for CatSetStr<'m, 'd> {
+    type Meta = MetaCatSetStr;
+
+    fn slot(self) -> SetSlot<'d> {
+        unsafe { self.el.get() }.clone()
+    }
+}
+
+impl<'m, 'd> Set<'m, 'd> for OrdSet<'m, 'd> {
+    type Meta = MetaOrdSet;
+
+    fn slot(self) -> SetSlot<'d> {
+        unsafe { self.el.get() }.clone()
     }
 }

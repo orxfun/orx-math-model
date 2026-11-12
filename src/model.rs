@@ -2,7 +2,7 @@ use crate::idxs::{CatIdxInt, CatIdxStr, IdxBag, IdxSlots, OrdIdx};
 use crate::par::p1::{IntParD1, NumParD1, P1Bag, P1Slots};
 use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetBag, SetSlots};
 use crate::vals::{Int, Num, ValBag, ValFun};
-use crate::{MetaInt, MetaNum, MetaSet, Res, SetTyp, Symbol, Validation};
+use crate::{MetaInt, MetaNum, MetaSet, Res, Set, SetTyp, Symbol, Validation};
 use alloc::boxed::Box;
 
 #[derive(Default)]
@@ -81,15 +81,15 @@ impl<'d> Model<'d> {
 
     // p1
 
-    pub fn par_d1_int<'m, I0: MetaSet>(&'m self, s0: I0::Set<'m, 'd>) -> IntParD1<'m, 'd, I0> {
-        let par = self.p1_slots.push::<I0, MetaInt>();
-        let el = self.p1_bag.push(par, I0::set_slot(s0));
+    pub fn par_d1_int<'m, S0: Set<'m, 'd>>(&'m self, s0: S0) -> IntParD1<'m, 'd, S0::Meta> {
+        let par = self.p1_slots.push::<S0::Meta, MetaInt>();
+        let el = self.p1_bag.push(par, s0.slot());
         Symbol::new(self, el).into()
     }
 
-    pub fn par_d1_num<'m, I0: MetaSet>(&'m self, s0: I0::Set<'m, 'd>) -> NumParD1<'m, 'd, I0> {
-        let par = self.p1_slots.push::<I0, MetaNum>();
-        let el = self.p1_bag.push(par, I0::set_slot(s0));
+    pub fn par_d1_num<'m, S0: Set<'m, 'd>>(&'m self, s0: S0) -> NumParD1<'m, 'd, S0::Meta> {
+        let par = self.p1_slots.push::<S0::Meta, MetaNum>();
+        let el = self.p1_bag.push(par, s0.slot());
         Symbol::new(self, el).into()
     }
 }

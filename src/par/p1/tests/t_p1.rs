@@ -11,7 +11,6 @@ fn int_p1_cat_int() {
     // modeling
     let m = Model::default();
     let set = m.cat_set_int();
-    let par = m.par_d1_int::<MetaCatSetInt>(set);
     let par = m.par_d1_int(set);
 
     // binding
