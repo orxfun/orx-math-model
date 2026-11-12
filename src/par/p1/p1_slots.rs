@@ -3,11 +3,7 @@ use crate::idxs::IdxVal;
 use crate::vals::MetaNum;
 #[cfg(test)]
 use crate::vals::ValVal;
-use crate::{new_bag, vals::MetaVal, Bag, Elements, Res, Slot};
-use crate::{
-    sets::{MetaSet, SetTyp},
-    vals::MetaInt,
-};
+use crate::{new_bag, Bag, Elements, MetaInt, MetaSet, MetaVal, Res, SetTyp, Slot};
 use alloc::{boxed::Box, string::String};
 
 pub enum P1Fun<'d, V: MetaVal> {
@@ -90,7 +86,9 @@ pub struct P1Slots<'d> {
 
 impl<'d> P1Slots<'d> {
     pub fn push<I0: MetaSet, V: MetaVal>(&self) -> P1Slot<'d, V> {
-        todo!()
+        match V::val_typ() {
+            _ => todo!(),
+        }
     }
 
     pub fn push_int(&self, s0_type: SetTyp) -> P1Slot<'d, MetaInt> {

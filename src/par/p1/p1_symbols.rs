@@ -1,9 +1,8 @@
 use crate::idxs::IdxSlot;
 use crate::par::p1::p1_bag::DP1;
 use crate::par::p1::P1Fun;
-use crate::sets::{MetaSet, SetSlot};
-use crate::vals::{MetaInt, MetaNum, MetaVal};
-use crate::{Elements, ElementsIter, Symbol};
+use crate::sets::SetSlot;
+use crate::{Elements, ElementsIter, MetaInt, MetaNum, MetaSet, MetaVal, Symbol};
 use alloc::{boxed::Box, string::String};
 use core::marker::PhantomData;
 use core::ops::Deref;

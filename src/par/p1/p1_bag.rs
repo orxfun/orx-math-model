@@ -1,8 +1,8 @@
 use crate::idxs::IdxSlot;
 use crate::par::p1::P1Slot;
-use crate::sets::{SetSlot, SetTyp};
-use crate::vals::{MetaInt, MetaNum, MetaVal};
+use crate::sets::SetSlot;
 use crate::{new_bag, Bag};
+use crate::{MetaInt, MetaNum, MetaVal, SetTyp};
 use orx_imp_vec::Elem;
 
 pub struct DP1<'d, V: MetaVal> {
