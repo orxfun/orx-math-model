@@ -3,9 +3,13 @@ use crate::par::p1::p1_bag::DP1;
 use crate::par::p1::{P1Fun, P1Slot};
 use crate::sets::SetSlot;
 use crate::vals::{Int, ValFun};
-use crate::{Elements, ElementsIter, Idx, MetaInt, MetaNum, MetaSet, MetaVal, SetTyp, Symbol};
+use crate::{
+    CatIntIndexer, CatStrIndexer, Elements, ElementsIter, Idx, MetaInt, MetaNum, MetaSet, MetaVal,
+    SetTyp, Symbol,
+};
 use alloc::{boxed::Box, string::String};
 use core::marker::PhantomData;
+use core::mem::transmute;
 use core::ops::Deref;
 
 #[derive(Clone, Copy)]
@@ -41,21 +45,56 @@ impl<'m, 'd, I0: MetaSet, V: MetaVal> ParD1<'m, 'd, I0, V> {
 pub type IntParD1<'m, 'd, I0> = ParD1<'m, 'd, I0, MetaInt>;
 
 impl<'m, 'd, I0: MetaSet> IntParD1<'m, 'd, I0> {
-    pub fn at(self, i0: I0::IdxSym<'m, 'd>) -> Int<'m, 'd> {
+    pub fn at(self, i0: impl Into<I0::IdxSum<'m, 'd>>) -> Int<'m, 'd> {
         // TODO: check if i0 and set of the par agrees
         let par_slot = &unsafe { self.el.get() }.par;
-        match (par_slot, i0.slot()) {
-            (P1Slot::CatSetInt(par), IdxSlot::CatIdxInt(i0)) => {
-                let (par, i0) = (par.ptr(), i0.ptr());
-                self.m.val_int(move || par.get()(i0.val()))
-            }
-            (P1Slot::CatSetStr(par), IdxSlot::CatIdxStr(i0)) => {
-                let (par, i0) = (par.ptr(), i0.ptr());
-                self.m.val_int(move || par.get()(i0.val()))
-            }
-            (P1Slot::OrdSet(par), IdxSlot::OrdIdx(i0)) => todo!(),
+
+        match par_slot {
+            P1Slot::CatSetInt(par) => match I0::idx_sum_into_cat_int(i0.into()) {
+                CatIntIndexer::Raw(i0) => {
+                    let par = par.ptr();
+                    self.m.val_int(move || par.get()(i0))
+                }
+                CatIntIndexer::Idx(i0) => match &unsafe { i0.el.get() }.idx {
+                    IdxSlot::CatIdxInt(i0) => {
+                        let (par, i0) = (par.ptr(), i0.ptr());
+                        self.m.val_int(move || par.get()(i0.val()))
+                    }
+                    _ => unreachable!(),
+                },
+            },
+
+            P1Slot::CatSetStr(par) => match I0::idx_sum_into_cat_str(i0.into()) {
+                CatStrIndexer::Raw(i0) => {
+                    let par = par.ptr();
+                    self.m.val_int(move || par.get()(i0))
+                }
+                CatStrIndexer::Idx(i0) => match &unsafe { i0.el.get() }.idx {
+                    IdxSlot::CatIdxStr(i0) => {
+                        let (par, i0) = (par.ptr(), i0.ptr());
+                        self.m.val_int(move || par.get()(i0.val()))
+                    }
+                    _ => unreachable!(),
+                },
+            },
+
             _ => todo!(),
         }
+
+        // match (par_slot, i0) {
+        //     // (P1Slot::CatSetInt(par), IdxSlot::CatIdxInt(i0)) => {
+        //     //     let (par, i0) = (par.ptr(), i0.ptr());
+        //     //     self.m.val_int(move || par.get()(i0.val()))
+        //     // }
+        //     // (P1Slot::CatSetStr(par), IdxSlot::CatIdxStr(i0)) => {
+        //     //     let (par, i0) = (par.ptr(), i0.ptr());
+        //     //     self.m.val_int(move || par.get()(i0.val()))
+        //     // }
+        //     // (P1Slot::OrdSet(par), IdxSlot::OrdIdx(i0)) => todo!(),
+
+        //     //
+        //     _ => todo!(),
+        // }
     }
 }
 

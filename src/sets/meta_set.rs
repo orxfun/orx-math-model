@@ -38,6 +38,12 @@ pub trait MetaSet {
 
     fn idx_as_enum<'d>(idx: Self::IdxRaw<'d>) -> IdxVal<'d>;
 
+    fn idx_sum_into_cat_int<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> CatIntIndexer<'m, 'd>;
+
+    fn idx_sum_into_cat_str<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> CatStrIndexer<'m, 'd>;
+
+    fn idx_sum_into_ord<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> OrdIndexer<'m, 'd>;
+
     // par
 
     fn into_p1_fun<'d, V: MetaVal>(fun: impl Fn(Self::IdxRaw<'d>) -> V::Val + 'd) -> P1Fun<'d, V>;
@@ -77,6 +83,18 @@ impl MetaSet for MetaCatSetInt {
         IdxVal::CatIdxInt(idx)
     }
 
+    fn idx_sum_into_cat_int<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> CatIntIndexer<'m, 'd> {
+        idx_sum
+    }
+
+    fn idx_sum_into_cat_str<'m, 'd>(_: Self::IdxSum<'m, 'd>) -> CatStrIndexer<'m, 'd> {
+        unreachable!()
+    }
+
+    fn idx_sum_into_ord<'m, 'd>(_: Self::IdxSum<'m, 'd>) -> OrdIndexer<'m, 'd> {
+        unreachable!()
+    }
+
     // par
 
     fn into_p1_fun<'d, V: MetaVal>(fun: impl Fn(Self::IdxRaw<'d>) -> V::Val + 'd) -> P1Fun<'d, V> {
@@ -109,14 +127,26 @@ impl MetaSet for MetaCatSetStr {
     where
         'd: 'm;
 
-    fn idx_as_enum<'d>(idx: Self::IdxRaw<'d>) -> IdxVal<'d> {
-        IdxVal::CatIdxStr(idx)
-    }
-
     type IdxSum<'m, 'd>
         = CatStrIndexer<'m, 'd>
     where
         'd: 'm;
+
+    fn idx_as_enum<'d>(idx: Self::IdxRaw<'d>) -> IdxVal<'d> {
+        IdxVal::CatIdxStr(idx)
+    }
+
+    fn idx_sum_into_cat_int<'m, 'd>(_: Self::IdxSum<'m, 'd>) -> CatIntIndexer<'m, 'd> {
+        unreachable!()
+    }
+
+    fn idx_sum_into_cat_str<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> CatStrIndexer<'m, 'd> {
+        idx_sum
+    }
+
+    fn idx_sum_into_ord<'m, 'd>(_: Self::IdxSum<'m, 'd>) -> OrdIndexer<'m, 'd> {
+        unreachable!()
+    }
 
     // par
 
@@ -157,6 +187,18 @@ impl MetaSet for MetaOrdSet {
 
     fn idx_as_enum<'d>(idx: Self::IdxRaw<'d>) -> IdxVal<'d> {
         IdxVal::OrdIdx(idx)
+    }
+
+    fn idx_sum_into_cat_int<'m, 'd>(_: Self::IdxSum<'m, 'd>) -> CatIntIndexer<'m, 'd> {
+        unreachable!()
+    }
+
+    fn idx_sum_into_cat_str<'m, 'd>(_: Self::IdxSum<'m, 'd>) -> CatStrIndexer<'m, 'd> {
+        unreachable!()
+    }
+
+    fn idx_sum_into_ord<'m, 'd>(idx_sum: Self::IdxSum<'m, 'd>) -> OrdIndexer<'m, 'd> {
+        idx_sum
     }
 
     // par
