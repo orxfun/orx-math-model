@@ -1,3 +1,4 @@
+use crate::arb_val::ArbVal;
 use crate::idxs::IdxSlot;
 use crate::par::p1::p1_bag::DP1;
 use crate::par::p1::{P1Fun, P1Slot};
@@ -11,6 +12,7 @@ use alloc::{boxed::Box, string::String};
 use core::marker::PhantomData;
 use core::mem::transmute;
 use core::ops::{Deref, Index};
+use orx_imp_vec::Elem;
 
 #[derive(Clone, Copy)]
 pub struct ParD1<'m, 'd, I0: MetaSet, V: MetaVal>(
@@ -67,9 +69,17 @@ impl<'m, 'd, I0: MetaSet, V: MetaVal> ParD1<'m, 'd, I0, V> {
             },
 
             P1Slot::CatSetStr(par) => match I0::idx_sum_into_cat_str(i0.into()) {
-                CatStrIdxSum::Raw(i0) => {
+                CatStrIdxSum::RefString(i0) => {
                     let par = par.ptr();
                     self.m.val::<V>(move || par.get()(i0))
+                }
+                CatStrIdxSum::String(i0) => {
+                    let ptr_i0 = unsafe { self.m.arb_val(i0).get() }.as_string_ptr();
+                    let x = self.m.val::<V>(move || {
+                        let i0 = unsafe { &*ptr_i0 };
+                        par.get()(i0);
+                    });
+                    x
                 }
                 CatStrIdxSum::Idx(i0) => match &unsafe { i0.el.get() }.idx {
                     IdxSlot::CatIdxStr(i0) => {

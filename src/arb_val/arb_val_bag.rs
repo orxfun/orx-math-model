@@ -11,6 +11,13 @@ pub enum ArbVal<'d> {
 }
 
 impl<'d> ArbVal<'d> {
+    pub fn as_string_ptr(&self) -> *const String {
+        match self {
+            ArbVal::String(x) => x,
+            _ => unreachable!(),
+        }
+    }
+
     pub fn as_val_sym_sum(&self) -> &ValSymSum<'d, 'd> {
         match self {
             ArbVal::ValSymSum(x) => x,

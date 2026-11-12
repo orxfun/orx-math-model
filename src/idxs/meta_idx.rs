@@ -32,7 +32,8 @@ impl<'m, 'd> Idx<'m, 'd> for CatIdxInt<'m, 'd> {
 #[derive(derive_more::From)]
 pub enum CatStrIdxSum<'m, 'd> {
     Idx(CatIdxStr<'m, 'd>),
-    Raw(&'d String),
+    RefString(&'d String),
+    String(String),
 }
 
 impl<'m, 'd> Idx<'m, 'd> for CatIdxStr<'m, 'd> {

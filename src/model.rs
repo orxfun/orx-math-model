@@ -92,6 +92,11 @@ impl<'d> Model<'d> {
         self.arb_val_bag.push(val)
     }
 
+    pub(crate) fn arb_val_ref<'m>(&'m self, val: impl Into<ArbVal<'m>>) -> &'d ArbVal<'d> {
+        // let el = self.arb_val(val);
+        todo!()
+    }
+
     // p1
 
     pub fn par_d1_int<'m, S0: Set<'m, 'd>>(&'m self, s0: S0) -> IntParD1<'m, 'd, S0::Meta> {
