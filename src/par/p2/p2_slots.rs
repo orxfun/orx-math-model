@@ -91,6 +91,11 @@ impl<'d, V: MetaVal> P2Data<'d, V> {
             fun,
         }
     }
+
+    fn debug_assert_set_types<I0: MetaSet, I1: MetaSet>(&self) {
+        debug_assert_eq!(self.i0_typ, I0::set_typ());
+        debug_assert_eq!(self.i1_typ, I1::set_typ());
+    }
 }
 
 // slot
@@ -105,6 +110,7 @@ impl<'d, V: MetaVal> P2Slot<'d, V> {
         I0: MetaSet,
         I1: MetaSet,
     {
+        self.slot.get().debug_assert_set_types::<I0, I1>();
         let data = P2Data::new::<I0, I1>(fun);
         self.slot.bind(data).expect("TODO: infallible, why");
     }
