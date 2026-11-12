@@ -1,7 +1,7 @@
 use crate::arb_val::ArbVal;
 use crate::idxs::IdxSlot;
 use crate::par::p1::p1_bag::DP1;
-use crate::par::p1::{P1Fun, P1Slot};
+use crate::par::p1::{P1FunE, P1Slot};
 use crate::sets::SetSlot;
 use crate::vals::{Int, ValFun};
 use crate::{
@@ -38,7 +38,7 @@ impl<'m, 'd, I0: MetaSet, V: MetaVal> Deref for ParD1<'m, 'd, I0, V> {
 impl<'m, 'd, I0: MetaSet, V: MetaVal> ParD1<'m, 'd, I0, V> {
     pub fn bind(&self, fun: impl Fn(I0::IdxRaw<'d>) -> V::Val + 'd) {
         let slot = &unsafe { self.el.get() }.par;
-        let fun: P1Fun<'_, V> = I0::into_p1_fun(fun);
+        let fun: P1FunE<'_, V> = P1FunE::new::<I0>(fun);
         slot.bind(fun).expect("TODO: it must succeed, why")
     }
 

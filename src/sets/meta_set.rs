@@ -1,5 +1,5 @@
 use crate::idxs::{CatIdxInt, CatIdxStr, DIdx, OrdIdx};
-use crate::par::p1::P1Fun;
+use crate::par::p1::P1FunE;
 use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetSlot};
 use crate::{idxs::IdxVal, vals::MetaVal};
 use crate::{CatIntIdxSum, CatStrIdxSum, Idx, MetaInt, Model, OrdIdxSum, Ptr, Symbol};
@@ -45,10 +45,6 @@ pub trait MetaSet: Clone + Copy {
     fn idx_as_enum<'d>(idx: Self::IdxRaw<'d>) -> IdxVal<'d>;
 
     fn create_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd>;
-
-    // par
-
-    fn into_p1_fun<'d, V: MetaVal>(fun: impl Fn(Self::IdxRaw<'d>) -> V::Val + 'd) -> P1Fun<'d, V>;
 
     // par-sca
 
@@ -100,12 +96,6 @@ impl MetaSet for MetaCatSetInt {
 
     fn create_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
         Symbol::new(m, el).into()
-    }
-
-    // par
-
-    fn into_p1_fun<'d, V: MetaVal>(fun: impl Fn(Self::IdxRaw<'d>) -> V::Val + 'd) -> P1Fun<'d, V> {
-        P1Fun::CatSetInt(Box::new(fun))
     }
 
     // par-sca
@@ -166,12 +156,6 @@ impl MetaSet for MetaCatSetStr {
 
     fn create_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
         Symbol::new(m, el).into()
-    }
-
-    // par
-
-    fn into_p1_fun<'d, V: MetaVal>(fun: impl Fn(Self::IdxRaw<'d>) -> V::Val + 'd) -> P1Fun<'d, V> {
-        P1Fun::CatSetStr(Box::new(fun))
     }
 
     // par-sca
@@ -240,12 +224,6 @@ impl MetaSet for MetaOrdSet {
 
     fn create_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
         Symbol::new(m, el).into()
-    }
-
-    // par
-
-    fn into_p1_fun<'d, V: MetaVal>(fun: impl Fn(Self::IdxRaw<'d>) -> V::Val + 'd) -> P1Fun<'d, V> {
-        P1Fun::OrdSet(Box::new(fun))
     }
 
     // par-sca
