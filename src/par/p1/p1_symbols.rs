@@ -10,7 +10,7 @@ use crate::{
 use alloc::{boxed::Box, string::String};
 use core::marker::PhantomData;
 use core::mem::transmute;
-use core::ops::Deref;
+use core::ops::{Deref, Index};
 
 #[derive(Clone, Copy)]
 pub struct ParD1<'m, 'd, I0: MetaSet, V: MetaVal>(
@@ -97,6 +97,20 @@ impl<'m, 'd, I0: MetaSet, V: MetaVal> ParD1<'m, 'd, I0, V> {
                 },
             },
         }
+    }
+}
+
+impl<'m, 'd, I0, V, X> Index<X> for ParD1<'m, 'd, I0, V>
+where
+    I0: MetaSet,
+    V: MetaVal,
+    X: Into<I0::IdxSum<'m, 'd>>,
+{
+    type Output = V::Sym<'m, 'd>;
+
+    fn index(&self, i0: X) -> &Self::Output {
+        let a = self.at(i0);
+        todo!()
     }
 }
 
