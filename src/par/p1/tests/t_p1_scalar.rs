@@ -23,7 +23,7 @@ fn int_p1_cat_int() {
 
     // binding
     par.bind(|i| par_data[i]);
-    set.bind(|| set_data.iter().copied()).unwrap();
+    set.bind(|| set_data.iter().copied());
 
     // running
     let mut elements: Elements<usize> = vec![].into();
@@ -61,7 +61,7 @@ fn int_p1_cat_str() {
 
     // binding
     par.bind(|i| par_data[i]);
-    set.bind(|| &set_data).unwrap();
+    set.bind(|| &set_data);
 
     // running
     let mut elements: Elements<&String> = vec![].into();
@@ -94,7 +94,7 @@ fn int_p1_ord() {
 
     // binding
     par.bind(|i| par_data(i));
-    set.bind(|| set_data.iter().copied()).unwrap();
+    set.bind(|| set_data.iter().copied());
 
     // running
     let mut elements: Elements<i64> = vec![].into();
@@ -126,7 +126,7 @@ fn num_p1_cat_int() {
 
     // binding
     par.bind(|i| par_data[i]);
-    set.bind(|| set_data.iter().copied()).unwrap();
+    set.bind(|| set_data.iter().copied());
 
     // running
     let mut elements: Elements<usize> = vec![].into();
@@ -160,7 +160,7 @@ fn num_p1_cat_str() {
 
     // binding
     par.bind(|i| par_data[i]);
-    set.bind(|| &set_data).unwrap();
+    set.bind(|| &set_data);
 
     // running
     let mut elements: Elements<&String> = vec![].into();
@@ -190,7 +190,7 @@ fn num_p1_ord() {
 
     // binding
     par.bind(|i| par_data(i));
-    set.bind(|| set_data.iter().copied()).unwrap();
+    set.bind(|| set_data.iter().copied());
 
     // running
     let mut elements: Elements<i64> = vec![].into();
