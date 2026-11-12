@@ -1,8 +1,22 @@
-use crate::{idxs::IdxVal, par::p1::P1Fun, vals::MetaVal};
+use crate::par::p1::P1Fun;
+use crate::sets::{CatSetInt, CatSetStr, OrdSet};
+use crate::{idxs::IdxVal, vals::MetaVal};
 use alloc::{boxed::Box, string::String};
+
+pub enum SetTyp {
+    CatSetInt,
+    CatSetStr,
+    OrdSet,
+}
 
 pub trait MetaSet {
     type Idx<'d>;
+
+    type Set<'m, 'd>
+    where
+        'd: 'm;
+
+    fn set_type() -> SetTyp;
 
     fn idx_as_enum<'d>(idx: Self::Idx<'d>) -> IdxVal<'d>;
 
@@ -17,6 +31,15 @@ pub struct MetaCatSetInt;
 
 impl MetaSet for MetaCatSetInt {
     type Idx<'d> = usize;
+
+    type Set<'m, 'd>
+        = CatSetInt<'m, 'd>
+    where
+        'd: 'm;
+
+    fn set_type() -> SetTyp {
+        SetTyp::CatSetInt
+    }
 
     fn idx_as_enum<'d>(idx: Self::Idx<'d>) -> IdxVal<'d> {
         IdxVal::CatIdxInt(idx)
@@ -36,6 +59,15 @@ pub struct MetaCatSetStr;
 impl MetaSet for MetaCatSetStr {
     type Idx<'d> = &'d String;
 
+    type Set<'m, 'd>
+        = CatSetStr<'m, 'd>
+    where
+        'd: 'm;
+
+    fn set_type() -> SetTyp {
+        SetTyp::CatSetStr
+    }
+
     fn idx_as_enum<'d>(idx: Self::Idx<'d>) -> IdxVal<'d> {
         IdxVal::CatIdxStr(idx)
     }
@@ -53,6 +85,15 @@ pub struct MetaOrdSet;
 
 impl MetaSet for MetaOrdSet {
     type Idx<'d> = i64;
+
+    type Set<'m, 'd>
+        = OrdSet<'m, 'd>
+    where
+        'd: 'm;
+
+    fn set_type() -> SetTyp {
+        SetTyp::OrdSet
+    }
 
     fn idx_as_enum<'d>(idx: Self::Idx<'d>) -> IdxVal<'d> {
         IdxVal::OrdIdx(idx)

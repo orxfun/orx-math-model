@@ -5,7 +5,7 @@ use crate::vals::MetaNum;
 use crate::vals::ValVal;
 use crate::{new_bag, vals::MetaVal, Bag, Elements, Res, Slot};
 use crate::{
-    sets::{MetaSet, SetType},
+    sets::{MetaSet, SetTyp},
     vals::MetaInt,
 };
 use alloc::{boxed::Box, string::String};
@@ -62,17 +62,17 @@ impl<'d, V: MetaVal> Default for P1SlotsOf<'d, V> {
 }
 
 impl<'d, T: MetaVal> P1SlotsOf<'d, T> {
-    fn push(&self, s0_type: SetType) -> P1Slot<'d, T> {
+    fn push(&self, s0_type: SetTyp) -> P1Slot<'d, T> {
         match s0_type {
-            SetType::CatSetInt => {
+            SetTyp::CatSetInt => {
                 let el = self.cat_idx_int.push(Box::new(|_| Default::default()));
                 P1Slot::CatSetInt(el.into())
             }
-            SetType::CatSetStr => {
+            SetTyp::CatSetStr => {
                 let el = self.cat_idx_str.push(Box::new(|_| Default::default()));
                 P1Slot::CatSetStr(el.into())
             }
-            SetType::OrdSet => {
+            SetTyp::OrdSet => {
                 let el = self.ord_idx.push(Box::new(|_| Default::default()));
                 P1Slot::OrdSet(el.into())
             }
@@ -89,11 +89,15 @@ pub struct P1Slots<'d> {
 }
 
 impl<'d> P1Slots<'d> {
-    pub fn push_int(&self, s0_type: SetType) -> P1Slot<'d, MetaInt> {
+    pub fn push<I0: MetaSet, V: MetaVal>(&self) -> P1Slot<'d, V> {
+        todo!()
+    }
+
+    pub fn push_int(&self, s0_type: SetTyp) -> P1Slot<'d, MetaInt> {
         self.int.push(s0_type)
     }
 
-    pub fn push_num(&self, s0_type: SetType) -> P1Slot<'d, MetaNum> {
+    pub fn push_num(&self, s0_type: SetTyp) -> P1Slot<'d, MetaNum> {
         self.num.push(s0_type)
     }
 }

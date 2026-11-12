@@ -1,4 +1,4 @@
-use crate::{new_bag, sets::SetType, Bag, Elements, Res, Slot};
+use crate::{new_bag, sets::SetTyp, Bag, Elements, Res, Slot};
 use alloc::string::String;
 use core::mem::MaybeUninit;
 use core::sync::atomic::{AtomicBool, Ordering};
@@ -46,17 +46,17 @@ impl Default for IdxSlots<'_> {
 }
 
 impl<'d> IdxSlots<'d> {
-    pub fn push(&self, t: SetType) -> IdxSlot<'d> {
+    pub fn push(&self, t: SetTyp) -> IdxSlot<'d> {
         match t {
-            SetType::CatSetInt => {
+            SetTyp::CatSetInt => {
                 let el = self.cat_idx_int.push(0);
                 IdxSlot::CatIdxInt(el.into())
             }
-            SetType::CatSetStr => {
+            SetTyp::CatSetStr => {
                 let el = self.cat_idx_str.push(unsafe { empty_string() });
                 IdxSlot::CatIdxStr(el.into())
             }
-            SetType::OrdSet => {
+            SetTyp::OrdSet => {
                 let el = self.ord_idx.push(0);
                 IdxSlot::OrdIdx(el.into())
             }

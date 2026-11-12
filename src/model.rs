@@ -1,6 +1,6 @@
 use crate::idxs::{CatIdxInt, CatIdxStr, IdxBag, IdxSlots, OrdIdx};
-use crate::par::p1::{P1Bag, P1Slots};
-use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetBag, SetSlots, SetType};
+use crate::par::p1::{IntParD1, P1Bag, P1Slots};
+use crate::sets::{CatSetInt, CatSetStr, MetaSet, OrdSet, SetBag, SetSlots, SetTyp};
 use crate::vals::{Int, Num, ValBag, ValFun};
 use crate::{Res, Symbol, Validation};
 use alloc::boxed::Box;
@@ -27,19 +27,19 @@ impl<'d> Model<'d> {
     // sets
 
     pub fn cat_set_int<'m>(&'m self) -> CatSetInt<'m, 'd> {
-        let slot = self.set_slots.push(SetType::CatSetInt);
+        let slot = self.set_slots.push(SetTyp::CatSetInt);
         let el = self.set_bag.push(slot);
         Symbol::new(self, el).into()
     }
 
     pub fn cat_set_str<'m>(&'m self) -> CatSetStr<'m, 'd> {
-        let slot = self.set_slots.push(SetType::CatSetStr);
+        let slot = self.set_slots.push(SetTyp::CatSetStr);
         let el = self.set_bag.push(slot);
         Symbol::new(self, el).into()
     }
 
     pub fn ord_set<'m>(&'m self) -> OrdSet<'m, 'd> {
-        let slot = self.set_slots.push(SetType::OrdSet);
+        let slot = self.set_slots.push(SetTyp::OrdSet);
         let el = self.set_bag.push(slot);
         Symbol::new(self, el).into()
     }
@@ -48,21 +48,21 @@ impl<'d> Model<'d> {
 
     pub(crate) fn cat_idx_int<'m>(&'m self, set: CatSetInt<'m, 'd>) -> CatIdxInt<'m, 'd> {
         Res::dbg_assert_same_model(self, set);
-        let slot = self.idx_slots.push(SetType::CatSetInt);
+        let slot = self.idx_slots.push(SetTyp::CatSetInt);
         let el = self.idx_bag.push(unsafe { set.el.get() }.clone(), slot);
         Symbol::new(self, el).into()
     }
 
     pub(crate) fn cat_idx_str<'m>(&'m self, set: CatSetStr<'m, 'd>) -> CatIdxStr<'m, 'd> {
         Res::dbg_assert_same_model(self, set);
-        let slot = self.idx_slots.push(SetType::CatSetStr);
+        let slot = self.idx_slots.push(SetTyp::CatSetStr);
         let el = self.idx_bag.push(unsafe { set.el.get() }.clone(), slot);
         Symbol::new(self, el).into()
     }
 
     pub(crate) fn ord_idx<'m>(&'m self, set: OrdSet<'m, 'd>) -> OrdIdx<'m, 'd> {
         Res::dbg_assert_same_model(self, set);
-        let slot = self.idx_slots.push(SetType::OrdSet);
+        let slot = self.idx_slots.push(SetTyp::OrdSet);
         let el = self.idx_bag.push(unsafe { set.el.get() }.clone(), slot);
         Symbol::new(self, el).into()
     }
@@ -77,5 +77,12 @@ impl<'d> Model<'d> {
     pub(crate) fn val_num<'m>(&'m self, fun: impl Fn() -> f64 + 'd) -> Num<'m, 'd> {
         let el = self.val_bag.push(ValFun::Num(Box::new(fun)));
         Symbol::new(self, el).into()
+    }
+
+    // p1
+
+    pub fn par_d1_int<'m, I0: MetaSet>(&'m self, s0: I0::Set<'m, 'd>) -> IntParD1<'m, 'd, I0> {
+        // self.p1_slots.push_int();
+        todo!()
     }
 }

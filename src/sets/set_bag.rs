@@ -1,4 +1,4 @@
-use crate::sets::{SetSlot, SetType};
+use crate::sets::{SetSlot, SetTyp};
 use crate::{new_bag, Bag};
 use orx_imp_vec::Elem;
 

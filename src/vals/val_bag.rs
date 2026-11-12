@@ -1,14 +1,10 @@
+#[cfg(test)]
+use crate::vals::ValVal;
 use crate::{new_bag, Bag};
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 
 // data
-
-#[derive(Debug, PartialEq)]
-pub enum ValVal {
-    Int(i64),
-    Num(f64),
-}
 
 pub enum ValFun<'d> {
     Int(Box<dyn Fn() -> i64 + 'd>),

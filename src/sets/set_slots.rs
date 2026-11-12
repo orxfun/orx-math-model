@@ -1,11 +1,5 @@
-use crate::{new_bag, Bag, Elements, Res, Slot};
+use crate::{new_bag, sets::SetTyp, Bag, Elements, Res, Slot};
 use alloc::{boxed::Box, string::String};
-
-pub enum SetType {
-    CatSetInt,
-    CatSetStr,
-    OrdSet,
-}
 
 pub enum SetFun<'d> {
     CatSetInt(Box<dyn Fn(&mut Elements<usize>) + 'd>),
@@ -82,17 +76,17 @@ impl Default for SetSlots<'_> {
 }
 
 impl<'d> SetSlots<'d> {
-    pub fn push(&self, t: SetType) -> SetSlot<'d> {
+    pub fn push(&self, t: SetTyp) -> SetSlot<'d> {
         match t {
-            SetType::CatSetInt => {
+            SetTyp::CatSetInt => {
                 let el = self.cat_set_int.push(Box::new(|_| {}));
                 SetSlot::CatSetInt(el.into())
             }
-            SetType::CatSetStr => {
+            SetTyp::CatSetStr => {
                 let el = self.cat_set_str.push(Box::new(|_| {}));
                 SetSlot::CatSetStr(el.into())
             }
-            SetType::OrdSet => {
+            SetTyp::OrdSet => {
                 let el = self.ord_set.push(Box::new(|_| {}));
                 SetSlot::OrdSet(el.into())
             }
