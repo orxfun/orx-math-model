@@ -18,7 +18,7 @@ pub enum ValVal {
 
 // trait
 
-pub trait MetaVal: Clone + Copy {
+pub trait MetaVal: Clone + Copy + 'static {
     type Val: Default + Clone + Copy;
 
     type Sym<'m, 'd>
