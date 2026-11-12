@@ -29,7 +29,7 @@ impl<'m, 'd, I0: MetaSet, V: MetaVal> Deref for ParD1<'m, 'd, I0, V> {
 }
 
 impl<'m, 'd, I0: MetaSet, V: MetaVal> ParD1<'m, 'd, I0, V> {
-    pub fn bind(&self, fun: impl Fn(I0::Idx<'d>) -> V::Val + 'd) {
+    pub fn bind(&self, fun: impl Fn(I0::IdxRaw<'d>) -> V::Val + 'd) {
         let slot = &unsafe { self.el.get() }.par;
         let fun: P1Fun<'_, V> = I0::into_p1_fun(fun);
         slot.bind(fun).expect("TODO: it must succeed, why")

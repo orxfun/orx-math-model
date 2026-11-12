@@ -15,7 +15,7 @@ pub struct DP1<'d, V: MetaVal> {
 
 impl<'d, V: MetaVal> DP1<'d, V> {
     #[cfg(test)]
-    pub fn test_at<M: MetaSet>(&self, idx: M::Idx<'d>) -> Res<ValVal> {
+    pub fn test_at<M: MetaSet>(&self, idx: M::IdxRaw<'d>) -> Res<ValVal> {
         self.par.test_at::<M>(idx)
     }
 }
