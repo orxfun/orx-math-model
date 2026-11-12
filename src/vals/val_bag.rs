@@ -1,7 +1,7 @@
 #[cfg(test)]
 use crate::vals::ValVal;
 use crate::vals::{Int, Num};
-use crate::{new_bag, Bag};
+use crate::{new_bag, Bag, MetaVal, Val, ValSymSum};
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 
@@ -22,17 +22,11 @@ impl<'d> ValFun<'d> {
     }
 }
 
-#[derive(derive_more::From)]
-pub enum SymRef<'m, 'd> {
-    Int(Int<'m, 'd>),
-    Num(Num<'m, 'd>),
-}
-
 // bag
 
 pub struct ValBag<'d> {
     bag: Bag<ValFun<'d>>,
-    sym_bag: Bag<SymRef<'d, 'd>>,
+    sym_bag: Bag<ValSymSum<'d, 'd>>,
 }
 
 impl Default for ValBag<'_> {
@@ -49,10 +43,10 @@ impl<'d> ValBag<'d> {
         self.bag.push(data)
     }
 
-    pub fn push_sym<'m>(&'m self, sym: impl Into<SymRef<'m, 'd>>) -> Elem<'m, SymRef<'d, 'd>> {
-        let sym: SymRef<'d, 'd> = match sym.into() {
-            SymRef::Int(x) => SymRef::Int(unsafe { x.create_sym_ref() }.into()),
-            SymRef::Num(x) => SymRef::Num(unsafe { x.create_sym_ref() }.into()),
+    pub fn push_sym<'m>(&'m self, sym: impl Val<'m, 'd>) -> Elem<'m, ValSymSum<'d, 'd>> {
+        let sym: ValSymSum<'d, 'd> = match sym.into_sym_sum() {
+            ValSymSum::Int(x) => ValSymSum::Int(unsafe { x.create_sym_ref() }.into()),
+            ValSymSum::Num(x) => ValSymSum::Num(unsafe { x.create_sym_ref() }.into()),
         };
         self.sym_bag.push(sym)
     }

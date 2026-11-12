@@ -38,7 +38,7 @@ pub(crate) use idxs::{CatIntIndexer, CatStrIndexer, Idx, OrdIndexer};
 pub(crate) use sets::{MetaCatSetInt, MetaCatSetStr, MetaOrdSet, MetaSet, Set, SetTyp};
 pub(crate) use slot::{Ptr, Slot};
 pub(crate) use symbol::Symbol;
-pub(crate) use vals::{MetaInt, MetaNum, MetaVal, ValTyp};
+pub(crate) use vals::{MetaInt, MetaNum, MetaVal, Val, ValSymSum, ValTyp};
 
 // api
 pub use model::Model;

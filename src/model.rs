@@ -2,7 +2,7 @@ use crate::idxs::{CatIdxInt, CatIdxStr, IdxBag, IdxSlots, OrdIdx};
 use crate::par::p1::{IntParD1, NumParD1, P1Bag, P1Slots};
 use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetBag, SetSlots};
 use crate::vals::{Int, Num, ValBag, ValFun};
-use crate::{MetaInt, MetaNum, MetaSet, MetaVal, Res, Set, SetTyp, Symbol, Validation};
+use crate::{MetaInt, MetaNum, MetaSet, MetaVal, Res, Set, SetTyp, Symbol, Val, Validation};
 use alloc::boxed::Box;
 
 #[derive(Default)]
@@ -72,6 +72,11 @@ impl<'d> Model<'d> {
     pub(crate) fn val<'m, V: MetaVal>(&'m self, fun: impl Fn() -> V::Val + 'd) -> V::Sym<'m, 'd> {
         let el = self.val_bag.push(V::create_val_fun(fun));
         V::create_sym(self, el)
+    }
+
+    pub(crate) fn val_sym<'m, V: MetaVal>(&'m self, sym: V::Sym<'m, 'd>) -> &'m V::Sym<'m, 'd> {
+        let el = self.val_bag.push_sym(sym);
+        <V::Sym<'m, 'd> as Val<'m, 'd>>::from_sum_to_self(unsafe { el.get() })
     }
 
     // p1
