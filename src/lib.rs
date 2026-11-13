@@ -27,7 +27,7 @@ mod err;
 // mod idxs;
 mod idxs;
 mod model;
-mod par;
+mod pars;
 mod sets;
 mod slot;
 mod symbol;

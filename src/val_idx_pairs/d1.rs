@@ -1,4 +1,4 @@
-use crate::par::p1::{UFunP1, FP1};
+use crate::pars::p1::{UFunP1, FP1};
 use crate::{Set, SetCatInt, SetCatStr, SetOrd, Val, ValInt, ValNum};
 
 pub trait ValIdxPairD1 {
