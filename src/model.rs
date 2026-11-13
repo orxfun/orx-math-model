@@ -112,7 +112,7 @@ impl<'d> Model<'d> {
         V::new_sym(self, el)
     }
 
-    pub(crate) fn con_val<T: TConVal>(&self, value: T) -> Ptr<'d, DConVal> {
+    pub(crate) fn con_val<T: TConVal + 'd>(&self, value: T) -> Ptr<'d, DConVal> {
         let el = self.con_val_bag.push(ConVal::new(value));
         Slot::new(self, el).ptr()
     }

@@ -1,7 +1,7 @@
 use core::arch::x86_64::_MM_ROUND_TOWARD_ZERO;
 
 use crate::pars::p1::ParD1;
-use crate::sets::{IndexCatInt, IndexOrd};
+use crate::sets::{IndexCatInt, IndexCatStr, IndexOrd};
 use crate::val_idx_pairs::D1ValIdxPair;
 use crate::{Ptr, Set, SetCatInt, SetCatStr, SetOrd, Val, ValInt};
 
@@ -54,6 +54,21 @@ impl D1Args for SetCatStr {
     {
         let fun = Ptr::new(par.el);
         match idx.into() {
+            IndexCatStr::Idx(idx) => {
+                let idx = Ptr::new(idx.el);
+                par.m.val::<V>(move || {
+                    let fun = fun.get();
+                    let idx = idx.get().read::<Self>();
+                    fun.at::<V, Self>(idx)
+                })
+            }
+            IndexCatStr::ConString(con) => {
+                let con = par.m.con_val(con);
+                par.m.val::<V>(move || {
+                    let fun = fun.get();
+                    fun.at::<V, Self>(con.get().get())
+                })
+            }
             _ => todo!(),
         }
     }
