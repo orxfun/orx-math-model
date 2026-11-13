@@ -3,14 +3,14 @@ use crate::sets::{DSet, SetFun};
 use crate::{Elements, MetaCatInt, MetaCatStr, MetaOrd, MetaSet, Res, Symbol};
 use alloc::{boxed::Box, string::String};
 
-fn bind<'d, M, I>(set: Symbol<'_, 'd, DSet<'d>>, fun: impl Fn() -> I + 'd) -> Res
+fn bind<'d, S, I>(set: Symbol<'_, 'd, DSet<'d>>, fun: impl Fn() -> I + 'd) -> Res
 where
-    M: MetaSet,
-    I: IntoIterator<Item = M::IdxRaw<'d>>,
+    S: MetaSet,
+    I: IntoIterator<Item = S::IdxRaw<'d>>,
 {
-    let fun = Box::new(move |e: &mut Elements<M::IdxRaw<'d>>| e.fill(fun()));
+    let fun = Box::new(move |e: &mut Elements<S::IdxRaw<'d>>| e.fill(fun()));
     let data = unsafe { set.el.get() };
-    data.bind::<M>(fun)
+    data.bind::<S>(fun)
 }
 
 // cat int

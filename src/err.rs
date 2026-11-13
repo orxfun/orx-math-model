@@ -43,7 +43,7 @@ pub trait Validation {
         debug_assert!(core::ptr::eq(m, sym.m), "wrong model used");
     }
 
-    fn dbg_assert_same_set<S: MetaSet>(set_typ: SetTyp) {
-        debug_assert_eq!(S::set_typ(), set_typ, "wrong set type")
+    fn dbg_assert_same_set(a: SetTyp, b: SetTyp) {
+        debug_assert_eq!(a, b, "wrong set type")
     }
 }
