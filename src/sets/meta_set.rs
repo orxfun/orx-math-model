@@ -84,7 +84,7 @@ impl Set for SetCatInt {
     }
 
     fn set_unpack<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self> {
-        unsafe { &u.cat_int }
+        unsafe { &u.cint }
     }
 
     fn new_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd> {
@@ -171,7 +171,7 @@ impl Set for SetCatStr {
     }
 
     fn set_unpack<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self> {
-        unsafe { &u.cat_str }
+        unsafe { &u.cstr }
     }
 
     fn new_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd> {

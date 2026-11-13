@@ -22,3 +22,19 @@ pub struct FunP1<'d> {
     pub i0_typ: SetTyp,
     data: UFunP1<'d>,
 }
+
+impl<'d> Drop for FunP1<'d> {
+    fn drop(&mut self) {
+        unsafe {
+            match (self.val_typ, self.i0_typ) {
+                (ValTyp::Int, SetTyp::CatInt) => ManuallyDrop::drop(&mut self.data.cint_int),
+                (ValTyp::Int, SetTyp::CatStr) => ManuallyDrop::drop(&mut self.data.cstr_int),
+                (ValTyp::Int, SetTyp::Ord) => ManuallyDrop::drop(&mut self.data.ord_int),
+
+                (ValTyp::Num, SetTyp::CatInt) => ManuallyDrop::drop(&mut self.data.cint_num),
+                (ValTyp::Num, SetTyp::CatStr) => ManuallyDrop::drop(&mut self.data.cstr_num),
+                (ValTyp::Num, SetTyp::Ord) => ManuallyDrop::drop(&mut self.data.ord_num),
+            }
+        }
+    }
+}

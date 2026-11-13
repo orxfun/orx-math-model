@@ -6,8 +6,8 @@ pub type FSet<'d, S> = Box<dyn Fn(&mut Elements<<S as Set>::IdxRaw<'d>>) + 'd>;
 
 #[repr(C)]
 pub union UFunSet<'d> {
-    pub cat_int: ManuallyDrop<FSet<'d, SetCatInt>>,
-    pub cat_str: ManuallyDrop<FSet<'d, SetCatStr>>,
+    pub cint: ManuallyDrop<FSet<'d, SetCatInt>>,
+    pub cstr: ManuallyDrop<FSet<'d, SetCatStr>>,
     pub ord: ManuallyDrop<FSet<'d, SetOrd>>,
 }
 
@@ -20,8 +20,8 @@ impl<'d> Drop for FunSet<'d> {
     fn drop(&mut self) {
         unsafe {
             match self.typ {
-                SetTyp::CatInt => ManuallyDrop::drop(&mut self.data.cat_int),
-                SetTyp::CatStr => ManuallyDrop::drop(&mut self.data.cat_str),
+                SetTyp::CatInt => ManuallyDrop::drop(&mut self.data.cint),
+                SetTyp::CatStr => ManuallyDrop::drop(&mut self.data.cstr),
                 SetTyp::Ord => ManuallyDrop::drop(&mut self.data.ord),
             }
         }
@@ -32,10 +32,10 @@ impl<'d> FunSet<'d> {
     pub fn empty(typ: SetTyp) -> Self {
         let data = match typ {
             SetTyp::CatInt => UFunSet {
-                cat_int: ManuallyDrop::new(Box::new(|_| {})),
+                cint: ManuallyDrop::new(Box::new(|_| {})),
             },
             SetTyp::CatStr => UFunSet {
-                cat_str: ManuallyDrop::new(Box::new(|_| {})),
+                cstr: ManuallyDrop::new(Box::new(|_| {})),
             },
             SetTyp::Ord => UFunSet {
                 ord: ManuallyDrop::new(Box::new(|_| {})),
@@ -49,10 +49,10 @@ impl<'d> FunSet<'d> {
         let typ = S::typ();
         let data = match typ {
             SetTyp::CatInt => UFunSet {
-                cat_int: unsafe { transmute(fun) },
+                cint: unsafe { transmute(fun) },
             },
             SetTyp::CatStr => UFunSet {
-                cat_str: unsafe { transmute(fun) },
+                cstr: unsafe { transmute(fun) },
             },
             SetTyp::Ord => UFunSet {
                 ord: unsafe { transmute(fun) },
