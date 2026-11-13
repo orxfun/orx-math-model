@@ -1,4 +1,4 @@
-use crate::{Elements, MetaCatInt, MetaCatStr, MetaOrd, MetaSet, SetTyp};
+use crate::{Elements, MetaCatInt, MetaCatStr, MetaOrd, MetaSet, Res, SetTyp, Validation};
 use alloc::boxed::Box;
 use core::mem::transmute;
 
@@ -11,14 +11,6 @@ pub enum FunSet<'d> {
 }
 
 impl<'d> FunSet<'d> {
-    pub fn typ(&self) -> SetTyp {
-        match self {
-            Self::CatInt(_) => SetTyp::CatInt,
-            Self::CatStr(_) => SetTyp::CatStr,
-            Self::Ord(_) => SetTyp::Ord,
-        }
-    }
-
     pub(super) fn new(typ: SetTyp) -> Self {
         match typ {
             SetTyp::CatInt => Self::CatInt(Box::new(|_| {})),
@@ -27,11 +19,20 @@ impl<'d> FunSet<'d> {
         }
     }
 
+    pub fn typ(&self) -> SetTyp {
+        match self {
+            Self::CatInt(_) => SetTyp::CatInt,
+            Self::CatStr(_) => SetTyp::CatStr,
+            Self::Ord(_) => SetTyp::Ord,
+        }
+    }
+
     pub fn get<S: MetaSet>(&self) -> &FSet<'d, S> {
-        match (S::set_typ(), self) {
-            (SetTyp::CatInt, Self::CatInt(f)) => unsafe { transmute(f) },
-            (SetTyp::CatStr, Self::CatStr(f)) => unsafe { transmute(f) },
-            (SetTyp::Ord, Self::Ord(f)) => unsafe { transmute(f) },
+        Res::dbg_assert_same_set(S::typ(), self.typ());
+        match self {
+            Self::CatInt(f) => unsafe { transmute(f) },
+            Self::CatStr(f) => unsafe { transmute(f) },
+            Self::Ord(f) => unsafe { transmute(f) },
             _ => unreachable!("invalid FunE::set call"),
         }
     }

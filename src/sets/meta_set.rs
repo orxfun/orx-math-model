@@ -1,7 +1,10 @@
 use crate::idxs::{CatIdxInt, CatIdxStr, DIdx, OrdIdx};
 use crate::sets::{CatSetInt, CatSetStr, DSet, OrdSet};
 use crate::{idxs::IdxVal, vals::MetaVal};
-use crate::{CatIntIdxSum, CatStrIdxSum, Idx, MetaInt, Model, OrdIdxSum, Ptr, Slot, Symbol};
+use crate::{
+    CatIntIdxSum, CatStrIdxSum, FSet, FunSet, Idx, MetaInt, Model, OrdIdxSum, Ptr, Res, Slot,
+    Symbol, Validation,
+};
 use alloc::string::ToString;
 use alloc::{boxed::Box, string::String};
 use core::mem::transmute;
@@ -26,7 +29,9 @@ pub trait MetaSet: Clone + Copy + 'static {
     where
         'd: 'm;
 
-    fn set_typ() -> SetTyp;
+    fn typ() -> SetTyp;
+
+    fn fun_set<'a, 'd>(fun: &'a FunSet<'d>) -> &'a FSet<'d, Self>;
 
     fn create_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd>;
 
@@ -68,8 +73,16 @@ impl MetaSet for MetaCatInt {
     where
         'd: 'm;
 
-    fn set_typ() -> SetTyp {
+    fn typ() -> SetTyp {
         SetTyp::CatInt
+    }
+
+    fn fun_set<'a, 'd>(fun: &'a FunSet<'d>) -> &'a FSet<'d, Self> {
+        Res::dbg_assert_same_set(Self::typ(), fun.typ());
+        match fun {
+            FunSet::CatInt(f) => unsafe { transmute(f) },
+            _ => unreachable!("invalid FunE::set call"),
+        }
     }
 
     fn create_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd> {
@@ -128,8 +141,16 @@ impl MetaSet for MetaCatStr {
     where
         'd: 'm;
 
-    fn set_typ() -> SetTyp {
+    fn typ() -> SetTyp {
         SetTyp::CatStr
+    }
+
+    fn fun_set<'a, 'd>(fun: &'a FunSet<'d>) -> &'a FSet<'d, Self> {
+        Res::dbg_assert_same_set(Self::typ(), fun.typ());
+        match fun {
+            FunSet::CatStr(f) => unsafe { transmute(f) },
+            _ => unreachable!("invalid FunE::set call"),
+        }
     }
 
     fn create_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd> {
@@ -196,8 +217,16 @@ impl MetaSet for MetaOrd {
     where
         'd: 'm;
 
-    fn set_typ() -> SetTyp {
+    fn typ() -> SetTyp {
         SetTyp::Ord
+    }
+
+    fn fun_set<'a, 'd>(fun: &'a FunSet<'d>) -> &'a FSet<'d, Self> {
+        Res::dbg_assert_same_set(Self::typ(), fun.typ());
+        match fun {
+            FunSet::Ord(f) => unsafe { transmute(f) },
+            _ => unreachable!("invalid FunE::set call"),
+        }
     }
 
     fn create_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd> {

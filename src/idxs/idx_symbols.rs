@@ -1,6 +1,4 @@
-use crate::idxs::idx_bag::DIdx;
 use crate::idxs::IdxSlot;
-use crate::sets::SetSlot;
 use crate::{Elements, ElementsIter, Symbol};
 use alloc::{boxed::Box, string::String};
 

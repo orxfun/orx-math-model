@@ -1,12 +1,8 @@
+use crate::idxs::idx_data::DIdx;
 use crate::idxs::IdxSlot;
-use crate::sets::{SetSlot, SetTyp};
-use crate::{new_bag, Bag};
+use crate::sets::{DSet, SetTyp};
+use crate::{new_bag, Bag, Ptr};
 use orx_imp_vec::Elem;
-
-pub struct DIdx<'d> {
-    pub set: SetSlot<'d>,
-    pub idx: IdxSlot<'d>,
-}
 
 // collection
 
@@ -21,8 +17,8 @@ impl Default for IdxBag<'_> {
 }
 
 impl<'d> IdxBag<'d> {
-    pub fn push<'m>(&'m self, set: SetSlot<'d>, idx: IdxSlot<'d>) -> Elem<'m, DIdx<'d>> {
-        let data = DIdx { set, idx };
+    pub fn push<'m>(&'m self, set: Ptr<'d, DSet<'d>>, idx: IdxSlot<'d>) -> Elem<'m, DIdx<'d>> {
+        let data = DIdx::new(set, idx);
         self.bag.push(data)
     }
 }

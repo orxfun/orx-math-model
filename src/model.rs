@@ -58,9 +58,9 @@ impl<'d> Model<'d> {
     }
 
     fn set<'m, S: MetaSet>(&'m self) -> S::SetSym<'m, 'd> {
-        let fun_el = self.fun_bag.push_set(S::set_typ());
+        let fun_el = self.fun_bag.push_set(S::typ());
         let fun_slot = Slot::new(self, fun_el);
-        let el = self.set_bag.push(S::set_typ(), fun_slot);
+        let el = self.set_bag.push(S::typ(), fun_slot);
         S::create_set_sym(self, el)
     }
 
@@ -80,7 +80,7 @@ impl<'d> Model<'d> {
 
     fn idx<'m, M: MetaSet>(&'m self, set: M::SetSym<'m, 'd>) -> M::IdxSym<'m, 'd> {
         Res::dbg_assert_same_model(self, set);
-        let idx = self.idx_slots.push(self, M::set_typ());
+        let idx = self.idx_slots.push(self, M::typ());
         let set = set.ptr();
         let el = self.idx_bag.push(set, idx);
         M::create_idx_sym(self, el)

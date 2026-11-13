@@ -9,8 +9,8 @@ pub struct DSet<'d> {
 
 impl<'d> DSet<'d> {
     pub fn bind<S: MetaSet>(&self, fun: FSet<'d, S>) -> Res {
-        Res::dbg_assert_same_set(S::set_typ(), self.typ);
-        let fun = match S::set_typ() {
+        Res::dbg_assert_same_set(S::typ(), self.typ);
+        let fun = match S::typ() {
             SetTyp::CatInt => FunSet::CatInt(unsafe { transmute(fun) }),
             SetTyp::CatStr => FunSet::CatStr(unsafe { transmute(fun) }),
             SetTyp::Ord => FunSet::Ord(unsafe { transmute(fun) }),
@@ -20,7 +20,7 @@ impl<'d> DSet<'d> {
 
     pub fn fill<S: MetaSet>(&self, elements: &mut Elements<S::IdxRaw<'d>>) -> Res {
         Res::assert_slot_bound(self.fun.state())?;
-        Res::dbg_assert_same_set(S::set_typ(), self.typ);
+        Res::dbg_assert_same_set(S::typ(), self.typ);
         let fun = self.fun.get().get::<S>();
         fun(elements);
         Ok(())

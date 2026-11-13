@@ -1,4 +1,6 @@
 mod fun_bag;
-pub(crate) mod set_fun;
+mod idx_val;
+mod set_fun;
 
 pub use fun_bag::FunBag;
+pub use set_fun::{FSet, FunSet};
