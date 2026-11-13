@@ -38,3 +38,34 @@ impl<'d> Drop for FunP1<'d> {
         }
     }
 }
+
+impl<'d> FunP1<'d> {
+    pub fn empty(val_typ: ValTyp, i0_typ: SetTyp) -> Self {
+        let data = match (val_typ, i0_typ) {
+            (ValTyp::Int, SetTyp::CatInt) => UFunP1 {
+                cint_int: ManuallyDrop::new(Box::new(|_| Default::default())),
+            },
+            (ValTyp::Int, SetTyp::CatStr) => UFunP1 {
+                cstr_int: ManuallyDrop::new(Box::new(|_| Default::default())),
+            },
+            (ValTyp::Int, SetTyp::Ord) => UFunP1 {
+                ord_int: ManuallyDrop::new(Box::new(|_| Default::default())),
+            },
+
+            (ValTyp::Num, SetTyp::CatInt) => UFunP1 {
+                cint_num: ManuallyDrop::new(Box::new(|_| Default::default())),
+            },
+            (ValTyp::Num, SetTyp::CatStr) => UFunP1 {
+                cstr_num: ManuallyDrop::new(Box::new(|_| Default::default())),
+            },
+            (ValTyp::Num, SetTyp::Ord) => UFunP1 {
+                ord_num: ManuallyDrop::new(Box::new(|_| Default::default())),
+            },
+        };
+        Self {
+            val_typ,
+            i0_typ,
+            data,
+        }
+    }
+}
