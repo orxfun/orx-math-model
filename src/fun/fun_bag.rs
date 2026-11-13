@@ -1,4 +1,5 @@
-use crate::{fun::FunSlot, new_bag, Bag, Model, Slot};
+use crate::fun::FunSlot;
+use crate::{new_bag, Bag, MetaSet, Model, Slot};
 use alloc::boxed::Box;
 use core::mem::transmute;
 
@@ -13,7 +14,7 @@ impl Default for FunBag<'_> {
 }
 
 impl<'d> FunBag<'d> {
-    pub fn push<'m, F>(&'m self, m: &'m Model<'d>) -> FunSlot<'d> {
+    pub fn push<'m>(&'m self, m: &'m Model<'d>) -> FunSlot<'d> {
         let el = self.bag.push(Box::new(|| {}));
         FunSlot::new(Slot::new(m, el))
     }

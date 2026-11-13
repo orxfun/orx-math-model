@@ -1,10 +1,7 @@
+use crate::fun::glossary::*;
 use crate::{Elements, MetaSet, Res, Slot};
 use alloc::boxed::Box;
 use core::mem::transmute;
-
-// glossary
-
-pub type FSet<'d, I0> = Box<dyn Fn(&mut Elements<<I0 as MetaSet>::IdxRaw<'d>>) + 'd>;
 
 // slot
 

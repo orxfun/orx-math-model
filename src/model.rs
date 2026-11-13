@@ -1,5 +1,5 @@
 use crate::arb_val::{ArbVal, ArbValBag};
-use crate::fun::FunBag;
+use crate::fun::{FunBag, FunSlot};
 use crate::idxs::{CatIdxInt, CatIdxStr, IdxBag, IdxSlots, OrdIdx};
 // use crate::par::p1::{IntParD1, NumParD1, P1Bag, P1Slots};
 use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetBag, SetSlots};
@@ -46,9 +46,8 @@ impl<'d> Model<'d> {
 
     // fun
 
-    pub(crate) fn fun_new<'m, F>(&'m self) -> Slot<'d, Box<F>> {
-        // self.fun_bag.push(self)
-        todo!()
+    pub(crate) fn fun_new<'m>(&'m self) -> FunSlot<'d> {
+        self.fun_bag.push(self)
     }
 
     // sets
