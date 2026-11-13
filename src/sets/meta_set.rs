@@ -1,7 +1,7 @@
 use crate::idxs::{CatIdxInt, CatIdxStr, DIdx, OrdIdx};
-use crate::sets::{CatSetInt, CatSetStr, DSet, OrdSet, SetSlot};
+use crate::sets::{CatSetInt, CatSetStr, DSet, OrdSet};
 use crate::{idxs::IdxVal, vals::MetaVal};
-use crate::{CatIntIdxSum, CatStrIdxSum, Idx, MetaInt, Model, OrdIdxSum, Ptr, Symbol};
+use crate::{CatIntIdxSum, CatStrIdxSum, Idx, MetaInt, Model, OrdIdxSum, Ptr, Slot, Symbol};
 use alloc::string::ToString;
 use alloc::{boxed::Box, string::String};
 use core::mem::transmute;
@@ -255,32 +255,29 @@ where
 {
     type Meta: MetaSet;
 
-    fn slot(self) -> SetSlot<'d>;
+    fn ptr(self) -> Ptr<'d, DSet<'d>>;
 }
 
 impl<'m, 'd> Set<'m, 'd> for CatSetInt<'m, 'd> {
     type Meta = MetaCatInt;
 
-    fn slot(self) -> SetSlot<'d> {
-        // unsafe { self.el.get() }.clone()
-        todo!()
+    fn ptr(self) -> Ptr<'d, DSet<'d>> {
+        Ptr::new(self.el)
     }
 }
 
 impl<'m, 'd> Set<'m, 'd> for CatSetStr<'m, 'd> {
     type Meta = MetaCatStr;
 
-    fn slot(self) -> SetSlot<'d> {
-        // unsafe { self.el.get() }.clone()
-        todo!()
+    fn ptr(self) -> Ptr<'d, DSet<'d>> {
+        Ptr::new(self.el)
     }
 }
 
 impl<'m, 'd> Set<'m, 'd> for OrdSet<'m, 'd> {
     type Meta = MetaOrd;
 
-    fn slot(self) -> SetSlot<'d> {
-        // unsafe { self.el.get() }.clone()
-        todo!()
+    fn ptr(self) -> Ptr<'d, DSet<'d>> {
+        Ptr::new(self.el)
     }
 }

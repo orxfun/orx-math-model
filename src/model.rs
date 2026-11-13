@@ -2,7 +2,7 @@ use crate::arb_val::{ArbVal, ArbValBag};
 use crate::fun::FunBag;
 use crate::idxs::{CatIdxInt, CatIdxStr, IdxBag, IdxSlots, OrdIdx};
 // use crate::par::p1::{IntParD1, NumParD1, P1Bag, P1Slots};
-use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetBag, SetSlots};
+use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetBag};
 use crate::slot::{SlotStates, State};
 use crate::vals::{Int, Num, ValBag, ValFun};
 use crate::{
@@ -21,7 +21,6 @@ pub struct Model<'d> {
     fun_bag: FunBag<'d>,
 
     // sets
-    set_slots: SetSlots<'d>,
     set_bag: SetBag<'d>,
 
     // idxs
@@ -82,7 +81,7 @@ impl<'d> Model<'d> {
     fn idx<'m, M: MetaSet>(&'m self, set: M::SetSym<'m, 'd>) -> M::IdxSym<'m, 'd> {
         Res::dbg_assert_same_model(self, set);
         let idx = self.idx_slots.push(self, M::set_typ());
-        let set = set.slot();
+        let set = set.ptr();
         let el = self.idx_bag.push(set, idx);
         M::create_idx_sym(self, el)
     }

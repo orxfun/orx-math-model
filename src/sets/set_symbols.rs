@@ -1,5 +1,5 @@
 use crate::idxs::{CatIdxInt, CatIdxStr, OrdIdx};
-use crate::sets::{DSet, SetFun};
+use crate::sets::DSet;
 use crate::{Elements, MetaCatInt, MetaCatStr, MetaOrd, MetaSet, Res, Symbol};
 use alloc::{boxed::Box, string::String};
 

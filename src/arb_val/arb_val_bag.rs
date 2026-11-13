@@ -1,4 +1,4 @@
-use crate::sets::{SetSlot, SetTyp};
+use crate::sets::SetTyp;
 use crate::{new_bag, Bag, ValSymSum};
 use alloc::string::String;
 use core::marker::PhantomData;

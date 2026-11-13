@@ -87,7 +87,6 @@ impl<'d, T> Slot<'d, T> {
 
 // ptr
 
-#[derive(derive_new::new)]
 pub struct Ptr<'d, T> {
     p: *const T,
     phantom: PhantomData<fn() -> &'d ()>,
@@ -105,6 +104,13 @@ impl<'d, T> Clone for Ptr<'d, T> {
 impl<'d, T> Copy for Ptr<'d, T> {}
 
 impl<'d, T> Ptr<'d, T> {
+    pub fn new(el: Elem<'_, T>) -> Self {
+        Self {
+            p: el.as_ptr(),
+            phantom: PhantomData,
+        }
+    }
+
     pub fn get(&self) -> &T {
         unsafe { &*self.p }
     }
