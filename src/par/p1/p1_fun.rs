@@ -1,5 +1,6 @@
 use crate::{
-    Elements, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetTyp, Val, ValInt, ValNum, ValTyp,
+    val_idx_pairs::ValIdxPairD1, Elements, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd,
+    SetTyp, Val, ValInt, ValNum, ValTyp,
 };
 use alloc::boxed::Box;
 use core::mem::{transmute, ManuallyDrop};
@@ -100,9 +101,12 @@ impl<'d> FunP1<'d> {
         }
     }
 
-    pub fn get<V: Val, I0: Set>(&self) -> &FP1<'d, V, I0> {
+    pub fn get<V: Val, I0: Set>(&self) -> &FP1<'d, V, I0>
+    where
+        (V, I0): ValIdxPairD1<V = V, I0 = I0>,
+    {
         Res::dbg_assert_same_val(V::typ(), self.val_typ);
         Res::dbg_assert_same_set(I0::typ(), self.i0_typ);
-        todo!()
+        <(V, I0) as ValIdxPairD1>::p1_fun_unpack(&self.data)
     }
 }

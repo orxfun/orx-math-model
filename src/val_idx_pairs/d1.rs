@@ -1,7 +1,7 @@
 use crate::par::p1::{UFunP1, FP1};
 use crate::{Set, SetCatInt, SetCatStr, SetOrd, Val, ValInt, ValNum};
 
-pub trait ValIdxD1 {
+pub trait ValIdxPairD1 {
     type V: Val;
 
     type I0: Set;
@@ -11,7 +11,7 @@ pub trait ValIdxD1 {
 
 // int
 
-impl ValIdxD1 for (ValInt, SetCatInt) {
+impl ValIdxPairD1 for (ValInt, SetCatInt) {
     type V = ValInt;
 
     type I0 = SetCatInt;
@@ -21,7 +21,7 @@ impl ValIdxD1 for (ValInt, SetCatInt) {
     }
 }
 
-impl ValIdxD1 for (ValInt, SetCatStr) {
+impl ValIdxPairD1 for (ValInt, SetCatStr) {
     type V = ValInt;
 
     type I0 = SetCatStr;
@@ -31,7 +31,7 @@ impl ValIdxD1 for (ValInt, SetCatStr) {
     }
 }
 
-impl ValIdxD1 for (ValInt, SetOrd) {
+impl ValIdxPairD1 for (ValInt, SetOrd) {
     type V = ValInt;
 
     type I0 = SetOrd;
@@ -43,7 +43,7 @@ impl ValIdxD1 for (ValInt, SetOrd) {
 
 // num
 
-impl ValIdxD1 for (ValNum, SetCatInt) {
+impl ValIdxPairD1 for (ValNum, SetCatInt) {
     type V = ValNum;
 
     type I0 = SetCatInt;
@@ -53,7 +53,7 @@ impl ValIdxD1 for (ValNum, SetCatInt) {
     }
 }
 
-impl ValIdxD1 for (ValNum, SetCatStr) {
+impl ValIdxPairD1 for (ValNum, SetCatStr) {
     type V = ValNum;
 
     type I0 = SetCatStr;
@@ -63,7 +63,7 @@ impl ValIdxD1 for (ValNum, SetCatStr) {
     }
 }
 
-impl ValIdxD1 for (ValNum, SetOrd) {
+impl ValIdxPairD1 for (ValNum, SetOrd) {
     type V = ValNum;
 
     type I0 = SetOrd;
