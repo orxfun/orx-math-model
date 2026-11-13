@@ -10,3 +10,4 @@ pub use val_bag::ValBag;
 pub use val_data::DVal;
 pub use val_fun::{FVal, FunVal, UFunVal};
 pub use val_fun_bag::ValFunBag;
+pub use val_symbols::{Int, Num};

@@ -28,7 +28,7 @@ pub trait Set: Clone + Copy + 'static {
 
     fn set_unpack<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self>;
 
-    fn set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd>;
+    fn new_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd>;
 
     fn set_ptr<'m, 'd>(sym: Self::SetSym<'m, 'd>) -> Ptr<'d, DSet<'d>>;
 
@@ -87,7 +87,7 @@ impl Set for SetCatInt {
         unsafe { &u.cat_int }
     }
 
-    fn set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd> {
+    fn new_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd> {
         Symbol::new(m, el).into()
     }
 
@@ -174,7 +174,7 @@ impl Set for SetCatStr {
         unsafe { &u.cat_str }
     }
 
-    fn set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd> {
+    fn new_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd> {
         Symbol::new(m, el).into()
     }
 
@@ -269,7 +269,7 @@ impl Set for SetOrd {
         unsafe { &u.ord }
     }
 
-    fn set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd> {
+    fn new_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd> {
         Symbol::new(m, el).into()
     }
 

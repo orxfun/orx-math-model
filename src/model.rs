@@ -5,7 +5,7 @@ use crate::idxs::{IdxBag, IdxValBag};
 use crate::sets::{CatInt, CatStr, Ord, SetBag, SetFunBag};
 use crate::slot::{SlotStates, State};
 // use crate::vals::{Int, Num, ValBag, ValFun};
-use crate::{SetCatInt, SetCatStr, SetOrd, Ptr, Res, ResValid, Set, SetTyp, Slot, Symbol};
+use crate::{Ptr, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetTyp, Slot, Symbol, Val};
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 
@@ -59,7 +59,7 @@ impl<'d> Model<'d> {
         let fun_el = self.set_fun_bag.push(S::typ());
         let fun_slot = Slot::new(self, fun_el);
         let el = self.set_bag.push(fun_slot);
-        S::set_sym(self, el)
+        S::new_set_sym(self, el)
     }
 
     // idxs
@@ -93,6 +93,10 @@ impl<'d> Model<'d> {
     // }
 
     // vals
+
+    pub(crate) fn val<'m, V: Val>(&'m self, fun: impl Fn() -> V::Raw + 'd) -> V::Sym<'m, 'd> {
+        todo!()
+    }
 
     // pub(crate) fn val<'m, V: MetaVal>(&'m self, fun: impl Fn() -> V::Val + 'd) -> V::Sym<'m, 'd> {
     //     let el = self.val_bag.push(V::create_val_fun(fun));
