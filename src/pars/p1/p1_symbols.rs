@@ -55,7 +55,8 @@ where
 {
     type Output = V::Sym<'m, 'd>;
 
-    fn index(&self, index: Idx) -> &Self::Output {
+    fn index(&self, idx: Idx) -> &Self::Output {
+        let val = self.at(idx);
         todo!()
     }
 }
