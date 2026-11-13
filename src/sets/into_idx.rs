@@ -3,6 +3,7 @@ use alloc::string::String;
 
 // cint
 
+#[derive(derive_more::From)]
 pub enum IndexCatInt<'m, 'd> {
     Idx(IdxCatInt<'m, 'd>),
     ConUsize(usize),
@@ -10,6 +11,7 @@ pub enum IndexCatInt<'m, 'd> {
 
 // cstr
 
+#[derive(derive_more::From)]
 pub enum IndexCatStr<'m, 'd> {
     Idx(IdxCatStr<'m, 'd>),
     ConString(String),
@@ -19,6 +21,7 @@ pub enum IndexCatStr<'m, 'd> {
 
 // ord
 
+#[derive(derive_more::From)]
 pub enum IndexOrd<'m, 'd> {
     Idx(IdxOrd<'m, 'd>),
     ConUsize(usize),
