@@ -72,9 +72,9 @@ pub trait Set: Clone + Copy + 'static {
 // cat set int
 
 #[derive(Clone, Copy)]
-pub struct MetaCatInt;
+pub struct CatInt;
 
-impl Set for MetaCatInt {
+impl Set for CatInt {
     // set
 
     type SetSym<'m, 'd: 'm> = SetCatInt<'m, 'd>;
@@ -159,9 +159,9 @@ impl Set for MetaCatInt {
 // cat set str
 
 #[derive(Clone, Copy)]
-pub struct MetaCatStr;
+pub struct CatStr;
 
-impl Set for MetaCatStr {
+impl Set for CatStr {
     // set
 
     type SetSym<'m, 'd: 'm> = SetCatStr<'m, 'd>;
@@ -254,9 +254,9 @@ impl Set for MetaCatStr {
 // ord set
 
 #[derive(Clone, Copy)]
-pub struct MetaOrd;
+pub struct Ord;
 
-impl Set for MetaOrd {
+impl Set for Ord {
     // set
 
     type SetSym<'m, 'd: 'm> = SetOrd<'m, 'd>;

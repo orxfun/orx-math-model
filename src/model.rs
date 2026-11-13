@@ -5,7 +5,7 @@ use crate::idxs::{IdxBag, IdxValBag};
 use crate::sets::{SetBag, SetCatInt, SetCatStr, SetFunBag, SetOrd};
 use crate::slot::{SlotStates, State};
 // use crate::vals::{Int, Num, ValBag, ValFun};
-use crate::{MetaCatInt, MetaCatStr, MetaOrd, Ptr, Res, ResValid, Set, SetTyp, Slot, Symbol};
+use crate::{CatInt, CatStr, Ord, Ptr, Res, ResValid, Set, SetTyp, Slot, Symbol};
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 
@@ -44,15 +44,15 @@ impl<'d> Model<'d> {
     // sets
 
     pub fn cat_set_int<'m>(&'m self) -> SetCatInt<'m, 'd> {
-        self.set::<MetaCatInt>()
+        self.set::<CatInt>()
     }
 
     pub fn cat_set_str<'m>(&'m self) -> SetCatStr<'m, 'd> {
-        self.set::<MetaCatStr>()
+        self.set::<CatStr>()
     }
 
     pub fn ord_set<'m>(&'m self) -> SetOrd<'m, 'd> {
-        self.set::<MetaOrd>()
+        self.set::<Ord>()
     }
 
     fn set<'m, S: Set>(&'m self) -> S::SetSym<'m, 'd> {

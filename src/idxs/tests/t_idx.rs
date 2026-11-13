@@ -1,12 +1,12 @@
 use crate::idxs::IdxVal;
 use crate::{elements::Elements, Model};
-use crate::{MetaCatInt, MetaCatStr, MetaOrd};
+use crate::{CatInt, CatStr, Ord};
 use alloc::string::{String, ToString};
 use alloc::{vec, vec::Vec};
 
 #[test]
 fn idx_cat_int() {
-    type S = MetaCatInt;
+    type S = CatInt;
 
     // modeling
     let m = Model::default();
@@ -22,7 +22,7 @@ fn idx_cat_int() {
 
 #[test]
 fn idx_cat_str() {
-    type S = MetaCatStr;
+    type S = CatStr;
 
     // data
     let s = 42.to_string();
@@ -41,7 +41,7 @@ fn idx_cat_str() {
 
 #[test]
 fn idx_ord() {
-    type S = MetaOrd;
+    type S = Ord;
 
     // modeling
     let m = Model::default();

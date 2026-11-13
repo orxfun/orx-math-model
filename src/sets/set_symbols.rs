@@ -1,7 +1,7 @@
 use crate::idxs::{IdxCatInt, IdxCatStr, IdxOrd};
 // use crate::idxs::{CatIdxInt, CatIdxStr, OrdIdx};
 use crate::sets::DSet;
-use crate::{Elements, MetaCatInt, MetaCatStr, MetaOrd, Set, Res, Symbol};
+use crate::{Elements, CatInt, CatStr, Ord, Set, Res, Symbol};
 use alloc::{boxed::Box, string::String};
 
 fn bind<'d, S, I>(set: Symbol<'_, 'd, DSet<'d>>, fun: impl Fn() -> I + 'd) -> Res
@@ -21,11 +21,11 @@ pub struct SetCatInt<'m, 'd>(pub(crate) Symbol<'m, 'd, DSet<'d>>);
 
 impl<'m, 'd> SetCatInt<'m, 'd> {
     pub fn bind<I: IntoIterator<Item = usize>>(self, fun: impl Fn() -> I + 'd) -> Res {
-        bind::<MetaCatInt, _>(self.0, fun)
+        bind::<CatInt, _>(self.0, fun)
     }
 
     pub fn idx(self) -> IdxCatInt<'m, 'd> {
-        self.m.idx::<MetaCatInt>(self)
+        self.m.idx::<CatInt>(self)
     }
 }
 
@@ -36,11 +36,11 @@ pub struct SetCatStr<'m, 'd>(pub(crate) Symbol<'m, 'd, DSet<'d>>);
 
 impl<'m, 'd> SetCatStr<'m, 'd> {
     pub fn bind<I: IntoIterator<Item = &'d String>>(self, fun: impl Fn() -> I + 'd) -> Res {
-        bind::<MetaCatStr, _>(self.0, fun)
+        bind::<CatStr, _>(self.0, fun)
     }
 
     pub fn idx(self) -> IdxCatStr<'m, 'd> {
-        self.m.idx::<MetaCatStr>(self)
+        self.m.idx::<CatStr>(self)
     }
 }
 
@@ -51,10 +51,10 @@ pub struct SetOrd<'m, 'd>(pub(crate) Symbol<'m, 'd, DSet<'d>>);
 
 impl<'m, 'd> SetOrd<'m, 'd> {
     pub fn bind<I: IntoIterator<Item = i64>>(self, fun: impl Fn() -> I + 'd) -> Res {
-        bind::<MetaOrd, _>(self.0, fun)
+        bind::<Ord, _>(self.0, fun)
     }
 
     pub fn idx(self) -> IdxOrd<'m, 'd> {
-        self.m.idx::<MetaOrd>(self)
+        self.m.idx::<Ord>(self)
     }
 }

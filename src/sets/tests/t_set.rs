@@ -1,5 +1,5 @@
 use crate::{elements::Elements, Model};
-use crate::{MetaCatInt, MetaCatStr, MetaOrd};
+use crate::{CatInt, CatStr, Ord};
 use alloc::string::{String, ToString};
 use alloc::{vec, vec::Vec};
 
@@ -17,7 +17,7 @@ fn set_cat_int() {
 
     // running
     let mut el: Elements<usize> = vec![].into();
-    unsafe { set.el.get() }.t_fill::<MetaCatInt>(&mut el);
+    unsafe { set.el.get() }.t_fill::<CatInt>(&mut el);
     assert_eq!(el.as_slice(), &[1, 2, 7, 9]);
 }
 
@@ -35,7 +35,7 @@ fn set_cat_str() {
 
     // running
     let mut el: Elements<&String> = vec![].into();
-    unsafe { set.el.get() }.t_fill::<MetaCatStr>(&mut el);
+    unsafe { set.el.get() }.t_fill::<CatStr>(&mut el);
     assert_eq!(el.as_slice(), &["1", "2", "7", "9"]);
 }
 
@@ -53,6 +53,6 @@ fn set_ord() {
 
     // running
     let mut el: Elements<i64> = vec![].into();
-    unsafe { set.el.get() }.t_fill::<MetaOrd>(&mut el);
+    unsafe { set.el.get() }.t_fill::<Ord>(&mut el);
     assert_eq!(el.as_slice(), &[1, 2, 7, 9]);
 }
