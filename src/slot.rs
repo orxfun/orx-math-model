@@ -73,6 +73,10 @@ impl<'d, T> Slot<'d, T> {
         unsafe { &*self.p }
     }
 
+    pub fn get_mut(&self) -> &mut T {
+        unsafe { &mut *self.p }
+    }
+
     pub fn mut_ptr(&self) -> *mut T {
         self.p
     }

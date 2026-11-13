@@ -1,25 +1,19 @@
 use crate::idxs::IdxVal;
-use crate::{Elements, MetaSet, Res, ResValid, SetTyp, Slot};
-use core::mem::transmute;
+use crate::sets::DSet;
+use crate::{Elements, MetaSet, Ptr, Res, ResValid, SetTyp, Slot};
 
 #[derive(derive_new::new)]
 pub struct DIdx<'d> {
-    typ: SetTyp,
-    fun: Slot<'d, IdxVal<'d>>,
+    set_ptr: Ptr<'d, DSet<'d>>,
+    slot: Slot<'d, IdxVal<'d>>,
 }
 
 impl<'d> DIdx<'d> {
-    // pub fn bind<S: MetaSet>(&self, fun: FSet<'d, S>) -> Res {
-    //     Res::dbg_assert_same_set(S::typ(), self.typ);
-    //     let fun = IdxVal::new::<S>(fun);
-    //     self.fun.bind(fun)
-    // }
+    pub fn read<S: MetaSet>(&self) -> S::IdxRaw<'d> {
+        self.slot.get().read::<S>()
+    }
 
-    // #[cfg(test)]
-    // pub fn t_fill<S: MetaSet>(&self, elements: &mut Elements<S::IdxRaw<'d>>) {
-    //     Res::assert_slot_bound(self.fun.state()).unwrap();
-    //     Res::assert_same_set_typ(S::typ(), self.typ).unwrap();
-    //     let fun = self.fun.get().get::<S>();
-    //     fun(elements);
-    // }
+    pub fn write<S: MetaSet>(&self, value: S::IdxRaw<'d>) {
+        self.slot.get_mut().write::<S>(value);
+    }
 }
