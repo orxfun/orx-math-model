@@ -31,6 +31,7 @@ pub struct Model<'d> {
     // vals
     val_bag: ValBag<'d>,
     arb_val_bag: ArbValBag<'d>,
+    //
     // // pars
     // p1_slots: P1Slots<'d>,
     // p1_bag: P1Bag<'d>,
