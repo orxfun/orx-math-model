@@ -12,7 +12,7 @@ pub union UFunSet<'d> {
 }
 
 pub struct FunSet<'d> {
-    typ: SetTyp,
+    pub typ: SetTyp,
     data: UFunSet<'d>,
 }
 

@@ -13,7 +13,7 @@ impl Default for SetBag<'_> {
 }
 
 impl<'d> SetBag<'d> {
-    pub fn push<'m>(&'m self, typ: SetTyp, fun: Slot<'d, FunSet<'d>>) -> Elem<'m, DSet<'d>> {
-        self.bag.push(DSet::new(typ, fun))
+    pub fn push<'m>(&'m self, fun: Slot<'d, FunSet<'d>>) -> Elem<'m, DSet<'d>> {
+        self.bag.push(DSet::new(fun))
     }
 }

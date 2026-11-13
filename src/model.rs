@@ -5,7 +5,7 @@ use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetBag, SetFunBag};
 use crate::slot::{SlotStates, State};
 // use crate::vals::{Int, Num, ValBag, ValFun};
 use crate::{
-    MetaCatInt, MetaCatStr, MetaOrd, MetaSet, Ptr, Res, Set, SetTyp, Slot, Symbol, ResValid,
+    MetaCatInt, MetaCatStr, MetaOrd, MetaSet, Ptr, Res, ResValid, Set, SetTyp, Slot, Symbol,
 };
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -55,7 +55,7 @@ impl<'d> Model<'d> {
     fn set<'m, S: MetaSet>(&'m self) -> S::SetSym<'m, 'd> {
         let fun_el = self.fun_bag.push_set(S::typ());
         let fun_slot = Slot::new(self, fun_el);
-        let el = self.set_bag.push(S::typ(), fun_slot);
+        let el = self.set_bag.push(fun_slot);
         S::create_set_sym(self, el)
     }
 
