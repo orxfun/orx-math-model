@@ -2,22 +2,6 @@ use crate::{slot::State, Model, Symbol};
 use alloc::string::String;
 use core::ops::Deref;
 
-// err
-
-#[derive(derive_new::new)]
-pub struct Err {
-    msg: String,
-}
-
-impl Err {
-    pub fn when(condition: bool, msg: impl Fn() -> String) -> Res {
-        match condition {
-            true => Err(msg()),
-            false => Ok(()),
-        }
-    }
-}
-
 // res
 
 pub type Res<T = ()> = Result<T, String>;
