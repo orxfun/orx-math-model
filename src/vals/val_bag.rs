@@ -13,7 +13,7 @@ impl Default for ValBag<'_> {
 }
 
 impl<'d> ValBag<'d> {
-    pub fn push<'m>(&'m self, fun: Slot<'d, FunVal<'d>>) -> Elem<'m, DVal<'d>> {
+    pub fn push<'m>(&'m self, fun: FunVal<'d>) -> Elem<'m, DVal<'d>> {
         self.bag.push(DVal::new(fun))
     }
 }
