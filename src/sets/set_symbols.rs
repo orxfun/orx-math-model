@@ -1,6 +1,6 @@
 use crate::idxs::{CatIdxInt, CatIdxStr, OrdIdx};
 use crate::sets::{DSet, SetFun};
-use crate::{Elements, MetaCatInt, MetaCatStr, MetaSet, Res, Symbol};
+use crate::{Elements, MetaCatInt, MetaCatStr, MetaOrd, MetaSet, Res, Symbol};
 use alloc::{boxed::Box, string::String};
 
 fn bind<'d, M, I>(set: Symbol<'_, 'd, DSet<'d>>, fun: impl Fn() -> I + 'd) -> Res
@@ -50,7 +50,7 @@ pub struct OrdSet<'m, 'd>(pub(crate) Symbol<'m, 'd, DSet<'d>>);
 
 impl<'m, 'd> OrdSet<'m, 'd> {
     pub fn bind<I: IntoIterator<Item = i64>>(self, fun: impl Fn() -> I + 'd) -> Res {
-        bind::<MetaCatInt, _>(self.0, fun)
+        bind::<MetaOrd, _>(self.0, fun)
     }
 
     pub fn idx(self) -> OrdIdx<'m, 'd> {
