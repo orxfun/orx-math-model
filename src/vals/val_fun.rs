@@ -2,7 +2,7 @@ use crate::{
     Elements, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetTyp, Val, ValInt, ValNum, ValTyp,
 };
 use alloc::boxed::Box;
-use core::mem::{transmute, ManuallyDrop};
+use core::mem::ManuallyDrop;
 
 pub type FVal<'d, V> = Box<dyn Fn() -> <V as Val>::Raw + 'd>;
 
@@ -30,16 +30,8 @@ impl<'d> Drop for FunVal<'d> {
 
 impl<'d> FunVal<'d> {
     pub fn new<V: Val>(fun: FVal<'d, V>) -> Self {
-        let fun = ManuallyDrop::new(fun);
         let typ = V::typ();
-        let data = match typ {
-            ValTyp::Int => UFunVal {
-                int: unsafe { transmute(fun) },
-            },
-            ValTyp::Num => UFunVal {
-                num: unsafe { transmute(fun) },
-            },
-        };
+        let data = V::into_fun_union(fun);
         Self { typ, data }
     }
 

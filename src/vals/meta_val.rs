@@ -1,3 +1,5 @@
+use core::mem::{transmute, ManuallyDrop};
+
 use crate::vals::{DVal, FVal, Int, Num, UFunVal};
 use crate::{Model, Symbol};
 use orx_imp_vec::Elem;
@@ -19,6 +21,8 @@ pub trait Val: Clone + Copy + 'static {
 
     fn typ() -> ValTyp;
 
+    fn into_fun_union<'d>(fun: FVal<'d, Self>) -> UFunVal<'d>;
+
     fn fun_from_union<'a, 'd>(u: &'a UFunVal<'d>) -> &'a FVal<'d, Self>;
 
     fn new_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DVal<'d>>) -> Self::Sym<'m, 'd>;
@@ -36,6 +40,12 @@ impl Val for ValInt {
 
     fn typ() -> ValTyp {
         ValTyp::Int
+    }
+
+    fn into_fun_union<'d>(fun: FVal<'d, Self>) -> UFunVal<'d> {
+        UFunVal {
+            int: ManuallyDrop::new(fun),
+        }
     }
 
     fn fun_from_union<'a, 'd>(u: &'a UFunVal<'d>) -> &'a FVal<'d, Self> {
@@ -59,6 +69,12 @@ impl Val for ValNum {
 
     fn typ() -> ValTyp {
         ValTyp::Num
+    }
+
+    fn into_fun_union<'d>(fun: FVal<'d, Self>) -> UFunVal<'d> {
+        UFunVal {
+            num: ManuallyDrop::new(fun),
+        }
     }
 
     fn fun_from_union<'a, 'd>(u: &'a UFunVal<'d>) -> &'a FVal<'d, Self> {
