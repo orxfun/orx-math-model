@@ -1,6 +1,7 @@
 #[cfg(test)]
 mod tests;
 
+mod into_idx;
 mod meta_set;
 mod meta_set_sym;
 mod set_bag;
