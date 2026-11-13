@@ -45,7 +45,7 @@ pub trait Set: Clone + Copy + 'static {
 
     fn new_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd>;
 
-    fn idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>>;
+    fn into_idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>>;
 }
 
 // cat set int
@@ -98,7 +98,7 @@ impl Set for SetCatInt {
         Symbol::new(m, el).into()
     }
 
-    fn idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>> {
+    fn into_idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>> {
         sym.0
     }
 }
@@ -153,7 +153,7 @@ impl Set for SetCatStr {
         Symbol::new(m, el).into()
     }
 
-    fn idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>> {
+    fn into_idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>> {
         sym.0
     }
 }
@@ -208,7 +208,7 @@ impl Set for SetOrd {
         Symbol::new(m, el).into()
     }
 
-    fn idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>> {
+    fn into_idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>> {
         sym.0
     }
 }

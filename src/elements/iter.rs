@@ -20,7 +20,7 @@ impl<'a, 'd, S: Set> Iterator for ElementsIter<'a, 'd, S> {
 
 impl<'a, 'd, S: Set> ElementsIter<'a, 'd, S> {
     pub fn new<'m>(idx: S::IdxSym<'m, 'd>, elements: &'a mut Elements<S::IdxRaw<'d>>) -> Self {
-        let sym = S::idx_sym(idx);
+        let sym = S::into_idx_sym(idx);
         let idx = sym.el.as_mut_ptr();
         let elements_iter = elements.iter();
         Self { elements_iter, idx }
