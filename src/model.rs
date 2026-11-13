@@ -10,7 +10,7 @@ use crate::vals::{FunVal, ValBag};
 // use crate::vals::{Int, Num, ValBag, ValFun};
 use crate::{
     Ptr, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetSym, SetTyp, Slot, Symbol, Val,
-    ValInt,
+    ValInt, ValNum,
 };
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -152,6 +152,15 @@ impl<'d> Model<'d> {
         S0: SetSym<'m, 'd>,
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
         (ValInt, S0::Meta): ValIdxPairD1<V = ValInt, I0 = S0::Meta>,
+    {
+        self.par1(s0)
+    }
+
+    pub fn par1_num<'m, S0>(&'m self, s0: S0) -> ParD1<'m, 'd, ValNum, S0::Meta>
+    where
+        S0: SetSym<'m, 'd>,
+        S0::Meta: Set<SetSym<'m, 'd> = S0>,
+        (ValNum, S0::Meta): ValIdxPairD1<V = ValNum, I0 = S0::Meta>,
     {
         self.par1(s0)
     }
