@@ -31,6 +31,7 @@ mod par;
 mod sets;
 mod slot;
 mod symbol;
+mod val_idx_pairs;
 mod vals;
 // mod vals;
 
