@@ -66,7 +66,7 @@ impl<'d> Model<'d> {
 
     // idxs
 
-    fn idx<'m, S: MetaSet>(&'m self, set: S::SetSym<'m, 'd>) -> S::IdxSym<'m, 'd> {
+    pub(crate) fn idx<'m, S: MetaSet>(&'m self, set: S::SetSym<'m, 'd>) -> S::IdxSym<'m, 'd> {
         Res::dbg_assert_same_model(self, set);
         let val_el = self.idx_val_bag.push(S::typ());
         let val_slot = Slot::new(self, val_el);

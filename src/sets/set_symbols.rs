@@ -1,3 +1,4 @@
+use crate::idxs::{IdxCatInt, IdxCatStr, IdxOrd};
 // use crate::idxs::{CatIdxInt, CatIdxStr, OrdIdx};
 use crate::sets::DSet;
 use crate::{Elements, MetaCatInt, MetaCatStr, MetaOrd, MetaSet, Res, Symbol};
@@ -23,9 +24,9 @@ impl<'m, 'd> SetCatInt<'m, 'd> {
         bind::<MetaCatInt, _>(self.0, fun)
     }
 
-    // pub fn idx(self) -> CatIdxInt<'m, 'd> {
-    //     self.m.cat_idx_int(self)
-    // }
+    pub fn idx(self) -> IdxCatInt<'m, 'd> {
+        self.m.idx::<MetaCatInt>(self)
+    }
 }
 
 // cat str
@@ -38,9 +39,9 @@ impl<'m, 'd> SetCatStr<'m, 'd> {
         bind::<MetaCatStr, _>(self.0, fun)
     }
 
-    // pub fn idx(self) -> CatIdxStr<'m, 'd> {
-    //     self.m.cat_idx_str(self)
-    // }
+    pub fn idx(self) -> IdxCatStr<'m, 'd> {
+        self.m.idx::<MetaCatStr>(self)
+    }
 }
 
 // ord
@@ -53,7 +54,7 @@ impl<'m, 'd> SetOrd<'m, 'd> {
         bind::<MetaOrd, _>(self.0, fun)
     }
 
-    // pub fn idx(self) -> OrdIdx<'m, 'd> {
-    //     self.m.ord_idx(self)
-    // }
+    pub fn idx(self) -> IdxOrd<'m, 'd> {
+        self.m.idx::<MetaOrd>(self)
+    }
 }
