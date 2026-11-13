@@ -1,5 +1,5 @@
 use crate::sets::{FSet, FunSet};
-use crate::{Elements, MetaSet, Res, SetTyp, Slot, Validation};
+use crate::{Elements, MetaSet, Res, SetTyp, Slot, ResValid};
 use core::mem::transmute;
 
 #[derive(derive_new::new)]

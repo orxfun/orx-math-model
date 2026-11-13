@@ -6,10 +6,10 @@ use core::ops::Deref;
 
 pub type Res<T = ()> = Result<T, String>;
 
-impl Validation for Res {}
+impl ResValid for Res {}
 
 // TODO: fix the error messages
-pub trait Validation {
+pub trait ResValid {
     fn assert(condition: bool, msg: impl FnOnce() -> String) -> Res {
         match condition {
             true => Ok(()),

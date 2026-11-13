@@ -25,8 +25,8 @@ mod elements;
 mod err;
 // mod fun;
 // mod idxs;
+mod idxs;
 mod model;
-mod val;
 // mod par;
 mod sets;
 mod slot;
@@ -36,7 +36,7 @@ mod symbol;
 // crate
 pub(crate) use bag::{new_bag, Bag};
 pub(crate) use elements::{Elements, ElementsIter};
-pub(crate) use err::{Res, Validation};
+pub(crate) use err::{Res, ResValid};
 // pub(crate) use fun::{FSet, FunSet};
 // pub(crate) use idxs::{CatIntIdxSum, CatStrIdxSum, Idx, OrdIdxSum};
 pub(crate) use sets::{MetaCatInt, MetaCatStr, MetaOrd, MetaSet, Set, SetTyp};

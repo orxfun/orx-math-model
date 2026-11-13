@@ -5,7 +5,7 @@ use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetBag, SetFunBag};
 use crate::slot::{SlotStates, State};
 // use crate::vals::{Int, Num, ValBag, ValFun};
 use crate::{
-    MetaCatInt, MetaCatStr, MetaOrd, MetaSet, Ptr, Res, Set, SetTyp, Slot, Symbol, Validation,
+    MetaCatInt, MetaCatStr, MetaOrd, MetaSet, Ptr, Res, Set, SetTyp, Slot, Symbol, ResValid,
 };
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;

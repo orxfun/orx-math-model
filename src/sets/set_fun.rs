@@ -1,4 +1,4 @@
-use crate::{Elements, MetaCatInt, MetaCatStr, MetaOrd, MetaSet, Res, SetTyp, Validation};
+use crate::{Elements, MetaCatInt, MetaCatStr, MetaOrd, MetaSet, Res, ResValid, SetTyp};
 use alloc::boxed::Box;
 use core::mem::{transmute, ManuallyDrop};
 
@@ -63,6 +63,6 @@ impl<'d> FunSet<'d> {
 
     pub fn get<S: MetaSet>(&self) -> &FSet<'d, S> {
         Res::dbg_assert_same_set(S::typ(), self.typ);
-        S::set_unpack_ufun(&self.data)
+        S::set_unpack(&self.data)
     }
 }

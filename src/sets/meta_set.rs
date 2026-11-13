@@ -1,6 +1,7 @@
+use crate::idxs::UIdxVal;
 // use crate::idxs::{CatIdxInt, CatIdxStr, DIdx, OrdIdx};
 use crate::sets::{CatSetInt, CatSetStr, DSet, FSet, FunSet, OrdSet, UFunSet};
-use crate::{Model, Ptr, Res, Slot, Symbol, Validation};
+use crate::{Model, Ptr, Res, ResValid, Slot, Symbol};
 use alloc::string::ToString;
 use alloc::{boxed::Box, string::String};
 use core::mem::transmute;
@@ -27,13 +28,17 @@ pub trait MetaSet: Clone + Copy + 'static {
 
     fn typ() -> SetTyp;
 
-    fn set_unpack_ufun<'a, 'd>(ufun: &'a UFunSet<'d>) -> &'a FSet<'d, Self>;
+    fn set_unpack<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self>;
 
     fn create_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd>;
 
     // idx
 
     type IdxRaw<'d>;
+
+    fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d>;
+
+    fn idx_write<'d>(u: &mut UIdxVal<'d>, value: Self::IdxRaw<'d>);
 
     // type IdxSym<'m, 'd>: Idx<'m, 'd, Meta = Self>
     // where
@@ -75,7 +80,7 @@ impl MetaSet for MetaCatInt {
         SetTyp::CatInt
     }
 
-    fn set_unpack_ufun<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self> {
+    fn set_unpack<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self> {
         unsafe { &u.cat_int }
     }
 
@@ -86,6 +91,14 @@ impl MetaSet for MetaCatInt {
     // idx
 
     type IdxRaw<'d> = usize;
+
+    fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d> {
+        unsafe { u.cat_int }
+    }
+
+    fn idx_write<'d>(u: &mut UIdxVal<'d>, value: Self::IdxRaw<'d>) {
+        u.cat_int = value;
+    }
 
     // type IdxSym<'m, 'd>
     //     = CatIdxInt<'m, 'd>
@@ -143,7 +156,7 @@ impl MetaSet for MetaCatStr {
         SetTyp::CatStr
     }
 
-    fn set_unpack_ufun<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self> {
+    fn set_unpack<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self> {
         unsafe { &u.cat_str }
     }
 
@@ -154,6 +167,14 @@ impl MetaSet for MetaCatStr {
     // idx
 
     type IdxRaw<'d> = &'d String;
+
+    fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d> {
+        unsafe { u.cat_str }
+    }
+
+    fn idx_write<'d>(u: &mut UIdxVal<'d>, value: Self::IdxRaw<'d>) {
+        u.cat_str = value;
+    }
 
     // type IdxSym<'m, 'd>
     //     = CatIdxStr<'m, 'd>
@@ -219,7 +240,7 @@ impl MetaSet for MetaOrd {
         SetTyp::Ord
     }
 
-    fn set_unpack_ufun<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self> {
+    fn set_unpack<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self> {
         unsafe { &u.ord }
     }
 
@@ -230,6 +251,14 @@ impl MetaSet for MetaOrd {
     // idx
 
     type IdxRaw<'d> = i64;
+
+    fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d> {
+        unsafe { u.ord }
+    }
+
+    fn idx_write<'d>(u: &mut UIdxVal<'d>, value: Self::IdxRaw<'d>) {
+        u.ord = value;
+    }
 
     // type IdxSym<'m, 'd>
     //     = OrdIdx<'m, 'd>

@@ -1,4 +1,4 @@
-use crate::{new_bag, Bag, Model, Res, Validation};
+use crate::{new_bag, Bag, Model, Res, ResValid};
 use alloc::{boxed::Box, format, rc::Rc, string::String};
 use core::{cell::UnsafeCell, marker::PhantomData};
 use orx_imp_vec::Elem;
