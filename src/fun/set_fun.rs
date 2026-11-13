@@ -29,11 +29,6 @@ impl<'d> FunSet<'d> {
 
     pub fn get<S: MetaSet>(&self) -> &FSet<'d, S> {
         Res::dbg_assert_same_set(S::typ(), self.typ());
-        match self {
-            Self::CatInt(f) => unsafe { transmute(f) },
-            Self::CatStr(f) => unsafe { transmute(f) },
-            Self::Ord(f) => unsafe { transmute(f) },
-            _ => unreachable!("invalid FunE::set call"),
-        }
+        S::unpack_fun_set(self)
     }
 }

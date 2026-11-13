@@ -31,7 +31,7 @@ pub trait MetaSet: Clone + Copy + 'static {
 
     fn typ() -> SetTyp;
 
-    fn fun_set<'a, 'd>(fun: &'a FunSet<'d>) -> &'a FSet<'d, Self>;
+    fn unpack_fun_set<'a, 'd>(fun: &'a FunSet<'d>) -> &'a FSet<'d, Self>;
 
     fn create_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd>;
 
@@ -77,7 +77,7 @@ impl MetaSet for MetaCatInt {
         SetTyp::CatInt
     }
 
-    fn fun_set<'a, 'd>(fun: &'a FunSet<'d>) -> &'a FSet<'d, Self> {
+    fn unpack_fun_set<'a, 'd>(fun: &'a FunSet<'d>) -> &'a FSet<'d, Self> {
         Res::dbg_assert_same_set(Self::typ(), fun.typ());
         match fun {
             FunSet::CatInt(f) => unsafe { transmute(f) },
@@ -145,7 +145,7 @@ impl MetaSet for MetaCatStr {
         SetTyp::CatStr
     }
 
-    fn fun_set<'a, 'd>(fun: &'a FunSet<'d>) -> &'a FSet<'d, Self> {
+    fn unpack_fun_set<'a, 'd>(fun: &'a FunSet<'d>) -> &'a FSet<'d, Self> {
         Res::dbg_assert_same_set(Self::typ(), fun.typ());
         match fun {
             FunSet::CatStr(f) => unsafe { transmute(f) },
@@ -221,7 +221,7 @@ impl MetaSet for MetaOrd {
         SetTyp::Ord
     }
 
-    fn fun_set<'a, 'd>(fun: &'a FunSet<'d>) -> &'a FSet<'d, Self> {
+    fn unpack_fun_set<'a, 'd>(fun: &'a FunSet<'d>) -> &'a FSet<'d, Self> {
         Res::dbg_assert_same_set(Self::typ(), fun.typ());
         match fun {
             FunSet::Ord(f) => unsafe { transmute(f) },
