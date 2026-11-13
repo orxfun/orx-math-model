@@ -180,6 +180,8 @@ fn p1_num_cstr_at() {
     let set = m.cat_set_str();
     let idx = set.idx();
     let par = m.par1_num(set);
+    let sca1 = [par.at(idx), par[idx]];
+    let sca2 = [par.at(3.to_string()), par["3"], par[&set_data[2]]];
 
     // binding
     par.bind(|i| par_data[i]).unwrap();
@@ -188,9 +190,15 @@ fn p1_num_cstr_at() {
     // running
     let mut elements: Elements<El<'_>> = vec![].into();
     let iter = ElementsIter::<I0>::new(idx, &mut elements);
-    for (i, v) in par_data.iter() {
-        let val = unsafe { par.el.get() }.at::<V, I0>(i);
-        assert_eq!(*v, val);
+    for (i, _) in iter.enumerate() {
+        let exp = par_data[&set_data[i]];
+        for sca in sca1 {
+            assert_eq!(exp, unsafe { sca.el.get() }.eval::<V>());
+        }
+        let exp = par_data[&set_data[2]];
+        for sca in sca2 {
+            assert_eq!(exp, unsafe { sca.el.get() }.eval::<V>());
+        }
     }
 }
 
