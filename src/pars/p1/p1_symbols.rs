@@ -31,7 +31,7 @@ impl<'m, 'd, V: Val, I0: Set> ParD1<'m, 'd, V, I0> {
         data.bind::<V, I0>(fun)
     }
 
-    pub fn at(self) -> V::Sym<'m, 'd> {
+    pub fn at(self, idx: impl Into<I0::IdxAny<'m, 'd>>) -> V::Sym<'m, 'd> {
         todo!()
     }
 }
