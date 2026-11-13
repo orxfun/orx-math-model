@@ -1,7 +1,7 @@
-use core::mem::{transmute, ManuallyDrop};
-
 use crate::vals::{DVal, FVal, Int, Num, UFunVal};
 use crate::{Model, Symbol};
+use core::mem::{transmute, ManuallyDrop};
+use core::ops::Deref;
 use orx_imp_vec::Elem;
 
 // enums
@@ -17,7 +17,7 @@ pub enum ValTyp {
 pub trait Val: Clone + Copy + 'static {
     type Raw: Clone + Copy;
 
-    type Sym<'m, 'd: 'm>: Clone + Copy;
+    type Sym<'m, 'd: 'm>: Clone + Copy + Deref<Target = Symbol<'m, 'd, DVal<'d>>>;
 
     fn typ() -> ValTyp;
 

@@ -8,7 +8,7 @@ pub struct DVal<'d> {
 }
 
 impl<'d> DVal<'d> {
-    fn typ(&self) -> ValTyp {
+    pub fn typ(&self) -> ValTyp {
         self.fun.typ
     }
 
