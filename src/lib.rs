@@ -25,6 +25,7 @@ mod elements;
 mod err;
 // mod fun;
 // mod idxs;
+mod con_vals;
 mod idxs;
 mod model;
 mod pars;
