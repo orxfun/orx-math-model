@@ -115,7 +115,7 @@ impl<'d, T> Ptr<'d, T> {
         }
     }
 
-    pub fn get(&self) -> &T {
+    pub fn get(&self) -> &'d T {
         unsafe { &*self.p }
     }
 
