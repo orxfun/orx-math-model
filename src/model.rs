@@ -5,7 +5,7 @@ use crate::idxs::{IdxBag, IdxValBag};
 use crate::sets::{SetBag, SetCatInt, SetCatStr, SetFunBag, SetOrd};
 use crate::slot::{SlotStates, State};
 // use crate::vals::{Int, Num, ValBag, ValFun};
-use crate::{MetaCatInt, MetaCatStr, MetaOrd, MetaSet, Ptr, Res, ResValid, SetTyp, Slot, Symbol};
+use crate::{MetaCatInt, MetaCatStr, MetaOrd, Ptr, Res, ResValid, Set, SetTyp, Slot, Symbol};
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 
@@ -55,7 +55,7 @@ impl<'d> Model<'d> {
         self.set::<MetaOrd>()
     }
 
-    fn set<'m, S: MetaSet>(&'m self) -> S::SetSym<'m, 'd> {
+    fn set<'m, S: Set>(&'m self) -> S::SetSym<'m, 'd> {
         let fun_el = self.set_fun_bag.push(S::typ());
         let fun_slot = Slot::new(self, fun_el);
         let el = self.set_bag.push(fun_slot);
@@ -64,7 +64,7 @@ impl<'d> Model<'d> {
 
     // idxs
 
-    pub(crate) fn idx<'m, S: MetaSet>(&'m self, set: S::SetSym<'m, 'd>) -> S::IdxSym<'m, 'd> {
+    pub(crate) fn idx<'m, S: Set>(&'m self, set: S::SetSym<'m, 'd>) -> S::IdxSym<'m, 'd> {
         Res::dbg_assert_same_model(self, set);
         let val_el = self.idx_val_bag.push(S::typ());
         let val_slot = Slot::new(self, val_el);

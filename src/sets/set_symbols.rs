@@ -1,12 +1,12 @@
 use crate::idxs::{IdxCatInt, IdxCatStr, IdxOrd};
 // use crate::idxs::{CatIdxInt, CatIdxStr, OrdIdx};
 use crate::sets::DSet;
-use crate::{Elements, MetaCatInt, MetaCatStr, MetaOrd, MetaSet, Res, Symbol};
+use crate::{Elements, MetaCatInt, MetaCatStr, MetaOrd, Set, Res, Symbol};
 use alloc::{boxed::Box, string::String};
 
 fn bind<'d, S, I>(set: Symbol<'_, 'd, DSet<'d>>, fun: impl Fn() -> I + 'd) -> Res
 where
-    S: MetaSet,
+    S: Set,
     I: IntoIterator<Item = S::IdxRaw<'d>>,
 {
     let fun = Box::new(move |e: &mut Elements<S::IdxRaw<'d>>| e.fill(fun()));

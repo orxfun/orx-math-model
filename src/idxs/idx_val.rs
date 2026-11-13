@@ -1,4 +1,4 @@
-use crate::{MetaSet, Res, ResValid, SetTyp};
+use crate::{Set, Res, ResValid, SetTyp};
 use alloc::string::String;
 
 #[repr(C)]
@@ -23,12 +23,12 @@ impl<'d> IdxVal<'d> {
         Self { typ, data }
     }
 
-    pub fn read<S: MetaSet>(&self) -> S::IdxRaw<'d> {
+    pub fn read<S: Set>(&self) -> S::IdxRaw<'d> {
         Res::dbg_assert_same_set(S::typ(), self.typ);
         S::idx_unpack(&self.data)
     }
 
-    pub fn write<S: MetaSet>(&mut self, value: S::IdxRaw<'d>) {
+    pub fn write<S: Set>(&mut self, value: S::IdxRaw<'d>) {
         Res::dbg_assert_same_set(S::typ(), self.typ);
         S::idx_write(&mut self.data, value);
     }

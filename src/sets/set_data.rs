@@ -1,5 +1,5 @@
 use crate::sets::{FSet, FunSet};
-use crate::{Elements, MetaSet, Res, ResValid, SetTyp, Slot};
+use crate::{Elements, Set, Res, ResValid, SetTyp, Slot};
 use core::mem::transmute;
 
 #[derive(derive_new::new)]
@@ -12,14 +12,14 @@ impl<'d> DSet<'d> {
         self.slot.get().typ
     }
 
-    pub fn bind<S: MetaSet>(&self, fun: FSet<'d, S>) -> Res {
+    pub fn bind<S: Set>(&self, fun: FSet<'d, S>) -> Res {
         Res::dbg_assert_same_set(S::typ(), self.typ());
         let fun = FunSet::new::<S>(fun);
         self.slot.bind(fun)
     }
 
     #[cfg(test)]
-    pub fn t_fill<S: MetaSet>(&self, elements: &mut Elements<S::IdxRaw<'d>>) {
+    pub fn t_fill<S: Set>(&self, elements: &mut Elements<S::IdxRaw<'d>>) {
         Res::assert_slot_bound(self.slot.state()).unwrap();
         Res::assert_same_set_typ(S::typ(), self.typ()).unwrap();
         let fun = self.slot.get().get::<S>();

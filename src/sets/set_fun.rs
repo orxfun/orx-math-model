@@ -1,8 +1,8 @@
-use crate::{Elements, MetaCatInt, MetaCatStr, MetaOrd, MetaSet, Res, ResValid, SetTyp};
+use crate::{Elements, MetaCatInt, MetaCatStr, MetaOrd, Set, Res, ResValid, SetTyp};
 use alloc::boxed::Box;
 use core::mem::{transmute, ManuallyDrop};
 
-pub type FSet<'d, S> = Box<dyn Fn(&mut Elements<<S as MetaSet>::IdxRaw<'d>>) + 'd>;
+pub type FSet<'d, S> = Box<dyn Fn(&mut Elements<<S as Set>::IdxRaw<'d>>) + 'd>;
 
 #[repr(C)]
 pub union UFunSet<'d> {
@@ -44,7 +44,7 @@ impl<'d> FunSet<'d> {
         Self { typ, data }
     }
 
-    pub fn new<S: MetaSet>(fun: FSet<'d, S>) -> Self {
+    pub fn new<S: Set>(fun: FSet<'d, S>) -> Self {
         let fun = ManuallyDrop::new(fun);
         let typ = S::typ();
         let data = match typ {
@@ -61,7 +61,7 @@ impl<'d> FunSet<'d> {
         Self { typ, data }
     }
 
-    pub fn get<S: MetaSet>(&self) -> &FSet<'d, S> {
+    pub fn get<S: Set>(&self) -> &FSet<'d, S> {
         Res::dbg_assert_same_set(S::typ(), self.typ);
         S::set_unpack(&self.data)
     }

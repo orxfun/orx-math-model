@@ -19,7 +19,7 @@ pub enum SetTyp {
 
 // meta
 
-pub trait MetaSet: Clone + Copy + 'static {
+pub trait Set: Clone + Copy + 'static {
     // set
 
     type SetSym<'m, 'd: 'm>: Copy + Deref<Target = Symbol<'m, 'd, DSet<'d>>>;
@@ -74,7 +74,7 @@ pub trait MetaSet: Clone + Copy + 'static {
 #[derive(Clone, Copy)]
 pub struct MetaCatInt;
 
-impl MetaSet for MetaCatInt {
+impl Set for MetaCatInt {
     // set
 
     type SetSym<'m, 'd: 'm> = SetCatInt<'m, 'd>;
@@ -161,7 +161,7 @@ impl MetaSet for MetaCatInt {
 #[derive(Clone, Copy)]
 pub struct MetaCatStr;
 
-impl MetaSet for MetaCatStr {
+impl Set for MetaCatStr {
     // set
 
     type SetSym<'m, 'd: 'm> = SetCatStr<'m, 'd>;
@@ -256,7 +256,7 @@ impl MetaSet for MetaCatStr {
 #[derive(Clone, Copy)]
 pub struct MetaOrd;
 
-impl MetaSet for MetaOrd {
+impl Set for MetaOrd {
     // set
 
     type SetSym<'m, 'd: 'm> = SetOrd<'m, 'd>;

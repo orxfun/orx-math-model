@@ -1,6 +1,6 @@
 use crate::idxs::IdxVal;
 use crate::sets::DSet;
-use crate::{Elements, MetaSet, Ptr, Res, ResValid, SetTyp, Slot};
+use crate::{Elements, Set, Ptr, Res, ResValid, SetTyp, Slot};
 
 #[derive(derive_new::new)]
 pub struct DIdx<'d> {
@@ -9,11 +9,11 @@ pub struct DIdx<'d> {
 }
 
 impl<'d> DIdx<'d> {
-    pub fn read<S: MetaSet>(&self) -> S::IdxRaw<'d> {
+    pub fn read<S: Set>(&self) -> S::IdxRaw<'d> {
         self.slot.get().read::<S>()
     }
 
-    pub fn write<S: MetaSet>(&self, value: S::IdxRaw<'d>) {
+    pub fn write<S: Set>(&self, value: S::IdxRaw<'d>) {
         self.slot.get_mut().write::<S>(value);
     }
 }

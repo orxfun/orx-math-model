@@ -1,4 +1,4 @@
-use crate::{slot::State, MetaSet, Model, SetTyp, Symbol};
+use crate::{slot::State, Model, Set, SetTyp, Symbol};
 use alloc::string::String;
 use core::ops::Deref;
 

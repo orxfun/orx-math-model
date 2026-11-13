@@ -1,4 +1,4 @@
-use crate::{idxs::IdxVal, new_bag, Bag, MetaSet, Model, SetTyp};
+use crate::{idxs::IdxVal, new_bag, Bag, Set, Model, SetTyp};
 use alloc::boxed::Box;
 use core::mem::transmute;
 use orx_imp_vec::Elem;
