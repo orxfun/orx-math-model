@@ -1,5 +1,5 @@
 use crate::sets::CatInt;
-use crate::{Model, SetCatInt, SetCatStr, SetOrd, ValInt, ValNum};
+use crate::{Elements, ElementsIter, Model, Set, SetCatInt, SetCatStr, SetOrd, ValInt, ValNum};
 use alloc::string::{String, ToString};
 use alloc::{vec, vec::Vec};
 use std::collections::HashMap;
@@ -10,6 +10,7 @@ use std::collections::HashMap;
 fn p1_int_cint_at() {
     type I0 = SetCatInt;
     type V = ValInt;
+    type El<'d> = <I0 as Set>::IdxRaw<'d>;
 
     // data
     let set_data = vec![0, 2, 3];
@@ -20,15 +21,25 @@ fn p1_int_cint_at() {
     let set = m.cat_set_int();
     let idx = set.idx();
     let par = m.par1_int(set);
-    let sca1 = par.at(idx);
+    let sca1 = [par.at(idx), par[idx]];
+    let sca2 = [par.at(2), par[2]];
 
     // binding
     par.bind(|i| par_data[i]).unwrap();
+    set.bind(|| set_data.iter().copied()).unwrap();
 
     // running
-    for (i, v) in par_data.iter().copied().enumerate() {
-        let val = unsafe { par.el.get() }.at::<V, I0>(i);
-        assert_eq!(v, val);
+    let mut elements: Elements<El<'_>> = vec![].into();
+    let iter = ElementsIter::<I0>::new(idx, &mut elements);
+    for (i, _) in iter.enumerate() {
+        let exp = par_data[set_data[i]];
+        for sca in sca1 {
+            assert_eq!(exp, unsafe { sca.el.get() }.eval::<V>());
+        }
+        let exp = par_data[set_data[2]];
+        for sca in sca2 {
+            assert_eq!(exp, unsafe { sca.el.get() }.eval::<V>());
+        }
     }
 }
 
@@ -36,6 +47,7 @@ fn p1_int_cint_at() {
 fn p1_int_cstr_at() {
     type I0 = SetCatStr;
     type V = ValInt;
+    type El<'d> = <I0 as Set>::IdxRaw<'d>;
 
     // data
     let set_data: Vec<_> = [0, 2, 3].map(|x| x.to_string()).into_iter().collect();
@@ -53,8 +65,11 @@ fn p1_int_cstr_at() {
 
     // binding
     par.bind(|i| par_data[i]).unwrap();
+    set.bind(|| &set_data).unwrap();
 
     // running
+    let mut elements: Elements<El<'_>> = vec![].into();
+    let iter = ElementsIter::<I0>::new(idx, &mut elements);
     for (i, v) in par_data.iter() {
         let val = unsafe { par.el.get() }.at::<V, I0>(i);
         assert_eq!(*v, val);
@@ -65,6 +80,7 @@ fn p1_int_cstr_at() {
 fn p1_int_ord_at() {
     type I0 = SetOrd;
     type V = ValInt;
+    type El<'d> = <I0 as Set>::IdxRaw<'d>;
 
     // data
     let set_data = vec![0i64, 2, 3];
@@ -78,8 +94,11 @@ fn p1_int_ord_at() {
 
     // binding
     par.bind(|i| par_data(i)).unwrap();
+    set.bind(|| set_data.iter().copied()).unwrap();
 
     // running
+    let mut elements: Elements<El<'_>> = vec![].into();
+    let iter = ElementsIter::<I0>::new(idx, &mut elements);
     for (i, v) in (0..4).map(|i| par_data(i)).enumerate() {
         let val = unsafe { par.el.get() }.at::<V, I0>(i as i64);
         assert_eq!(v, val);
@@ -92,6 +111,7 @@ fn p1_int_ord_at() {
 fn p1_num_cint_at() {
     type I0 = SetCatInt;
     type V = ValNum;
+    type El<'d> = <I0 as Set>::IdxRaw<'d>;
 
     // data
     let set_data = vec![0, 2, 3];
@@ -105,8 +125,11 @@ fn p1_num_cint_at() {
 
     // binding
     par.bind(|i| par_data[i]).unwrap();
+    set.bind(|| set_data.iter().copied()).unwrap();
 
     // running
+    let mut elements: Elements<El<'_>> = vec![].into();
+    let iter = ElementsIter::<I0>::new(idx, &mut elements);
     for (i, v) in par_data.iter().copied().enumerate() {
         let val = unsafe { par.el.get() }.at::<V, I0>(i);
         assert_eq!(v, val);
@@ -117,6 +140,7 @@ fn p1_num_cint_at() {
 fn p1_num_cstr_at() {
     type I0 = SetCatStr;
     type V = ValNum;
+    type El<'d> = <I0 as Set>::IdxRaw<'d>;
 
     // data
     let set_data: Vec<_> = [0, 2, 3].map(|x| x.to_string()).into_iter().collect();
@@ -134,8 +158,11 @@ fn p1_num_cstr_at() {
 
     // binding
     par.bind(|i| par_data[i]).unwrap();
+    set.bind(|| &set_data).unwrap();
 
     // running
+    let mut elements: Elements<El<'_>> = vec![].into();
+    let iter = ElementsIter::<I0>::new(idx, &mut elements);
     for (i, v) in par_data.iter() {
         let val = unsafe { par.el.get() }.at::<V, I0>(i);
         assert_eq!(*v, val);
@@ -146,6 +173,7 @@ fn p1_num_cstr_at() {
 fn p1_num_ord_at() {
     type I0 = SetOrd;
     type V = ValNum;
+    type El<'d> = <I0 as Set>::IdxRaw<'d>;
 
     // data
     let set_data = vec![0i64, 2, 3];
@@ -159,8 +187,11 @@ fn p1_num_ord_at() {
 
     // binding
     par.bind(|i| par_data(i)).unwrap();
+    set.bind(|| set_data.iter().copied()).unwrap();
 
     // running
+    let mut elements: Elements<El<'_>> = vec![].into();
+    let iter = ElementsIter::<I0>::new(idx, &mut elements);
     for (i, v) in (0..4).map(|i| par_data(i)).enumerate() {
         let val = unsafe { par.el.get() }.at::<V, I0>(i as i64);
         assert_eq!(v, val);
