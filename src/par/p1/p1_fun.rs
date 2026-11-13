@@ -1,0 +1,18 @@
+use crate::{
+    Elements, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetTyp, Val, ValInt, ValNum,
+};
+use alloc::boxed::Box;
+use core::mem::{transmute, ManuallyDrop};
+
+pub type FP1<'d, V, I0> = Box<dyn Fn(<I0 as Set>::IdxRaw<'d>) -> <V as Val>::Raw + 'd>;
+
+#[repr(C)]
+pub union UFunP1<'d> {
+    pub cint_int: ManuallyDrop<FP1<'d, ValInt, SetCatInt>>,
+    pub cstr_int: ManuallyDrop<FP1<'d, ValInt, SetCatStr>>,
+    pub ord_int: ManuallyDrop<FP1<'d, ValInt, SetOrd>>,
+
+    pub cint_num: ManuallyDrop<FP1<'d, ValNum, SetCatInt>>,
+    pub cstr_num: ManuallyDrop<FP1<'d, ValNum, SetCatStr>>,
+    pub ord_num: ManuallyDrop<FP1<'d, ValNum, SetOrd>>,
+}

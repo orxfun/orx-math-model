@@ -27,11 +27,11 @@ mod err;
 // mod idxs;
 mod idxs;
 mod model;
-mod vals;
-// mod par;
+mod par;
 mod sets;
 mod slot;
 mod symbol;
+mod vals;
 // mod vals;
 
 // crate
@@ -40,10 +40,10 @@ pub(crate) use elements::{Elements, ElementsIter};
 pub(crate) use err::{Res, ResValid};
 // pub(crate) use fun::{FSet, FunSet};
 // pub(crate) use idxs::{CatIntIdxSum, CatStrIdxSum, Idx, OrdIdxSum};
-pub(crate) use sets::{SetCatInt, SetCatStr, SetOrd, Set, SetTyp};
+pub(crate) use sets::{Set, SetCatInt, SetCatStr, SetOrd, SetTyp};
 pub(crate) use slot::{Ptr, Slot};
 pub(crate) use symbol::Symbol;
-pub(crate) use vals::{ValInt, ValNum, Val, ValTyp};
+pub(crate) use vals::{Val, ValInt, ValNum, ValTyp};
 
 // api
 pub use model::Model;
