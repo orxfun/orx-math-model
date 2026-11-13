@@ -3,11 +3,11 @@ use crate::{ConValTyp, Elements, Res, ResValid, Slot, TConVal, Val};
 use core::mem::transmute;
 
 #[derive(derive_new::new)]
-pub struct DVal {
+pub struct DConVal {
     val: ConVal,
 }
 
-impl DVal {
+impl DConVal {
     fn typ(&self) -> ConValTyp {
         self.val.typ
     }
