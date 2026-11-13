@@ -17,9 +17,9 @@ pub trait Val: Clone + Copy + 'static {
 // int
 
 #[derive(Clone, Copy)]
-pub struct Int;
+pub struct ValInt;
 
-impl Val for Int {
+impl Val for ValInt {
     type Raw = i64;
 
     fn typ() -> ValTyp {
@@ -30,9 +30,9 @@ impl Val for Int {
 // num
 
 #[derive(Clone, Copy)]
-pub struct Num;
+pub struct ValNum;
 
-impl Val for Num {
+impl Val for ValNum {
     type Raw = f64;
 
     fn typ() -> ValTyp {

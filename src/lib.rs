@@ -43,7 +43,7 @@ pub(crate) use err::{Res, ResValid};
 pub(crate) use sets::{SetCatInt, SetCatStr, SetOrd, Set, SetTyp};
 pub(crate) use slot::{Ptr, Slot};
 pub(crate) use symbol::Symbol;
-pub(crate) use vals::{Int, Num, Val, ValTyp};
+pub(crate) use vals::{ValInt, ValNum, Val, ValTyp};
 
 // api
 pub use model::Model;
