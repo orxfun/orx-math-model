@@ -1,5 +1,5 @@
 use crate::{new_bag, sets::SetTyp, Bag, Elements, Res, Slot};
-use crate::{MetaSet, Ptr};
+use crate::{MetaSet, Model, Ptr};
 use alloc::string::String;
 use core::mem::{transmute, MaybeUninit};
 use core::sync::atomic::{AtomicBool, Ordering};
@@ -13,18 +13,18 @@ pub enum IdxSlot<'d> {
 
 #[derive(Debug, PartialEq)]
 pub enum IdxVal<'d> {
-    CatIdxInt(usize),
-    CatIdxStr(&'d String),
-    OrdIdx(i64),
+    CatInt(usize),
+    CatStr(&'d String),
+    Ord(i64),
 }
 
 impl<'d> IdxSlot<'d> {
     #[cfg(test)]
     pub fn test_value(&self) -> IdxVal<'d> {
         match self {
-            Self::CatIdxInt(x) => IdxVal::CatIdxInt(*x.get()),
-            Self::CatIdxStr(x) => IdxVal::CatIdxStr(*x.get()),
-            Self::OrdIdx(x) => IdxVal::OrdIdx(*x.get()),
+            Self::CatIdxInt(x) => IdxVal::CatInt(*x.get()),
+            Self::CatIdxStr(x) => IdxVal::CatStr(*x.get()),
+            Self::OrdIdx(x) => IdxVal::Ord(*x.get()),
         }
     }
 
@@ -56,19 +56,19 @@ impl Default for IdxSlots<'_> {
 }
 
 impl<'d> IdxSlots<'d> {
-    pub fn push(&self, t: SetTyp) -> IdxSlot<'d> {
+    pub fn push(&self, m: &Model<'d>, t: SetTyp) -> IdxSlot<'d> {
         match t {
-            SetTyp::CatSetInt => {
+            SetTyp::CatInt => {
                 let el = self.cat_idx_int.push(0);
-                IdxSlot::CatIdxInt(el.into())
+                IdxSlot::CatIdxInt(Slot::new(m, el))
             }
-            SetTyp::CatSetStr => {
+            SetTyp::CatStr => {
                 let el = self.cat_idx_str.push(unsafe { empty_string() });
-                IdxSlot::CatIdxStr(el.into())
+                IdxSlot::CatIdxStr(Slot::new(m, el))
             }
-            SetTyp::OrdSet => {
+            SetTyp::Ord => {
                 let el = self.ord_idx.push(0);
-                IdxSlot::OrdIdx(el.into())
+                IdxSlot::OrdIdx(Slot::new(m, el))
             }
         }
     }

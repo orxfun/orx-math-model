@@ -1,0 +1,32 @@
+use crate::idxs::{IdxCatInt, IdxCatStr, IdxOrd};
+use crate::vals::Int;
+use alloc::string::String;
+
+// cint
+
+#[derive(derive_more::From)]
+pub enum IndexCatInt<'m, 'd> {
+    Idx(IdxCatInt<'m, 'd>),
+    ConUsize(usize),
+}
+
+// cstr
+
+#[derive(derive_more::From)]
+pub enum IndexCatStr<'m, 'd> {
+    Idx(IdxCatStr<'m, 'd>),
+    ConString(String),
+    ConStringRef(&'d String),
+    ConStr(&'d str),
+}
+
+// ord
+
+#[derive(derive_more::From)]
+pub enum IndexOrd<'m, 'd> {
+    Idx(IdxOrd<'m, 'd>),
+    Int(Int<'m, 'd>),
+    ConUsize(usize),
+    ConI64(i64),
+    ConI32(i32),
+}

@@ -19,27 +19,35 @@ extern crate alloc;
 #[cfg(any(test, feature = "std"))]
 extern crate std;
 
-mod arb_val;
+// mod arb_val;
 mod bag;
 mod elements;
 mod err;
+// mod fun;
+// mod idxs;
+mod con_vals;
 mod idxs;
 mod model;
-mod par;
+mod pars;
 mod sets;
 mod slot;
+mod sym_refs;
 mod symbol;
+mod val_idx_pairs;
 mod vals;
+// mod vals;
 
 // crate
 pub(crate) use bag::{new_bag, Bag};
 pub(crate) use elements::{Elements, ElementsIter};
-pub(crate) use err::{Err, Res, Validation};
-pub(crate) use idxs::{CatIntIdxSum, CatStrIdxSum, Idx, OrdIdxSum};
-pub(crate) use sets::{MetaCatSetInt, MetaCatSetStr, MetaOrdSet, MetaSet, Set, SetTyp};
+pub(crate) use err::{Res, ResValid};
+// pub(crate) use fun::{FSet, FunSet};
+// pub(crate) use idxs::{CatIntIdxSum, CatStrIdxSum, Idx, OrdIdxSum};
+pub(crate) use con_vals::{ConValTyp, TConVal};
+pub(crate) use sets::{Set, SetCatInt, SetCatStr, SetOrd, SetSym, SetTyp};
 pub(crate) use slot::{Ptr, Slot};
 pub(crate) use symbol::Symbol;
-pub(crate) use vals::{MetaInt, MetaNum, MetaVal, Val, ValSymSum, ValTyp};
+pub(crate) use vals::{Val, ValInt, ValNum, ValTyp};
 
 // api
 pub use model::Model;

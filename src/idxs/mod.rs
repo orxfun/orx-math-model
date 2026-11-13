@@ -2,11 +2,13 @@
 mod tests;
 
 mod idx_bag;
-mod idx_slots;
+mod idx_data;
 mod idx_symbols;
-mod meta_idx;
+mod idx_val;
+mod idx_val_bag;
 
-pub use idx_bag::{DIdx, IdxBag};
-pub use idx_slots::{IdxSlot, IdxSlots, IdxVal};
-pub use idx_symbols::{CatIdxInt, CatIdxStr, OrdIdx};
-pub use meta_idx::{CatIntIdxSum, CatStrIdxSum, Idx, OrdIdxSum};
+pub use idx_bag::IdxBag;
+pub use idx_data::DIdx;
+pub use idx_symbols::{IdxCatInt, IdxCatStr, IdxOrd};
+pub use idx_val::{IdxVal, UIdxVal};
+pub use idx_val_bag::IdxValBag;

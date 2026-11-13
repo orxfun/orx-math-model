@@ -1,6 +1,6 @@
 use crate::idxs::{CatIdxInt, CatIdxStr, IdxSlot, OrdIdx};
 use crate::vals::Int;
-use crate::{MetaCatSetInt, MetaCatSetStr, MetaOrdSet, MetaSet, MetaVal, Model, Ptr};
+use crate::{MetaCatInt, MetaCatStr, MetaOrd, MetaSet, MetaVal, Model, Ptr};
 use alloc::boxed::Box;
 use alloc::string::String;
 
@@ -28,7 +28,7 @@ impl<'m, 'd> CatIntIdxSum<'m, 'd> {
         match self {
             CatIntIdxSum::Usize(i0) => Box::new(move || p1.get()(i0)),
             CatIntIdxSum::Idx(i0) => {
-                let i0 = unsafe { i0.el.get() }.idx.val_ptr::<MetaCatSetInt>();
+                let i0 = unsafe { i0.el.get() }.idx.val_ptr::<MetaCatInt>();
                 Box::new(move || p1.get()(i0.val()))
             }
         }
@@ -36,7 +36,7 @@ impl<'m, 'd> CatIntIdxSum<'m, 'd> {
 }
 
 impl<'m, 'd> Idx<'m, 'd> for CatIdxInt<'m, 'd> {
-    type Meta = MetaCatSetInt;
+    type Meta = MetaCatInt;
 
     fn slot(self) -> IdxSlot<'d> {
         unsafe { self.el.get() }.idx.clone()
@@ -54,7 +54,7 @@ pub enum CatStrIdxSum<'m, 'd> {
 }
 
 impl<'m, 'd> Idx<'m, 'd> for CatIdxStr<'m, 'd> {
-    type Meta = MetaCatSetStr;
+    type Meta = MetaCatStr;
 
     fn slot(self) -> IdxSlot<'d> {
         unsafe { self.el.get() }.idx.clone()
@@ -71,7 +71,7 @@ pub enum OrdIdxSum<'m, 'd> {
 }
 
 impl<'m, 'd> Idx<'m, 'd> for OrdIdx<'m, 'd> {
-    type Meta = MetaOrdSet;
+    type Meta = MetaOrd;
 
     fn slot(self) -> IdxSlot<'d> {
         unsafe { self.el.get() }.idx.clone()

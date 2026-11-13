@@ -1,55 +1,60 @@
-use crate::idxs::{CatIdxInt, CatIdxStr, OrdIdx};
-use crate::sets::{SetFun, SetSlot};
-use crate::{Elements, Res, Symbol};
+use crate::idxs::{IdxCatInt, IdxCatStr, IdxOrd};
+// use crate::idxs::{CatIdxInt, CatIdxStr, OrdIdx};
+use crate::sets::DSet;
+use crate::{Elements, Res, Set, SetCatInt, SetCatStr, SetOrd, Symbol};
 use alloc::{boxed::Box, string::String};
+
+fn bind<'d, S, I>(set: Symbol<'_, 'd, DSet<'d>>, fun: impl Fn() -> I + 'd) -> Res
+where
+    S: Set,
+    I: IntoIterator<Item = S::IdxRaw<'d>>,
+{
+    let fun = Box::new(move |e: &mut Elements<S::IdxRaw<'d>>| e.fill(fun()));
+    let data = unsafe { set.el.get() };
+    data.bind::<S>(fun)
+}
 
 // cat int
 
 #[derive(derive_more::From, derive_more::Deref, Clone, Copy)]
-pub struct CatSetInt<'m, 'd>(pub(crate) Symbol<'m, 'd, SetSlot<'d>>);
+pub struct CatInt<'m, 'd>(pub(crate) Symbol<'m, 'd, DSet<'d>>);
 
-impl<'m, 'd> CatSetInt<'m, 'd> {
-    pub fn bind<I: IntoIterator<Item = usize>>(self, fun: impl Fn() -> I + 'd) {
-        let fun = Box::new(move |e: &mut Elements<usize>| e.fill(fun()));
-        let slot = unsafe { self.el.get() };
-        slot.bind(SetFun::CatSetInt(fun)).expect("TODO: can't fail")
+impl<'m, 'd> CatInt<'m, 'd> {
+    pub fn bind<I: IntoIterator<Item = usize>>(self, fun: impl Fn() -> I + 'd) -> Res {
+        bind::<SetCatInt, _>(self.0, fun)
     }
 
-    pub fn idx(self) -> CatIdxInt<'m, 'd> {
-        self.m.cat_idx_int(self)
+    pub fn idx(self) -> IdxCatInt<'m, 'd> {
+        self.m.idx::<SetCatInt>(self)
     }
 }
 
 // cat str
 
 #[derive(derive_more::From, derive_more::Deref, Clone, Copy)]
-pub struct CatSetStr<'m, 'd>(pub(crate) Symbol<'m, 'd, SetSlot<'d>>);
+pub struct CatStr<'m, 'd>(pub(crate) Symbol<'m, 'd, DSet<'d>>);
 
-impl<'m, 'd> CatSetStr<'m, 'd> {
-    pub fn bind<I: IntoIterator<Item = &'d String>>(self, fun: impl Fn() -> I + 'd) {
-        let fun = Box::new(move |e: &mut Elements<&'d String>| e.fill(fun()));
-        let slot = unsafe { self.el.get() };
-        slot.bind(SetFun::CatSetStr(fun)).expect("TODO: can't fail")
+impl<'m, 'd> CatStr<'m, 'd> {
+    pub fn bind<I: IntoIterator<Item = &'d String>>(self, fun: impl Fn() -> I + 'd) -> Res {
+        bind::<SetCatStr, _>(self.0, fun)
     }
 
-    pub fn idx(self) -> CatIdxStr<'m, 'd> {
-        self.m.cat_idx_str(self)
+    pub fn idx(self) -> IdxCatStr<'m, 'd> {
+        self.m.idx::<SetCatStr>(self)
     }
 }
 
 // ord
 
 #[derive(derive_more::From, derive_more::Deref, Clone, Copy)]
-pub struct OrdSet<'m, 'd>(pub(crate) Symbol<'m, 'd, SetSlot<'d>>);
+pub struct Ord<'m, 'd>(pub(crate) Symbol<'m, 'd, DSet<'d>>);
 
-impl<'m, 'd> OrdSet<'m, 'd> {
-    pub fn bind<I: IntoIterator<Item = i64>>(self, fun: impl Fn() -> I + 'd) {
-        let fun = Box::new(move |e: &mut Elements<i64>| e.fill(fun()));
-        let slot = unsafe { self.el.get() };
-        slot.bind(SetFun::OrdSet(fun)).expect("TODO: can't fail")
+impl<'m, 'd> Ord<'m, 'd> {
+    pub fn bind<I: IntoIterator<Item = i64>>(self, fun: impl Fn() -> I + 'd) -> Res {
+        bind::<SetOrd, _>(self.0, fun)
     }
 
-    pub fn idx(self) -> OrdIdx<'m, 'd> {
-        self.m.ord_idx(self)
+    pub fn idx(self) -> IdxOrd<'m, 'd> {
+        self.m.idx::<SetOrd>(self)
     }
 }

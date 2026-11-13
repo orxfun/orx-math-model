@@ -1,7 +1,9 @@
-use crate::{Res, Validation};
+use crate::{new_bag, Bag, Model, Res, ResValid};
 use alloc::{boxed::Box, format, rc::Rc, string::String};
 use core::{cell::UnsafeCell, marker::PhantomData};
 use orx_imp_vec::Elem;
+
+// state
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum State {
@@ -9,17 +11,35 @@ pub enum State {
     Bound,
 }
 
+pub struct SlotStates {
+    bag: Bag<State>,
+}
+
+impl Default for SlotStates {
+    fn default() -> Self {
+        Self { bag: new_bag() }
+    }
+}
+
+impl SlotStates {
+    pub fn push(&self) -> Elem<'_, State> {
+        self.bag.push(State::Empty)
+    }
+}
+
+// slot
+
 pub struct Slot<'d, T> {
-    state: Rc<UnsafeCell<State>>,
+    state: *mut State,
     p: *mut T,
     phantom: PhantomData<fn() -> &'d ()>,
 }
 
-impl<'m, 'd, T> From<Elem<'m, T>> for Slot<'d, T> {
-    fn from(value: Elem<'m, T>) -> Self {
+impl<'d, T> Slot<'d, T> {
+    pub fn new<'m>(m: &'m Model<'d>, el: Elem<'m, T>) -> Self {
         Self {
-            state: Rc::new(State::Empty.into()),
-            p: value.as_mut_ptr(),
+            state: m.slot_state().as_mut_ptr(),
+            p: el.as_mut_ptr(),
             phantom: PhantomData,
         }
     }
@@ -27,22 +47,20 @@ impl<'m, 'd, T> From<Elem<'m, T>> for Slot<'d, T> {
 
 impl<'d, T> Clone for Slot<'d, T> {
     fn clone(&self) -> Self {
-        Self {
-            p: self.p,
-            state: self.state.clone(),
-            phantom: PhantomData,
-        }
+        *self
     }
 }
 
+impl<'d, T> Copy for Slot<'d, T> {}
+
 impl<'d, T> Slot<'d, T> {
-    fn state(&self) -> State {
-        *unsafe { &*self.state.get() }
+    pub fn state(&self) -> State {
+        *unsafe { &*self.state }
     }
 
     pub fn bind(&self, value: T) -> Res {
-        Res::assert_slot_empty(self.state())?;
-        *unsafe { &mut *self.state.get() } = State::Bound;
+        Res::assert_slot_empty(*unsafe { &*self.state })?;
+        *unsafe { &mut *(self.state) } = State::Bound;
         *unsafe { &mut *self.p } = value;
         Ok(())
     }
@@ -53,6 +71,10 @@ impl<'d, T> Slot<'d, T> {
 
     pub fn get(&self) -> &T {
         unsafe { &*self.p }
+    }
+
+    pub fn get_mut(&self) -> &mut T {
+        unsafe { &mut *self.p }
     }
 
     pub fn mut_ptr(&self) -> *mut T {
@@ -70,7 +92,7 @@ impl<'d, T> Slot<'d, T> {
 // ptr
 
 pub struct Ptr<'d, T> {
-    p: *mut T,
+    pub p: *const T,
     phantom: PhantomData<fn() -> &'d ()>,
 }
 
@@ -86,7 +108,14 @@ impl<'d, T> Clone for Ptr<'d, T> {
 impl<'d, T> Copy for Ptr<'d, T> {}
 
 impl<'d, T> Ptr<'d, T> {
-    pub fn get(&self) -> &T {
+    pub fn new(el: Elem<'_, T>) -> Self {
+        Self {
+            p: el.as_ptr(),
+            phantom: PhantomData,
+        }
+    }
+
+    pub fn get(&self) -> &'d T {
         unsafe { &*self.p }
     }
 

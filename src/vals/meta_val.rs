@@ -1,79 +1,61 @@
-use crate::vals::{Int, Num, ValFun};
+use crate::vals::{DVal, FVal, Int, Num, UFunVal};
 use crate::{Model, Symbol};
-use alloc::boxed::Box;
+use core::mem::{transmute, ManuallyDrop};
+use core::ops::Deref;
 use orx_imp_vec::Elem;
 
 // enums
 
+#[derive(Debug, PartialEq, Clone, Copy)]
 pub enum ValTyp {
     Int,
     Num,
 }
 
-#[derive(Debug, PartialEq)]
-pub enum ValVal {
-    Int(i64),
-    Num(f64),
-}
+// meta
 
-pub enum ValSymSum<'m, 'd> {
-    Int(Int<'m, 'd>),
-    Num(Num<'m, 'd>),
-}
+pub trait Val: Clone + Copy + 'static {
+    type Raw: Clone + Copy;
 
-// trait
+    type Sym<'m, 'd: 'm>: Clone
+        + Copy
+        + Deref<Target = Symbol<'m, 'd, DVal<'d>>>
+        + From<Symbol<'m, 'd, DVal<'d>>>;
 
-pub trait MetaVal: Clone + Copy + 'static {
-    type Val: Default + Clone + Copy + 'static;
+    fn typ() -> ValTyp;
 
-    type Sym<'m, 'd>: Val<'m, 'd>
-    where
-        'd: 'm;
+    fn into_fun_union<'d>(fun: FVal<'d, Self>) -> UFunVal<'d>;
 
-    fn val_typ() -> ValTyp;
+    fn fun_from_union<'a, 'd>(u: &'a UFunVal<'d>) -> &'a FVal<'d, Self>;
 
-    fn val_as_enum(idx: Self::Val) -> ValVal;
-
-    fn create_val_fun<'d>(fun: impl Fn() -> Self::Val + 'd) -> ValFun<'d>;
-
-    fn unpack_val_fun<'a, 'd>(fun: &'a ValFun<'d>) -> &'a Box<dyn Fn() -> Self::Val + 'd>;
-
-    fn create_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, ValFun<'d>>) -> Self::Sym<'m, 'd>;
+    fn new_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DVal<'d>>) -> Self::Sym<'m, 'd>;
 }
 
 // int
 
 #[derive(Clone, Copy)]
-pub struct MetaInt;
+pub struct ValInt;
 
-impl MetaVal for MetaInt {
-    type Val = i64;
+impl Val for ValInt {
+    type Raw = i64;
 
-    type Sym<'m, 'd>
-        = Int<'m, 'd>
-    where
-        'd: 'm;
+    type Sym<'m, 'd: 'm> = Int<'m, 'd>;
 
-    fn val_typ() -> ValTyp {
+    fn typ() -> ValTyp {
         ValTyp::Int
     }
 
-    fn val_as_enum(idx: Self::Val) -> ValVal {
-        ValVal::Int(idx)
-    }
-
-    fn create_val_fun<'d>(fun: impl Fn() -> Self::Val + 'd) -> ValFun<'d> {
-        ValFun::Int(Box::new(fun))
-    }
-
-    fn unpack_val_fun<'a, 'd>(fun: &'a ValFun<'d>) -> &'a Box<dyn Fn() -> Self::Val + 'd> {
-        match fun {
-            ValFun::Int(x) => x,
-            _ => unreachable!(),
+    fn into_fun_union<'d>(fun: FVal<'d, Self>) -> UFunVal<'d> {
+        UFunVal {
+            int: ManuallyDrop::new(fun),
         }
     }
 
-    fn create_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, ValFun<'d>>) -> Self::Sym<'m, 'd> {
+    fn fun_from_union<'a, 'd>(u: &'a UFunVal<'d>) -> &'a FVal<'d, Self> {
+        unsafe { &u.int }
+    }
+
+    fn new_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DVal<'d>>) -> Self::Sym<'m, 'd> {
         Symbol::new(m, el).into()
     }
 }
@@ -81,70 +63,28 @@ impl MetaVal for MetaInt {
 // num
 
 #[derive(Clone, Copy)]
-pub struct MetaNum;
+pub struct ValNum;
 
-impl MetaVal for MetaNum {
-    type Val = f64;
+impl Val for ValNum {
+    type Raw = f64;
 
-    type Sym<'m, 'd>
-        = Num<'m, 'd>
-    where
-        'd: 'm;
+    type Sym<'m, 'd: 'm> = Num<'m, 'd>;
 
-    fn val_typ() -> ValTyp {
+    fn typ() -> ValTyp {
         ValTyp::Num
     }
 
-    fn val_as_enum(idx: Self::Val) -> ValVal {
-        ValVal::Num(idx)
-    }
-
-    fn create_val_fun<'d>(fun: impl Fn() -> Self::Val + 'd) -> ValFun<'d> {
-        ValFun::Num(Box::new(fun))
-    }
-
-    fn unpack_val_fun<'a, 'd>(fun: &'a ValFun<'d>) -> &'a Box<dyn Fn() -> Self::Val + 'd> {
-        match fun {
-            ValFun::Num(x) => x,
-            _ => unreachable!(),
+    fn into_fun_union<'d>(fun: FVal<'d, Self>) -> UFunVal<'d> {
+        UFunVal {
+            num: ManuallyDrop::new(fun),
         }
     }
 
-    fn create_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, ValFun<'d>>) -> Self::Sym<'m, 'd> {
+    fn fun_from_union<'a, 'd>(u: &'a UFunVal<'d>) -> &'a FVal<'d, Self> {
+        unsafe { &u.num }
+    }
+
+    fn new_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DVal<'d>>) -> Self::Sym<'m, 'd> {
         Symbol::new(m, el).into()
-    }
-}
-
-// symbols
-
-pub trait Val<'m, 'd> {
-    fn into_sym_sum(self) -> ValSymSum<'m, 'd>;
-
-    fn from_sum_to_self(sum: &'m ValSymSum<'m, 'd>) -> &'m Self;
-}
-
-impl<'m, 'd> Val<'m, 'd> for Int<'m, 'd> {
-    fn into_sym_sum(self) -> ValSymSum<'m, 'd> {
-        ValSymSum::Int(self)
-    }
-
-    fn from_sum_to_self(sum: &'m ValSymSum<'m, 'd>) -> &'m Self {
-        match sum {
-            ValSymSum::Int(x) => x,
-            _ => unreachable!(),
-        }
-    }
-}
-
-impl<'m, 'd> Val<'m, 'd> for Num<'m, 'd> {
-    fn into_sym_sum(self) -> ValSymSum<'m, 'd> {
-        ValSymSum::Num(self)
-    }
-
-    fn from_sum_to_self(sum: &'m ValSymSum<'m, 'd>) -> &'m Self {
-        match sum {
-            ValSymSum::Num(x) => x,
-            _ => unreachable!(),
-        }
     }
 }

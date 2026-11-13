@@ -1,31 +1,15 @@
-use crate::{slot::State, Model, Symbol};
+use crate::{con_vals::ConValTyp, slot::State, Model, Set, SetTyp, Symbol, ValTyp};
 use alloc::string::String;
 use core::ops::Deref;
-
-// err
-
-#[derive(derive_new::new)]
-pub struct Err {
-    msg: String,
-}
-
-impl Err {
-    pub fn when(condition: bool, msg: impl Fn() -> String) -> Res {
-        match condition {
-            true => Err(msg()),
-            false => Ok(()),
-        }
-    }
-}
 
 // res
 
 pub type Res<T = ()> = Result<T, String>;
 
-impl Validation for Res {}
+impl ResValid for Res {}
 
 // TODO: fix the error messages
-pub trait Validation {
+pub trait ResValid {
     fn assert(condition: bool, msg: impl FnOnce() -> String) -> Res {
         match condition {
             true => Ok(()),
@@ -50,6 +34,10 @@ pub trait Validation {
         Self::assert(core::ptr::eq(m, sym.m), || String::from("wrong model used"))
     }
 
+    fn assert_same_set_typ(a: SetTyp, b: SetTyp) -> Res {
+        Self::assert(a == b, || String::from("set type mismatch"))
+    }
+
     // panic
 
     fn dbg_assert_same_model<'m, 'd, T>(
@@ -57,5 +45,21 @@ pub trait Validation {
         sym: impl Deref<Target = Symbol<'m, 'd, T>>,
     ) {
         debug_assert!(core::ptr::eq(m, sym.m), "wrong model used");
+    }
+
+    fn dbg_assert_same_set(a: SetTyp, b: SetTyp) {
+        debug_assert_eq!(a, b, "wrong set type")
+    }
+
+    fn dbg_assert_same_val(a: ValTyp, b: ValTyp) {
+        debug_assert_eq!(a, b, "wrong val type")
+    }
+
+    fn dbg_assert_same_con_val(a: ConValTyp, b: ConValTyp) {
+        debug_assert_eq!(a, b, "wrong constant value type")
+    }
+
+    fn dbg_assert_slot_bound(state: State) {
+        Self::assert_slot_bound(state).unwrap();
     }
 }

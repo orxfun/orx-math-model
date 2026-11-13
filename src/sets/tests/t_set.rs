@@ -1,4 +1,5 @@
 use crate::{elements::Elements, Model};
+use crate::{SetCatInt, SetCatStr, SetOrd};
 use alloc::string::{String, ToString};
 use alloc::{vec, vec::Vec};
 
@@ -12,12 +13,12 @@ fn set_cat_int() {
     let set = m.cat_set_int();
 
     // binding
-    set.bind(|| values.iter().copied());
+    set.bind(|| values.iter().copied()).unwrap();
 
     // running
-    let mut elements: Elements<usize> = vec![].into();
-    unsafe { set.el.get() }.fill(&mut elements).unwrap();
-    assert_eq!(elements.as_slice(), &[1, 2, 7, 9]);
+    let mut el: Elements<usize> = vec![].into();
+    unsafe { set.el.get() }.t_fill::<SetCatInt>(&mut el);
+    assert_eq!(el.as_slice(), &[1, 2, 7, 9]);
 }
 
 #[test]
@@ -30,12 +31,12 @@ fn set_cat_str() {
     let set = m.cat_set_str();
 
     // binding
-    set.bind(|| &values);
+    set.bind(|| &values).unwrap();
 
     // running
-    let mut elements: Elements<&String> = vec![].into();
-    unsafe { set.el.get() }.fill(&mut elements).unwrap();
-    assert_eq!(elements.as_slice(), &["1", "2", "7", "9"]);
+    let mut el: Elements<&String> = vec![].into();
+    unsafe { set.el.get() }.t_fill::<SetCatStr>(&mut el);
+    assert_eq!(el.as_slice(), &["1", "2", "7", "9"]);
 }
 
 #[test]
@@ -48,10 +49,10 @@ fn set_ord() {
     let set = m.ord_set();
 
     // binding
-    set.bind(|| values.iter().copied());
+    set.bind(|| values.iter().copied()).unwrap();
 
     // running
-    let mut elements: Elements<i64> = vec![].into();
-    unsafe { set.el.get() }.fill(&mut elements).unwrap();
-    assert_eq!(elements.as_slice(), &[1, 2, 7, 9]);
+    let mut el: Elements<i64> = vec![].into();
+    unsafe { set.el.get() }.t_fill::<SetOrd>(&mut el);
+    assert_eq!(el.as_slice(), &[1, 2, 7, 9]);
 }
