@@ -10,7 +10,7 @@ use orx_imp_vec::Elem;
 
 // enums
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 pub enum SetTyp {
     CatInt,
     CatStr,

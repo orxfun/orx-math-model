@@ -1,4 +1,4 @@
-use crate::{slot::State, Model, Symbol};
+use crate::{slot::State, MetaSet, Model, SetTyp, Symbol};
 use alloc::string::String;
 use core::ops::Deref;
 
@@ -41,5 +41,9 @@ pub trait Validation {
         sym: impl Deref<Target = Symbol<'m, 'd, T>>,
     ) {
         debug_assert!(core::ptr::eq(m, sym.m), "wrong model used");
+    }
+
+    fn dbg_assert_same_set<S: MetaSet>(set_typ: SetTyp) {
+        debug_assert_eq!(S::set_typ(), set_typ, "wrong set type")
     }
 }
