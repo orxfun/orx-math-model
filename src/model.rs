@@ -62,7 +62,7 @@ impl<'d> Model<'d> {
         let fun_el = self.fun_bag.push_set(S::set_typ());
         let fun_slot = Slot::new(self, fun_el);
         let el = self.set_bag.push(S::set_typ(), fun_slot);
-        M::create_set_sym(self, el)
+        S::create_set_sym(self, el)
     }
 
     // idxs
