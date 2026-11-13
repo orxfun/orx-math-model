@@ -45,6 +45,6 @@ impl<'d> FunVal<'d> {
 
     pub fn get<V: Val>(&self) -> &FVal<'d, V> {
         Res::dbg_assert_same_val(V::typ(), self.typ);
-        V::val_unpack(&self.data)
+        V::fun_from_union(&self.data)
     }
 }

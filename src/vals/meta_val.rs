@@ -19,7 +19,7 @@ pub trait Val: Clone + Copy + 'static {
 
     fn typ() -> ValTyp;
 
-    fn val_unpack<'a, 'd>(u: &'a UFunVal<'d>) -> &'a FVal<'d, Self>;
+    fn fun_from_union<'a, 'd>(u: &'a UFunVal<'d>) -> &'a FVal<'d, Self>;
 
     fn new_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DVal<'d>>) -> Self::Sym<'m, 'd>;
 }
@@ -38,7 +38,7 @@ impl Val for ValInt {
         ValTyp::Int
     }
 
-    fn val_unpack<'a, 'd>(u: &'a UFunVal<'d>) -> &'a FVal<'d, Self> {
+    fn fun_from_union<'a, 'd>(u: &'a UFunVal<'d>) -> &'a FVal<'d, Self> {
         unsafe { &u.int }
     }
 
@@ -61,7 +61,7 @@ impl Val for ValNum {
         ValTyp::Num
     }
 
-    fn val_unpack<'a, 'd>(u: &'a UFunVal<'d>) -> &'a FVal<'d, Self> {
+    fn fun_from_union<'a, 'd>(u: &'a UFunVal<'d>) -> &'a FVal<'d, Self> {
         unsafe { &u.num }
     }
 

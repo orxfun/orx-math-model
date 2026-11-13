@@ -26,4 +26,8 @@ impl<'m, 'd, V: Val, I0: Set> ParD1<'m, 'd, V, I0> {
         let data = unsafe { self.el.get() };
         data.bind::<V, I0>(fun)
     }
+
+    pub fn at(self) -> V::Sym<'m, 'd> {
+        todo!()
+    }
 }
