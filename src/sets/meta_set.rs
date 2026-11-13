@@ -341,38 +341,3 @@ impl Set for Ord {
     //     }
     // }
 }
-
-// symbols
-
-// pub trait Set<'m, 'd>: Deref<Target = Symbol<'m, 'd, DSet<'d>>> + Clone + Copy
-// where
-//     'd: 'm,
-// {
-//     type Meta: MetaSet;
-
-//     fn ptr(self) -> Ptr<'d, DSet<'d>>;
-// }
-
-// impl<'m, 'd> Set<'m, 'd> for SetCatInt<'m, 'd> {
-//     type Meta = MetaCatInt;
-
-//     fn ptr(self) -> Ptr<'d, DSet<'d>> {
-//         Ptr::new(self.el)
-//     }
-// }
-
-// impl<'m, 'd> Set<'m, 'd> for SetCatStr<'m, 'd> {
-//     type Meta = MetaCatStr;
-
-//     fn ptr(self) -> Ptr<'d, DSet<'d>> {
-//         Ptr::new(self.el)
-//     }
-// }
-
-// impl<'m, 'd> Set<'m, 'd> for SetOrd<'m, 'd> {
-//     type Meta = MetaOrd;
-
-//     fn ptr(self) -> Ptr<'d, DSet<'d>> {
-//         Ptr::new(self.el)
-//     }
-// }
