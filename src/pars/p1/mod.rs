@@ -1,3 +1,6 @@
+#[cfg(test)]
+mod tests;
+
 mod p1_bag;
 mod p1_data;
 mod p1_fun;

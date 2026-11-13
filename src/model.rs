@@ -138,9 +138,7 @@ impl<'d> Model<'d> {
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
         (V, S0::Meta): ValIdxPairD1<V = V, I0 = S0::Meta>,
     {
-        let fun_el = self
-            .p1_fun_bag
-            .push(ValInt::typ(), <S0::Meta as Set>::typ());
+        let fun_el = self.p1_fun_bag.push(V::typ(), <S0::Meta as Set>::typ());
         let fun_slot = Slot::new(self, fun_el);
         let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
         let el = self.p1_bag.push(s0_ptr, fun_slot);
