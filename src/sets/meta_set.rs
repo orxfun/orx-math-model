@@ -1,5 +1,7 @@
 use crate::idxs::{DIdx, IdxCatInt, IdxCatStr, IdxOrd, UIdxVal};
-use crate::sets::{CatInt, CatStr, DSet, FSet, FunSet, Ord, UFunSet};
+use crate::sets::{
+    CatInt, CatStr, DSet, FSet, FunSet, IndexCatInt, IndexCatStr, IndexOrd, Ord, UFunSet,
+};
 use crate::{Model, Ptr, Res, ResValid, SetSym, Slot, Symbol};
 use alloc::boxed::Box;
 use alloc::string::{String, ToString};
@@ -38,6 +40,8 @@ pub trait Set: Clone + Copy + 'static {
     type IdxRaw<'d>: Copy;
 
     type IdxSym<'m, 'd: 'm>;
+
+    type IdxAny<'m, 'd: 'm>;
 
     fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d>;
 
@@ -85,6 +89,8 @@ impl Set for SetCatInt {
     type IdxRaw<'d> = usize;
 
     type IdxSym<'m, 'd: 'm> = IdxCatInt<'m, 'd>;
+
+    type IdxAny<'m, 'd: 'm> = IndexCatInt<'m, 'd>;
 
     fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d> {
         unsafe { u.cat_int }
@@ -141,6 +147,8 @@ impl Set for SetCatStr {
 
     type IdxSym<'m, 'd: 'm> = IdxCatStr<'m, 'd>;
 
+    type IdxAny<'m, 'd: 'm> = IndexCatStr<'m, 'd>;
+
     fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d> {
         unsafe { u.cat_str }
     }
@@ -195,6 +203,8 @@ impl Set for SetOrd {
     type IdxRaw<'d> = i64;
 
     type IdxSym<'m, 'd: 'm> = IdxOrd<'m, 'd>;
+
+    type IdxAny<'m, 'd: 'm> = IndexOrd<'m, 'd>;
 
     fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d> {
         unsafe { u.ord }
