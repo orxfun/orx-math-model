@@ -1,4 +1,4 @@
-use crate::fun::glossary::*;
+use crate::fun::fun_sum::*;
 use crate::slot::State;
 use crate::{Elements, MetaSet, Res, Slot};
 use alloc::boxed::Box;
