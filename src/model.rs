@@ -1,3 +1,4 @@
+use crate::idxs::{IdxBag, IdxValBag};
 // use crate::arb_val::{ArbVal, ArbValBag};
 // use crate::idxs::{CatIdxInt, CatIdxStr, IdxBag, IdxSlots, OrdIdx};
 // use crate::par::p1::{IntParD1, NumParD1, P1Bag, P1Slots};
@@ -16,9 +17,13 @@ pub struct Model<'d> {
     slot_states: SlotStates,
 
     // sets
-    fun_bag: SetFunBag<'d>,
+    set_fun_bag: SetFunBag<'d>,
     set_bag: SetBag<'d>,
+
     // idxs
+    idx_val_bag: IdxValBag<'d>,
+    idx_bag: IdxBag<'d>,
+    //
     // idx_slots: IdxSlots<'d>,
     // idx_bag: IdxBag<'d>,
 
@@ -53,16 +58,20 @@ impl<'d> Model<'d> {
     }
 
     fn set<'m, S: MetaSet>(&'m self) -> S::SetSym<'m, 'd> {
-        let fun_el = self.fun_bag.push_set(S::typ());
+        let fun_el = self.set_fun_bag.push(S::typ());
         let fun_slot = Slot::new(self, fun_el);
         let el = self.set_bag.push(fun_slot);
-        S::create_set_sym(self, el)
+        S::set_sym(self, el)
     }
 
     // idxs
 
-    fn idx<'m, S: MetaSet>(&'m self) -> S::IdxSym<'m, 'd> {
-        todo!()
+    fn idx<'m, S: MetaSet>(&'m self, set: S::SetSym<'m, 'd>) -> S::IdxSym<'m, 'd> {
+        Res::dbg_assert_same_model(self, set);
+        let val_el = self.idx_val_bag.push(S::typ());
+        let val_slot = Slot::new(self, val_el);
+        let el = self.idx_bag.push(set.ptr(), val_slot);
+        S::idx_sym(self, el)
     }
 
     // pub(crate) fn cat_idx_int<'m>(&'m self, set: CatSetInt<'m, 'd>) -> CatIdxInt<'m, 'd> {

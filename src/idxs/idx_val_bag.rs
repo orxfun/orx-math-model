@@ -14,7 +14,7 @@ impl Default for IdxValBag<'_> {
 }
 
 impl<'d> IdxValBag<'d> {
-    pub fn push_set<'m>(&'m self, typ: SetTyp) -> Elem<'m, IdxVal<'d>> {
+    pub fn push<'m>(&'m self, typ: SetTyp) -> Elem<'m, IdxVal<'d>> {
         self.set.push(IdxVal::empty(typ))
     }
 }

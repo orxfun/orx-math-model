@@ -1,4 +1,4 @@
-use crate::idxs::{IdxCatInt, IdxCatStr, IdxOrd, UIdxVal};
+use crate::idxs::{DIdx, IdxCatInt, IdxCatStr, IdxOrd, UIdxVal};
 // use crate::idxs::{CatIdxInt, CatIdxStr, DIdx, OrdIdx};
 use crate::sets::{DSet, FSet, FunSet, SetCatInt, SetCatStr, SetOrd, UFunSet};
 use crate::{Model, Ptr, Res, ResValid, Slot, Symbol};
@@ -28,7 +28,7 @@ pub trait MetaSet: Clone + Copy + 'static {
 
     fn set_unpack<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self>;
 
-    fn create_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd>;
+    fn set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd>;
 
     // idx
 
@@ -39,6 +39,8 @@ pub trait MetaSet: Clone + Copy + 'static {
     fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d>;
 
     fn idx_write<'d>(u: &mut UIdxVal<'d>, value: Self::IdxRaw<'d>);
+
+    fn idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd>;
 
     // type IdxSym<'m, 'd>: Idx<'m, 'd, Meta = Self>
     // where
@@ -81,7 +83,7 @@ impl MetaSet for MetaCatInt {
         unsafe { &u.cat_int }
     }
 
-    fn create_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd> {
+    fn set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd> {
         Symbol::new(m, el).into()
     }
 
@@ -97,6 +99,10 @@ impl MetaSet for MetaCatInt {
 
     fn idx_write<'d>(u: &mut UIdxVal<'d>, value: Self::IdxRaw<'d>) {
         u.cat_int = value;
+    }
+
+    fn idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
+        Symbol::new(m, el).into()
     }
 
     // type IdxSym<'m, 'd>
@@ -156,7 +162,7 @@ impl MetaSet for MetaCatStr {
         unsafe { &u.cat_str }
     }
 
-    fn create_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd> {
+    fn set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd> {
         Symbol::new(m, el).into()
     }
 
@@ -172,6 +178,10 @@ impl MetaSet for MetaCatStr {
 
     fn idx_write<'d>(u: &mut UIdxVal<'d>, value: Self::IdxRaw<'d>) {
         u.cat_str = value;
+    }
+
+    fn idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
+        Symbol::new(m, el).into()
     }
 
     // type IdxSym<'m, 'd>
@@ -239,7 +249,7 @@ impl MetaSet for MetaOrd {
         unsafe { &u.ord }
     }
 
-    fn create_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd> {
+    fn set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd> {
         Symbol::new(m, el).into()
     }
 
@@ -255,6 +265,10 @@ impl MetaSet for MetaOrd {
 
     fn idx_write<'d>(u: &mut UIdxVal<'d>, value: Self::IdxRaw<'d>) {
         u.ord = value;
+    }
+
+    fn idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
+        Symbol::new(m, el).into()
     }
 
     // type IdxSym<'m, 'd>
