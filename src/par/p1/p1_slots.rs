@@ -39,6 +39,15 @@ impl<'d, V: MetaVal> P1Fun1<'d, V> {
         }
     }
 
+    fn bind<I0: MetaSet>(&mut self, fun: impl Fn(I0::IdxRaw<'d>) -> V::Val + 'd) {
+        let fun: Box<dyn Fn(I0::IdxRaw<'d>) -> V::Val + 'd> = Box::new(fun);
+        match self {
+            P1Fun1::CatInt(f) => *(&mut f.0) = unsafe { transmute(fun) },
+            P1Fun1::CatStr(f) => *(&mut f.0) = unsafe { transmute(fun) },
+            P1Fun1::Ord(f) => *(&mut f.0) = unsafe { transmute(fun) },
+        }
+    }
+
     #[cfg(test)]
     fn test_at<I0: MetaSet>(&self, i0: I0::IdxRaw<'d>) -> crate::vals::ValVal {
         use crate::{idxs::IdxVal, vals::ValVal};
