@@ -1,4 +1,5 @@
 use crate::idxs::{IdxBag, IdxValBag};
+use crate::pars::p1::{P1Bag, P1FunBag};
 // use crate::arb_val::{ArbVal, ArbValBag};
 // use crate::idxs::{CatIdxInt, CatIdxStr, IdxBag, IdxSlots, OrdIdx};
 // use crate::par::p1::{IntParD1, NumParD1, P1Bag, P1Slots};
@@ -18,6 +19,10 @@ pub struct Model<'d> {
     // sets
     set_fun_bag: SetFunBag<'d>,
     set_bag: SetBag<'d>,
+
+    // pars
+    p1_fun_bag: P1FunBag<'d>,
+    p1_bag: P1Bag<'d>,
 
     // idxs
     idx_val_bag: IdxValBag<'d>,
@@ -121,6 +126,8 @@ impl<'d> Model<'d> {
     // }
 
     // p1
+
+    // pub fn par1_int<'m,S0:Set>
 
     // pub fn par_d1_int<'m, S0: Set<'m, 'd>>(&'m self, s0: S0) -> IntParD1<'m, 'd, S0::Meta> {
     //     let par = self.p1_slots.push::<S0::Meta, MetaInt>(self);
