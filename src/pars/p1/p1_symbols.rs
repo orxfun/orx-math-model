@@ -42,23 +42,20 @@ type V = ValInt;
 type I0 = SetCatInt;
 impl<'m, 'd> ParD1<'m, 'd, V, I0> {
     pub fn at(self, idx: impl Into<<I0 as Set>::IdxAny<'m, 'd>>) -> <V as Val>::Sym<'m, 'd> {
+        let fun = Ptr::new(self.el);
         match idx.into() {
             IndexCatInt::Idx(idx) => {
                 let idx = Ptr::new(idx.el);
-                let fun = Ptr::new(self.el);
                 self.m.val::<V>(move || {
                     let fun = fun.get();
                     let idx = idx.get().read::<I0>();
                     fun.at::<V, I0>(idx)
                 })
             }
-            IndexCatInt::ConUsize(con) => {
-                let fun = Ptr::new(self.el);
-                self.m.val::<V>(move || {
-                    let fun = fun.get();
-                    fun.at::<V, I0>(con)
-                })
-            }
+            IndexCatInt::ConUsize(con) => self.m.val::<V>(move || {
+                let fun = fun.get();
+                fun.at::<V, I0>(con)
+            }),
         }
     }
 }
