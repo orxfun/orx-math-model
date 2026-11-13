@@ -9,5 +9,6 @@ mod set_symbols;
 
 pub use meta_set::{MetaCatInt, MetaCatStr, MetaOrd, MetaSet, Set, SetTyp};
 pub use set_bag::SetBag;
+pub use set_data::DSet;
 pub use set_slots::{SetFun, SetSlot, SetSlots};
 pub use set_symbols::{CatSetInt, CatSetStr, OrdSet};

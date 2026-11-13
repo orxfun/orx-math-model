@@ -1,5 +1,6 @@
 use crate::{Elements, FSet, FunSlot, MetaSet, Res, SetTyp, Validation};
 
+#[derive(derive_new::new)]
 pub struct DSet<'d> {
     typ: SetTyp,
     fun: FunSlot<'d>,

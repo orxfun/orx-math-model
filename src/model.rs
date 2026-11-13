@@ -65,8 +65,8 @@ impl<'d> Model<'d> {
     }
 
     fn set<'m, M: MetaSet>(&'m self) -> M::SetSym<'m, 'd> {
-        let slot = self.set_slots.push(self, M::set_typ());
-        let el = self.set_bag.push(slot);
+        let fun_slot = self.fun_bag.push(self);
+        let el = self.set_bag.push(M::set_typ(), fun_slot);
         M::create_set_sym(self, el)
     }
 
