@@ -1,4 +1,5 @@
 use crate::arb_val::{ArbVal, ArbValBag};
+use crate::fun::FunBag;
 use crate::idxs::{CatIdxInt, CatIdxStr, IdxBag, IdxSlots, OrdIdx};
 // use crate::par::p1::{IntParD1, NumParD1, P1Bag, P1Slots};
 use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetBag, SetSlots};
@@ -6,7 +7,7 @@ use crate::slot::{SlotStates, State};
 use crate::vals::{Int, Num, ValBag, ValFun};
 use crate::{
     MetaCatInt, MetaCatStr, MetaInt, MetaNum, MetaOrd, MetaSet, MetaVal, Ptr, Res, Set, SetTyp,
-    Symbol, Val, ValSymSum, Validation,
+    Slot, Symbol, Val, ValSymSum, Validation,
 };
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -15,6 +16,9 @@ use orx_imp_vec::Elem;
 pub struct Model<'d> {
     // states
     slot_states: SlotStates,
+
+    // fun
+    fun_bag: FunBag<'d>,
 
     // sets
     set_slots: SetSlots<'d>,
@@ -37,6 +41,12 @@ impl<'d> Model<'d> {
 
     pub(crate) fn slot_state(&self) -> Elem<'_, State> {
         self.slot_states.push()
+    }
+
+    // fun
+
+    pub(crate) fn fun<'m, F>(&'m self) -> Slot<'d, Box<F>> {
+        self.fun_bag.push(self)
     }
 
     // sets
