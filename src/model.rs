@@ -1,3 +1,4 @@
+use crate::con_vals::{ConVal, ConValBag, DConVal};
 use crate::idxs::{IdxBag, IdxValBag};
 use crate::pars::p1::{P1Bag, P1FunBag, ParD1};
 // use crate::arb_val::{ArbVal, ArbValBag};
@@ -7,10 +8,9 @@ use crate::sets::{CatInt, CatStr, Ord, SetBag, SetFunBag};
 use crate::slot::{SlotStates, State};
 use crate::val_idx_pairs::ValIdxPairD1;
 use crate::vals::{FunVal, ValBag};
-// use crate::vals::{Int, Num, ValBag, ValFun};
 use crate::{
-    Ptr, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetSym, SetTyp, Slot, Symbol, Val,
-    ValInt, ValNum,
+    Ptr, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetSym, SetTyp, Slot, Symbol, TConVal,
+    Val, ValInt, ValNum,
 };
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -34,6 +34,7 @@ pub struct Model<'d> {
 
     // vals
     val_bag: ValBag<'d>,
+    con_val_bag: ConValBag,
     //
     // vals
     // val_bag: ValBag<'d>,
@@ -109,6 +110,11 @@ impl<'d> Model<'d> {
         let fun = FunVal::new::<V>(fun);
         let el = self.val_bag.push(fun);
         V::new_sym(self, el)
+    }
+
+    pub(crate) fn con_val<T: TConVal>(&self, value: T) -> Ptr<'d, DConVal> {
+        let el = self.con_val_bag.push(ConVal::new(value));
+        Slot::new(self, el).ptr()
     }
 
     // pub(crate) fn val<'m, V: MetaVal>(&'m self, fun: impl Fn() -> V::Val + 'd) -> V::Sym<'m, 'd> {
