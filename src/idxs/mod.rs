@@ -9,5 +9,6 @@ mod idx_val_bag;
 
 pub use idx_bag::IdxBag;
 pub use idx_data::DIdx;
+pub use idx_symbols::{IdxCatInt, IdxCatStr, IdxOrd};
 pub use idx_val::{IdxVal, UIdxVal};
 pub use idx_val_bag::IdxValBag;

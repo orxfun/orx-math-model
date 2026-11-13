@@ -1,4 +1,4 @@
-use crate::idxs::UIdxVal;
+use crate::idxs::{IdxCatInt, IdxCatStr, IdxOrd, UIdxVal};
 // use crate::idxs::{CatIdxInt, CatIdxStr, DIdx, OrdIdx};
 use crate::sets::{DSet, FSet, FunSet, SetCatInt, SetCatStr, SetOrd, UFunSet};
 use crate::{Model, Ptr, Res, ResValid, Slot, Symbol};
@@ -22,9 +22,7 @@ pub enum SetTyp {
 pub trait MetaSet: Clone + Copy + 'static {
     // set
 
-    type SetSym<'m, 'd>: Set<'m, 'd, Meta = Self>
-    where
-        'd: 'm;
+    type SetSym<'m, 'd: 'm>: Set<'m, 'd, Meta = Self>;
 
     fn typ() -> SetTyp;
 
@@ -35,6 +33,8 @@ pub trait MetaSet: Clone + Copy + 'static {
     // idx
 
     type IdxRaw<'d>;
+
+    type IdxSym<'m, 'd: 'm>;
 
     fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d>;
 
@@ -71,10 +71,7 @@ pub struct MetaCatInt;
 impl MetaSet for MetaCatInt {
     // set
 
-    type SetSym<'m, 'd>
-        = SetCatInt<'m, 'd>
-    where
-        'd: 'm;
+    type SetSym<'m, 'd: 'm> = SetCatInt<'m, 'd>;
 
     fn typ() -> SetTyp {
         SetTyp::CatInt
@@ -91,6 +88,8 @@ impl MetaSet for MetaCatInt {
     // idx
 
     type IdxRaw<'d> = usize;
+
+    type IdxSym<'m, 'd: 'm> = IdxCatInt<'m, 'd>;
 
     fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d> {
         unsafe { u.cat_int }
@@ -147,10 +146,7 @@ pub struct MetaCatStr;
 impl MetaSet for MetaCatStr {
     // set
 
-    type SetSym<'m, 'd>
-        = SetCatStr<'m, 'd>
-    where
-        'd: 'm;
+    type SetSym<'m, 'd: 'm> = SetCatStr<'m, 'd>;
 
     fn typ() -> SetTyp {
         SetTyp::CatStr
@@ -167,6 +163,8 @@ impl MetaSet for MetaCatStr {
     // idx
 
     type IdxRaw<'d> = &'d String;
+
+    type IdxSym<'m, 'd: 'm> = IdxCatStr<'m, 'd>;
 
     fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d> {
         unsafe { u.cat_str }
@@ -231,10 +229,7 @@ pub struct MetaOrd;
 impl MetaSet for MetaOrd {
     // set
 
-    type SetSym<'m, 'd>
-        = SetOrd<'m, 'd>
-    where
-        'd: 'm;
+    type SetSym<'m, 'd: 'm> = SetOrd<'m, 'd>;
 
     fn typ() -> SetTyp {
         SetTyp::Ord
@@ -251,6 +246,8 @@ impl MetaSet for MetaOrd {
     // idx
 
     type IdxRaw<'d> = i64;
+
+    type IdxSym<'m, 'd: 'm> = IdxOrd<'m, 'd>;
 
     fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d> {
         unsafe { u.ord }

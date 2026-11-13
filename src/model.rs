@@ -61,6 +61,10 @@ impl<'d> Model<'d> {
 
     // idxs
 
+    fn idx<'m, S: MetaSet>(&'m self) -> S::IdxSym<'m, 'd> {
+        todo!()
+    }
+
     // pub(crate) fn cat_idx_int<'m>(&'m self, set: CatSetInt<'m, 'd>) -> CatIdxInt<'m, 'd> {
     //     self.idx::<MetaCatInt>(set)
     // }
