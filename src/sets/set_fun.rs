@@ -45,19 +45,8 @@ impl<'d> FunSet<'d> {
     }
 
     pub fn new<S: Set>(fun: FSet<'d, S>) -> Self {
-        let fun = ManuallyDrop::new(fun);
         let typ = S::typ();
-        let data = match typ {
-            SetTyp::CatInt => UFunSet {
-                cint: unsafe { transmute(fun) },
-            },
-            SetTyp::CatStr => UFunSet {
-                cstr: unsafe { transmute(fun) },
-            },
-            SetTyp::Ord => UFunSet {
-                ord: unsafe { transmute(fun) },
-            },
-        };
+        let data = S::into_fun_union(fun);
         Self { typ, data }
     }
 
