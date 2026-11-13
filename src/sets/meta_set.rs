@@ -1,7 +1,6 @@
-use crate::fun::{UFunSet, UIdxVal};
 // use crate::idxs::{CatIdxInt, CatIdxStr, DIdx, OrdIdx};
-use crate::sets::{CatSetInt, CatSetStr, DSet, OrdSet};
-use crate::{FSet, FunSet, Model, Ptr, Res, Slot, Symbol, Validation};
+use crate::sets::{CatSetInt, CatSetStr, DSet, FSet, FunSet, OrdSet, UFunSet};
+use crate::{Model, Ptr, Res, Slot, Symbol, Validation};
 use alloc::string::ToString;
 use alloc::{boxed::Box, string::String};
 use core::mem::transmute;
@@ -44,7 +43,7 @@ pub trait MetaSet: Clone + Copy + 'static {
     // where
     //     'd: 'm;
 
-    fn idx_unpack_val<'d>(u: UIdxVal<'d>) -> Self::IdxRaw<'d>;
+    // fn idx_unpack_val<'d>(u: UIdxVal<'d>) -> Self::IdxRaw<'d>;
 
     // fn idx_as_enum<'d>(idx: Self::IdxRaw<'d>) -> IdxVal<'d>;
 
@@ -98,9 +97,9 @@ impl MetaSet for MetaCatInt {
     // where
     //     'd: 'm;
 
-    fn idx_unpack_val<'d>(u: UIdxVal<'d>) -> Self::IdxRaw<'d> {
-        unsafe { u.cat_int }
-    }
+    // fn idx_unpack_val<'d>(u: UIdxVal<'d>) -> Self::IdxRaw<'d> {
+    //     unsafe { u.cat_int }
+    // }
 
     // fn idx_as_enum<'d>(idx: Self::IdxRaw<'d>) -> IdxVal<'d> {
     //     IdxVal::CatInt(idx)
@@ -166,9 +165,9 @@ impl MetaSet for MetaCatStr {
     // where
     //     'd: 'm;
 
-    fn idx_unpack_val<'d>(u: UIdxVal<'d>) -> Self::IdxRaw<'d> {
-        unsafe { u.cat_str }
-    }
+    // fn idx_unpack_val<'d>(u: UIdxVal<'d>) -> Self::IdxRaw<'d> {
+    //     unsafe { u.cat_str }
+    // }
 
     // fn idx_as_enum<'d>(idx: Self::IdxRaw<'d>) -> IdxVal<'d> {
     //     IdxVal::CatStr(idx)
@@ -242,9 +241,9 @@ impl MetaSet for MetaOrd {
     // where
     //     'd: 'm;
 
-    fn idx_unpack_val<'d>(u: UIdxVal<'d>) -> Self::IdxRaw<'d> {
-        unsafe { u.ord }
-    }
+    // fn idx_unpack_val<'d>(u: UIdxVal<'d>) -> Self::IdxRaw<'d> {
+    //     unsafe { u.ord }
+    // }
 
     // fn idx_as_enum<'d>(idx: Self::IdxRaw<'d>) -> IdxVal<'d> {
     //     IdxVal::Ord(idx)

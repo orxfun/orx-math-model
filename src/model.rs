@@ -1,8 +1,7 @@
 // use crate::arb_val::{ArbVal, ArbValBag};
-use crate::fun::FunBag;
 // use crate::idxs::{CatIdxInt, CatIdxStr, IdxBag, IdxSlots, OrdIdx};
 // use crate::par::p1::{IntParD1, NumParD1, P1Bag, P1Slots};
-use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetBag};
+use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetBag, SetFunBag};
 use crate::slot::{SlotStates, State};
 // use crate::vals::{Int, Num, ValBag, ValFun};
 use crate::{
@@ -16,10 +15,8 @@ pub struct Model<'d> {
     // states
     slot_states: SlotStates,
 
-    // fun
-    fun_bag: FunBag<'d>,
-
     // sets
+    fun_bag: SetFunBag<'d>,
     set_bag: SetBag<'d>,
     // idxs
     // idx_slots: IdxSlots<'d>,
