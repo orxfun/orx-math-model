@@ -68,4 +68,41 @@ impl<'d> FunP1<'d> {
             data,
         }
     }
+
+    pub fn new<V: Val, I0: Set>(fun: FP1<'d, V, I0>) -> Self {
+        let fun = ManuallyDrop::new(fun);
+        let (val_typ, i0_typ) = (V::typ(), I0::typ());
+        let data = match (val_typ, i0_typ) {
+            (ValTyp::Int, SetTyp::CatInt) => UFunP1 {
+                cint_int: unsafe { transmute(fun) },
+            },
+            (ValTyp::Int, SetTyp::CatStr) => UFunP1 {
+                cstr_int: unsafe { transmute(fun) },
+            },
+            (ValTyp::Int, SetTyp::Ord) => UFunP1 {
+                ord_int: unsafe { transmute(fun) },
+            },
+
+            (ValTyp::Num, SetTyp::CatInt) => UFunP1 {
+                cint_num: unsafe { transmute(fun) },
+            },
+            (ValTyp::Num, SetTyp::CatStr) => UFunP1 {
+                cstr_num: unsafe { transmute(fun) },
+            },
+            (ValTyp::Num, SetTyp::Ord) => UFunP1 {
+                ord_num: unsafe { transmute(fun) },
+            },
+        };
+        Self {
+            val_typ,
+            i0_typ,
+            data,
+        }
+    }
+
+    pub fn get<V: Val, I0: Set>(&self) -> &FP1<'d, V, I0> {
+        Res::dbg_assert_same_val(V::typ(), self.val_typ);
+        Res::dbg_assert_same_set(I0::typ(), self.i0_typ);
+        todo!()
+    }
 }
