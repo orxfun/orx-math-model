@@ -1,13 +1,12 @@
-use crate::arb_val::{ArbVal, ArbValBag};
+// use crate::arb_val::{ArbVal, ArbValBag};
 use crate::fun::FunBag;
-use crate::idxs::{CatIdxInt, CatIdxStr, IdxBag, IdxSlots, OrdIdx};
+// use crate::idxs::{CatIdxInt, CatIdxStr, IdxBag, IdxSlots, OrdIdx};
 // use crate::par::p1::{IntParD1, NumParD1, P1Bag, P1Slots};
 use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetBag};
 use crate::slot::{SlotStates, State};
-use crate::vals::{Int, Num, ValBag, ValFun};
+// use crate::vals::{Int, Num, ValBag, ValFun};
 use crate::{
-    MetaCatInt, MetaCatStr, MetaInt, MetaNum, MetaOrd, MetaSet, MetaVal, Ptr, Res, Set, SetTyp,
-    Slot, Symbol, Val, ValSymSum, Validation,
+    MetaCatInt, MetaCatStr, MetaOrd, MetaSet, Ptr, Res, Set, SetTyp, Slot, Symbol, Validation,
 };
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -22,14 +21,13 @@ pub struct Model<'d> {
 
     // sets
     set_bag: SetBag<'d>,
-
     // idxs
-    idx_slots: IdxSlots<'d>,
-    idx_bag: IdxBag<'d>,
+    // idx_slots: IdxSlots<'d>,
+    // idx_bag: IdxBag<'d>,
 
     // vals
-    val_bag: ValBag<'d>,
-    arb_val_bag: ArbValBag<'d>,
+    // val_bag: ValBag<'d>,
+    // arb_val_bag: ArbValBag<'d>,
     //
     // // pars
     // p1_slots: P1Slots<'d>,
@@ -66,45 +64,45 @@ impl<'d> Model<'d> {
 
     // idxs
 
-    pub(crate) fn cat_idx_int<'m>(&'m self, set: CatSetInt<'m, 'd>) -> CatIdxInt<'m, 'd> {
-        self.idx::<MetaCatInt>(set)
-    }
+    // pub(crate) fn cat_idx_int<'m>(&'m self, set: CatSetInt<'m, 'd>) -> CatIdxInt<'m, 'd> {
+    //     self.idx::<MetaCatInt>(set)
+    // }
 
-    pub(crate) fn cat_idx_str<'m>(&'m self, set: CatSetStr<'m, 'd>) -> CatIdxStr<'m, 'd> {
-        self.idx::<MetaCatStr>(set)
-    }
+    // pub(crate) fn cat_idx_str<'m>(&'m self, set: CatSetStr<'m, 'd>) -> CatIdxStr<'m, 'd> {
+    //     self.idx::<MetaCatStr>(set)
+    // }
 
-    pub(crate) fn ord_idx<'m>(&'m self, set: OrdSet<'m, 'd>) -> OrdIdx<'m, 'd> {
-        self.idx::<MetaOrd>(set)
-    }
+    // pub(crate) fn ord_idx<'m>(&'m self, set: OrdSet<'m, 'd>) -> OrdIdx<'m, 'd> {
+    //     self.idx::<MetaOrd>(set)
+    // }
 
-    fn idx<'m, M: MetaSet>(&'m self, set: M::SetSym<'m, 'd>) -> M::IdxSym<'m, 'd> {
-        Res::dbg_assert_same_model(self, set);
-        let idx = self.idx_slots.push(self, M::typ());
-        let set = set.ptr();
-        let el = self.idx_bag.push(set, idx);
-        M::create_idx_sym(self, el)
-    }
+    // fn idx<'m, M: MetaSet>(&'m self, set: M::SetSym<'m, 'd>) -> M::IdxSym<'m, 'd> {
+    //     Res::dbg_assert_same_model(self, set);
+    //     let idx = self.idx_slots.push(self, M::typ());
+    //     let set = set.ptr();
+    //     let el = self.idx_bag.push(set, idx);
+    //     M::create_idx_sym(self, el)
+    // }
 
     // vals
 
-    pub(crate) fn val<'m, V: MetaVal>(&'m self, fun: impl Fn() -> V::Val + 'd) -> V::Sym<'m, 'd> {
-        let el = self.val_bag.push(V::create_val_fun(fun));
-        V::create_sym(self, el)
-    }
+    // pub(crate) fn val<'m, V: MetaVal>(&'m self, fun: impl Fn() -> V::Val + 'd) -> V::Sym<'m, 'd> {
+    //     let el = self.val_bag.push(V::create_val_fun(fun));
+    //     V::create_sym(self, el)
+    // }
 
-    pub(crate) fn val_sym<'m, V: MetaVal>(&'m self, sym: V::Sym<'m, 'd>) -> &'m V::Sym<'m, 'd> {
-        let sym: ValSymSum<'d, 'd> = match sym.into_sym_sum() {
-            ValSymSum::Int(x) => ValSymSum::Int(unsafe { x.create_sym_ref() }.into()),
-            ValSymSum::Num(x) => ValSymSum::Num(unsafe { x.create_sym_ref() }.into()),
-        };
-        let el = self.arb_val_bag.push(sym);
-        <V::Sym<'m, 'd> as Val<'m, 'd>>::from_sum_to_self(unsafe { el.get() }.as_val_sym_sum())
-    }
+    // pub(crate) fn val_sym<'m, V: MetaVal>(&'m self, sym: V::Sym<'m, 'd>) -> &'m V::Sym<'m, 'd> {
+    //     let sym: ValSymSum<'d, 'd> = match sym.into_sym_sum() {
+    //         ValSymSum::Int(x) => ValSymSum::Int(unsafe { x.create_sym_ref() }.into()),
+    //         ValSymSum::Num(x) => ValSymSum::Num(unsafe { x.create_sym_ref() }.into()),
+    //     };
+    //     let el = self.arb_val_bag.push(sym);
+    //     <V::Sym<'m, 'd> as Val<'m, 'd>>::from_sum_to_self(unsafe { el.get() }.as_val_sym_sum())
+    // }
 
-    pub(crate) fn arb_val<'m>(&'m self, val: impl Into<ArbVal<'d>>) -> Elem<'m, ArbVal<'d>> {
-        self.arb_val_bag.push(val)
-    }
+    // pub(crate) fn arb_val<'m>(&'m self, val: impl Into<ArbVal<'d>>) -> Elem<'m, ArbVal<'d>> {
+    //     self.arb_val_bag.push(val)
+    // }
 
     // p1
 

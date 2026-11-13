@@ -15,6 +15,6 @@ impl Default for FunBag<'_> {
 
 impl<'d> FunBag<'d> {
     pub fn push_set<'m>(&'m self, typ: SetTyp) -> Elem<'m, FunSet<'d>> {
-        self.set.push(FunSet::new(typ))
+        self.set.push(FunSet::empty(typ))
     }
 }

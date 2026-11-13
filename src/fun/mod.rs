@@ -3,4 +3,5 @@ mod idx_val;
 mod set_fun;
 
 pub use fun_bag::FunBag;
-pub use set_fun::{FSet, FunSet};
+pub use idx_val::{IdxVal, UIdxVal};
+pub use set_fun::{FSet, FunSet, UFunSet};

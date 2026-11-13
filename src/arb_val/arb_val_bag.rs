@@ -1,5 +1,5 @@
 use crate::sets::SetTyp;
-use crate::{new_bag, Bag, ValSymSum};
+use crate::{new_bag, Bag};
 use alloc::string::String;
 use core::marker::PhantomData;
 use orx_imp_vec::Elem;

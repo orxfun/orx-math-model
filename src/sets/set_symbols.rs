@@ -1,4 +1,4 @@
-use crate::idxs::{CatIdxInt, CatIdxStr, OrdIdx};
+// use crate::idxs::{CatIdxInt, CatIdxStr, OrdIdx};
 use crate::sets::DSet;
 use crate::{Elements, MetaCatInt, MetaCatStr, MetaOrd, MetaSet, Res, Symbol};
 use alloc::{boxed::Box, string::String};
@@ -23,9 +23,9 @@ impl<'m, 'd> CatSetInt<'m, 'd> {
         bind::<MetaCatInt, _>(self.0, fun)
     }
 
-    pub fn idx(self) -> CatIdxInt<'m, 'd> {
-        self.m.cat_idx_int(self)
-    }
+    // pub fn idx(self) -> CatIdxInt<'m, 'd> {
+    //     self.m.cat_idx_int(self)
+    // }
 }
 
 // cat str
@@ -38,9 +38,9 @@ impl<'m, 'd> CatSetStr<'m, 'd> {
         bind::<MetaCatStr, _>(self.0, fun)
     }
 
-    pub fn idx(self) -> CatIdxStr<'m, 'd> {
-        self.m.cat_idx_str(self)
-    }
+    // pub fn idx(self) -> CatIdxStr<'m, 'd> {
+    //     self.m.cat_idx_str(self)
+    // }
 }
 
 // ord
@@ -53,7 +53,7 @@ impl<'m, 'd> OrdSet<'m, 'd> {
         bind::<MetaOrd, _>(self.0, fun)
     }
 
-    pub fn idx(self) -> OrdIdx<'m, 'd> {
-        self.m.ord_idx(self)
-    }
+    // pub fn idx(self) -> OrdIdx<'m, 'd> {
+    //     self.m.ord_idx(self)
+    // }
 }
