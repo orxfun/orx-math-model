@@ -1,4 +1,4 @@
-use crate::{FSet, FunSlot, MetaSet, Res, SetTyp, Validation};
+use crate::{Elements, FSet, FunSlot, MetaSet, Res, SetTyp, Validation};
 
 pub struct DSet<'d> {
     typ: SetTyp,
@@ -6,8 +6,14 @@ pub struct DSet<'d> {
 }
 
 impl<'d> DSet<'d> {
-    pub fn bind<I0: MetaSet>(&self, fun: FSet<'d, I0>) -> Res {
-        Res::dbg_assert_same_set::<I0>(self.typ);
-        self.fun.bind_set::<I0>(fun)
+    pub fn bind<S: MetaSet>(&self, fun: FSet<'d, S>) -> Res {
+        Res::dbg_assert_same_set::<S>(self.typ);
+        self.fun.bind_set::<S>(fun)
+    }
+
+    pub fn fill<S: MetaSet>(&self, elements: &mut Elements<S::IdxRaw<'d>>) {
+        Res::dbg_assert_same_set::<S>(self.typ);
+        let fun = self.fun.get_set::<S>();
+        fun(elements)
     }
 }

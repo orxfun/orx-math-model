@@ -13,11 +13,11 @@ pub struct FunSlot<'d> {
 impl<'d> FunSlot<'d> {
     // set
 
-    pub fn bind_set<I0: MetaSet>(&self, fun: FSet<'d, I0>) -> Res {
+    pub fn bind_set<S: MetaSet>(&self, fun: FSet<'d, S>) -> Res {
         self.slot.bind(unsafe { transmute(fun) })
     }
 
-    pub fn get_set<I0: MetaSet>(&self) -> &FSet<'d, I0> {
-        unsafe { transmute::<_, &FSet<'d, I0>>(self.slot.get()) }
+    pub fn get_set<S: MetaSet>(&self) -> &FSet<'d, S> {
+        unsafe { transmute::<_, &FSet<'d, S>>(self.slot.get()) }
     }
 }
