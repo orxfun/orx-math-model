@@ -1,4 +1,4 @@
-use crate::{Elements, FSet, FunSlot, MetaSet, Res, SetTyp, Validation};
+use crate::{Elements, Fun, FunSlot, MetaSet, Res, SetTyp, Validation};
 
 #[derive(derive_new::new)]
 pub struct DSet<'d> {
@@ -7,7 +7,7 @@ pub struct DSet<'d> {
 }
 
 impl<'d> DSet<'d> {
-    pub fn bind<S: MetaSet>(&self, fun: FSet<'d, S>) -> Res {
+    pub fn bind<S: MetaSet>(&self, fun: Fun<'d, S>) -> Res {
         Res::dbg_assert_same_set::<S>(self.typ);
         self.fun.bind_set::<S>(fun)
     }

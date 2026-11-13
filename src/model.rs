@@ -1,5 +1,5 @@
 use crate::arb_val::{ArbVal, ArbValBag};
-use crate::fun::{FunBag, FunSlot};
+use crate::fun::FunBag;
 use crate::idxs::{CatIdxInt, CatIdxStr, IdxBag, IdxSlots, OrdIdx};
 // use crate::par::p1::{IntParD1, NumParD1, P1Bag, P1Slots};
 use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetBag, SetSlots};
@@ -44,12 +44,6 @@ impl<'d> Model<'d> {
         self.slot_states.push()
     }
 
-    // fun
-
-    pub(crate) fn fun_new<'m>(&'m self) -> FunSlot<'d> {
-        self.fun_bag.push(self)
-    }
-
     // sets
 
     pub fn cat_set_int<'m>(&'m self) -> CatSetInt<'m, 'd> {
@@ -64,9 +58,10 @@ impl<'d> Model<'d> {
         self.set::<MetaOrd>()
     }
 
-    fn set<'m, M: MetaSet>(&'m self) -> M::SetSym<'m, 'd> {
-        let fun_slot = self.fun_bag.push(self);
-        let el = self.set_bag.push(M::set_typ(), fun_slot);
+    fn set<'m, S: MetaSet>(&'m self) -> S::SetSym<'m, 'd> {
+        let fun_el = self.fun_bag.push_set(S::set_typ());
+        let fun_slot = Slot::new(self, fun_el);
+        let el = self.set_bag.push(S::set_typ(), fun_slot);
         M::create_set_sym(self, el)
     }
 
