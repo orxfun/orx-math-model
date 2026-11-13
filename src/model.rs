@@ -119,7 +119,7 @@ impl<'d> Model<'d> {
         Slot::new(self, el).ptr()
     }
 
-    pub(crate) fn sym_ref_bag<'m, V: Val>(&'m self, sym: V::Sym<'m, 'd>) -> &'m V::Sym<'m, 'd> {
+    pub(crate) fn sym_ref<'m, V: Val>(&'m self, sym: V::Sym<'m, 'd>) -> &'m V::Sym<'m, 'd> {
         self.sym_ref_bag.push::<V>(sym)
     }
 

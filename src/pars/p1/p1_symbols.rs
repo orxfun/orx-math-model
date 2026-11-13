@@ -57,6 +57,6 @@ where
 
     fn index(&self, idx: Idx) -> &Self::Output {
         let val = self.at(idx);
-        todo!()
+        self.m.sym_ref::<V>(val)
     }
 }
