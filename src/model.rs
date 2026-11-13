@@ -1,7 +1,7 @@
 // use crate::arb_val::{ArbVal, ArbValBag};
 // use crate::idxs::{CatIdxInt, CatIdxStr, IdxBag, IdxSlots, OrdIdx};
 // use crate::par::p1::{IntParD1, NumParD1, P1Bag, P1Slots};
-use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetBag, SetFunBag};
+use crate::sets::{SetBag, SetCatInt, SetCatStr, SetFunBag, SetOrd};
 use crate::slot::{SlotStates, State};
 // use crate::vals::{Int, Num, ValBag, ValFun};
 use crate::{
@@ -40,15 +40,15 @@ impl<'d> Model<'d> {
 
     // sets
 
-    pub fn cat_set_int<'m>(&'m self) -> CatSetInt<'m, 'd> {
+    pub fn cat_set_int<'m>(&'m self) -> SetCatInt<'m, 'd> {
         self.set::<MetaCatInt>()
     }
 
-    pub fn cat_set_str<'m>(&'m self) -> CatSetStr<'m, 'd> {
+    pub fn cat_set_str<'m>(&'m self) -> SetCatStr<'m, 'd> {
         self.set::<MetaCatStr>()
     }
 
-    pub fn ord_set<'m>(&'m self) -> OrdSet<'m, 'd> {
+    pub fn ord_set<'m>(&'m self) -> SetOrd<'m, 'd> {
         self.set::<MetaOrd>()
     }
 

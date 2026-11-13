@@ -13,4 +13,4 @@ pub use set_bag::SetBag;
 pub use set_data::DSet;
 pub use set_fun::{FSet, FunSet, UFunSet};
 pub use set_fun_bag::SetFunBag;
-pub use set_symbols::{CatSetInt, CatSetStr, OrdSet};
+pub use set_symbols::{SetCatInt, SetCatStr, SetOrd};

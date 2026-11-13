@@ -16,9 +16,9 @@ where
 // cat int
 
 #[derive(derive_more::From, derive_more::Deref, Clone, Copy)]
-pub struct CatSetInt<'m, 'd>(pub(crate) Symbol<'m, 'd, DSet<'d>>);
+pub struct SetCatInt<'m, 'd>(pub(crate) Symbol<'m, 'd, DSet<'d>>);
 
-impl<'m, 'd> CatSetInt<'m, 'd> {
+impl<'m, 'd> SetCatInt<'m, 'd> {
     pub fn bind<I: IntoIterator<Item = usize>>(self, fun: impl Fn() -> I + 'd) -> Res {
         bind::<MetaCatInt, _>(self.0, fun)
     }
@@ -31,9 +31,9 @@ impl<'m, 'd> CatSetInt<'m, 'd> {
 // cat str
 
 #[derive(derive_more::From, derive_more::Deref, Clone, Copy)]
-pub struct CatSetStr<'m, 'd>(pub(crate) Symbol<'m, 'd, DSet<'d>>);
+pub struct SetCatStr<'m, 'd>(pub(crate) Symbol<'m, 'd, DSet<'d>>);
 
-impl<'m, 'd> CatSetStr<'m, 'd> {
+impl<'m, 'd> SetCatStr<'m, 'd> {
     pub fn bind<I: IntoIterator<Item = &'d String>>(self, fun: impl Fn() -> I + 'd) -> Res {
         bind::<MetaCatStr, _>(self.0, fun)
     }
@@ -46,9 +46,9 @@ impl<'m, 'd> CatSetStr<'m, 'd> {
 // ord
 
 #[derive(derive_more::From, derive_more::Deref, Clone, Copy)]
-pub struct OrdSet<'m, 'd>(pub(crate) Symbol<'m, 'd, DSet<'d>>);
+pub struct SetOrd<'m, 'd>(pub(crate) Symbol<'m, 'd, DSet<'d>>);
 
-impl<'m, 'd> OrdSet<'m, 'd> {
+impl<'m, 'd> SetOrd<'m, 'd> {
     pub fn bind<I: IntoIterator<Item = i64>>(self, fun: impl Fn() -> I + 'd) -> Res {
         bind::<MetaOrd, _>(self.0, fun)
     }

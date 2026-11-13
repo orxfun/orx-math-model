@@ -1,6 +1,6 @@
 use crate::idxs::UIdxVal;
 // use crate::idxs::{CatIdxInt, CatIdxStr, DIdx, OrdIdx};
-use crate::sets::{CatSetInt, CatSetStr, DSet, FSet, FunSet, OrdSet, UFunSet};
+use crate::sets::{DSet, FSet, FunSet, SetCatInt, SetCatStr, SetOrd, UFunSet};
 use crate::{Model, Ptr, Res, ResValid, Slot, Symbol};
 use alloc::string::ToString;
 use alloc::{boxed::Box, string::String};
@@ -72,7 +72,7 @@ impl MetaSet for MetaCatInt {
     // set
 
     type SetSym<'m, 'd>
-        = CatSetInt<'m, 'd>
+        = SetCatInt<'m, 'd>
     where
         'd: 'm;
 
@@ -148,7 +148,7 @@ impl MetaSet for MetaCatStr {
     // set
 
     type SetSym<'m, 'd>
-        = CatSetStr<'m, 'd>
+        = SetCatStr<'m, 'd>
     where
         'd: 'm;
 
@@ -232,7 +232,7 @@ impl MetaSet for MetaOrd {
     // set
 
     type SetSym<'m, 'd>
-        = OrdSet<'m, 'd>
+        = SetOrd<'m, 'd>
     where
         'd: 'm;
 
@@ -314,7 +314,7 @@ where
     fn ptr(self) -> Ptr<'d, DSet<'d>>;
 }
 
-impl<'m, 'd> Set<'m, 'd> for CatSetInt<'m, 'd> {
+impl<'m, 'd> Set<'m, 'd> for SetCatInt<'m, 'd> {
     type Meta = MetaCatInt;
 
     fn ptr(self) -> Ptr<'d, DSet<'d>> {
@@ -322,7 +322,7 @@ impl<'m, 'd> Set<'m, 'd> for CatSetInt<'m, 'd> {
     }
 }
 
-impl<'m, 'd> Set<'m, 'd> for CatSetStr<'m, 'd> {
+impl<'m, 'd> Set<'m, 'd> for SetCatStr<'m, 'd> {
     type Meta = MetaCatStr;
 
     fn ptr(self) -> Ptr<'d, DSet<'d>> {
@@ -330,7 +330,7 @@ impl<'m, 'd> Set<'m, 'd> for CatSetStr<'m, 'd> {
     }
 }
 
-impl<'m, 'd> Set<'m, 'd> for OrdSet<'m, 'd> {
+impl<'m, 'd> Set<'m, 'd> for SetOrd<'m, 'd> {
     type Meta = MetaOrd;
 
     fn ptr(self) -> Ptr<'d, DSet<'d>> {
