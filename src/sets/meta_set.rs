@@ -32,7 +32,7 @@ pub trait MetaSet: Clone + Copy + 'static {
 
     // idx
 
-    type IdxRaw<'d>;
+    type IdxRaw<'d>: Copy;
 
     type IdxSym<'m, 'd: 'm>;
 
@@ -40,7 +40,9 @@ pub trait MetaSet: Clone + Copy + 'static {
 
     fn idx_write<'d>(u: &mut UIdxVal<'d>, value: Self::IdxRaw<'d>);
 
-    fn idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd>;
+    fn new_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd>;
+
+    fn idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>>;
 
     // type IdxSym<'m, 'd>: Idx<'m, 'd, Meta = Self>
     // where
@@ -101,8 +103,12 @@ impl MetaSet for MetaCatInt {
         u.cat_int = value;
     }
 
-    fn idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
+    fn new_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
         Symbol::new(m, el).into()
+    }
+
+    fn idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>> {
+        sym.0
     }
 
     // type IdxSym<'m, 'd>
@@ -180,8 +186,12 @@ impl MetaSet for MetaCatStr {
         u.cat_str = value;
     }
 
-    fn idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
+    fn new_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
         Symbol::new(m, el).into()
+    }
+
+    fn idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>> {
+        sym.0
     }
 
     // type IdxSym<'m, 'd>
@@ -267,8 +277,12 @@ impl MetaSet for MetaOrd {
         u.ord = value;
     }
 
-    fn idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
+    fn new_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
         Symbol::new(m, el).into()
+    }
+
+    fn idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>> {
+        sym.0
     }
 
     // type IdxSym<'m, 'd>

@@ -71,7 +71,7 @@ impl<'d> Model<'d> {
         let val_el = self.idx_val_bag.push(S::typ());
         let val_slot = Slot::new(self, val_el);
         let el = self.idx_bag.push(set.ptr(), val_slot);
-        S::idx_sym(self, el)
+        S::new_idx_sym(self, el)
     }
 
     // pub(crate) fn cat_idx_int<'m>(&'m self, set: CatSetInt<'m, 'd>) -> CatIdxInt<'m, 'd> {
