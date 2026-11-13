@@ -1,4 +1,5 @@
 use crate::idxs::{IdxCatInt, IdxCatStr, IdxOrd};
+use crate::vals::Int;
 use alloc::string::String;
 
 // cint
@@ -24,6 +25,7 @@ pub enum IndexCatStr<'m, 'd> {
 #[derive(derive_more::From)]
 pub enum IndexOrd<'m, 'd> {
     Idx(IdxOrd<'m, 'd>),
+    Int(Int<'m, 'd>),
     ConUsize(usize),
     ConI64(i64),
 }

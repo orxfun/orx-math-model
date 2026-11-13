@@ -1,6 +1,7 @@
 use crate::pars::p1::DP1;
+use crate::sets::IndexCatInt;
 use crate::val_idx_pairs::ValIdxPairD1;
-use crate::{Res, Set, Symbol, Val};
+use crate::{Res, Set, SetCatInt, Symbol, Val, ValInt};
 use alloc::boxed::Box;
 use core::{marker::PhantomData, ops::Deref};
 
@@ -31,7 +32,20 @@ impl<'m, 'd, V: Val, I0: Set> ParD1<'m, 'd, V, I0> {
         data.bind::<V, I0>(fun)
     }
 
-    pub fn at(self, idx: impl Into<I0::IdxAny<'m, 'd>>) -> V::Sym<'m, 'd> {
-        todo!()
+    // pub fn at(self, idx: impl Into<I0::IdxAny<'m, 'd>>) -> V::Sym<'m, 'd> {
+    //     let idx = idx.into();
+    //     todo!()
+    // }
+}
+
+impl<'m, 'd> ParD1<'m, 'd, ValInt, SetCatInt> {
+    pub fn at(
+        self,
+        idx: impl Into<<SetCatInt as Set>::IdxAny<'m, 'd>>,
+    ) -> <ValInt as Val>::Sym<'m, 'd> {
+        match idx.into() {
+            IndexCatInt::Idx(idx) => todo!(),
+            _ => todo!(),
+        }
     }
 }
