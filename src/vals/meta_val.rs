@@ -17,7 +17,10 @@ pub enum ValTyp {
 pub trait Val: Clone + Copy + 'static {
     type Raw: Clone + Copy;
 
-    type Sym<'m, 'd: 'm>: Clone + Copy + Deref<Target = Symbol<'m, 'd, DVal<'d>>>;
+    type Sym<'m, 'd: 'm>: Clone
+        + Copy
+        + Deref<Target = Symbol<'m, 'd, DVal<'d>>>
+        + From<Symbol<'m, 'd, DVal<'d>>>;
 
     fn typ() -> ValTyp;
 

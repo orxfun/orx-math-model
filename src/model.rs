@@ -6,6 +6,7 @@ use crate::pars::p1::{P1Bag, P1FunBag, ParD1};
 // use crate::par::p1::{IntParD1, NumParD1, P1Bag, P1Slots};
 use crate::sets::{CatInt, CatStr, Ord, SetBag, SetFunBag};
 use crate::slot::{SlotStates, State};
+use crate::sym_refs::SymRefBag;
 use crate::val_idx_pairs::D1ValIdxPair;
 use crate::vals::{FunVal, ValBag};
 use crate::{
@@ -35,6 +36,7 @@ pub struct Model<'d> {
     // vals
     val_bag: ValBag<'d>,
     con_val_bag: ConValBag,
+    sym_ref_bag: SymRefBag<'d>,
     //
     // vals
     // val_bag: ValBag<'d>,
@@ -112,9 +114,13 @@ impl<'d> Model<'d> {
         V::new_sym(self, el)
     }
 
-    pub(crate) fn con_val<T: TConVal + 'd>(&self, value: T) -> Ptr<'d, DConVal> {
+    pub(crate) fn con_val<T: TConVal>(&self, value: T) -> Ptr<'d, DConVal> {
         let el = self.con_val_bag.push(ConVal::new(value));
         Slot::new(self, el).ptr()
+    }
+
+    pub(crate) fn sym_ref_bag<'m, V: Val>(&'m self, sym: V::Sym<'m, 'd>) -> &'m V::Sym<'m, 'd> {
+        self.sym_ref_bag.push::<V>(sym)
     }
 
     // pub(crate) fn val<'m, V: MetaVal>(&'m self, fun: impl Fn() -> V::Val + 'd) -> V::Sym<'m, 'd> {
