@@ -42,6 +42,7 @@ pub(crate) use elements::{Elements, ElementsIter};
 pub(crate) use err::{Res, ResValid};
 // pub(crate) use fun::{FSet, FunSet};
 // pub(crate) use idxs::{CatIntIdxSum, CatStrIdxSum, Idx, OrdIdxSum};
+pub(crate) use con_vals::{ConValTyp, TConVal};
 pub(crate) use sets::{Set, SetCatInt, SetCatStr, SetOrd, SetSym, SetTyp};
 pub(crate) use slot::{Ptr, Slot};
 pub(crate) use symbol::Symbol;

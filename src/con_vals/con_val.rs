@@ -37,7 +37,7 @@ pub union UConVal {
 }
 
 pub struct ConVal {
-    typ: ConValTyp,
+    pub typ: ConValTyp,
     data: UConVal,
 }
 
