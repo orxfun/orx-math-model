@@ -1,9 +1,8 @@
 use crate::idxs::{DIdx, IdxCatInt, IdxCatStr, IdxOrd, UIdxVal};
-// use crate::idxs::{CatIdxInt, CatIdxStr, DIdx, OrdIdx};
 use crate::sets::{CatInt, CatStr, DSet, FSet, FunSet, Ord, UFunSet};
 use crate::{Model, Ptr, Res, ResValid, SetSym, Slot, Symbol};
-use alloc::string::ToString;
-use alloc::{boxed::Box, string::String};
+use alloc::boxed::Box;
+use alloc::string::{String, ToString};
 use core::mem::{transmute, ManuallyDrop};
 use core::ops::Deref;
 use orx_imp_vec::Elem;
@@ -47,28 +46,6 @@ pub trait Set: Clone + Copy + 'static {
     fn new_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd>;
 
     fn idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>>;
-
-    // type IdxSym<'m, 'd>: Idx<'m, 'd, Meta = Self>
-    // where
-    //     'd: 'm;
-
-    // type IdxSum<'m, 'd>
-    // where
-    //     'd: 'm;
-
-    // fn idx_unpack_val<'d>(u: UIdxVal<'d>) -> Self::IdxRaw<'d>;
-
-    // fn idx_as_enum<'d>(idx: Self::IdxRaw<'d>) -> IdxVal<'d>;
-
-    // fn create_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd>;
-
-    // par-sca
-
-    // fn p1_scalar_fun<'m, 'd: 'm, V: MetaVal>(
-    //     m: &'m Model<'d>,
-    //     i0: Self::IdxSum<'m, 'd>,
-    //     p1: Ptr<'d, Box<dyn Fn(Self::IdxRaw<'d>) -> V::Val + 'd>>,
-    // ) -> Box<dyn Fn() -> V::Val + 'd>;
 }
 
 // cat set int
@@ -124,44 +101,6 @@ impl Set for SetCatInt {
     fn idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>> {
         sym.0
     }
-
-    // type IdxSym<'m, 'd>
-    //     = CatIdxInt<'m, 'd>
-    // where
-    //     'd: 'm;
-
-    // type IdxSum<'m, 'd>
-    //     = CatIntIdxSum<'m, 'd>
-    // where
-    //     'd: 'm;
-
-    // fn idx_unpack_val<'d>(u: UIdxVal<'d>) -> Self::IdxRaw<'d> {
-    //     unsafe { u.cat_int }
-    // }
-
-    // fn idx_as_enum<'d>(idx: Self::IdxRaw<'d>) -> IdxVal<'d> {
-    //     IdxVal::CatInt(idx)
-    // }
-
-    // fn create_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
-    //     Symbol::new(m, el).into()
-    // }
-
-    // par-sca
-
-    // fn p1_scalar_fun<'m, 'd: 'm, V: MetaVal>(
-    //     _: &'m Model<'d>,
-    //     i0: Self::IdxSum<'m, 'd>,
-    //     p1: Ptr<'d, Box<dyn Fn(Self::IdxRaw<'d>) -> V::Val + 'd>>,
-    // ) -> Box<dyn Fn() -> V::Val + 'd> {
-    //     match i0 {
-    //         CatIntIdxSum::Usize(i0) => Box::new(move || p1.get()(i0)),
-    //         CatIntIdxSum::Idx(i0) => {
-    //             let i0 = unsafe { i0.el.get() }.idx.val_ptr::<MetaCatInt>();
-    //             Box::new(move || p1.get()(i0.val()))
-    //         }
-    //     }
-    // }
 }
 
 // cat set str
@@ -217,52 +156,6 @@ impl Set for SetCatStr {
     fn idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>> {
         sym.0
     }
-
-    // type IdxSym<'m, 'd>
-    //     = CatIdxStr<'m, 'd>
-    // where
-    //     'd: 'm;
-
-    // type IdxSum<'m, 'd>
-    //     = CatStrIdxSum<'m, 'd>
-    // where
-    //     'd: 'm;
-
-    // fn idx_unpack_val<'d>(u: UIdxVal<'d>) -> Self::IdxRaw<'d> {
-    //     unsafe { u.cat_str }
-    // }
-
-    // fn idx_as_enum<'d>(idx: Self::IdxRaw<'d>) -> IdxVal<'d> {
-    //     IdxVal::CatStr(idx)
-    // }
-
-    // fn create_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
-    //     Symbol::new(m, el).into()
-    // }
-
-    // par-sca
-
-    // fn p1_scalar_fun<'m, 'd: 'm, V: MetaVal>(
-    //     m: &'m Model<'d>,
-    //     i0: Self::IdxSum<'m, 'd>,
-    //     p1: Ptr<'d, Box<dyn Fn(Self::IdxRaw<'d>) -> V::Val + 'd>>,
-    // ) -> Box<dyn Fn() -> V::Val + 'd> {
-    //     match i0 {
-    //         CatStrIdxSum::RefString(i0) => Box::new(move || p1.get()(i0)),
-    //         CatStrIdxSum::String(i0) => {
-    //             let i0 = unsafe { m.arb_val(i0).get() }.as_string_ptr();
-    //             Box::new(move || p1.get()(unsafe { &*i0 }))
-    //         }
-    //         CatStrIdxSum::Str(i0) => {
-    //             let i0 = unsafe { m.arb_val(i0.to_string()).get() }.as_string_ptr();
-    //             Box::new(move || p1.get()(unsafe { &*i0 }))
-    //         }
-    //         CatStrIdxSum::Idx(i0) => {
-    //             let i0 = unsafe { i0.el.get() }.idx.val_ptr::<MetaCatStr>();
-    //             Box::new(move || p1.get()(i0.val()))
-    //         }
-    //     }
-    // }
 }
 
 // ord set
@@ -318,46 +211,4 @@ impl Set for SetOrd {
     fn idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>> {
         sym.0
     }
-
-    // type IdxSym<'m, 'd>
-    //     = OrdIdx<'m, 'd>
-    // where
-    //     'd: 'm;
-
-    // type IdxSum<'m, 'd>
-    //     = OrdIdxSum<'m, 'd>
-    // where
-    //     'd: 'm;
-
-    // fn idx_unpack_val<'d>(u: UIdxVal<'d>) -> Self::IdxRaw<'d> {
-    //     unsafe { u.ord }
-    // }
-
-    // fn idx_as_enum<'d>(idx: Self::IdxRaw<'d>) -> IdxVal<'d> {
-    //     IdxVal::Ord(idx)
-    // }
-
-    // fn create_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
-    //     Symbol::new(m, el).into()
-    // }
-
-    // par-sca
-
-    // fn p1_scalar_fun<'m, 'd: 'm, V: MetaVal>(
-    //     _: &'m Model<'d>,
-    //     i0: Self::IdxSum<'m, 'd>,
-    //     p1: Ptr<'d, Box<dyn Fn(Self::IdxRaw<'d>) -> V::Val + 'd>>,
-    // ) -> Box<dyn Fn() -> V::Val + 'd> {
-    //     match i0 {
-    //         OrdIdxSum::Raw(i0) => Box::new(move || p1.get()(i0)),
-    //         OrdIdxSum::Idx(i0) => {
-    //             let i0 = unsafe { i0.el.get() }.idx.val_ptr::<MetaOrd>();
-    //             Box::new(move || p1.get()(i0.val()))
-    //         }
-    //         OrdIdxSum::Int(i0) => {
-    //             let i0 = unsafe { i0.el.get() }.fun_ptr::<MetaInt>() as *const Box<dyn Fn() -> i64>;
-    //             Box::new(move || p1.get()(unsafe { &*i0 }()))
-    //         }
-    //     }
-    // }
 }
