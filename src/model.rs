@@ -5,9 +5,7 @@ use crate::idxs::{IdxBag, IdxValBag};
 use crate::sets::{SetBag, SetCatInt, SetCatStr, SetFunBag, SetOrd};
 use crate::slot::{SlotStates, State};
 // use crate::vals::{Int, Num, ValBag, ValFun};
-use crate::{
-    MetaCatInt, MetaCatStr, MetaOrd, MetaSet, Ptr, Res, ResValid, Set, SetTyp, Slot, Symbol,
-};
+use crate::{MetaCatInt, MetaCatStr, MetaOrd, MetaSet, Ptr, Res, ResValid, SetTyp, Slot, Symbol};
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 
@@ -70,7 +68,7 @@ impl<'d> Model<'d> {
         Res::dbg_assert_same_model(self, set);
         let val_el = self.idx_val_bag.push(S::typ());
         let val_slot = Slot::new(self, val_el);
-        let el = self.idx_bag.push(set.ptr(), val_slot);
+        let el = self.idx_bag.push(S::set_ptr(set), val_slot);
         S::new_idx_sym(self, el)
     }
 

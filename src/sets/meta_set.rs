@@ -22,13 +22,15 @@ pub enum SetTyp {
 pub trait MetaSet: Clone + Copy + 'static {
     // set
 
-    type SetSym<'m, 'd: 'm>: Set<'m, 'd, Meta = Self>;
+    type SetSym<'m, 'd: 'm>: Copy + Deref<Target = Symbol<'m, 'd, DSet<'d>>>;
 
     fn typ() -> SetTyp;
 
     fn set_unpack<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self>;
 
     fn set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd>;
+
+    fn set_ptr<'m, 'd>(sym: Self::SetSym<'m, 'd>) -> Ptr<'d, DSet<'d>>;
 
     // idx
 
@@ -87,6 +89,10 @@ impl MetaSet for MetaCatInt {
 
     fn set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd> {
         Symbol::new(m, el).into()
+    }
+
+    fn set_ptr<'m, 'd>(sym: Self::SetSym<'m, 'd>) -> Ptr<'d, DSet<'d>> {
+        Ptr::new(sym.el)
     }
 
     // idx
@@ -170,6 +176,10 @@ impl MetaSet for MetaCatStr {
 
     fn set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd> {
         Symbol::new(m, el).into()
+    }
+
+    fn set_ptr<'m, 'd>(sym: Self::SetSym<'m, 'd>) -> Ptr<'d, DSet<'d>> {
+        Ptr::new(sym.el)
     }
 
     // idx
@@ -263,6 +273,10 @@ impl MetaSet for MetaOrd {
         Symbol::new(m, el).into()
     }
 
+    fn set_ptr<'m, 'd>(sym: Self::SetSym<'m, 'd>) -> Ptr<'d, DSet<'d>> {
+        Ptr::new(sym.el)
+    }
+
     // idx
 
     type IdxRaw<'d> = i64;
@@ -330,35 +344,35 @@ impl MetaSet for MetaOrd {
 
 // symbols
 
-pub trait Set<'m, 'd>: Deref<Target = Symbol<'m, 'd, DSet<'d>>> + Clone + Copy
-where
-    'd: 'm,
-{
-    type Meta: MetaSet;
+// pub trait Set<'m, 'd>: Deref<Target = Symbol<'m, 'd, DSet<'d>>> + Clone + Copy
+// where
+//     'd: 'm,
+// {
+//     type Meta: MetaSet;
 
-    fn ptr(self) -> Ptr<'d, DSet<'d>>;
-}
+//     fn ptr(self) -> Ptr<'d, DSet<'d>>;
+// }
 
-impl<'m, 'd> Set<'m, 'd> for SetCatInt<'m, 'd> {
-    type Meta = MetaCatInt;
+// impl<'m, 'd> Set<'m, 'd> for SetCatInt<'m, 'd> {
+//     type Meta = MetaCatInt;
 
-    fn ptr(self) -> Ptr<'d, DSet<'d>> {
-        Ptr::new(self.el)
-    }
-}
+//     fn ptr(self) -> Ptr<'d, DSet<'d>> {
+//         Ptr::new(self.el)
+//     }
+// }
 
-impl<'m, 'd> Set<'m, 'd> for SetCatStr<'m, 'd> {
-    type Meta = MetaCatStr;
+// impl<'m, 'd> Set<'m, 'd> for SetCatStr<'m, 'd> {
+//     type Meta = MetaCatStr;
 
-    fn ptr(self) -> Ptr<'d, DSet<'d>> {
-        Ptr::new(self.el)
-    }
-}
+//     fn ptr(self) -> Ptr<'d, DSet<'d>> {
+//         Ptr::new(self.el)
+//     }
+// }
 
-impl<'m, 'd> Set<'m, 'd> for SetOrd<'m, 'd> {
-    type Meta = MetaOrd;
+// impl<'m, 'd> Set<'m, 'd> for SetOrd<'m, 'd> {
+//     type Meta = MetaOrd;
 
-    fn ptr(self) -> Ptr<'d, DSet<'d>> {
-        Ptr::new(self.el)
-    }
-}
+//     fn ptr(self) -> Ptr<'d, DSet<'d>> {
+//         Ptr::new(self.el)
+//     }
+// }
