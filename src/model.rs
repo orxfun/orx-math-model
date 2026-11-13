@@ -47,7 +47,8 @@ impl<'d> Model<'d> {
     // fun
 
     pub(crate) fn fun_new<'m, F>(&'m self) -> Slot<'d, Box<F>> {
-        self.fun_bag.push(self)
+        // self.fun_bag.push(self)
+        todo!()
     }
 
     // sets

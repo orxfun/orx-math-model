@@ -19,7 +19,7 @@ pub enum SetTyp {
 
 // meta
 
-pub trait MetaSet: Clone + Copy {
+pub trait MetaSet: Clone + Copy + 'static {
     // set
 
     type SetSym<'m, 'd>: Set<'m, 'd, Meta = Self>
