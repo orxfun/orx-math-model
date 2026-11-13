@@ -1,4 +1,6 @@
-use crate::vals::{FVal, Int, Num, UFunVal};
+use crate::vals::{DVal, FVal, Int, Num, UFunVal};
+use crate::{Model, Symbol};
+use orx_imp_vec::Elem;
 
 // enums
 
@@ -18,6 +20,8 @@ pub trait Val: Clone + Copy + 'static {
     fn typ() -> ValTyp;
 
     fn val_unpack<'a, 'd>(u: &'a UFunVal<'d>) -> &'a FVal<'d, Self>;
+
+    fn new_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DVal<'d>>) -> Self::Sym<'m, 'd>;
 }
 
 // int
@@ -37,6 +41,10 @@ impl Val for ValInt {
     fn val_unpack<'a, 'd>(u: &'a UFunVal<'d>) -> &'a FVal<'d, Self> {
         unsafe { &u.int }
     }
+
+    fn new_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DVal<'d>>) -> Self::Sym<'m, 'd> {
+        Symbol::new(m, el).into()
+    }
 }
 
 // num
@@ -55,5 +63,9 @@ impl Val for ValNum {
 
     fn val_unpack<'a, 'd>(u: &'a UFunVal<'d>) -> &'a FVal<'d, Self> {
         unsafe { &u.num }
+    }
+
+    fn new_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DVal<'d>>) -> Self::Sym<'m, 'd> {
+        Symbol::new(m, el).into()
     }
 }

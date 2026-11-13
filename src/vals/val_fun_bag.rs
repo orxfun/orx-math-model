@@ -1,4 +1,4 @@
-use crate::{new_bag, vals::FunVal, Bag, Model, Set, SetTyp};
+use crate::{new_bag, vals::FunVal, Bag, Model, Set, SetTyp, Val};
 use alloc::boxed::Box;
 use core::mem::transmute;
 use orx_imp_vec::Elem;
@@ -14,7 +14,9 @@ impl Default for ValFunBag<'_> {
 }
 
 impl<'d> ValFunBag<'d> {
-    pub fn push<'m>(&'m self, fun: FunVal<'d>) -> Elem<'m, FunVal<'d>> {
+    pub fn push<'m, V: Val>(&'m self, fun: impl Fn() -> V::Raw + 'd) -> Elem<'m, FunVal<'d>> {
+        let fun: Box<dyn Fn() -> <V as Val>::Raw + 'd> = Box::new(fun);
+        let fun = FunVal::new::<V>(fun);
         self.set.push(fun)
     }
 }

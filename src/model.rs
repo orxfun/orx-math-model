@@ -4,6 +4,7 @@ use crate::idxs::{IdxBag, IdxValBag};
 // use crate::par::p1::{IntParD1, NumParD1, P1Bag, P1Slots};
 use crate::sets::{CatInt, CatStr, Ord, SetBag, SetFunBag};
 use crate::slot::{SlotStates, State};
+use crate::vals::{ValBag, ValFunBag};
 // use crate::vals::{Int, Num, ValBag, ValFun};
 use crate::{Ptr, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetTyp, Slot, Symbol, Val};
 use alloc::boxed::Box;
@@ -21,10 +22,11 @@ pub struct Model<'d> {
     // idxs
     idx_val_bag: IdxValBag<'d>,
     idx_bag: IdxBag<'d>,
-    //
-    // idx_slots: IdxSlots<'d>,
-    // idx_bag: IdxBag<'d>,
 
+    // vals
+    val_fun_bag: ValFunBag<'d>,
+    val_bag: ValBag<'d>,
+    //
     // vals
     // val_bag: ValBag<'d>,
     // arb_val_bag: ArbValBag<'d>,
@@ -95,7 +97,10 @@ impl<'d> Model<'d> {
     // vals
 
     pub(crate) fn val<'m, V: Val>(&'m self, fun: impl Fn() -> V::Raw + 'd) -> V::Sym<'m, 'd> {
-        todo!()
+        let fun_el = self.val_fun_bag.push::<V>(fun);
+        let fun_slot = Slot::new(self, fun_el);
+        let el = self.val_bag.push(fun_slot);
+        V::new_sym(self, el)
     }
 
     // pub(crate) fn val<'m, V: MetaVal>(&'m self, fun: impl Fn() -> V::Val + 'd) -> V::Sym<'m, 'd> {
