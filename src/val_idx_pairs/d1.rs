@@ -1,5 +1,6 @@
-use crate::pars::p1::{UFunP1, FP1};
-use crate::{Set, SetCatInt, SetCatStr, SetOrd, Val, ValInt, ValNum};
+use crate::pars::p1::{ParD1, UFunP1, DP1, FP1};
+use crate::{Model, Set, SetCatInt, SetCatStr, SetOrd, Symbol, Val, ValInt, ValNum};
+use orx_imp_vec::Elem;
 
 pub trait ValIdxPairD1 {
     type V: Val;
@@ -7,6 +8,16 @@ pub trait ValIdxPairD1 {
     type I0: Set;
 
     fn p1_fun_unpack<'a, 'd>(data: &'a UFunP1<'d>) -> &'a FP1<'d, Self::V, Self::I0>;
+
+    fn new_p1_sym<'m, 'd>(
+        m: &'m Model<'d>,
+        el: Elem<'m, DP1<'d>>,
+    ) -> ParD1<'m, 'd, Self::V, Self::I0>
+    where
+        ParD1<'m, 'd, Self::V, Self::I0>: From<Symbol<'m, 'd, DP1<'d>>>,
+    {
+        Symbol::new(m, el).into()
+    }
 }
 
 // int

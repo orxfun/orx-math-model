@@ -1,9 +1,11 @@
 use crate::pars::p1::{FunP1, FP1};
-use crate::{Elements, Res, ResValid, Set, SetTyp, Slot, Val};
+use crate::sets::DSet;
+use crate::{Elements, Ptr, Res, ResValid, Set, SetTyp, Slot, Val};
 use core::mem::transmute;
 
 #[derive(derive_new::new)]
 pub struct DP1<'d> {
+    s0: Ptr<'d, DSet<'d>>,
     slot: Slot<'d, FunP1<'d>>,
 }
 

@@ -1,7 +1,7 @@
 use crate::idxs::{DIdx, IdxCatInt, IdxCatStr, IdxOrd, UIdxVal};
 // use crate::idxs::{CatIdxInt, CatIdxStr, DIdx, OrdIdx};
 use crate::sets::{CatInt, CatStr, DSet, FSet, FunSet, Ord, UFunSet};
-use crate::{Model, Ptr, Res, ResValid, Slot, Symbol};
+use crate::{Model, Ptr, Res, ResValid, SetSym, Slot, Symbol};
 use alloc::string::ToString;
 use alloc::{boxed::Box, string::String};
 use core::mem::transmute;
@@ -22,7 +22,7 @@ pub enum SetTyp {
 pub trait Set: Clone + Copy + 'static {
     // set
 
-    type SetSym<'m, 'd: 'm>: Copy + Deref<Target = Symbol<'m, 'd, DSet<'d>>>;
+    type SetSym<'m, 'd: 'm>: SetSym<'m, 'd, Meta = Self>;
 
     fn typ() -> SetTyp;
 

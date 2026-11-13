@@ -6,6 +6,12 @@ use core::{marker::PhantomData, ops::Deref};
 #[derive(derive_more::From, Clone, Copy)]
 pub struct ParD1<'m, 'd, V: Val, I0: Set>(pub(crate) Symbol<'m, 'd, DP1<'d>>, PhantomData<(V, I0)>);
 
+impl<'m, 'd, V: Val, I0: Set> From<Symbol<'m, 'd, DP1<'d>>> for ParD1<'m, 'd, V, I0> {
+    fn from(value: Symbol<'m, 'd, DP1<'d>>) -> Self {
+        Self(value, PhantomData)
+    }
+}
+
 impl<'m, 'd, V: Val, I0: Set> Deref for ParD1<'m, 'd, V, I0> {
     type Target = Symbol<'m, 'd, DP1<'d>>;
 
