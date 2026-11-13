@@ -62,6 +62,8 @@ fn p1_int_cstr_at() {
     let set = m.cat_set_str();
     let idx = set.idx();
     let par = m.par1_int(set);
+    let sca1 = [par.at(idx), par[idx]];
+    let sca2 = [par.at(3.to_string()), par["3"], par[&set_data[2]]];
 
     // binding
     par.bind(|i| par_data[i]).unwrap();
@@ -70,9 +72,15 @@ fn p1_int_cstr_at() {
     // running
     let mut elements: Elements<El<'_>> = vec![].into();
     let iter = ElementsIter::<I0>::new(idx, &mut elements);
-    for (i, v) in par_data.iter() {
-        let val = unsafe { par.el.get() }.at::<V, I0>(i);
-        assert_eq!(*v, val);
+    for (i, _) in iter.enumerate() {
+        let exp = par_data[&set_data[i]];
+        for sca in sca1 {
+            assert_eq!(exp, unsafe { sca.el.get() }.eval::<V>());
+        }
+        let exp = par_data[&set_data[2]];
+        for sca in sca2 {
+            assert_eq!(exp, unsafe { sca.el.get() }.eval::<V>());
+        }
     }
 }
 
@@ -91,6 +99,9 @@ fn p1_int_ord_at() {
     let set = m.ord_set();
     let idx = set.idx();
     let par = m.par1_int(set);
+    let sca1 = [par.at(idx), par[idx]];
+    let sca2 = [par.at(2), par[2]];
+    // TODO: add sca3 to test Int as index
 
     // binding
     par.bind(|i| par_data(i)).unwrap();
@@ -99,9 +110,15 @@ fn p1_int_ord_at() {
     // running
     let mut elements: Elements<El<'_>> = vec![].into();
     let iter = ElementsIter::<I0>::new(idx, &mut elements);
-    for (i, v) in (0..4).map(|i| par_data(i)).enumerate() {
-        let val = unsafe { par.el.get() }.at::<V, I0>(i as i64);
-        assert_eq!(v, val);
+    for (i, _) in iter.enumerate() {
+        let exp = par_data(set_data[i]);
+        for sca in sca1 {
+            assert_eq!(exp, unsafe { sca.el.get() }.eval::<V>());
+        }
+        let exp = par_data(set_data[2]);
+        for sca in sca2 {
+            assert_eq!(exp, unsafe { sca.el.get() }.eval::<V>());
+        }
     }
 }
 
@@ -122,6 +139,8 @@ fn p1_num_cint_at() {
     let set = m.cat_set_int();
     let idx = set.idx();
     let par = m.par1_num(set);
+    let sca1 = [par.at(idx), par[idx]];
+    let sca2 = [par.at(2), par[2]];
 
     // binding
     par.bind(|i| par_data[i]).unwrap();
@@ -130,9 +149,15 @@ fn p1_num_cint_at() {
     // running
     let mut elements: Elements<El<'_>> = vec![].into();
     let iter = ElementsIter::<I0>::new(idx, &mut elements);
-    for (i, v) in par_data.iter().copied().enumerate() {
-        let val = unsafe { par.el.get() }.at::<V, I0>(i);
-        assert_eq!(v, val);
+    for (i, _) in iter.enumerate() {
+        let exp = par_data[set_data[i]];
+        for sca in sca1 {
+            assert_eq!(exp, unsafe { sca.el.get() }.eval::<V>());
+        }
+        let exp = par_data[set_data[2]];
+        for sca in sca2 {
+            assert_eq!(exp, unsafe { sca.el.get() }.eval::<V>());
+        }
     }
 }
 
@@ -184,6 +209,9 @@ fn p1_num_ord_at() {
     let set = m.ord_set();
     let idx = set.idx();
     let par = m.par1_num(set);
+    let sca1 = [par.at(idx), par[idx]];
+    let sca2 = [par.at(2), par[2]];
+    // TODO: add sca3 to test Int as index
 
     // binding
     par.bind(|i| par_data(i)).unwrap();
@@ -192,8 +220,14 @@ fn p1_num_ord_at() {
     // running
     let mut elements: Elements<El<'_>> = vec![].into();
     let iter = ElementsIter::<I0>::new(idx, &mut elements);
-    for (i, v) in (0..4).map(|i| par_data(i)).enumerate() {
-        let val = unsafe { par.el.get() }.at::<V, I0>(i as i64);
-        assert_eq!(v, val);
+    for (i, _) in iter.enumerate() {
+        let exp = par_data(set_data[i]);
+        for sca in sca1 {
+            assert_eq!(exp, unsafe { sca.el.get() }.eval::<V>());
+        }
+        let exp = par_data(set_data[2]);
+        for sca in sca2 {
+            assert_eq!(exp, unsafe { sca.el.get() }.eval::<V>());
+        }
     }
 }

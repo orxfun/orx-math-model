@@ -111,11 +111,15 @@ impl D1Args for SetOrd {
                     fun.at::<V, Self>(idx)
                 })
             }
+            IndexOrd::ConUsize(con) => par.m.val::<V>(move || {
+                let fun = fun.get();
+                fun.at::<V, Self>(con as i64)
+            }),
             IndexOrd::ConI64(con) => par.m.val::<V>(move || {
                 let fun = fun.get();
                 fun.at::<V, Self>(con)
             }),
-            IndexOrd::ConUsize(con) => par.m.val::<V>(move || {
+            IndexOrd::ConI32(con) => par.m.val::<V>(move || {
                 let fun = fun.get();
                 fun.at::<V, Self>(con as i64)
             }),

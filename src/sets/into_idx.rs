@@ -28,4 +28,5 @@ pub enum IndexOrd<'m, 'd> {
     Int(Int<'m, 'd>),
     ConUsize(usize),
     ConI64(i64),
+    ConI32(i32),
 }
