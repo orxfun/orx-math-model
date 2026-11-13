@@ -1,7 +1,7 @@
 use crate::idxs::{IdxCatInt, IdxCatStr, IdxOrd};
 // use crate::idxs::{CatIdxInt, CatIdxStr, OrdIdx};
 use crate::sets::DSet;
-use crate::{SetCatInt, SetCatStr, Elements, SetOrd, Res, Set, Symbol};
+use crate::{Elements, Res, Set, SetCatInt, SetCatStr, SetOrd, Symbol};
 use alloc::{boxed::Box, string::String};
 
 fn bind<'d, S, I>(set: Symbol<'_, 'd, DSet<'d>>, fun: impl Fn() -> I + 'd) -> Res

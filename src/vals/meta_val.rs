@@ -1,3 +1,5 @@
+use crate::vals::{FVal, UFunVal};
+
 // enums
 
 #[derive(Debug, PartialEq, Clone, Copy)]
@@ -12,6 +14,8 @@ pub trait Val: Clone + Copy + 'static {
     type Raw: Clone + Copy;
 
     fn typ() -> ValTyp;
+
+    fn val_unpack<'a, 'd>(u: &'a UFunVal<'d>) -> &'a FVal<'d, Self>;
 }
 
 // int
@@ -25,6 +29,10 @@ impl Val for ValInt {
     fn typ() -> ValTyp {
         ValTyp::Int
     }
+
+    fn val_unpack<'a, 'd>(u: &'a UFunVal<'d>) -> &'a FVal<'d, Self> {
+        unsafe { &u.int }
+    }
 }
 
 // num
@@ -37,5 +45,9 @@ impl Val for ValNum {
 
     fn typ() -> ValTyp {
         ValTyp::Num
+    }
+
+    fn val_unpack<'a, 'd>(u: &'a UFunVal<'d>) -> &'a FVal<'d, Self> {
+        unsafe { &u.num }
     }
 }

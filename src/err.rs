@@ -1,4 +1,4 @@
-use crate::{slot::State, Model, Set, SetTyp, Symbol};
+use crate::{slot::State, Model, Set, SetTyp, Symbol, ValTyp};
 use alloc::string::String;
 use core::ops::Deref;
 
@@ -49,5 +49,13 @@ pub trait ResValid {
 
     fn dbg_assert_same_set(a: SetTyp, b: SetTyp) {
         debug_assert_eq!(a, b, "wrong set type")
+    }
+
+    fn dbg_assert_same_val(a: ValTyp, b: ValTyp) {
+        debug_assert_eq!(a, b, "wrong val type")
+    }
+
+    fn dbg_assert_slot_bound(state: State) {
+        Self::assert_slot_bound(state).unwrap();
     }
 }
