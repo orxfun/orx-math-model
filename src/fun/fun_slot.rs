@@ -1,4 +1,5 @@
 use crate::fun::glossary::*;
+use crate::slot::State;
 use crate::{Elements, MetaSet, Res, Slot};
 use alloc::boxed::Box;
 use core::mem::transmute;
@@ -11,6 +12,10 @@ pub struct FunSlot<'d> {
 }
 
 impl<'d> FunSlot<'d> {
+    pub fn state(&self) -> State {
+        self.slot.state()
+    }
+
     // set
 
     pub fn bind_set<S: MetaSet>(&self, fun: FSet<'d, S>) -> Res {

@@ -11,10 +11,11 @@ impl<'d> DSet<'d> {
         self.fun.bind_set::<S>(fun)
     }
 
-    pub fn fill<S: MetaSet>(&self, elements: &mut Elements<S::IdxRaw<'d>>) {
-        // Res::assert_slot_bound(state);
+    pub fn fill<S: MetaSet>(&self, elements: &mut Elements<S::IdxRaw<'d>>) -> Res {
+        Res::assert_slot_bound(self.fun.state())?;
         Res::dbg_assert_same_set::<S>(self.typ);
         let fun = self.fun.get_set::<S>();
-        fun(elements)
+        fun(elements);
+        Ok(())
     }
 }

@@ -54,6 +54,10 @@ impl<'d, T> Clone for Slot<'d, T> {
 impl<'d, T> Copy for Slot<'d, T> {}
 
 impl<'d, T> Slot<'d, T> {
+    pub fn state(&self) -> State {
+        *unsafe { &*self.state }
+    }
+
     pub fn bind(&self, value: T) -> Res {
         Res::assert_slot_empty(*unsafe { &*self.state })?;
         *unsafe { &mut *(self.state) } = State::Bound;
@@ -62,7 +66,7 @@ impl<'d, T> Slot<'d, T> {
     }
 
     pub fn assert_is_bound(&self) -> Res {
-        Res::assert_slot_bound(*unsafe { &*self.state })
+        Res::assert_slot_bound(self.state())
     }
 
     pub fn get(&self) -> &T {
