@@ -1,5 +1,5 @@
 use crate::{
-    Elements, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetTyp, Val, ValInt, ValNum,
+    Elements, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetTyp, Val, ValInt, ValNum, ValTyp,
 };
 use alloc::boxed::Box;
 use core::mem::{transmute, ManuallyDrop};
@@ -15,4 +15,10 @@ pub union UFunP1<'d> {
     pub cint_num: ManuallyDrop<FP1<'d, ValNum, SetCatInt>>,
     pub cstr_num: ManuallyDrop<FP1<'d, ValNum, SetCatStr>>,
     pub ord_num: ManuallyDrop<FP1<'d, ValNum, SetOrd>>,
+}
+
+pub struct FunP1<'d> {
+    pub val_typ: ValTyp,
+    pub i0_typ: SetTyp,
+    data: UFunP1<'d>,
 }
