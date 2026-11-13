@@ -3,6 +3,7 @@ mod tests;
 
 mod meta_set;
 mod set_bag;
+mod set_data;
 mod set_slots;
 mod set_symbols;
 
