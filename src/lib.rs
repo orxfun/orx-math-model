@@ -36,6 +36,8 @@ mod vals;
 pub(crate) use bag::{new_bag, Bag};
 pub(crate) use elements::{Elements, ElementsIter};
 pub(crate) use err::{Err, Res, Validation};
+pub(crate) use fun::glossary::*;
+pub(crate) use fun::FunSlot;
 pub(crate) use idxs::{CatIntIdxSum, CatStrIdxSum, Idx, OrdIdxSum};
 pub(crate) use sets::{MetaCatInt, MetaCatStr, MetaOrd, MetaSet, Set, SetTyp};
 pub(crate) use slot::{Ptr, Slot};
