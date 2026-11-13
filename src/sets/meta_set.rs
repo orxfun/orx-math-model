@@ -4,7 +4,7 @@ use crate::sets::{CatInt, CatStr, DSet, FSet, FunSet, Ord, UFunSet};
 use crate::{Model, Ptr, Res, ResValid, SetSym, Slot, Symbol};
 use alloc::string::ToString;
 use alloc::{boxed::Box, string::String};
-use core::mem::transmute;
+use core::mem::{transmute, ManuallyDrop};
 use core::ops::Deref;
 use orx_imp_vec::Elem;
 
@@ -26,7 +26,9 @@ pub trait Set: Clone + Copy + 'static {
 
     fn typ() -> SetTyp;
 
-    fn set_unpack<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self>;
+    fn into_fun_union<'d>(fun: FSet<'d, Self>) -> UFunSet<'d>;
+
+    fn fun_from_union<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self>;
 
     fn new_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd>;
 
@@ -83,7 +85,13 @@ impl Set for SetCatInt {
         SetTyp::CatInt
     }
 
-    fn set_unpack<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self> {
+    fn into_fun_union<'d>(fun: FSet<'d, Self>) -> UFunSet<'d> {
+        UFunSet {
+            cint: ManuallyDrop::new(fun),
+        }
+    }
+
+    fn fun_from_union<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self> {
         unsafe { &u.cint }
     }
 
@@ -170,7 +178,13 @@ impl Set for SetCatStr {
         SetTyp::CatStr
     }
 
-    fn set_unpack<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self> {
+    fn into_fun_union<'d>(fun: FSet<'d, Self>) -> UFunSet<'d> {
+        UFunSet {
+            cstr: ManuallyDrop::new(fun),
+        }
+    }
+
+    fn fun_from_union<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self> {
         unsafe { &u.cstr }
     }
 
@@ -265,7 +279,13 @@ impl Set for SetOrd {
         SetTyp::Ord
     }
 
-    fn set_unpack<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self> {
+    fn into_fun_union<'d>(fun: FSet<'d, Self>) -> UFunSet<'d> {
+        UFunSet {
+            ord: ManuallyDrop::new(fun),
+        }
+    }
+
+    fn fun_from_union<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self> {
         unsafe { &u.ord }
     }
 

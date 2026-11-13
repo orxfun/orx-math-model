@@ -63,6 +63,6 @@ impl<'d> FunSet<'d> {
 
     pub fn get<S: Set>(&self) -> &FSet<'d, S> {
         Res::dbg_assert_same_set(S::typ(), self.typ);
-        S::set_unpack(&self.data)
+        S::fun_from_union(&self.data)
     }
 }
