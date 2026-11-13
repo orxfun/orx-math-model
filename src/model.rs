@@ -45,7 +45,7 @@ impl<'d> Model<'d> {
 
     // fun
 
-    pub(crate) fn fun<'m, F>(&'m self) -> Slot<'d, Box<F>> {
+    pub(crate) fn fun_new<'m, F>(&'m self) -> Slot<'d, Box<F>> {
         self.fun_bag.push(self)
     }
 
