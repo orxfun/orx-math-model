@@ -1,5 +1,6 @@
-use crate::{new_bag, Bag};
+use crate::{new_bag, Bag, Model, Slot};
 use alloc::boxed::Box;
+use core::mem::transmute;
 
 pub struct FunBag<'d> {
     bag: Bag<Box<dyn Fn() + 'd>>,
@@ -12,5 +13,8 @@ impl Default for FunBag<'_> {
 }
 
 impl<'d> FunBag<'d> {
-    // pub fn
+    pub fn push<'m, F>(&'m self, m: &'m Model<'d>) -> Slot<'d, Box<F>> {
+        let el = self.bag.push(Box::new(|| {}));
+        Slot::new(m, unsafe { transmute(el) })
+    }
 }

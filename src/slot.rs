@@ -36,10 +36,10 @@ pub struct Slot<'d, T> {
 }
 
 impl<'d, T> Slot<'d, T> {
-    pub fn new<'m>(m: &'m Model<'d>, elem: Elem<'m, T>) -> Self {
+    pub fn new<'m>(m: &'m Model<'d>, el: Elem<'m, T>) -> Self {
         Self {
             state: m.slot_state().as_mut_ptr(),
-            p: elem.as_mut_ptr(),
+            p: el.as_mut_ptr(),
             phantom: PhantomData,
         }
     }

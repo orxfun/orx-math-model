@@ -1,6 +1,6 @@
 use crate::arb_val::{ArbVal, ArbValBag};
 use crate::idxs::{CatIdxInt, CatIdxStr, IdxBag, IdxSlots, OrdIdx};
-use crate::par::p1::{IntParD1, NumParD1, P1Bag, P1Slots};
+// use crate::par::p1::{IntParD1, NumParD1, P1Bag, P1Slots};
 use crate::sets::{CatSetInt, CatSetStr, OrdSet, SetBag, SetSlots};
 use crate::slot::{SlotStates, State};
 use crate::vals::{Int, Num, ValBag, ValFun};
@@ -27,10 +27,9 @@ pub struct Model<'d> {
     // vals
     val_bag: ValBag<'d>,
     arb_val_bag: ArbValBag<'d>,
-
-    // pars
-    p1_slots: P1Slots<'d>,
-    p1_bag: P1Bag<'d>,
+    // // pars
+    // p1_slots: P1Slots<'d>,
+    // p1_bag: P1Bag<'d>,
 }
 
 impl<'d> Model<'d> {
@@ -104,15 +103,15 @@ impl<'d> Model<'d> {
 
     // p1
 
-    pub fn par_d1_int<'m, S0: Set<'m, 'd>>(&'m self, s0: S0) -> IntParD1<'m, 'd, S0::Meta> {
-        let par = self.p1_slots.push::<S0::Meta, MetaInt>(self);
-        let el = self.p1_bag.push(par, s0.slot());
-        Symbol::new(self, el).into()
-    }
+    // pub fn par_d1_int<'m, S0: Set<'m, 'd>>(&'m self, s0: S0) -> IntParD1<'m, 'd, S0::Meta> {
+    //     let par = self.p1_slots.push::<S0::Meta, MetaInt>(self);
+    //     let el = self.p1_bag.push(par, s0.slot());
+    //     Symbol::new(self, el).into()
+    // }
 
-    pub fn par_d1_num<'m, S0: Set<'m, 'd>>(&'m self, s0: S0) -> NumParD1<'m, 'd, S0::Meta> {
-        let par = self.p1_slots.push::<S0::Meta, MetaNum>(self);
-        let el = self.p1_bag.push(par, s0.slot());
-        Symbol::new(self, el).into()
-    }
+    // pub fn par_d1_num<'m, S0: Set<'m, 'd>>(&'m self, s0: S0) -> NumParD1<'m, 'd, S0::Meta> {
+    //     let par = self.p1_slots.push::<S0::Meta, MetaNum>(self);
+    //     let el = self.p1_bag.push(par, s0.slot());
+    //     Symbol::new(self, el).into()
+    // }
 }

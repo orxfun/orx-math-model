@@ -26,7 +26,7 @@ mod err;
 mod fun;
 mod idxs;
 mod model;
-mod par;
+// mod par;
 mod sets;
 mod slot;
 mod symbol;
