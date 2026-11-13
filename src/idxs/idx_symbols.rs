@@ -8,30 +8,18 @@ use alloc::{boxed::Box, string::String};
 #[derive(derive_more::From, derive_more::Deref, Clone, Copy)]
 pub struct IdxCatInt<'m, 'd>(pub(crate) Symbol<'m, 'd, DSet<'d>>);
 
-impl<'m, 'd> IdxCatInt<'m, 'd> {
-    // pub fn idx(self) -> CatIdxInt<'m, 'd> {
-    //     self.m.cat_idx_int(self)
-    // }
-}
+impl<'m, 'd> IdxCatInt<'m, 'd> {}
 
 // cat str
 
 #[derive(derive_more::From, derive_more::Deref, Clone, Copy)]
 pub struct IdxCatStr<'m, 'd>(pub(crate) Symbol<'m, 'd, DSet<'d>>);
 
-impl<'m, 'd> IdxCatStr<'m, 'd> {
-    // pub fn idx(self) -> CatIdxStr<'m, 'd> {
-    //     self.m.cat_idx_str(self)
-    // }
-}
+impl<'m, 'd> IdxCatStr<'m, 'd> {}
 
 // ord
 
 #[derive(derive_more::From, derive_more::Deref, Clone, Copy)]
 pub struct IdxOrd<'m, 'd>(pub(crate) Symbol<'m, 'd, DSet<'d>>);
 
-impl<'m, 'd> IdxOrd<'m, 'd> {
-    // pub fn idx(self) -> OrdIdx<'m, 'd> {
-    //     self.m.ord_idx(self)
-    // }
-}
+impl<'m, 'd> IdxOrd<'m, 'd> {}
