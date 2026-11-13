@@ -131,11 +131,12 @@ impl<'d> Model<'d> {
 
     // p1
 
-    pub fn par1_int<'m, S0>(&'m self, s0: S0) -> ParD1<'m, 'd, ValInt, S0::Meta>
+    fn par1<'m, V, S0>(&'m self, s0: S0) -> ParD1<'m, 'd, V, S0::Meta>
     where
+        V: Val,
         S0: SetSym<'m, 'd>,
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
-        (ValInt, S0::Meta): ValIdxPairD1<V = ValInt, I0 = S0::Meta>,
+        (V, S0::Meta): ValIdxPairD1<V = V, I0 = S0::Meta>,
     {
         let fun_el = self
             .p1_fun_bag
@@ -143,7 +144,16 @@ impl<'d> Model<'d> {
         let fun_slot = Slot::new(self, fun_el);
         let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
         let el = self.p1_bag.push(s0_ptr, fun_slot);
-        <(ValInt, S0::Meta) as ValIdxPairD1>::new_p1_sym(self, el)
+        <(V, S0::Meta) as ValIdxPairD1>::new_p1_sym(self, el)
+    }
+
+    pub fn par1_int<'m, S0>(&'m self, s0: S0) -> ParD1<'m, 'd, ValInt, S0::Meta>
+    where
+        S0: SetSym<'m, 'd>,
+        S0::Meta: Set<SetSym<'m, 'd> = S0>,
+        (ValInt, S0::Meta): ValIdxPairD1<V = ValInt, I0 = S0::Meta>,
+    {
+        self.par1(s0)
     }
 
     // pub fn par_d1_int<'m, S0: Set<'m, 'd>>(&'m self, s0: S0) -> IntParD1<'m, 'd, S0::Meta> {
