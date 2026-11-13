@@ -56,21 +56,3 @@ fn set_ord() {
     unsafe { set.el.get() }.fill::<MetaOrd>(&mut el).unwrap();
     assert_eq!(el.as_slice(), &[1, 2, 7, 9]);
 }
-
-#[test]
-fn abc() {
-    // data
-    let values = vec![1usize, 2, 7, 9];
-
-    // modeling
-    let m = Model::default();
-    let set = m.cat_set_int();
-
-    // binding
-    set.bind(|| values.iter().copied()).unwrap();
-
-    // running
-    let mut el: Elements<usize> = vec![].into();
-    unsafe { set.el.get() }.fill::<MetaCatInt>(&mut el).unwrap();
-    assert_eq!(el.as_slice(), &[1, 2, 7, 9]);
-}
