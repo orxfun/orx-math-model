@@ -20,12 +20,11 @@ impl<'d> DP1<'d> {
         self.slot.bind(fun)
     }
 
-    #[cfg(test)]
-    pub fn t_at<V: Val, I0: Set>(&self, i0: I0::IdxRaw<'d>) -> V::Raw
+    pub fn at<V: Val, I0: Set>(&self, i0: I0::IdxRaw<'d>) -> V::Raw
     where
         (V, I0): ValIdxPairD1<V = V, I0 = I0>,
     {
-        Res::assert_slot_bound(self.slot.state()).unwrap();
+        Res::dbg_assert_slot_bound(self.slot.state());
         Res::dbg_assert_same_val(V::typ(), self.slot.get().val_typ);
         Res::dbg_assert_same_set(I0::typ(), self.slot.get().i0_typ);
         let fun = self.slot.get().get::<V, I0>();

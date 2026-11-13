@@ -1,7 +1,7 @@
 use crate::pars::p1::DP1;
 use crate::sets::IndexCatInt;
 use crate::val_idx_pairs::ValIdxPairD1;
-use crate::{Res, Set, SetCatInt, Symbol, Val, ValInt};
+use crate::{Ptr, Res, Set, SetCatInt, Symbol, Val, ValInt};
 use alloc::boxed::Box;
 use core::{marker::PhantomData, ops::Deref};
 
@@ -38,14 +38,27 @@ impl<'m, 'd, V: Val, I0: Set> ParD1<'m, 'd, V, I0> {
     // }
 }
 
-impl<'m, 'd> ParD1<'m, 'd, ValInt, SetCatInt> {
-    pub fn at(
-        self,
-        idx: impl Into<<SetCatInt as Set>::IdxAny<'m, 'd>>,
-    ) -> <ValInt as Val>::Sym<'m, 'd> {
+type V = ValInt;
+type I0 = SetCatInt;
+impl<'m, 'd> ParD1<'m, 'd, V, I0> {
+    pub fn at(self, idx: impl Into<<I0 as Set>::IdxAny<'m, 'd>>) -> <V as Val>::Sym<'m, 'd> {
         match idx.into() {
-            IndexCatInt::Idx(idx) => todo!(),
-            _ => todo!(),
+            IndexCatInt::Idx(idx) => {
+                let idx = Ptr::new(idx.el);
+                let fun = Ptr::new(self.el);
+                self.m.val::<V>(move || {
+                    let fun = fun.get();
+                    let idx = idx.get().read::<I0>();
+                    fun.at::<V, I0>(idx)
+                })
+            }
+            IndexCatInt::ConUsize(con) => {
+                let fun = Ptr::new(self.el);
+                self.m.val::<V>(move || {
+                    let fun = fun.get();
+                    fun.at::<V, I0>(con)
+                })
+            }
         }
     }
 }
