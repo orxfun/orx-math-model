@@ -1,9 +1,8 @@
-use core::arch::x86_64::_MM_ROUND_TOWARD_ZERO;
-
 use crate::pars::p1::ParD1;
 use crate::sets::{IndexCatInt, IndexCatStr, IndexOrd};
 use crate::val_idx_pairs::D1ValIdxPair;
 use crate::{Ptr, Set, SetCatInt, SetCatStr, SetOrd, Val, ValInt};
+use alloc::string::ToString;
 
 pub trait D1Args: Set {
     fn par_at<'m, 'd, V: Val>(
@@ -69,7 +68,17 @@ impl D1Args for SetCatStr {
                     fun.at::<V, Self>(con.get().get())
                 })
             }
-            _ => todo!(),
+            IndexCatStr::ConStringRef(con) => par.m.val::<V>(move || {
+                let fun = fun.get();
+                fun.at::<V, Self>(con)
+            }),
+            IndexCatStr::ConStr(con) => {
+                let con = par.m.con_val(con.to_string());
+                par.m.val::<V>(move || {
+                    let fun = fun.get();
+                    fun.at::<V, Self>(con.get().get())
+                })
+            }
         }
     }
 }
