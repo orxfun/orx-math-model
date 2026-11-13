@@ -1,12 +1,12 @@
 use crate::idxs::IdxVal;
 use crate::{elements::Elements, Model};
-use crate::{CatInt, CatStr, ElementsIter, Ord, Set};
+use crate::{SetCatInt, SetCatStr, ElementsIter, SetOrd, Set};
 use alloc::string::{String, ToString};
 use alloc::{vec, vec::Vec};
 
 #[test]
 fn idx_set_iter_cat_int() {
-    type S = CatInt;
+    type S = SetCatInt;
     type El<'d> = <S as Set>::IdxRaw<'d>;
 
     // data
@@ -30,7 +30,7 @@ fn idx_set_iter_cat_int() {
 
 #[test]
 fn idx_set_iter_cat_str() {
-    type S = CatStr;
+    type S = SetCatStr;
     type El<'d> = <S as Set>::IdxRaw<'d>;
 
     // data
@@ -54,7 +54,7 @@ fn idx_set_iter_cat_str() {
 
 #[test]
 fn idx_set_iter_ord() {
-    type S = Ord;
+    type S = SetOrd;
     type El<'d> = <S as Set>::IdxRaw<'d>;
 
     // data

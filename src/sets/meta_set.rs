@@ -1,6 +1,6 @@
 use crate::idxs::{DIdx, IdxCatInt, IdxCatStr, IdxOrd, UIdxVal};
 // use crate::idxs::{CatIdxInt, CatIdxStr, DIdx, OrdIdx};
-use crate::sets::{DSet, FSet, FunSet, SetCatInt, SetCatStr, SetOrd, UFunSet};
+use crate::sets::{CatInt, CatStr, DSet, FSet, FunSet, Ord, UFunSet};
 use crate::{Model, Ptr, Res, ResValid, Slot, Symbol};
 use alloc::string::ToString;
 use alloc::{boxed::Box, string::String};
@@ -72,12 +72,12 @@ pub trait Set: Clone + Copy + 'static {
 // cat set int
 
 #[derive(Clone, Copy)]
-pub struct CatInt;
+pub struct SetCatInt;
 
-impl Set for CatInt {
+impl Set for SetCatInt {
     // set
 
-    type SetSym<'m, 'd: 'm> = SetCatInt<'m, 'd>;
+    type SetSym<'m, 'd: 'm> = CatInt<'m, 'd>;
 
     fn typ() -> SetTyp {
         SetTyp::CatInt
@@ -159,12 +159,12 @@ impl Set for CatInt {
 // cat set str
 
 #[derive(Clone, Copy)]
-pub struct CatStr;
+pub struct SetCatStr;
 
-impl Set for CatStr {
+impl Set for SetCatStr {
     // set
 
-    type SetSym<'m, 'd: 'm> = SetCatStr<'m, 'd>;
+    type SetSym<'m, 'd: 'm> = CatStr<'m, 'd>;
 
     fn typ() -> SetTyp {
         SetTyp::CatStr
@@ -254,12 +254,12 @@ impl Set for CatStr {
 // ord set
 
 #[derive(Clone, Copy)]
-pub struct Ord;
+pub struct SetOrd;
 
-impl Set for Ord {
+impl Set for SetOrd {
     // set
 
-    type SetSym<'m, 'd: 'm> = SetOrd<'m, 'd>;
+    type SetSym<'m, 'd: 'm> = Ord<'m, 'd>;
 
     fn typ() -> SetTyp {
         SetTyp::Ord

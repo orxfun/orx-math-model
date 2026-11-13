@@ -8,9 +8,9 @@ mod set_fun;
 mod set_fun_bag;
 mod set_symbols;
 
-pub use meta_set::{CatInt, CatStr, Ord, Set, SetTyp};
+pub use meta_set::{SetCatInt, SetCatStr, SetOrd, Set, SetTyp};
 pub use set_bag::SetBag;
 pub use set_data::DSet;
 pub use set_fun::{FSet, FunSet, UFunSet};
 pub use set_fun_bag::SetFunBag;
-pub use set_symbols::{SetCatInt, SetCatStr, SetOrd};
+pub use set_symbols::{CatInt, CatStr, Ord};

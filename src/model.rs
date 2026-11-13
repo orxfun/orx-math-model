@@ -2,10 +2,10 @@ use crate::idxs::{IdxBag, IdxValBag};
 // use crate::arb_val::{ArbVal, ArbValBag};
 // use crate::idxs::{CatIdxInt, CatIdxStr, IdxBag, IdxSlots, OrdIdx};
 // use crate::par::p1::{IntParD1, NumParD1, P1Bag, P1Slots};
-use crate::sets::{SetBag, SetCatInt, SetCatStr, SetFunBag, SetOrd};
+use crate::sets::{CatInt, CatStr, Ord, SetBag, SetFunBag};
 use crate::slot::{SlotStates, State};
 // use crate::vals::{Int, Num, ValBag, ValFun};
-use crate::{CatInt, CatStr, Ord, Ptr, Res, ResValid, Set, SetTyp, Slot, Symbol};
+use crate::{SetCatInt, SetCatStr, SetOrd, Ptr, Res, ResValid, Set, SetTyp, Slot, Symbol};
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 
@@ -43,16 +43,16 @@ impl<'d> Model<'d> {
 
     // sets
 
-    pub fn cat_set_int<'m>(&'m self) -> SetCatInt<'m, 'd> {
-        self.set::<CatInt>()
+    pub fn cat_set_int<'m>(&'m self) -> CatInt<'m, 'd> {
+        self.set::<SetCatInt>()
     }
 
-    pub fn cat_set_str<'m>(&'m self) -> SetCatStr<'m, 'd> {
-        self.set::<CatStr>()
+    pub fn cat_set_str<'m>(&'m self) -> CatStr<'m, 'd> {
+        self.set::<SetCatStr>()
     }
 
-    pub fn ord_set<'m>(&'m self) -> SetOrd<'m, 'd> {
-        self.set::<Ord>()
+    pub fn ord_set<'m>(&'m self) -> Ord<'m, 'd> {
+        self.set::<SetOrd>()
     }
 
     fn set<'m, S: Set>(&'m self) -> S::SetSym<'m, 'd> {

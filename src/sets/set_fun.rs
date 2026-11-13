@@ -1,4 +1,4 @@
-use crate::{CatInt, CatStr, Elements, Ord, Res, ResValid, Set, SetTyp};
+use crate::{Elements, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetTyp};
 use alloc::boxed::Box;
 use core::mem::{transmute, ManuallyDrop};
 
@@ -6,9 +6,9 @@ pub type FSet<'d, S> = Box<dyn Fn(&mut Elements<<S as Set>::IdxRaw<'d>>) + 'd>;
 
 #[repr(C)]
 pub union UFunSet<'d> {
-    pub cat_int: ManuallyDrop<FSet<'d, CatInt>>,
-    pub cat_str: ManuallyDrop<FSet<'d, CatStr>>,
-    pub ord: ManuallyDrop<FSet<'d, Ord>>,
+    pub cat_int: ManuallyDrop<FSet<'d, SetCatInt>>,
+    pub cat_str: ManuallyDrop<FSet<'d, SetCatStr>>,
+    pub ord: ManuallyDrop<FSet<'d, SetOrd>>,
 }
 
 pub struct FunSet<'d> {
