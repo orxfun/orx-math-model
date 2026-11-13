@@ -1,6 +1,6 @@
 use crate::pars::p1::DP1;
 use crate::sets::IndexCatInt;
-use crate::val_idx_pairs::ValIdxPairD1;
+use crate::val_idx_pairs::D1ValIdxPair;
 use crate::{Ptr, Res, Set, SetCatInt, Symbol, Val, ValInt};
 use alloc::boxed::Box;
 use core::{marker::PhantomData, ops::Deref};
@@ -25,7 +25,7 @@ impl<'m, 'd, V: Val, I0: Set> Deref for ParD1<'m, 'd, V, I0> {
 impl<'m, 'd, V: Val, I0: Set> ParD1<'m, 'd, V, I0> {
     pub fn bind(self, fun: impl Fn(I0::IdxRaw<'d>) -> V::Raw + 'd) -> Res
     where
-        (V, I0): ValIdxPairD1<V = V, I0 = I0>,
+        (V, I0): D1ValIdxPair<V = V, I0 = I0>,
     {
         let fun: Box<dyn Fn(I0::IdxRaw<'d>) -> V::Raw + 'd> = Box::new(fun);
         let data = unsafe { self.el.get() };

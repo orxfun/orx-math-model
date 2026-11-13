@@ -1,5 +1,5 @@
 use crate::{
-    val_idx_pairs::ValIdxPairD1, Elements, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd,
+    val_idx_pairs::D1ValIdxPair, Elements, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd,
     SetTyp, Val, ValInt, ValNum, ValTyp,
 };
 use alloc::boxed::Box;
@@ -72,10 +72,10 @@ impl<'d> FunP1<'d> {
 
     pub fn new<V: Val, I0: Set>(fun: FP1<'d, V, I0>) -> Self
     where
-        (V, I0): ValIdxPairD1<V = V, I0 = I0>,
+        (V, I0): D1ValIdxPair<V = V, I0 = I0>,
     {
         let (val_typ, i0_typ) = (V::typ(), I0::typ());
-        let data = <(V, I0) as ValIdxPairD1>::into_fun_union(fun);
+        let data = <(V, I0) as D1ValIdxPair>::into_fun_union(fun);
         Self {
             val_typ,
             i0_typ,
@@ -85,10 +85,10 @@ impl<'d> FunP1<'d> {
 
     pub fn get<V: Val, I0: Set>(&self) -> &FP1<'d, V, I0>
     where
-        (V, I0): ValIdxPairD1<V = V, I0 = I0>,
+        (V, I0): D1ValIdxPair<V = V, I0 = I0>,
     {
         Res::dbg_assert_same_val(V::typ(), self.val_typ);
         Res::dbg_assert_same_set(I0::typ(), self.i0_typ);
-        <(V, I0) as ValIdxPairD1>::fun_from_union(&self.data)
+        <(V, I0) as D1ValIdxPair>::fun_from_union(&self.data)
     }
 }

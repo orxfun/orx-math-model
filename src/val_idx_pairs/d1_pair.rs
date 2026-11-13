@@ -3,7 +3,7 @@ use crate::{Model, Set, SetCatInt, SetCatStr, SetOrd, Symbol, Val, ValInt, ValNu
 use core::mem::ManuallyDrop;
 use orx_imp_vec::Elem;
 
-pub trait ValIdxPairD1 {
+pub trait D1ValIdxPair {
     type V: Val;
 
     type I0: Set;
@@ -25,7 +25,7 @@ pub trait ValIdxPairD1 {
 
 // int
 
-impl ValIdxPairD1 for (ValInt, SetCatInt) {
+impl D1ValIdxPair for (ValInt, SetCatInt) {
     type V = ValInt;
 
     type I0 = SetCatInt;
@@ -41,7 +41,7 @@ impl ValIdxPairD1 for (ValInt, SetCatInt) {
     }
 }
 
-impl ValIdxPairD1 for (ValInt, SetCatStr) {
+impl D1ValIdxPair for (ValInt, SetCatStr) {
     type V = ValInt;
 
     type I0 = SetCatStr;
@@ -57,7 +57,7 @@ impl ValIdxPairD1 for (ValInt, SetCatStr) {
     }
 }
 
-impl ValIdxPairD1 for (ValInt, SetOrd) {
+impl D1ValIdxPair for (ValInt, SetOrd) {
     type V = ValInt;
 
     type I0 = SetOrd;
@@ -75,7 +75,7 @@ impl ValIdxPairD1 for (ValInt, SetOrd) {
 
 // num
 
-impl ValIdxPairD1 for (ValNum, SetCatInt) {
+impl D1ValIdxPair for (ValNum, SetCatInt) {
     type V = ValNum;
 
     type I0 = SetCatInt;
@@ -91,7 +91,7 @@ impl ValIdxPairD1 for (ValNum, SetCatInt) {
     }
 }
 
-impl ValIdxPairD1 for (ValNum, SetCatStr) {
+impl D1ValIdxPair for (ValNum, SetCatStr) {
     type V = ValNum;
 
     type I0 = SetCatStr;
@@ -107,7 +107,7 @@ impl ValIdxPairD1 for (ValNum, SetCatStr) {
     }
 }
 
-impl ValIdxPairD1 for (ValNum, SetOrd) {
+impl D1ValIdxPair for (ValNum, SetOrd) {
     type V = ValNum;
 
     type I0 = SetOrd;
