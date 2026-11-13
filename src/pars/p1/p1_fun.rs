@@ -107,6 +107,6 @@ impl<'d> FunP1<'d> {
     {
         Res::dbg_assert_same_val(V::typ(), self.val_typ);
         Res::dbg_assert_same_set(I0::typ(), self.i0_typ);
-        <(V, I0) as ValIdxPairD1>::p1_fun_unpack(&self.data)
+        <(V, I0) as ValIdxPairD1>::fun_from_union(&self.data)
     }
 }

@@ -7,7 +7,7 @@ pub trait ValIdxPairD1 {
 
     type I0: Set;
 
-    fn p1_fun_unpack<'a, 'd>(data: &'a UFunP1<'d>) -> &'a FP1<'d, Self::V, Self::I0>;
+    fn fun_from_union<'a, 'd>(data: &'a UFunP1<'d>) -> &'a FP1<'d, Self::V, Self::I0>;
 
     fn new_p1_sym<'m, 'd>(
         m: &'m Model<'d>,
@@ -27,7 +27,7 @@ impl ValIdxPairD1 for (ValInt, SetCatInt) {
 
     type I0 = SetCatInt;
 
-    fn p1_fun_unpack<'a, 'd>(data: &'a UFunP1<'d>) -> &'a FP1<'d, Self::V, Self::I0> {
+    fn fun_from_union<'a, 'd>(data: &'a UFunP1<'d>) -> &'a FP1<'d, Self::V, Self::I0> {
         unsafe { &data.cint_int }
     }
 }
@@ -37,7 +37,7 @@ impl ValIdxPairD1 for (ValInt, SetCatStr) {
 
     type I0 = SetCatStr;
 
-    fn p1_fun_unpack<'a, 'd>(data: &'a UFunP1<'d>) -> &'a FP1<'d, Self::V, Self::I0> {
+    fn fun_from_union<'a, 'd>(data: &'a UFunP1<'d>) -> &'a FP1<'d, Self::V, Self::I0> {
         unsafe { &data.cstr_int }
     }
 }
@@ -47,7 +47,7 @@ impl ValIdxPairD1 for (ValInt, SetOrd) {
 
     type I0 = SetOrd;
 
-    fn p1_fun_unpack<'a, 'd>(data: &'a UFunP1<'d>) -> &'a FP1<'d, Self::V, Self::I0> {
+    fn fun_from_union<'a, 'd>(data: &'a UFunP1<'d>) -> &'a FP1<'d, Self::V, Self::I0> {
         unsafe { &data.ord_int }
     }
 }
@@ -59,7 +59,7 @@ impl ValIdxPairD1 for (ValNum, SetCatInt) {
 
     type I0 = SetCatInt;
 
-    fn p1_fun_unpack<'a, 'd>(data: &'a UFunP1<'d>) -> &'a FP1<'d, Self::V, Self::I0> {
+    fn fun_from_union<'a, 'd>(data: &'a UFunP1<'d>) -> &'a FP1<'d, Self::V, Self::I0> {
         unsafe { &data.cint_num }
     }
 }
@@ -69,7 +69,7 @@ impl ValIdxPairD1 for (ValNum, SetCatStr) {
 
     type I0 = SetCatStr;
 
-    fn p1_fun_unpack<'a, 'd>(data: &'a UFunP1<'d>) -> &'a FP1<'d, Self::V, Self::I0> {
+    fn fun_from_union<'a, 'd>(data: &'a UFunP1<'d>) -> &'a FP1<'d, Self::V, Self::I0> {
         unsafe { &data.cstr_num }
     }
 }
@@ -79,7 +79,7 @@ impl ValIdxPairD1 for (ValNum, SetOrd) {
 
     type I0 = SetOrd;
 
-    fn p1_fun_unpack<'a, 'd>(data: &'a UFunP1<'d>) -> &'a FP1<'d, Self::V, Self::I0> {
+    fn fun_from_union<'a, 'd>(data: &'a UFunP1<'d>) -> &'a FP1<'d, Self::V, Self::I0> {
         unsafe { &data.ord_num }
     }
 }
