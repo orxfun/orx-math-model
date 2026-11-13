@@ -23,6 +23,7 @@ mod arb_val;
 mod bag;
 mod elements;
 mod err;
+mod fun;
 mod idxs;
 mod model;
 mod par;
