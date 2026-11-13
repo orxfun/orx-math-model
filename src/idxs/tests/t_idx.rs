@@ -1,76 +1,56 @@
 use crate::idxs::IdxVal;
 use crate::{elements::Elements, Model};
+use crate::{MetaCatInt, MetaCatStr, MetaOrd};
 use alloc::string::{String, ToString};
 use alloc::{vec, vec::Vec};
 
-// #[test]
-// fn idx_cat_int() {
-//     // data
-//     let values = vec![1usize, 2, 7, 9];
+#[test]
+fn idx_cat_int() {
+    type S = MetaCatInt;
 
-//     // modeling
-//     let m = Model::default();
-//     let set = m.cat_set_int();
-//     let idx = set.idx();
+    // modeling
+    let m = Model::default();
+    let set = m.cat_set_int();
+    let idx = set.idx();
 
-//     // binding
-//     set.bind(|| values.iter().copied());
+    // running
+    assert_eq!(unsafe { idx.el.get() }.read::<S>(), 0);
 
-//     // running
-//     let mut elements: Elements<usize> = vec![].into();
-//     let iter = idx.iter(&mut elements);
-//     for (i, _) in iter.enumerate() {
-//         assert_eq!(
-//             unsafe { idx.el.get() }.idx.test_value(),
-//             IdxVal::CatInt(values[i])
-//         );
-//     }
-// }
+    unsafe { idx.el.get() }.write::<S>(42);
+    assert_eq!(unsafe { idx.el.get() }.read::<S>(), 42);
+}
 
-// #[test]
-// fn idx_cat_str() {
-//     // data
-//     let values: Vec<_> = [1, 2, 7, 9].map(|x| x.to_string()).into_iter().collect();
+#[test]
+fn idx_cat_str() {
+    type S = MetaCatStr;
 
-//     // modeling
-//     let m = Model::default();
-//     let set = m.cat_set_str();
-//     let idx = set.idx();
+    // data
+    let s = 42.to_string();
 
-//     // binding
-//     set.bind(|| &values);
+    // modeling
+    let m = Model::default();
+    let set = m.cat_set_str();
+    let idx = set.idx();
 
-//     // running
-//     let mut elements: Elements<&String> = vec![].into();
-//     let iter = idx.iter(&mut elements);
-//     for (i, _) in iter.enumerate() {
-//         assert_eq!(
-//             unsafe { idx.el.get() }.idx.test_value(),
-//             IdxVal::CatStr(&values[i])
-//         );
-//     }
-// }
+    // running
+    assert_eq!(unsafe { idx.el.get() }.read::<S>(), &String::new());
 
-// #[test]
-// fn idx_ord() {
-//     // data
-//     let values = vec![1i64, 2, 7, 9];
+    unsafe { idx.el.get() }.write::<S>(&s);
+    assert_eq!(unsafe { idx.el.get() }.read::<S>(), &s);
+}
 
-//     // modeling
-//     let m = Model::default();
-//     let set = m.ord_set();
-//     let idx = set.idx();
+#[test]
+fn idx_ord() {
+    type S = MetaOrd;
 
-//     // binding
-//     set.bind(|| values.iter().copied());
+    // modeling
+    let m = Model::default();
+    let set = m.ord_set();
+    let idx = set.idx();
 
-//     // running
-//     let mut elements: Elements<i64> = vec![].into();
-//     let iter = idx.iter(&mut elements);
-//     for (i, _) in iter.enumerate() {
-//         assert_eq!(
-//             unsafe { idx.el.get() }.idx.test_value(),
-//             IdxVal::Ord(values[i])
-//         );
-//     }
-// }
+    // running
+    assert_eq!(unsafe { idx.el.get() }.read::<S>(), 0);
+
+    unsafe { idx.el.get() }.write::<S>(42);
+    assert_eq!(unsafe { idx.el.get() }.read::<S>(), 42);
+}
