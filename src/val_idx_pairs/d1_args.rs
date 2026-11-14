@@ -27,11 +27,11 @@ impl D1Args for SetCatInt {
         let fun = Ptr::new(par.el);
         match i0.into() {
             IndexCatInt::Idx(i0) => {
-                let idx = Ptr::new(i0.el);
+                let i0 = Ptr::new(i0.el);
                 par.m.val::<V>(move || {
                     let fun = fun.get();
-                    let idx = idx.get().read::<Self>();
-                    fun.at::<V, Self>(idx)
+                    let i0 = i0.get().read::<Self>();
+                    fun.at::<V, Self>(i0)
                 })
             }
             IndexCatInt::ConUsize(i0) => par.m.val::<V>(move || {
@@ -48,10 +48,14 @@ impl D1Args for SetCatInt {
     ) -> V::Sym<'m, 'd> {
         let fun = Ptr::new(par.el);
         match i1.into() {
-            IndexCatInt::Idx(idx) => {
-                let i0 = Ptr::new(idx.el);
-
-                todo!()
+            IndexCatInt::Idx(i0) => {
+                let i0 = Ptr::new(i0.el);
+                par.m.val::<V>(move || {
+                    let fun = fun.get();
+                    let i0 = i0.get().read::<Self>();
+                    // fun.at::<V, Self>(i0);
+                    todo!()
+                })
             }
             IndexCatInt::ConUsize(i0) => todo!(),
         }
@@ -68,11 +72,11 @@ impl D1Args for SetCatStr {
         let fun = Ptr::new(par.el);
         match i0.into() {
             IndexCatStr::Idx(i0) => {
-                let idx = Ptr::new(i0.el);
+                let i0 = Ptr::new(i0.el);
                 par.m.val::<V>(move || {
                     let fun = fun.get();
-                    let idx = idx.get().read::<Self>();
-                    fun.at::<V, Self>(idx)
+                    let i0 = i0.get().read::<Self>();
+                    fun.at::<V, Self>(i0)
                 })
             }
             IndexCatStr::ConString(i0) => {
@@ -116,11 +120,11 @@ impl D1Args for SetOrd {
         let fun = Ptr::new(par.el);
         match i0.into() {
             IndexOrd::Idx(i0) => {
-                let idx = Ptr::new(i0.el);
+                let i0 = Ptr::new(i0.el);
                 par.m.val::<V>(move || {
                     let fun = fun.get();
-                    let idx = idx.get().read::<Self>();
-                    fun.at::<V, Self>(idx)
+                    let i0 = i0.get().read::<Self>();
+                    fun.at::<V, Self>(i0)
                 })
             }
             IndexOrd::Int(i0) => {
