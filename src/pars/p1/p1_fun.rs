@@ -8,7 +8,7 @@ use core::mem::{transmute, ManuallyDrop};
 
 pub type FP1<'d, V, I0> = Box<dyn Fn(<I0 as Set>::IdxRaw<'d>) -> <V as Val>::Raw + 'd>;
 
-// c
+// v
 
 #[repr(C)]
 pub union UFunP1V<'d, V: Val> {

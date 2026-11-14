@@ -152,7 +152,7 @@ impl<'d> Model<'d> {
         let fun_slot = Slot::new(self, fun_el);
         let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
         let el = self.p1_bag.push(s0_ptr, fun_slot);
-        <(V, S0::Meta) as D1ValIdxPair>::new_p1_sym(self, el)
+        Symbol::new(self, el).into()
     }
 
     pub fn par1_int<'m, S0>(&'m self, s0: S0) -> ParD1<'m, 'd, ValInt, S0::Meta>
