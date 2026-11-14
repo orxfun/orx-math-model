@@ -144,3 +144,12 @@ pub struct FunP2<'d> {
     pub i1_typ: SetTyp,
     data: UFunP2<'d>,
 }
+
+impl<'d> Drop for FunP2<'d> {
+    fn drop(&mut self) {
+        match self.val_typ {
+            ValTyp::Int => unsafe { &mut self.data.int }.man_drop(self.i0_typ, self.i1_typ),
+            ValTyp::Num => unsafe { &mut self.data.num }.man_drop(self.i0_typ, self.i1_typ),
+        }
+    }
+}
