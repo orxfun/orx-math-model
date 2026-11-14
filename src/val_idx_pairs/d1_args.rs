@@ -49,11 +49,11 @@ impl D1Args for SetCatInt {
         let fun = Ptr::new(par.el);
         match i1.into() {
             IndexCatInt::Idx(idx) => {
-                let idx = Ptr::new(idx.el);
+                let i0 = Ptr::new(idx.el);
 
                 todo!()
             }
-            IndexCatInt::ConUsize(con) => todo!(),
+            IndexCatInt::ConUsize(i0) => todo!(),
         }
     }
 }
