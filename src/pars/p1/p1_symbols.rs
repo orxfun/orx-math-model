@@ -1,4 +1,4 @@
-use crate::pars::p1::DP1;
+use crate::pars::p1::{DP1, FP1};
 use crate::sets::IndexCatInt;
 use crate::val_idx_pairs::D1Args;
 use crate::{Ptr, Res, Set, SetCatInt, Symbol, Val, ValInt};
@@ -29,7 +29,7 @@ where
     I0: Set,
 {
     pub fn bind(self, fun: impl Fn(I0::IdxRaw<'d>) -> V::Raw + 'd) -> Res {
-        let fun: Box<dyn Fn(I0::IdxRaw<'d>) -> V::Raw + 'd> = Box::new(fun);
+        let fun: FP1<'d, V, I0> = Box::new(fun);
         let data = unsafe { self.el.get() };
         data.bind::<V, I0>(fun)
     }
