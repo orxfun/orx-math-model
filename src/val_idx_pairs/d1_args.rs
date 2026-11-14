@@ -1,4 +1,5 @@
 use crate::pars::p1::ParD1;
+use crate::pars::p2::ParD2;
 use crate::sets::{IndexCatInt, IndexCatStr, IndexOrd};
 use crate::{Ptr, Set, SetCatInt, SetCatStr, SetOrd, Val, ValInt};
 use alloc::string::ToString;
@@ -7,6 +8,12 @@ pub trait D1Args: Set {
     fn p1_at<'m, 'd, V: Val>(
         par: ParD1<'m, 'd, V, Self>,
         idx: impl Into<Self::IdxAny<'m, 'd>>,
+    ) -> V::Sym<'m, 'd>;
+
+    fn p2_at<'m, 'd, V: Val, I0: Set>(
+        par: ParD2<'m, 'd, V, I0, Self>,
+        i0: impl Fn() -> I0::IdxRaw<'d>,
+        i1: impl Into<Self::IdxAny<'m, 'd>>,
     ) -> V::Sym<'m, 'd>;
 }
 
@@ -19,18 +26,34 @@ impl D1Args for SetCatInt {
     ) -> V::Sym<'m, 'd> {
         let fun = Ptr::new(par.el);
         match i0.into() {
-            IndexCatInt::Idx(idx) => {
-                let idx = Ptr::new(idx.el);
+            IndexCatInt::Idx(i0) => {
+                let idx = Ptr::new(i0.el);
                 par.m.val::<V>(move || {
                     let fun = fun.get();
                     let idx = idx.get().read::<Self>();
                     fun.at::<V, Self>(idx)
                 })
             }
-            IndexCatInt::ConUsize(con) => par.m.val::<V>(move || {
+            IndexCatInt::ConUsize(i0) => par.m.val::<V>(move || {
                 let fun = fun.get();
-                fun.at::<V, Self>(con)
+                fun.at::<V, Self>(i0)
             }),
+        }
+    }
+
+    fn p2_at<'m, 'd, V: Val, I0: Set>(
+        par: ParD2<'m, 'd, V, I0, Self>,
+        i0: impl Fn() -> I0::IdxRaw<'d>,
+        i1: impl Into<Self::IdxAny<'m, 'd>>,
+    ) -> V::Sym<'m, 'd> {
+        let fun = Ptr::new(par.el);
+        match i1.into() {
+            IndexCatInt::Idx(idx) => {
+                let idx = Ptr::new(idx.el);
+
+                todo!()
+            }
+            IndexCatInt::ConUsize(con) => todo!(),
         }
     }
 }
@@ -44,33 +67,42 @@ impl D1Args for SetCatStr {
     ) -> V::Sym<'m, 'd> {
         let fun = Ptr::new(par.el);
         match i0.into() {
-            IndexCatStr::Idx(idx) => {
-                let idx = Ptr::new(idx.el);
+            IndexCatStr::Idx(i0) => {
+                let idx = Ptr::new(i0.el);
                 par.m.val::<V>(move || {
                     let fun = fun.get();
                     let idx = idx.get().read::<Self>();
                     fun.at::<V, Self>(idx)
                 })
             }
-            IndexCatStr::ConString(con) => {
-                let con = par.m.con_val(con);
+            IndexCatStr::ConString(i0) => {
+                let con = par.m.con_val(i0);
                 par.m.val::<V>(move || {
                     let fun = fun.get();
                     fun.at::<V, Self>(con.get().get())
                 })
             }
-            IndexCatStr::ConStringRef(con) => par.m.val::<V>(move || {
+            IndexCatStr::ConStringRef(i0) => par.m.val::<V>(move || {
                 let fun = fun.get();
-                fun.at::<V, Self>(con)
+                fun.at::<V, Self>(i0)
             }),
-            IndexCatStr::ConStr(con) => {
-                let con = par.m.con_val(con.to_string());
+            IndexCatStr::ConStr(i0) => {
+                let con = par.m.con_val(i0.to_string());
                 par.m.val::<V>(move || {
                     let fun = fun.get();
                     fun.at::<V, Self>(con.get().get())
                 })
             }
         }
+    }
+
+    fn p2_at<'m, 'd, V: Val, I0: Set>(
+        par: ParD2<'m, 'd, V, I0, Self>,
+        i0: impl Fn() -> I0::IdxRaw<'d>,
+        i1: impl Into<Self::IdxAny<'m, 'd>>,
+    ) -> V::Sym<'m, 'd> {
+        let fun = Ptr::new(par.el);
+        todo!()
     }
 }
 
@@ -83,34 +115,43 @@ impl D1Args for SetOrd {
     ) -> V::Sym<'m, 'd> {
         let fun = Ptr::new(par.el);
         match i0.into() {
-            IndexOrd::Idx(idx) => {
-                let idx = Ptr::new(idx.el);
+            IndexOrd::Idx(i0) => {
+                let idx = Ptr::new(i0.el);
                 par.m.val::<V>(move || {
                     let fun = fun.get();
                     let idx = idx.get().read::<Self>();
                     fun.at::<V, Self>(idx)
                 })
             }
-            IndexOrd::Int(int) => {
-                let int = Ptr::new(int.el);
+            IndexOrd::Int(i0) => {
+                let int = Ptr::new(i0.el);
                 par.m.val::<V>(move || {
                     let fun = fun.get();
                     let idx = int.get().eval::<ValInt>();
                     fun.at::<V, Self>(idx)
                 })
             }
-            IndexOrd::ConUsize(con) => par.m.val::<V>(move || {
+            IndexOrd::ConUsize(i0) => par.m.val::<V>(move || {
                 let fun = fun.get();
-                fun.at::<V, Self>(con as i64)
+                fun.at::<V, Self>(i0 as i64)
             }),
-            IndexOrd::ConI64(con) => par.m.val::<V>(move || {
+            IndexOrd::ConI64(i0) => par.m.val::<V>(move || {
                 let fun = fun.get();
-                fun.at::<V, Self>(con)
+                fun.at::<V, Self>(i0)
             }),
-            IndexOrd::ConI32(con) => par.m.val::<V>(move || {
+            IndexOrd::ConI32(i0) => par.m.val::<V>(move || {
                 let fun = fun.get();
-                fun.at::<V, Self>(con as i64)
+                fun.at::<V, Self>(i0 as i64)
             }),
         }
+    }
+
+    fn p2_at<'m, 'd, V: Val, I0: Set>(
+        par: ParD2<'m, 'd, V, I0, Self>,
+        i0: impl Fn() -> I0::IdxRaw<'d>,
+        i1: impl Into<Self::IdxAny<'m, 'd>>,
+    ) -> V::Sym<'m, 'd> {
+        let fun = Ptr::new(par.el);
+        todo!()
     }
 }
