@@ -1,6 +1,7 @@
 use crate::con_vals::{ConVal, ConValBag, DConVal};
 use crate::idxs::{IdxBag, IdxValBag};
 use crate::pars::p1::{P1Bag, P1FunBag, ParD1};
+use crate::pars::p2::{P2Bag, P2FunBag, ParD2};
 // use crate::arb_val::{ArbVal, ArbValBag};
 // use crate::idxs::{CatIdxInt, CatIdxStr, IdxBag, IdxSlots, OrdIdx};
 // use crate::par::p1::{IntParD1, NumParD1, P1Bag, P1Slots};
@@ -27,6 +28,8 @@ pub struct Model<'d> {
     // pars
     p1_fun_bag: P1FunBag<'d>,
     p1_bag: P1Bag<'d>,
+    p2_fun_bag: P2FunBag<'d>,
+    p2_bag: P2Bag<'d>,
 
     // idxs
     idx_val_bag: IdxValBag<'d>,
@@ -169,6 +172,53 @@ impl<'d> Model<'d> {
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
     {
         self.par1(s0)
+    }
+
+    // p2
+
+    fn par2<'m, V, S0, S1>(&'m self, s0: S0, s1: S1) -> ParD2<'m, 'd, V, S0::Meta, S1::Meta>
+    where
+        V: Val,
+        S0: SetSym<'m, 'd>,
+        S0::Meta: Set<SetSym<'m, 'd> = S0>,
+        S1: SetSym<'m, 'd>,
+        S1::Meta: Set<SetSym<'m, 'd> = S1>,
+    {
+        let [t0, t1] = [<S0::Meta as Set>::typ(), <S1::Meta as Set>::typ()];
+        let fun_el = self.p2_fun_bag.push(V::typ(), t0, t1);
+        let fun_slot = Slot::new(self, fun_el);
+        let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
+        let s1_ptr = <S1::Meta as Set>::set_ptr(s1);
+        let el = self.p2_bag.push(s0_ptr, s1_ptr, fun_slot);
+        Symbol::new(self, el).into()
+    }
+
+    pub fn par2_int<'m, S0, S1>(
+        &'m self,
+        s0: S0,
+        s1: S1,
+    ) -> ParD2<'m, 'd, ValInt, S0::Meta, S1::Meta>
+    where
+        S0: SetSym<'m, 'd>,
+        S0::Meta: Set<SetSym<'m, 'd> = S0>,
+        S1: SetSym<'m, 'd>,
+        S1::Meta: Set<SetSym<'m, 'd> = S1>,
+    {
+        self.par2(s0, s1)
+    }
+
+    pub fn par2_num<'m, S0, S1>(
+        &'m self,
+        s0: S0,
+        s1: S1,
+    ) -> ParD2<'m, 'd, ValNum, S0::Meta, S1::Meta>
+    where
+        S0: SetSym<'m, 'd>,
+        S0::Meta: Set<SetSym<'m, 'd> = S0>,
+        S1: SetSym<'m, 'd>,
+        S1::Meta: Set<SetSym<'m, 'd> = S1>,
+    {
+        self.par2(s0, s1)
     }
 
     // pub fn par_d1_int<'m, S0: Set<'m, 'd>>(&'m self, s0: S0) -> IntParD1<'m, 'd, S0::Meta> {
