@@ -15,7 +15,7 @@ pub enum ValTyp {
 // meta
 
 pub trait Val: Clone + Copy + 'static {
-    type Raw: Clone + Copy;
+    type Raw: Clone + Copy + Default;
 
     type Sym<'m, 'd: 'm>: Clone
         + Copy

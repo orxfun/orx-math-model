@@ -7,7 +7,6 @@ use crate::pars::p1::{P1Bag, P1FunBag, ParD1};
 use crate::sets::{CatInt, CatStr, Ord, SetBag, SetFunBag};
 use crate::slot::{SlotStates, State};
 use crate::sym_refs::SymRefBag;
-use crate::val_idx_pairs::D1ValIdxPair;
 use crate::vals::{FunVal, ValBag};
 use crate::{
     Ptr, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetSym, SetTyp, Slot, Symbol, TConVal,
@@ -148,20 +147,18 @@ impl<'d> Model<'d> {
         V: Val,
         S0: SetSym<'m, 'd>,
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
-        (V, S0::Meta): D1ValIdxPair<V = V, I0 = S0::Meta>,
     {
         let fun_el = self.p1_fun_bag.push(V::typ(), <S0::Meta as Set>::typ());
         let fun_slot = Slot::new(self, fun_el);
         let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
         let el = self.p1_bag.push(s0_ptr, fun_slot);
-        <(V, S0::Meta) as D1ValIdxPair>::new_p1_sym(self, el)
+        Symbol::new(self, el).into()
     }
 
     pub fn par1_int<'m, S0>(&'m self, s0: S0) -> ParD1<'m, 'd, ValInt, S0::Meta>
     where
         S0: SetSym<'m, 'd>,
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
-        (ValInt, S0::Meta): D1ValIdxPair<V = ValInt, I0 = S0::Meta>,
     {
         self.par1(s0)
     }
@@ -170,7 +167,6 @@ impl<'d> Model<'d> {
     where
         S0: SetSym<'m, 'd>,
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
-        (ValNum, S0::Meta): D1ValIdxPair<V = ValNum, I0 = S0::Meta>,
     {
         self.par1(s0)
     }

@@ -9,6 +9,6 @@ mod p1_symbols;
 
 pub use p1_bag::P1Bag;
 pub use p1_data::DP1;
-pub use p1_fun::{FunP1, UFunP1, FP1};
+pub use p1_fun::{FunP1, UFunP1, UFunP1V, FP1};
 pub use p1_fun_bag::P1FunBag;
 pub use p1_symbols::ParD1;
