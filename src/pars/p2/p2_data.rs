@@ -5,6 +5,7 @@ use crate::{Elements, Ptr, Res, ResValid, Set, SetTyp, Slot, Val};
 #[derive(derive_new::new)]
 pub struct DP2<'d> {
     s0: Ptr<'d, DSet<'d>>,
+    s1: Ptr<'d, DSet<'d>>,
     slot: Slot<'d, FunP2<'d>>,
 }
 

@@ -17,8 +17,9 @@ impl<'d> P2Bag<'d> {
     pub fn push<'m>(
         &'m self,
         s0_ptr: Ptr<'d, DSet<'d>>,
+        s1_ptr: Ptr<'d, DSet<'d>>,
         fun: Slot<'d, FunP2<'d>>,
     ) -> Elem<'m, DP2<'d>> {
-        self.bag.push(DP2::new(s0_ptr, fun))
+        self.bag.push(DP2::new(s0_ptr, s1_ptr, fun))
     }
 }
