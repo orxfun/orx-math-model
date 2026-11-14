@@ -17,3 +17,11 @@ impl<'m, 'd, V: Val, I0: Set, I1: Set> From<Symbol<'m, 'd, DP2<'d>>> for ParD2<'
         Self(value, PhantomData)
     }
 }
+
+impl<'m, 'd, V: Val, I0: Set, I1: Set> Deref for ParD2<'m, 'd, V, I0, I1> {
+    type Target = Symbol<'m, 'd, DP2<'d>>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
