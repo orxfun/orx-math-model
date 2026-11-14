@@ -8,7 +8,20 @@ use core::mem::ManuallyDrop;
 pub type FP1<'d, V, I0> = Box<dyn Fn(<I0 as Set>::IdxRaw<'d>) -> <V as Val>::Raw + 'd>;
 
 #[repr(C)]
+pub union UFunP1V<'d, V: Val> {
+    pub cint: ManuallyDrop<FP1<'d, V, SetCatInt>>,
+    pub cstr: ManuallyDrop<FP1<'d, V, SetCatStr>>,
+    pub ord: ManuallyDrop<FP1<'d, V, SetOrd>>,
+}
+
+#[repr(C)]
 pub union UFunP1<'d> {
+    pub int: ManuallyDrop<UFunP1V<'d, ValInt>>,
+    pub num: ManuallyDrop<UFunP1V<'d, ValInt>>,
+}
+
+#[repr(C)]
+pub union UFunP1Old<'d> {
     pub int_cint: ManuallyDrop<FP1<'d, ValInt, SetCatInt>>,
     pub int_cstr: ManuallyDrop<FP1<'d, ValInt, SetCatStr>>,
     pub int_ord: ManuallyDrop<FP1<'d, ValInt, SetOrd>>,
@@ -21,7 +34,7 @@ pub union UFunP1<'d> {
 pub struct FunP1<'d> {
     pub val_typ: ValTyp,
     pub i0_typ: SetTyp,
-    data: UFunP1<'d>,
+    data: UFunP1Old<'d>,
 }
 
 impl<'d> Drop for FunP1<'d> {
@@ -43,23 +56,23 @@ impl<'d> Drop for FunP1<'d> {
 impl<'d> FunP1<'d> {
     pub fn empty(val_typ: ValTyp, i0_typ: SetTyp) -> Self {
         let data = match (val_typ, i0_typ) {
-            (ValTyp::Int, SetTyp::CatInt) => UFunP1 {
+            (ValTyp::Int, SetTyp::CatInt) => UFunP1Old {
                 int_cint: ManuallyDrop::new(Box::new(|_| Default::default())),
             },
-            (ValTyp::Int, SetTyp::CatStr) => UFunP1 {
+            (ValTyp::Int, SetTyp::CatStr) => UFunP1Old {
                 int_cstr: ManuallyDrop::new(Box::new(|_| Default::default())),
             },
-            (ValTyp::Int, SetTyp::Ord) => UFunP1 {
+            (ValTyp::Int, SetTyp::Ord) => UFunP1Old {
                 int_ord: ManuallyDrop::new(Box::new(|_| Default::default())),
             },
 
-            (ValTyp::Num, SetTyp::CatInt) => UFunP1 {
+            (ValTyp::Num, SetTyp::CatInt) => UFunP1Old {
                 num_cint: ManuallyDrop::new(Box::new(|_| Default::default())),
             },
-            (ValTyp::Num, SetTyp::CatStr) => UFunP1 {
+            (ValTyp::Num, SetTyp::CatStr) => UFunP1Old {
                 num_cstr: ManuallyDrop::new(Box::new(|_| Default::default())),
             },
-            (ValTyp::Num, SetTyp::Ord) => UFunP1 {
+            (ValTyp::Num, SetTyp::Ord) => UFunP1Old {
                 num_ord: ManuallyDrop::new(Box::new(|_| Default::default())),
             },
         };
