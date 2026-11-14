@@ -35,7 +35,7 @@ impl<'d, V: Val, I0: Set> UFunP2_V_I0<'d, V, I0> {
 
     fn create<I1: Set>(fun: FP2<'d, V, I0, I1>) -> ManuallyDrop<Self> {
         unsafe {
-            ManuallyDrop::new(match I0::typ() {
+            ManuallyDrop::new(match I1::typ() {
                 SetTyp::CatInt => Self {
                     cint: ManuallyDrop::new(transmute(fun)),
                 },
