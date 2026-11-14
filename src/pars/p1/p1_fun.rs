@@ -1,4 +1,3 @@
-use crate::val_idx_pairs::D1ValIdxPair;
 use crate::{
     Elements, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetTyp, Val, ValInt, ValNum, ValTyp,
 };
@@ -107,10 +106,7 @@ impl<'d> FunP1<'d> {
         Self::new(val_typ, i0_typ, data)
     }
 
-    pub fn create<V: Val, I0: Set>(fun: FP1<'d, V, I0>) -> Self
-    where
-        (V, I0): D1ValIdxPair<V = V, I0 = I0>,
-    {
+    pub fn create<V: Val, I0: Set>(fun: FP1<'d, V, I0>) -> Self {
         let (val_typ, i0_typ) = (V::typ(), I0::typ());
         let data = unsafe {
             match val_typ {
@@ -125,10 +121,7 @@ impl<'d> FunP1<'d> {
         Self::new(val_typ, i0_typ, data)
     }
 
-    pub fn get<V: Val, I0: Set>(&self) -> &FP1<'d, V, I0>
-    where
-        (V, I0): D1ValIdxPair<V = V, I0 = I0>,
-    {
+    pub fn get<V: Val, I0: Set>(&self) -> &FP1<'d, V, I0> {
         Res::dbg_assert_same_val(V::typ(), self.val_typ);
         Res::dbg_assert_same_set(I0::typ(), self.i0_typ);
         unsafe {

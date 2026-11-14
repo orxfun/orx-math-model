@@ -1,6 +1,5 @@
 use crate::pars::p1::ParD1;
 use crate::sets::{IndexCatInt, IndexCatStr, IndexOrd};
-use crate::val_idx_pairs::D1ValIdxPair;
 use crate::{Ptr, Set, SetCatInt, SetCatStr, SetOrd, Val, ValInt};
 use alloc::string::ToString;
 
@@ -8,9 +7,7 @@ pub trait D1Args: Set {
     fn par_at<'m, 'd, V: Val>(
         par: ParD1<'m, 'd, V, Self>,
         idx: impl Into<Self::IdxAny<'m, 'd>>,
-    ) -> V::Sym<'m, 'd>
-    where
-        (V, Self): D1ValIdxPair<V = V, I0 = Self>;
+    ) -> V::Sym<'m, 'd>;
 }
 
 // cat int
@@ -19,10 +16,7 @@ impl D1Args for SetCatInt {
     fn par_at<'m, 'd, V: Val>(
         par: ParD1<'m, 'd, V, Self>,
         idx: impl Into<Self::IdxAny<'m, 'd>>,
-    ) -> V::Sym<'m, 'd>
-    where
-        (V, Self): D1ValIdxPair<V = V, I0 = Self>,
-    {
+    ) -> V::Sym<'m, 'd> {
         let fun = Ptr::new(par.el);
         match idx.into() {
             IndexCatInt::Idx(idx) => {
@@ -47,10 +41,7 @@ impl D1Args for SetCatStr {
     fn par_at<'m, 'd, V: Val>(
         par: ParD1<'m, 'd, V, Self>,
         idx: impl Into<Self::IdxAny<'m, 'd>>,
-    ) -> V::Sym<'m, 'd>
-    where
-        (V, Self): D1ValIdxPair<V = V, I0 = Self>,
-    {
+    ) -> V::Sym<'m, 'd> {
         let fun = Ptr::new(par.el);
         match idx.into() {
             IndexCatStr::Idx(idx) => {
@@ -89,10 +80,7 @@ impl D1Args for SetOrd {
     fn par_at<'m, 'd, V: Val>(
         par: ParD1<'m, 'd, V, Self>,
         idx: impl Into<Self::IdxAny<'m, 'd>>,
-    ) -> V::Sym<'m, 'd>
-    where
-        (V, Self): D1ValIdxPair<V = V, I0 = Self>,
-    {
+    ) -> V::Sym<'m, 'd> {
         let fun = Ptr::new(par.el);
         match idx.into() {
             IndexOrd::Idx(idx) => {
