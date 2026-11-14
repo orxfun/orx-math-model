@@ -10,14 +10,14 @@
     clippy::missing_panics_doc,
     clippy::todo
 )]
-// #![no_std]
+#![no_std]
 // TODO: clean up this
 #![allow(dead_code, unused_imports)]
 
 extern crate alloc;
 
-// #[cfg(any(test, feature = "std"))]
-// extern crate std;
+#[cfg(any(test, feature = "std"))]
+extern crate std;
 
 // mod arb_val;
 mod bag;
