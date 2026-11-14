@@ -3,9 +3,13 @@ use crate::{
     Elements, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetTyp, Val, ValInt, ValNum, ValTyp,
 };
 use alloc::boxed::Box;
-use core::mem::ManuallyDrop;
+use core::mem::{transmute, ManuallyDrop};
+
+// core
 
 pub type FP1<'d, V, I0> = Box<dyn Fn(<I0 as Set>::IdxRaw<'d>) -> <V as Val>::Raw + 'd>;
+
+// c
 
 #[repr(C)]
 pub union UFunP1V<'d, V: Val> {
@@ -29,6 +33,32 @@ impl<'d, V: Val> UFunP1V<'d, V> {
         })
     }
 
+    fn create<I0: Set>(fun: FP1<'d, V, I0>) -> ManuallyDrop<Self> {
+        unsafe {
+            ManuallyDrop::new(match I0::typ() {
+                SetTyp::CatInt => Self {
+                    cint: ManuallyDrop::new(transmute(fun)),
+                },
+                SetTyp::CatStr => Self {
+                    cstr: ManuallyDrop::new(transmute(fun)),
+                },
+                SetTyp::Ord => Self {
+                    ord: ManuallyDrop::new(transmute(fun)),
+                },
+            })
+        }
+    }
+
+    fn get<I0: Set>(&self) -> &FP1<'d, V, I0> {
+        unsafe {
+            match I0::typ() {
+                SetTyp::CatInt => transmute(&self.cint),
+                SetTyp::CatStr => transmute(&self.cstr),
+                SetTyp::Ord => transmute(&self.ord),
+            }
+        }
+    }
+
     fn man_drop(&mut self, i0_typ: SetTyp) {
         unsafe {
             match i0_typ {
@@ -39,6 +69,8 @@ impl<'d, V: Val> UFunP1V<'d, V> {
         }
     }
 }
+
+// v-i0
 
 #[repr(C)]
 pub union UFunP1<'d> {
@@ -80,7 +112,16 @@ impl<'d> FunP1<'d> {
         (V, I0): D1ValIdxPair<V = V, I0 = I0>,
     {
         let (val_typ, i0_typ) = (V::typ(), I0::typ());
-        let data = <(V, I0) as D1ValIdxPair>::into_fun_union(fun);
+        let data = unsafe {
+            match val_typ {
+                ValTyp::Int => UFunP1 {
+                    int: UFunP1V::create::<I0>(transmute(fun)),
+                },
+                ValTyp::Num => UFunP1 {
+                    num: UFunP1V::create::<I0>(transmute(fun)),
+                },
+            }
+        };
         Self::new(val_typ, i0_typ, data)
     }
 
@@ -90,6 +131,11 @@ impl<'d> FunP1<'d> {
     {
         Res::dbg_assert_same_val(V::typ(), self.val_typ);
         Res::dbg_assert_same_set(I0::typ(), self.i0_typ);
-        <(V, I0) as D1ValIdxPair>::fun_from_union(&self.data)
+        unsafe {
+            match V::typ() {
+                ValTyp::Int => transmute(self.data.int.get::<I0>()),
+                ValTyp::Num => transmute(self.data.num.get::<I0>()),
+            }
+        }
     }
 }
