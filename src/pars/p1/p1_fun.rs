@@ -1,9 +1,9 @@
+use crate::val_idx_pairs::D1ValIdxPair;
 use crate::{
-    val_idx_pairs::D1ValIdxPair, Elements, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd,
-    SetTyp, Val, ValInt, ValNum, ValTyp,
+    Elements, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetTyp, Val, ValInt, ValNum, ValTyp,
 };
 use alloc::boxed::Box;
-use core::mem::{transmute, ManuallyDrop};
+use core::mem::ManuallyDrop;
 
 pub type FP1<'d, V, I0> = Box<dyn Fn(<I0 as Set>::IdxRaw<'d>) -> <V as Val>::Raw + 'd>;
 
