@@ -7,7 +7,7 @@ use std::collections::HashMap;
 // int
 
 #[test]
-fn p1_int_cint_at() {
+fn p1_at_int_cint() {
     type I0 = SetCatInt;
     type V = ValInt;
     type El<'d> = <I0 as Set>::IdxRaw<'d>;
@@ -44,7 +44,7 @@ fn p1_int_cint_at() {
 }
 
 #[test]
-fn p1_int_cstr_at() {
+fn p1_at_int_cstr() {
     type I0 = SetCatStr;
     type V = ValInt;
     type El<'d> = <I0 as Set>::IdxRaw<'d>;
@@ -85,7 +85,7 @@ fn p1_int_cstr_at() {
 }
 
 #[test]
-fn p1_int_ord_at() {
+fn p1_at_int_ord() {
     type I0 = SetOrd;
     type V = ValInt;
     type El<'d> = <I0 as Set>::IdxRaw<'d>;
@@ -125,7 +125,7 @@ fn p1_int_ord_at() {
 // num
 
 #[test]
-fn p1_num_cint_at() {
+fn p1_at_num_cint() {
     type I0 = SetCatInt;
     type V = ValNum;
     type El<'d> = <I0 as Set>::IdxRaw<'d>;
@@ -162,7 +162,7 @@ fn p1_num_cint_at() {
 }
 
 #[test]
-fn p1_num_cstr_at() {
+fn p1_at_num_cstr() {
     type I0 = SetCatStr;
     type V = ValNum;
     type El<'d> = <I0 as Set>::IdxRaw<'d>;
@@ -203,7 +203,7 @@ fn p1_num_cstr_at() {
 }
 
 #[test]
-fn p1_num_ord_at() {
+fn p1_at_num_ord() {
     type I0 = SetOrd;
     type V = ValNum;
     type El<'d> = <I0 as Set>::IdxRaw<'d>;
