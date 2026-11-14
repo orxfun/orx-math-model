@@ -33,7 +33,6 @@ mod sets;
 mod slot;
 mod sym_refs;
 mod symbol;
-mod val_idx_pairs;
 mod vals;
 // mod vals;
 
