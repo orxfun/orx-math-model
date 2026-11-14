@@ -153,3 +153,17 @@ impl<'d> Drop for FunP2<'d> {
         }
     }
 }
+
+impl<'d> FunP2<'d> {
+    pub fn empty(val_typ: ValTyp, i0_typ: SetTyp, i1_typ: SetTyp) -> Self {
+        let data = match val_typ {
+            ValTyp::Int => UFunP2 {
+                int: UFunP2_V::empty(i0_typ, i1_typ),
+            },
+            ValTyp::Num => UFunP2 {
+                num: UFunP2_V::empty(i0_typ, i1_typ),
+            },
+        };
+        Self::new(val_typ, i0_typ, i1_typ, data)
+    }
+}
