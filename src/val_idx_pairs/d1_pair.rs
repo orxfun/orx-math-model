@@ -32,12 +32,12 @@ impl D1ValIdxPair for (ValInt, SetCatInt) {
 
     fn into_fun_union<'d>(fun: FP1<'d, Self::V, Self::I0>) -> UFunP1<'d> {
         UFunP1 {
-            cint_int: ManuallyDrop::new(fun),
+            int_cint: ManuallyDrop::new(fun),
         }
     }
 
     fn fun_from_union<'a, 'd>(data: &'a UFunP1<'d>) -> &'a FP1<'d, Self::V, Self::I0> {
-        unsafe { &data.cint_int }
+        unsafe { &data.int_cint }
     }
 }
 
@@ -48,12 +48,12 @@ impl D1ValIdxPair for (ValInt, SetCatStr) {
 
     fn into_fun_union<'d>(fun: FP1<'d, Self::V, Self::I0>) -> UFunP1<'d> {
         UFunP1 {
-            cstr_int: ManuallyDrop::new(fun),
+            int_cstr: ManuallyDrop::new(fun),
         }
     }
 
     fn fun_from_union<'a, 'd>(data: &'a UFunP1<'d>) -> &'a FP1<'d, Self::V, Self::I0> {
-        unsafe { &data.cstr_int }
+        unsafe { &data.int_cstr }
     }
 }
 
@@ -64,12 +64,12 @@ impl D1ValIdxPair for (ValInt, SetOrd) {
 
     fn into_fun_union<'d>(fun: FP1<'d, Self::V, Self::I0>) -> UFunP1<'d> {
         UFunP1 {
-            ord_int: ManuallyDrop::new(fun),
+            int_ord: ManuallyDrop::new(fun),
         }
     }
 
     fn fun_from_union<'a, 'd>(data: &'a UFunP1<'d>) -> &'a FP1<'d, Self::V, Self::I0> {
-        unsafe { &data.ord_int }
+        unsafe { &data.int_ord }
     }
 }
 
@@ -82,12 +82,12 @@ impl D1ValIdxPair for (ValNum, SetCatInt) {
 
     fn into_fun_union<'d>(fun: FP1<'d, Self::V, Self::I0>) -> UFunP1<'d> {
         UFunP1 {
-            cint_num: ManuallyDrop::new(fun),
+            num_cint: ManuallyDrop::new(fun),
         }
     }
 
     fn fun_from_union<'a, 'd>(data: &'a UFunP1<'d>) -> &'a FP1<'d, Self::V, Self::I0> {
-        unsafe { &data.cint_num }
+        unsafe { &data.num_cint }
     }
 }
 
@@ -98,12 +98,12 @@ impl D1ValIdxPair for (ValNum, SetCatStr) {
 
     fn into_fun_union<'d>(fun: FP1<'d, Self::V, Self::I0>) -> UFunP1<'d> {
         UFunP1 {
-            cstr_num: ManuallyDrop::new(fun),
+            num_cstr: ManuallyDrop::new(fun),
         }
     }
 
     fn fun_from_union<'a, 'd>(data: &'a UFunP1<'d>) -> &'a FP1<'d, Self::V, Self::I0> {
-        unsafe { &data.cstr_num }
+        unsafe { &data.num_cstr }
     }
 }
 
@@ -114,11 +114,11 @@ impl D1ValIdxPair for (ValNum, SetOrd) {
 
     fn into_fun_union<'d>(fun: FP1<'d, Self::V, Self::I0>) -> UFunP1<'d> {
         UFunP1 {
-            ord_num: ManuallyDrop::new(fun),
+            num_ord: ManuallyDrop::new(fun),
         }
     }
 
     fn fun_from_union<'a, 'd>(data: &'a UFunP1<'d>) -> &'a FP1<'d, Self::V, Self::I0> {
-        unsafe { &data.ord_num }
+        unsafe { &data.num_ord }
     }
 }
