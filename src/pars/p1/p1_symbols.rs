@@ -1,6 +1,5 @@
 use crate::pars::p1::{DP1, FP1};
 use crate::sets::IndexCatInt;
-use crate::val_idx_pairs::D1Args;
 use crate::{Ptr, Res, Set, SetCatInt, Symbol, Val, ValInt};
 use alloc::boxed::Box;
 use core::ops::Index;
@@ -34,24 +33,21 @@ where
         data.bind::<V, I0>(fun)
     }
 
-    pub fn at(self, idx: impl Into<I0::IdxAny<'m, 'd>>) -> V::Sym<'m, 'd>
-    where
-        I0: D1Args,
-    {
-        <I0 as D1Args>::par_at(self, idx)
+    pub fn at(self, i0: impl Into<I0::IdxAny<'m, 'd>>) -> V::Sym<'m, 'd> {
+        I0::p1_at(self, i0)
     }
 }
 
-impl<'m, 'd, V, I0, Idx> Index<Idx> for ParD1<'m, 'd, V, I0>
+impl<'m, 'd, V, I0, Idx0> Index<Idx0> for ParD1<'m, 'd, V, I0>
 where
     V: Val,
-    I0: Set + D1Args,
-    Idx: Into<I0::IdxAny<'m, 'd>>,
+    I0: Set,
+    Idx0: Into<I0::IdxAny<'m, 'd>>,
 {
     type Output = V::Sym<'m, 'd>;
 
-    fn index(&self, idx: Idx) -> &Self::Output {
-        let val = self.at(idx);
+    fn index(&self, i0: Idx0) -> &Self::Output {
+        let val = self.at(i0);
         self.m.sym_ref::<V>(val)
     }
 }
