@@ -37,10 +37,11 @@ where
         data.bind::<V, I0, I1>(fun)
     }
 
-    // pub fn at(self, idx: impl Into<I0::IdxAny<'m, 'd>>) -> V::Sym<'m, 'd>
-    // where
-    //     I0: D1Args,
-    // {
-    //     <I0 as D1Args>::par_at(self, idx)
-    // }
+    pub fn at(
+        self,
+        i0: impl Into<I0::IdxAny<'m, 'd>>,
+        i1: impl Into<I1::IdxAny<'m, 'd>>,
+    ) -> V::Sym<'m, 'd> {
+        I0::p2_at::<V, I1>(self, i0, i1)
+    }
 }

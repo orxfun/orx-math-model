@@ -33,8 +33,8 @@ where
         data.bind::<V, I0>(fun)
     }
 
-    pub fn at(self, idx: impl Into<I0::IdxAny<'m, 'd>>) -> V::Sym<'m, 'd> {
-        I0::p1_at(self, idx)
+    pub fn at(self, i0: impl Into<I0::IdxAny<'m, 'd>>) -> V::Sym<'m, 'd> {
+        I0::p1_at(self, i0)
     }
 }
 
@@ -46,8 +46,8 @@ where
 {
     type Output = V::Sym<'m, 'd>;
 
-    fn index(&self, idx: Idx) -> &Self::Output {
-        let val = self.at(idx);
+    fn index(&self, i0: Idx) -> &Self::Output {
+        let val = self.at(i0);
         self.m.sym_ref::<V>(val)
     }
 }
