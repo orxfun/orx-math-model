@@ -1,4 +1,6 @@
-use crate::{Set, SetCatInt, SetCatStr, SetOrd, SetTyp, Val, ValInt, ValNum, ValTyp};
+use crate::{
+    Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetTyp, Val, ValInt, ValNum, ValTyp,
+};
 use alloc::boxed::Box;
 use core::mem::{transmute, ManuallyDrop};
 
@@ -180,5 +182,17 @@ impl<'d> FunP2<'d> {
             }
         };
         Self::new(val_typ, i0_typ, i1_typ, data)
+    }
+
+    pub fn get<V: Val, I0: Set, I1: Set>(&self) -> &FP2<'d, V, I0, I1> {
+        Res::dbg_assert_same_val(V::typ(), self.val_typ);
+        Res::dbg_assert_same_set(I0::typ(), self.i0_typ);
+        Res::dbg_assert_same_set(I1::typ(), self.i1_typ);
+        unsafe {
+            match V::typ() {
+                ValTyp::Int => transmute(self.data.int.get::<I0, I1>()),
+                ValTyp::Num => transmute(self.data.num.get::<I0, I1>()),
+            }
+        }
     }
 }
