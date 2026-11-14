@@ -166,4 +166,19 @@ impl<'d> FunP2<'d> {
         };
         Self::new(val_typ, i0_typ, i1_typ, data)
     }
+
+    pub fn create<V: Val, I0: Set, I1: Set>(fun: FP2<'d, V, I0, I1>) -> Self {
+        let (val_typ, i0_typ, i1_typ) = (V::typ(), I0::typ(), I1::typ());
+        let data = unsafe {
+            match val_typ {
+                ValTyp::Int => UFunP2 {
+                    int: UFunP2_V::create::<I0, I1>(transmute(fun)),
+                },
+                ValTyp::Num => UFunP2 {
+                    num: UFunP2_V::create::<I0, I1>(transmute(fun)),
+                },
+            }
+        };
+        Self::new(val_typ, i0_typ, i1_typ, data)
+    }
 }
