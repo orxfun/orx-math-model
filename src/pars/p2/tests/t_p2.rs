@@ -24,9 +24,9 @@ fn p2_int_cint_cstr() {
 
     // modeling
     let m = Model::default();
-    let s1 = m.cat_set_int();
-    let s2 = m.cat_set_str();
-    let par = m.par2_int(s1, s2);
+    let s0 = m.cat_set_int();
+    let s1 = m.cat_set_str();
+    let par = m.par2_int(s0, s1);
 
     // binding
     par.bind(|i, j| par_data[i][j]).unwrap();
@@ -56,9 +56,9 @@ fn p2_int_cstr_ord() {
 
     // modeling
     let m = Model::default();
-    let s1 = m.cat_set_str();
-    let s2 = m.ord_set();
-    let par = m.par2_int(s1, s2);
+    let s0 = m.cat_set_str();
+    let s1 = m.ord_set();
+    let par = m.par2_int(s0, s1);
 
     // binding
     par.bind(|i, j| par_data[i][j as usize]).unwrap();
@@ -83,9 +83,9 @@ fn p2_int_ord_cint() {
 
     // modeling
     let m = Model::default();
-    let s1 = m.ord_set();
-    let s2 = m.cat_set_int();
-    let par = m.par2_int(s1, s2);
+    let s0 = m.ord_set();
+    let s1 = m.cat_set_int();
+    let par = m.par2_int(s0, s1);
 
     // binding
     par.bind(|i, j| par_data[i as usize][j]).unwrap();
@@ -119,9 +119,9 @@ fn p2_num_cint_cstr() {
 
     // modeling
     let m = Model::default();
-    let s1 = m.cat_set_int();
-    let s2 = m.cat_set_str();
-    let par = m.par2_num(s1, s2);
+    let s0 = m.cat_set_int();
+    let s1 = m.cat_set_str();
+    let par = m.par2_num(s0, s1);
 
     // binding
     par.bind(|i, j| par_data[i][j]).unwrap();
@@ -151,9 +151,9 @@ fn p2_num_cstr_ord() {
 
     // modeling
     let m = Model::default();
-    let s1 = m.cat_set_str();
-    let s2 = m.ord_set();
-    let par = m.par2_num(s1, s2);
+    let s0 = m.cat_set_str();
+    let s1 = m.ord_set();
+    let par = m.par2_num(s0, s1);
 
     // binding
     par.bind(|i, j| par_data[i][j as usize]).unwrap();
@@ -178,9 +178,9 @@ fn p2_num_ord_cint() {
 
     // modeling
     let m = Model::default();
-    let s1 = m.ord_set();
-    let s2 = m.cat_set_int();
-    let par = m.par2_num(s1, s2);
+    let s0 = m.ord_set();
+    let s1 = m.cat_set_int();
+    let par = m.par2_num(s0, s1);
 
     // binding
     par.bind(|i, j| par_data[i as usize][j]).unwrap();
