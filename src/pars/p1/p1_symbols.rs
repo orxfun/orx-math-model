@@ -38,7 +38,7 @@ where
     where
         I0: D1Args,
     {
-        <I0 as D1Args>::par_at(self, idx)
+        <I0 as D1Args>::p1_at(self, idx)
     }
 }
 
