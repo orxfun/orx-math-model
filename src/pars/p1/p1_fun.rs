@@ -17,37 +17,35 @@ pub union UFunP1V<'d, V: Val> {
 #[repr(C)]
 pub union UFunP1<'d> {
     pub int: ManuallyDrop<UFunP1V<'d, ValInt>>,
-    pub num: ManuallyDrop<UFunP1V<'d, ValInt>>,
-}
-
-#[repr(C)]
-pub union UFunP1Old<'d> {
-    pub int_cint: ManuallyDrop<FP1<'d, ValInt, SetCatInt>>,
-    pub int_cstr: ManuallyDrop<FP1<'d, ValInt, SetCatStr>>,
-    pub int_ord: ManuallyDrop<FP1<'d, ValInt, SetOrd>>,
-
-    pub num_cint: ManuallyDrop<FP1<'d, ValNum, SetCatInt>>,
-    pub num_cstr: ManuallyDrop<FP1<'d, ValNum, SetCatStr>>,
-    pub num_ord: ManuallyDrop<FP1<'d, ValNum, SetOrd>>,
+    pub num: ManuallyDrop<UFunP1V<'d, ValNum>>,
 }
 
 pub struct FunP1<'d> {
     pub val_typ: ValTyp,
     pub i0_typ: SetTyp,
-    data: UFunP1Old<'d>,
+    data: UFunP1<'d>,
 }
 
 impl<'d> Drop for FunP1<'d> {
     fn drop(&mut self) {
         unsafe {
-            match (self.val_typ, self.i0_typ) {
-                (ValTyp::Int, SetTyp::CatInt) => ManuallyDrop::drop(&mut self.data.int_cint),
-                (ValTyp::Int, SetTyp::CatStr) => ManuallyDrop::drop(&mut self.data.int_cstr),
-                (ValTyp::Int, SetTyp::Ord) => ManuallyDrop::drop(&mut self.data.int_ord),
-
-                (ValTyp::Num, SetTyp::CatInt) => ManuallyDrop::drop(&mut self.data.num_cint),
-                (ValTyp::Num, SetTyp::CatStr) => ManuallyDrop::drop(&mut self.data.num_cstr),
-                (ValTyp::Num, SetTyp::Ord) => ManuallyDrop::drop(&mut self.data.num_ord),
+            match self.val_typ {
+                ValTyp::Int => {
+                    let data = &mut self.data.int;
+                    match self.i0_typ {
+                        SetTyp::CatInt => ManuallyDrop::drop(&mut data.cint),
+                        SetTyp::CatStr => ManuallyDrop::drop(&mut data.cstr),
+                        SetTyp::Ord => ManuallyDrop::drop(&mut data.ord),
+                    }
+                }
+                ValTyp::Num => {
+                    let data = &mut self.data.num;
+                    match self.i0_typ {
+                        SetTyp::CatInt => ManuallyDrop::drop(&mut data.cint),
+                        SetTyp::CatStr => ManuallyDrop::drop(&mut data.cstr),
+                        SetTyp::Ord => ManuallyDrop::drop(&mut data.ord),
+                    }
+                }
             }
         }
     }
@@ -56,24 +54,36 @@ impl<'d> Drop for FunP1<'d> {
 impl<'d> FunP1<'d> {
     pub fn empty(val_typ: ValTyp, i0_typ: SetTyp) -> Self {
         let data = match (val_typ, i0_typ) {
-            (ValTyp::Int, SetTyp::CatInt) => UFunP1Old {
-                int_cint: ManuallyDrop::new(Box::new(|_| Default::default())),
+            (ValTyp::Int, SetTyp::CatInt) => UFunP1 {
+                int: ManuallyDrop::new(UFunP1V {
+                    cint: ManuallyDrop::new(Box::new(|_| Default::default())),
+                }),
             },
-            (ValTyp::Int, SetTyp::CatStr) => UFunP1Old {
-                int_cstr: ManuallyDrop::new(Box::new(|_| Default::default())),
+            (ValTyp::Int, SetTyp::CatStr) => UFunP1 {
+                int: ManuallyDrop::new(UFunP1V {
+                    cstr: ManuallyDrop::new(Box::new(|_| Default::default())),
+                }),
             },
-            (ValTyp::Int, SetTyp::Ord) => UFunP1Old {
-                int_ord: ManuallyDrop::new(Box::new(|_| Default::default())),
+            (ValTyp::Int, SetTyp::Ord) => UFunP1 {
+                int: ManuallyDrop::new(UFunP1V {
+                    ord: ManuallyDrop::new(Box::new(|_| Default::default())),
+                }),
             },
 
-            (ValTyp::Num, SetTyp::CatInt) => UFunP1Old {
-                num_cint: ManuallyDrop::new(Box::new(|_| Default::default())),
+            (ValTyp::Num, SetTyp::CatInt) => UFunP1 {
+                num: ManuallyDrop::new(UFunP1V {
+                    cint: ManuallyDrop::new(Box::new(|_| Default::default())),
+                }),
             },
-            (ValTyp::Num, SetTyp::CatStr) => UFunP1Old {
-                num_cstr: ManuallyDrop::new(Box::new(|_| Default::default())),
+            (ValTyp::Num, SetTyp::CatStr) => UFunP1 {
+                num: ManuallyDrop::new(UFunP1V {
+                    cstr: ManuallyDrop::new(Box::new(|_| Default::default())),
+                }),
             },
-            (ValTyp::Num, SetTyp::Ord) => UFunP1Old {
-                num_ord: ManuallyDrop::new(Box::new(|_| Default::default())),
+            (ValTyp::Num, SetTyp::Ord) => UFunP1 {
+                num: ManuallyDrop::new(UFunP1V {
+                    ord: ManuallyDrop::new(Box::new(|_| Default::default())),
+                }),
             },
         };
         Self {
