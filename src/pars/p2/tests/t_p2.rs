@@ -35,7 +35,7 @@ fn p2_int_cint_cstr() {
     for (i, map) in par_data.iter().enumerate() {
         for (j, exp) in map.iter() {
             let val = unsafe { par.el.get() }.at::<V, I0, I1>(i, j);
-            // assert_eq!(*exp, val);
+            assert_eq!(*exp, val);
         }
     }
 }

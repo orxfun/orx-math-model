@@ -113,9 +113,9 @@ impl<'d, V: Val> UFunP2_V<'d, V> {
     fn get<I0: Set, I1: Set>(&self) -> &FP2<'d, V, I0, I1> {
         unsafe {
             match I0::typ() {
-                SetTyp::CatInt => transmute(&self.cint.get::<I1>()),
-                SetTyp::CatStr => transmute(&self.cstr.get::<I1>()),
-                SetTyp::Ord => transmute(&self.ord.get::<I1>()),
+                SetTyp::CatInt => transmute(self.cint.get::<I1>()),
+                SetTyp::CatStr => transmute(self.cstr.get::<I1>()),
+                SetTyp::Ord => transmute(self.ord.get::<I1>()),
             }
         }
     }
