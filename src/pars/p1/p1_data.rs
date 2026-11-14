@@ -16,7 +16,7 @@ impl<'d> DP1<'d> {
     {
         Res::dbg_assert_same_val(V::typ(), self.slot.get().val_typ);
         Res::dbg_assert_same_set(I0::typ(), self.slot.get().i0_typ);
-        let fun = FunP1::new::<V, I0>(fun);
+        let fun = FunP1::create::<V, I0>(fun);
         self.slot.bind(fun)
     }
 
