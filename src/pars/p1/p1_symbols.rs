@@ -38,15 +38,15 @@ where
     }
 }
 
-impl<'m, 'd, V, I0, Idx> Index<Idx> for ParD1<'m, 'd, V, I0>
+impl<'m, 'd, V, I0, Idx0> Index<Idx0> for ParD1<'m, 'd, V, I0>
 where
     V: Val,
     I0: Set,
-    Idx: Into<I0::IdxAny<'m, 'd>>,
+    Idx0: Into<I0::IdxAny<'m, 'd>>,
 {
     type Output = V::Sym<'m, 'd>;
 
-    fn index(&self, i0: Idx) -> &Self::Output {
+    fn index(&self, i0: Idx0) -> &Self::Output {
         let val = self.at(i0);
         self.m.sym_ref::<V>(val)
     }
