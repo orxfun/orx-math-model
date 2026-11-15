@@ -35,8 +35,7 @@ where
         i0: impl Into<I0::IdxAny<'m, 'd>>,
         i1: impl Into<I1::IdxAny<'m, 'd>>,
     ) -> Var<'m, 'd> {
-        // I0::v1_at(self, i0)
-        todo!()
+        I0::v2_at(self, i0, i1)
     }
 }
 
