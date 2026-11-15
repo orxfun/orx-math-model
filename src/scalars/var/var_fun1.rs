@@ -1,4 +1,4 @@
-use crate::sets::{DSet, FunSet};
+use crate::sets::FunSet;
 use crate::{Ptr, Set, SetCatInt, SetCatStr, SetOrd, SetTyp};
 use alloc::boxed::Box;
 use core::mem::{transmute, ManuallyDrop};
