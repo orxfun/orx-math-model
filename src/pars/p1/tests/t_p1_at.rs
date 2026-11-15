@@ -34,11 +34,11 @@ fn p1_at_int_cint() {
     for (i, _) in iter.enumerate() {
         let exp = par_data[set_data[i]];
         for sca in sca1 {
-            assert_eq!(exp, unsafe { sca.el.get() }.eval::<V>());
+            assert_eq!(exp, sca.data().eval::<V>());
         }
         let exp = par_data[set_data[2]];
         for sca in sca2 {
-            assert_eq!(exp, unsafe { sca.el.get() }.eval::<V>());
+            assert_eq!(exp, sca.data().eval::<V>());
         }
     }
 }
@@ -75,11 +75,11 @@ fn p1_at_int_cstr() {
     for (i, _) in iter.enumerate() {
         let exp = par_data[&set_data[i]];
         for sca in sca1 {
-            assert_eq!(exp, unsafe { sca.el.get() }.eval::<V>());
+            assert_eq!(exp, sca.data().eval::<V>());
         }
         let exp = par_data[&set_data[2]];
         for sca in sca2 {
-            assert_eq!(exp, unsafe { sca.el.get() }.eval::<V>());
+            assert_eq!(exp, sca.data().eval::<V>());
         }
     }
 }
@@ -113,11 +113,11 @@ fn p1_at_int_ord() {
     for (i, _) in iter.enumerate() {
         let exp = par_data(set_data[i]);
         for sca in sca1 {
-            assert_eq!(exp, unsafe { sca.el.get() }.eval::<V>());
+            assert_eq!(exp, sca.data().eval::<V>());
         }
         let exp = par_data(set_data[2]);
         for sca in sca2 {
-            assert_eq!(exp, unsafe { sca.el.get() }.eval::<V>());
+            assert_eq!(exp, sca.data().eval::<V>());
         }
     }
 }
@@ -152,11 +152,11 @@ fn p1_at_num_cint() {
     for (i, _) in iter.enumerate() {
         let exp = par_data[set_data[i]];
         for sca in sca1 {
-            assert_eq!(exp, unsafe { sca.el.get() }.eval::<V>());
+            assert_eq!(exp, sca.data().eval::<V>());
         }
         let exp = par_data[set_data[2]];
         for sca in sca2 {
-            assert_eq!(exp, unsafe { sca.el.get() }.eval::<V>());
+            assert_eq!(exp, sca.data().eval::<V>());
         }
     }
 }
@@ -193,11 +193,11 @@ fn p1_at_num_cstr() {
     for (i, _) in iter.enumerate() {
         let exp = par_data[&set_data[i]];
         for sca in sca1 {
-            assert_eq!(exp, unsafe { sca.el.get() }.eval::<V>());
+            assert_eq!(exp, sca.data().eval::<V>());
         }
         let exp = par_data[&set_data[2]];
         for sca in sca2 {
-            assert_eq!(exp, unsafe { sca.el.get() }.eval::<V>());
+            assert_eq!(exp, sca.data().eval::<V>());
         }
     }
 }
@@ -231,11 +231,11 @@ fn p1_at_num_ord() {
     for (i, _) in iter.enumerate() {
         let exp = par_data(set_data[i]);
         for sca in sca1 {
-            assert_eq!(exp, unsafe { sca.el.get() }.eval::<V>());
+            assert_eq!(exp, sca.data().eval::<V>());
         }
         let exp = par_data(set_data[2]);
         for sca in sca2 {
-            assert_eq!(exp, unsafe { sca.el.get() }.eval::<V>());
+            assert_eq!(exp, sca.data().eval::<V>());
         }
     }
 }

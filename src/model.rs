@@ -218,7 +218,7 @@ impl<'d> Model<'d> {
 
     pub(crate) fn val<'m, V: Val>(&'m self, fun: impl Fn() -> V::Raw + 'd) -> V::Sym<'m, 'd> {
         let fun: Box<dyn Fn() -> <V as Val>::Raw + 'd> = Box::new(fun);
-        let data = DSca::new_val(fun);
+        let data = DSca::new_val::<V>(fun);
         let el = self.sca_bag.push(data);
         V::new_sym(self, el)
     }
