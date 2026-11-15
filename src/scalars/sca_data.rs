@@ -1,4 +1,4 @@
-use crate::scalars::var::{FV1, FV2};
+use crate::scalars::var::{FVar1, FVar2};
 use crate::scalars::{DVal, DVar, FVal, ScaTyp, Val, ValTyp};
 use crate::sets::FunSet;
 use crate::{Ptr, Set, VarType};
@@ -35,7 +35,7 @@ impl<'d> DSca<'d> {
         Self { typ, data }
     }
 
-    pub fn new_var_d1<I0: Set>(typ: VarType, i0: Ptr<'d, FunSet<'d>>, fun: FV1<'d, I0>) -> Self {
+    pub fn new_var_d1<I0: Set>(typ: VarType, i0: Ptr<'d, FunSet<'d>>, fun: FVar1<'d, I0>) -> Self {
         let data = USca {
             var: ManuallyDrop::new(DVar::create_d1::<I0>(typ, i0, fun)),
         };
@@ -47,7 +47,7 @@ impl<'d> DSca<'d> {
         typ: VarType,
         i0: Ptr<'d, FunSet<'d>>,
         i1: Ptr<'d, FunSet<'d>>,
-        fun: FV2<'d, I0, I1>,
+        fun: FVar2<'d, I0, I1>,
     ) -> Self {
         let data = USca {
             var: ManuallyDrop::new(DVar::create_d2::<I0, I1>(typ, i0, i1, fun)),

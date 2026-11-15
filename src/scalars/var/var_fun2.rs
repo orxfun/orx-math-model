@@ -6,19 +6,19 @@ use core::mem::{transmute, ManuallyDrop};
 
 pub type Idx2<'d, I0, I1> = (<I0 as Set>::IdxRaw<'d>, <I1 as Set>::IdxRaw<'d>);
 
-pub type FV2<'d, I0, I1> = Box<dyn Fn() -> Idx2<'d, I0, I1> + 'd>;
+pub type FVar2<'d, I0, I1> = Box<dyn Fn() -> Idx2<'d, I0, I1> + 'd>;
 
 // i0
 
 #[repr(C)]
 pub union UFunV2_I0<'d, I0: Set> {
-    cint: ManuallyDrop<FV2<'d, I0, SetCatInt>>,
-    cstr: ManuallyDrop<FV2<'d, I0, SetCatStr>>,
-    ord: ManuallyDrop<FV2<'d, I0, SetOrd>>,
+    cint: ManuallyDrop<FVar2<'d, I0, SetCatInt>>,
+    cstr: ManuallyDrop<FVar2<'d, I0, SetCatStr>>,
+    ord: ManuallyDrop<FVar2<'d, I0, SetOrd>>,
 }
 
 impl<'d, I0: Set> UFunV2_I0<'d, I0> {
-    fn create<I1: Set>(fun: FV2<'d, I0, I1>) -> ManuallyDrop<Self> {
+    fn create<I1: Set>(fun: FVar2<'d, I0, I1>) -> ManuallyDrop<Self> {
         unsafe {
             ManuallyDrop::new(match I1::typ() {
                 SetTyp::CatInt => Self {
@@ -34,7 +34,7 @@ impl<'d, I0: Set> UFunV2_I0<'d, I0> {
         }
     }
 
-    fn get<I1: Set>(&self) -> &FV2<'d, I0, I1> {
+    fn get<I1: Set>(&self) -> &FVar2<'d, I0, I1> {
         unsafe {
             match I0::typ() {
                 SetTyp::CatInt => transmute(&self.cint),
@@ -94,7 +94,7 @@ impl<'d> FunV2<'d> {
     pub fn create<I0: Set, I1: Set>(
         i0: Ptr<'d, FunSet<'d>>,
         i1: Ptr<'d, FunSet<'d>>,
-        fun: FV2<'d, I0, I1>,
+        fun: FVar2<'d, I0, I1>,
     ) -> Self {
         debug_assert_eq!(I0::typ(), i0.get().typ);
         debug_assert_eq!(I1::typ(), i1.get().typ);
@@ -114,7 +114,7 @@ impl<'d> FunV2<'d> {
         Self::new(i0, i1, data)
     }
 
-    pub fn get<I0: Set, I1: Set>(&self) -> &FV2<'d, I0, I1> {
+    pub fn get<I0: Set, I1: Set>(&self) -> &FVar2<'d, I0, I1> {
         debug_assert_eq!(I0::typ(), self.i0_typ());
         debug_assert_eq!(I1::typ(), self.i1_typ());
         unsafe {

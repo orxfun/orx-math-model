@@ -1,5 +1,5 @@
-use crate::scalars::var::var_fun1::{FunV1, Idx1, FV1};
-use crate::scalars::var::var_fun2::{FunV2, Idx2, FV2};
+use crate::scalars::var::var_fun1::{FVar1, FunV1, Idx1};
+use crate::scalars::var::var_fun2::{FVar2, FunV2, Idx2};
 use crate::sets::FunSet;
 use crate::{Dim, Ptr, Set, VarType};
 use core::mem::{transmute, ManuallyDrop};
@@ -32,7 +32,7 @@ impl<'d> Drop for DVar<'d> {
 impl<'d> DVar<'d> {
     // create
 
-    pub fn create_d1<I0: Set>(typ: VarType, i0: Ptr<'d, FunSet<'d>>, fun: FV1<'d, I0>) -> Self {
+    pub fn create_d1<I0: Set>(typ: VarType, i0: Ptr<'d, FunSet<'d>>, fun: FVar1<'d, I0>) -> Self {
         let dim = Dim::D1;
         let data = UFunVar {
             d1: ManuallyDrop::new(FunV1::create::<I0>(i0, fun)),
@@ -44,7 +44,7 @@ impl<'d> DVar<'d> {
         typ: VarType,
         i0: Ptr<'d, FunSet<'d>>,
         i1: Ptr<'d, FunSet<'d>>,
-        fun: FV2<'d, I0, I1>,
+        fun: FVar2<'d, I0, I1>,
     ) -> Self {
         let dim = Dim::D2;
         let data = UFunVar {
@@ -55,11 +55,11 @@ impl<'d> DVar<'d> {
 
     // get
 
-    pub fn get_d1<I0: Set>(&self) -> &FV1<'d, I0> {
+    pub fn get_d1<I0: Set>(&self) -> &FVar1<'d, I0> {
         unsafe { transmute(&self.data.d1) }
     }
 
-    pub fn get_d2<I0: Set, I1: Set>(&self) -> &FV2<'d, I0, I1> {
+    pub fn get_d2<I0: Set, I1: Set>(&self) -> &FVar2<'d, I0, I1> {
         unsafe { transmute(&self.data.d2) }
     }
 
