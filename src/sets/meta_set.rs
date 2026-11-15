@@ -4,7 +4,7 @@ use crate::pars::p2::ParD2;
 use crate::sets::{
     CatInt, CatStr, DSet, FSet, FunSet, IndexCatInt, IndexCatStr, IndexOrd, Ord, UFunSet,
 };
-use crate::var::FunV;
+use crate::var::DV;
 use crate::vars::v1::VarD1;
 use crate::{Model, Ptr, Res, ResValid, SetSym, Slot, Symbol, Val, ValInt, Var};
 use alloc::boxed::Box;

@@ -9,7 +9,7 @@ use crate::sets::{CatInt, CatStr, Ord, SetBag, SetFunBag};
 use crate::slot::{SlotStates, State};
 use crate::sym_refs::SymRefBag;
 use crate::vals::{FunVal, ValBag};
-use crate::var::{FunV, VarFunBag};
+use crate::var::{VarFunBag, DV};
 use crate::vars::v1::{V1Bag, VarD1};
 use crate::vars::VarType;
 use crate::{
@@ -112,7 +112,7 @@ impl<'d> Model<'d> {
         self.sym_ref_bag.push::<V>(sym)
     }
 
-    pub(crate) fn var<'m>(&'m self, fun: FunV<'d>) -> Var<'m, 'd> {
+    pub(crate) fn var<'m>(&'m self, fun: DV<'d>) -> Var<'m, 'd> {
         // let el = self.var_bag.push(fun);
         // Symbol::new(self, el).into()
         todo!()
