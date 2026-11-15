@@ -9,10 +9,6 @@ pub struct DVal<'d> {
 }
 
 impl<'d> DVal<'d> {
-    pub fn typ(&self) -> ValTyp {
-        self.typ
-    }
-
     pub fn eval<V: Val>(&self) -> V::Raw {
         debug_assert_eq!(V::typ(), self.typ);
         let fun = V::fun_from_union(&self.data);

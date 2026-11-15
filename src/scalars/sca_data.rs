@@ -1,4 +1,4 @@
-use crate::scalars::var::{FVar1, FVar2};
+use crate::scalars::var::{FVar1, FVar2, Idx1, Idx2};
 use crate::scalars::{DVal, DVar, FVal, ScaTyp, Val, ValTyp};
 use crate::sets::FunSet;
 use crate::{Ptr, Set, VarType};
@@ -54,5 +54,23 @@ impl<'d> DSca<'d> {
         };
         let typ = ScaTyp::Var;
         Self { typ, data }
+    }
+
+    // get
+
+    pub fn var_indices_d1<I0: Set>(&self) -> Idx1<'d, I0> {
+        unsafe { &self.data.var }.indices_d1::<I0>()
+    }
+
+    pub fn var_indices_d2<I0: Set, I1: Set>(&self) -> Idx2<'d, I0, I1> {
+        unsafe { &self.data.var }.indices_d2::<I0, I1>()
+    }
+
+    pub fn val_eval<V: Val>(&self) -> V::Raw {
+        unsafe { &self.data.val }.eval::<V>()
+    }
+
+    pub fn val_typ(&self) -> ValTyp {
+        unsafe { &self.data.val }.typ
     }
 }

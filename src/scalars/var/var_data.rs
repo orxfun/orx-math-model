@@ -56,16 +56,6 @@ impl<'d> DVar<'d> {
         Self::new(dim, typ, data)
     }
 
-    // get
-
-    pub fn get_d1<I0: Set>(&self) -> &FVar1<'d, I0> {
-        unsafe { transmute(&self.data.d1) }
-    }
-
-    pub fn get_d2<I0: Set, I1: Set>(&self) -> &FVar2<'d, I0, I1> {
-        unsafe { transmute(&self.data.d2) }
-    }
-
     // indices
 
     pub fn indices_d1<I0: Set>(&self) -> Idx1<'d, I0> {
