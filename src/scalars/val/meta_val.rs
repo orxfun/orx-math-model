@@ -1,8 +1,7 @@
-use crate::scalars::val::{FVal, Int, Num, UFunVal};
+use crate::scalars::val::{FVal, UFunVal};
 use crate::scalars::{DSca, Sca};
 use crate::{Model, Symbol};
-use core::mem::{transmute, ManuallyDrop};
-use core::ops::Deref;
+use core::mem::ManuallyDrop;
 use orx_imp_vec::Elem;
 
 // enums
