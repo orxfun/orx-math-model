@@ -87,6 +87,12 @@ pub trait Set: Clone + Copy + 'static {
         var: VarD2<'m, 'd, I0, Self>,
         i0: impl Fn() -> I0::IdxRaw<'d> + 'd,
         i1: impl Into<Self::IdxAny<'m, 'd>>,
+    ) -> Var<'m, 'd>;
+
+    fn v2_at<'m, 'd, I1: Set>(
+        var: VarD2<'m, 'd, Self, I1>,
+        i0: impl Into<Self::IdxAny<'m, 'd>>,
+        i1: impl Into<I1::IdxAny<'m, 'd>>,
     ) -> Var<'m, 'd> {
         todo!()
     }
@@ -254,6 +260,21 @@ impl Set for SetCatInt {
             }
         };
         var.m.var(data)
+    }
+
+    fn v2_at<'m, 'd, I1: Set>(
+        var: VarD2<'m, 'd, Self, I1>,
+        i0: impl Into<Self::IdxAny<'m, 'd>>,
+        i1: impl Into<I1::IdxAny<'m, 'd>>,
+    ) -> Var<'m, 'd> {
+        match i0.into() {
+            IndexCatInt::Idx(i0) => {
+                let i0 = Ptr::new(i0.el);
+                let i0 = move || i0.get().read::<Self>();
+                I1::v2_at_i0(var, i0, i1)
+            }
+            IndexCatInt::ConUsize(i0) => I1::v2_at_i0(var, move || i0, i1),
+        }
     }
 }
 
@@ -479,6 +500,29 @@ impl Set for SetCatStr {
             }
         };
         var.m.var(data)
+    }
+
+    fn v2_at<'m, 'd, I1: Set>(
+        var: VarD2<'m, 'd, Self, I1>,
+        i0: impl Into<Self::IdxAny<'m, 'd>>,
+        i1: impl Into<I1::IdxAny<'m, 'd>>,
+    ) -> Var<'m, 'd> {
+        match i0.into() {
+            IndexCatStr::Idx(i0) => {
+                let i0 = Ptr::new(i0.el);
+                let i0 = move || i0.get().read::<Self>();
+                I1::v2_at_i0(var, i0, i1)
+            }
+            IndexCatStr::ConStringRef(i0) => I1::v2_at_i0(var, move || i0, i1),
+            IndexCatStr::ConString(i0) => {
+                let i0 = var.m.con_val(i0);
+                I1::v2_at_i0(var, move || i0.get().get(), i1)
+            }
+            IndexCatStr::ConStr(i0) => {
+                let i0 = var.m.con_val(i0.to_string());
+                I1::v2_at_i0(var, move || i0.get().get(), i1)
+            }
+        }
     }
 }
 
@@ -709,5 +753,27 @@ impl Set for SetOrd {
             }
         };
         var.m.var(data)
+    }
+
+    fn v2_at<'m, 'd, I1: Set>(
+        var: VarD2<'m, 'd, Self, I1>,
+        i0: impl Into<Self::IdxAny<'m, 'd>>,
+        i1: impl Into<I1::IdxAny<'m, 'd>>,
+    ) -> Var<'m, 'd> {
+        match i0.into() {
+            IndexOrd::Idx(i0) => {
+                let i0 = Ptr::new(i0.el);
+                let i0 = move || i0.get().read::<Self>();
+                I1::v2_at_i0(var, i0, i1)
+            }
+            IndexOrd::Int(i0) => {
+                let i0 = Ptr::new(i0.el);
+                let i0 = move || i0.get().eval::<ValInt>();
+                I1::v2_at_i0(var, i0, i1)
+            }
+            IndexOrd::ConI64(i0) => I1::v2_at_i0(var, move || i0, i1),
+            IndexOrd::ConUsize(i0) => I1::v2_at_i0(var, move || i0 as i64, i1),
+            IndexOrd::ConI32(i0) => I1::v2_at_i0(var, move || i0 as i64, i1),
+        }
     }
 }
