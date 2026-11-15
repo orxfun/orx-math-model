@@ -1,6 +1,6 @@
 use crate::pars::p2::{FunP2, FP2};
 use crate::sets::DSet;
-use crate::{Elements, Ptr, Res, ResValid, Set, SetTyp, Slot, Val};
+use crate::{Ptr, Res, ResValid, Set, Slot, Val};
 
 #[derive(derive_new::new)]
 pub struct DP2<'d> {
