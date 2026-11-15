@@ -9,6 +9,8 @@ use crate::sets::{CatInt, CatStr, Ord, SetBag, SetFunBag};
 use crate::slot::{SlotStates, State};
 use crate::sym_refs::SymRefBag;
 use crate::vals::{FunVal, ValBag};
+use crate::vars::v1::{V1Bag, VarD1};
+use crate::vars::VarType;
 use crate::{
     Ptr, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetSym, SetTyp, Slot, Symbol, TConVal,
     Val, ValInt, ValNum,
@@ -30,6 +32,9 @@ pub struct Model<'d> {
     p1_bag: P1Bag<'d>,
     p2_fun_bag: P2FunBag<'d>,
     p2_bag: P2Bag<'d>,
+
+    // vars
+    v1_bag: V1Bag<'d>,
 
     // idxs
     idx_val_bag: IdxValBag<'d>,
@@ -219,6 +224,18 @@ impl<'d> Model<'d> {
         S1::Meta: Set<SetSym<'m, 'd> = S1>,
     {
         self.par2(s0, s1)
+    }
+
+    // vars
+
+    pub fn var2<'m, S0>(&'m self, typ: VarType, s0: S0) -> VarD1<'m, 'd, S0::Meta>
+    where
+        S0: SetSym<'m, 'd>,
+        S0::Meta: Set<SetSym<'m, 'd> = S0>,
+    {
+        let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
+        let el = self.v1_bag.push(typ, s0_ptr);
+        Symbol::new(self, el).into()
     }
 
     // pub fn par_d1_int<'m, S0: Set<'m, 'd>>(&'m self, s0: S0) -> IntParD1<'m, 'd, S0::Meta> {

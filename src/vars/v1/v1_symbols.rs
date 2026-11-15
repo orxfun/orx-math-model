@@ -6,7 +6,7 @@ use core::ops::Index;
 use core::{marker::PhantomData, ops::Deref};
 
 #[derive(derive_more::From, Clone, Copy)]
-pub struct VarD1<'m, 'd, I0: Set>(pub(crate) Symbol<'m, 'd, DV1<'d>>, PhantomData<(I0)>);
+pub struct VarD1<'m, 'd, I0: Set>(pub(crate) Symbol<'m, 'd, DV1<'d>>, PhantomData<I0>);
 
 impl<'m, 'd, I0: Set> From<Symbol<'m, 'd, DV1<'d>>> for VarD1<'m, 'd, I0> {
     fn from(value: Symbol<'m, 'd, DV1<'d>>) -> Self {
