@@ -82,7 +82,7 @@ impl<'d> Drop for FunV2<'d> {
 }
 
 impl<'d> FunV2<'d> {
-    fn create<I0: Set, I1: Set>(fun: FV2<'d, I0, I1>) -> Self {
+    pub fn create<I0: Set, I1: Set>(fun: FV2<'d, I0, I1>) -> Self {
         let (i0_typ, i1_typ) = (I0::typ(), I1::typ());
         let data = unsafe {
             match i0_typ {
@@ -100,7 +100,7 @@ impl<'d> FunV2<'d> {
         Self::new(i0_typ, i1_typ, data)
     }
 
-    fn get<I0: Set, I1: Set>(&self) -> &FV2<'d, I0, I1> {
+    pub fn get<I0: Set, I1: Set>(&self) -> &FV2<'d, I0, I1> {
         Res::dbg_assert_same_set(I0::typ(), self.i0_typ);
         Res::dbg_assert_same_set(I1::typ(), self.i1_typ);
         unsafe {

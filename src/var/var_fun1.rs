@@ -36,7 +36,7 @@ impl<'d> Drop for FunV1<'d> {
 }
 
 impl<'d> FunV1<'d> {
-    fn create<I0: Set>(fun: FV1<'d, I0>) -> Self {
+    pub fn create<I0: Set>(fun: FV1<'d, I0>) -> Self {
         let i0_typ = I0::typ();
         let data = unsafe {
             match i0_typ {
@@ -54,7 +54,7 @@ impl<'d> FunV1<'d> {
         Self::new(i0_typ, data)
     }
 
-    fn get<I0: Set>(&self) -> &FV1<'d, I0> {
+    pub fn get<I0: Set>(&self) -> &FV1<'d, I0> {
         unsafe {
             match self.i0_typ {
                 SetTyp::CatInt => transmute(&self.data.cint),
