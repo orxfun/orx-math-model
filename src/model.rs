@@ -1,13 +1,8 @@
-use core::mem::ManuallyDrop;
-
 use crate::con_vals::{ConVal, ConValBag, DConVal};
 use crate::idxs::{IdxBag, IdxValBag};
 use crate::pars::p1::{P1Bag, P1FunBag, ParD1};
 use crate::pars::p2::{P2Bag, P2FunBag, ParD2};
-use crate::scalars::{DSca, DVal, DVar, FVar1, FVar2, ScaBag};
-// use crate::arb_val::{ArbVal, ArbValBag};
-// use crate::idxs::{CatIdxInt, CatIdxStr, IdxBag, IdxSlots, OrdIdx};
-// use crate::par::p1::{IntParD1, NumParD1, P1Bag, P1Slots};
+use crate::scalars::{DSca, FVar1, FVar2, ScaBag};
 use crate::sets::{CatInt, CatStr, Ord, SetBag, SetFunBag};
 use crate::slot::{SlotStates, State};
 use crate::sym_refs::SymRefBag;
@@ -15,10 +10,11 @@ use crate::vars::v1::{V1Bag, VarD1};
 use crate::vars::v2::{V2Bag, VarD2};
 use crate::vars::VarType;
 use crate::{
-    Ptr, Res, ResValid, Sca, ScaInt, ScaNum, Set, SetCatInt, SetCatStr, SetOrd, SetSym, SetTyp,
-    Slot, Symbol, TConVal, Val, Var,
+    Ptr, Res, ResValid, Sca, ScaInt, ScaNum, Set, SetCatInt, SetCatStr, SetOrd, SetSym, Slot,
+    Symbol, TConVal, Val, Var,
 };
 use alloc::boxed::Box;
+use core::mem::ManuallyDrop;
 use orx_imp_vec::Elem;
 
 #[derive(Default)]

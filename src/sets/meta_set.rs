@@ -1,17 +1,13 @@
 use crate::idxs::{DIdx, IdxCatInt, IdxCatStr, IdxOrd, UIdxVal};
 use crate::pars::p1::ParD1;
 use crate::pars::p2::ParD2;
-use crate::scalars::DSca;
-use crate::sets::{
-    CatInt, CatStr, DSet, FSet, FunSet, IndexCatInt, IndexCatStr, IndexOrd, Ord, UFunSet,
-};
+use crate::sets::{CatInt, CatStr, DSet, FSet, IndexCatInt, IndexCatStr, IndexOrd, Ord, UFunSet};
 use crate::vars::v1::VarD1;
 use crate::vars::v2::VarD2;
-use crate::{Dim, Model, Ptr, Res, ResValid, SetSym, Slot, Symbol, Val, ScaInt, Var};
+use crate::{Model, Ptr, ScaInt, SetSym, Symbol, Val, Var};
 use alloc::boxed::Box;
 use alloc::string::{String, ToString};
-use core::mem::{transmute, ManuallyDrop};
-use core::ops::Deref;
+use core::mem::ManuallyDrop;
 use orx_imp_vec::Elem;
 
 // enums

@@ -27,17 +27,6 @@ pub trait ResValid {
         Self::assert(state == State::Bound, || String::from("slot is empty"))
     }
 
-    fn assert_same_model<'m, 'd, T>(
-        m: &'m Model<'d>,
-        sym: impl Deref<Target = Symbol<'m, 'd, T>>,
-    ) -> Res {
-        Self::assert(core::ptr::eq(m, sym.m), || String::from("wrong model used"))
-    }
-
-    fn assert_same_set_typ(a: SetTyp, b: SetTyp) -> Res {
-        Self::assert(a == b, || String::from("set type mismatch"))
-    }
-
     // panic
 
     fn dbg_assert_same_model<'m, 'd, T>(

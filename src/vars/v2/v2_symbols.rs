@@ -1,7 +1,5 @@
-use crate::sets::IndexCatInt;
 use crate::vars::v2::DV2;
-use crate::{Ptr, Res, ScaInt, ScaVar, Set, SetCatInt, Symbol, Val, Var};
-use alloc::boxed::Box;
+use crate::{ScaVar, Set, Symbol, Var};
 use core::ops::Index;
 use core::{marker::PhantomData, ops::Deref};
 
