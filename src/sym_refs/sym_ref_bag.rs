@@ -1,7 +1,5 @@
-use crate::con_vals::{ConVal, DConVal};
 use crate::sym_refs::SymRef;
-use crate::{new_bag, Bag, Sca, SetTyp, Slot, Val};
-use orx_imp_vec::Elem;
+use crate::{new_bag, Bag, Sca};
 
 pub struct SymRefBag<'d> {
     bag: Bag<SymRef<'d>>,

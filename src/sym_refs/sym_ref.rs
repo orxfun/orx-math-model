@@ -1,5 +1,5 @@
-use crate::scalars::{DSca, Sca, ScaTyp};
-use crate::{Int, Num, Symbol, Val, ValTyp, Var};
+use crate::scalars::{Sca, ScaTyp};
+use crate::{Int, Num, Var};
 use core::mem::transmute;
 
 pub enum SymRef<'d> {
