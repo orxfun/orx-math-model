@@ -32,7 +32,6 @@ mod sets;
 mod slot;
 mod sym_refs;
 mod symbol;
-// mod vals;
 mod vars;
 
 // crate
@@ -45,7 +44,6 @@ pub(crate) use scalars::{Int, Num, Sca, ScaInt, ScaNum, ScaVar, Val, ValTyp, Var
 pub(crate) use sets::{Set, SetCatInt, SetCatStr, SetOrd, SetSym, SetTyp};
 pub(crate) use slot::{Ptr, Slot};
 pub(crate) use symbol::Symbol;
-// pub(crate) use vals::{Val, ValInt, ValNum, ValTyp};
 pub(crate) use vars::{Bounds, VarType};
 
 // api
