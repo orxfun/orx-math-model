@@ -73,8 +73,8 @@ impl<'d, V: Val> UFunP1_V<'d, V> {
 
 #[repr(C)]
 pub union UFunP1<'d> {
-    pub int: ManuallyDrop<UFunP1_V<'d, ValInt>>,
-    pub num: ManuallyDrop<UFunP1_V<'d, ValNum>>,
+    int: ManuallyDrop<UFunP1_V<'d, ValInt>>,
+    num: ManuallyDrop<UFunP1_V<'d, ValNum>>,
 }
 
 #[derive(derive_new::new)]

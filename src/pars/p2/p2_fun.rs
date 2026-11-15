@@ -13,9 +13,9 @@ pub type FP2<'d, V, I0, I1> =
 
 #[repr(C)]
 pub union UFunP2_V_I0<'d, V: Val, I0: Set> {
-    pub cint: ManuallyDrop<FP2<'d, V, I0, SetCatInt>>,
-    pub cstr: ManuallyDrop<FP2<'d, V, I0, SetCatStr>>,
-    pub ord: ManuallyDrop<FP2<'d, V, I0, SetOrd>>,
+    cint: ManuallyDrop<FP2<'d, V, I0, SetCatInt>>,
+    cstr: ManuallyDrop<FP2<'d, V, I0, SetCatStr>>,
+    ord: ManuallyDrop<FP2<'d, V, I0, SetOrd>>,
 }
 
 impl<'d, V: Val, I0: Set> UFunP2_V_I0<'d, V, I0> {
@@ -74,9 +74,9 @@ impl<'d, V: Val, I0: Set> UFunP2_V_I0<'d, V, I0> {
 
 #[repr(C)]
 pub union UFunP2_V<'d, V: Val> {
-    pub cint: ManuallyDrop<UFunP2_V_I0<'d, V, SetCatInt>>,
-    pub cstr: ManuallyDrop<UFunP2_V_I0<'d, V, SetCatStr>>,
-    pub ord: ManuallyDrop<UFunP2_V_I0<'d, V, SetOrd>>,
+    cint: ManuallyDrop<UFunP2_V_I0<'d, V, SetCatInt>>,
+    cstr: ManuallyDrop<UFunP2_V_I0<'d, V, SetCatStr>>,
+    ord: ManuallyDrop<UFunP2_V_I0<'d, V, SetOrd>>,
 }
 
 impl<'d, V: Val> UFunP2_V<'d, V> {
@@ -135,8 +135,8 @@ impl<'d, V: Val> UFunP2_V<'d, V> {
 
 #[repr(C)]
 pub union UFunP2<'d> {
-    pub int: ManuallyDrop<UFunP2_V<'d, ValInt>>,
-    pub num: ManuallyDrop<UFunP2_V<'d, ValNum>>,
+    int: ManuallyDrop<UFunP2_V<'d, ValInt>>,
+    num: ManuallyDrop<UFunP2_V<'d, ValNum>>,
 }
 
 #[derive(derive_new::new)]
