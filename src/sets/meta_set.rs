@@ -4,7 +4,8 @@ use crate::pars::p2::ParD2;
 use crate::sets::{
     CatInt, CatStr, DSet, FSet, FunSet, IndexCatInt, IndexCatStr, IndexOrd, Ord, UFunSet,
 };
-use crate::{Model, Ptr, Res, ResValid, SetSym, Slot, Symbol, Val, ValInt};
+use crate::vars::v1::VarD1;
+use crate::{Model, Ptr, Res, ResValid, SetSym, Slot, Symbol, Val, ValInt, Var};
 use alloc::boxed::Box;
 use alloc::string::{String, ToString};
 use core::mem::{transmute, ManuallyDrop};
@@ -57,7 +58,7 @@ pub trait Set: Clone + Copy + 'static {
 
     fn p1_at<'m, 'd, V: Val>(
         par: ParD1<'m, 'd, V, Self>,
-        idx: impl Into<Self::IdxAny<'m, 'd>>,
+        i0: impl Into<Self::IdxAny<'m, 'd>>,
     ) -> V::Sym<'m, 'd>;
 
     // p2
@@ -73,6 +74,12 @@ pub trait Set: Clone + Copy + 'static {
         i0: impl Into<Self::IdxAny<'m, 'd>>,
         i1: impl Into<I1::IdxAny<'m, 'd>>,
     ) -> V::Sym<'m, 'd>;
+
+    // v1
+
+    fn v1_at<'m, 'd>(var: VarD1<'m, 'd, Self>, i0: impl Into<Self::IdxAny<'m, 'd>>) -> Var<'m, 'd> {
+        todo!()
+    }
 }
 
 // cat set int
