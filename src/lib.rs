@@ -34,7 +34,7 @@ mod slot;
 mod sym_refs;
 mod symbol;
 mod vals;
-// mod vals;
+mod vars;
 
 // crate
 pub(crate) use bag::{new_bag, Bag};
