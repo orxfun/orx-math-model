@@ -1,6 +1,6 @@
 use crate::idxs::{DIdx, IdxVal};
 use crate::sets::DSet;
-use crate::{new_bag, Bag, Ptr, SetTyp, Slot};
+use crate::{new_bag, Bag, Ptr, Slot};
 use orx_imp_vec::Elem;
 
 pub struct IdxBag<'d> {

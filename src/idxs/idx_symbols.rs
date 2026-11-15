@@ -1,7 +1,6 @@
 // use crate::idxs::{CatIdxInt, CatIdxStr, OrdIdx};
 use crate::idxs::DIdx;
-use crate::{SetCatInt, SetCatStr, Elements, SetOrd, Res, Set, Symbol};
-use alloc::{boxed::Box, string::String};
+use crate::Symbol;
 
 // cat int
 

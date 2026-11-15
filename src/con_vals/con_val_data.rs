@@ -1,6 +1,5 @@
 use crate::con_vals::ConVal;
-use crate::{ConValTyp, Elements, Res, ResValid, Slot, TConVal, Val};
-use core::mem::transmute;
+use crate::{ConValTyp, TConVal};
 
 #[derive(derive_new::new)]
 pub struct DConVal {

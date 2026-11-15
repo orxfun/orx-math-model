@@ -1,8 +1,6 @@
-use crate::idxs::IdxVal;
-use crate::{elements::Elements, Model};
+use crate::Model;
 use crate::{SetCatInt, SetCatStr, SetOrd};
 use alloc::string::{String, ToString};
-use alloc::{vec, vec::Vec};
 
 #[test]
 fn idx_cat_int() {
