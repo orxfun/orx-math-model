@@ -80,4 +80,24 @@ impl<'d> UFunV2<'d> {
             })
         }
     }
+
+    fn get<I0: Set, I1: Set>(&self) -> &FV2<'d, I0, I1> {
+        unsafe {
+            match I0::typ() {
+                SetTyp::CatInt => transmute(self.cint.get::<I1>()),
+                SetTyp::CatStr => transmute(self.cstr.get::<I1>()),
+                SetTyp::Ord => transmute(self.ord.get::<I1>()),
+            }
+        }
+    }
+
+    fn man_drop(&mut self, i0_typ: SetTyp, i1_typ: SetTyp) {
+        unsafe {
+            match i0_typ {
+                SetTyp::CatInt => self.cint.man_drop(i1_typ),
+                SetTyp::CatStr => self.cstr.man_drop(i1_typ),
+                SetTyp::Ord => self.ord.man_drop(i1_typ),
+            }
+        }
+    }
 }
