@@ -32,11 +32,11 @@ fn v1_at_int_cint() {
     for (i, _) in iter.enumerate() {
         let exp = s0_data[i];
         for sca in sca1 {
-            assert_eq!(exp, unsafe { sca.el.get() }.indices_d1::<I0>());
+            assert_eq!(exp, sca.data().indices_d1::<I0>());
         }
         let exp = s0_data[2];
         for sca in sca2 {
-            assert_eq!(exp, unsafe { sca.el.get() }.indices_d1::<I0>());
+            assert_eq!(exp, sca.data().indices_d1::<I0>());
         }
     }
 }
@@ -66,11 +66,11 @@ fn v1_at_int_cstr() {
     for (i, _) in iter.enumerate() {
         let exp = &s0_data[i];
         for sca in sca1 {
-            assert_eq!(exp, unsafe { sca.el.get() }.indices_d1::<I0>());
+            assert_eq!(exp, sca.data().indices_d1::<I0>());
         }
         let exp = &s0_data[2];
         for sca in sca2 {
-            assert_eq!(exp, unsafe { sca.el.get() }.indices_d1::<I0>());
+            assert_eq!(exp, sca.data().indices_d1::<I0>());
         }
     }
 }
@@ -100,11 +100,11 @@ fn v1_at_int_ord() {
     for (i, _) in iter.enumerate() {
         let exp = s0_data[i];
         for sca in sca1 {
-            assert_eq!(exp, unsafe { sca.el.get() }.indices_d1::<I0>());
+            assert_eq!(exp, sca.data().indices_d1::<I0>());
         }
         let exp = s0_data[2];
         for sca in sca2 {
-            assert_eq!(exp, unsafe { sca.el.get() }.indices_d1::<I0>());
+            assert_eq!(exp, sca.data().indices_d1::<I0>());
         }
     }
 }

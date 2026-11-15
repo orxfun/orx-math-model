@@ -230,12 +230,11 @@ impl<'d> Model<'d> {
         var: VarD1<'m, 'd, I0>,
         fun: FVar1<'d, I0>,
     ) -> Var<'m, 'd> {
-        let var_data = unsafe { var.el.get() };
-        let i0 = var_data.s0.get().fun_set();
-        // let data = DSca::new_var_d1(var_data.typ, i0, fun);
-        // let el = self.sca_bag.push(data);
-        // Symbol::new(self, el).into()
-        todo!()
+        let var = unsafe { var.el.get() };
+        let i0 = var.s0.get().fun_set();
+        let data = DSca::new_var_d1::<I0>(var.typ, i0, fun);
+        let el = self.sca_bag.push(data);
+        Symbol::new(self, el).into()
     }
 
     pub(crate) fn var_from_d2<'m, I0: Set, I1: Set>(
@@ -243,13 +242,12 @@ impl<'d> Model<'d> {
         var: VarD2<'m, 'd, I0, I1>,
         fun: FVar2<'d, I0, I1>,
     ) -> Var<'m, 'd> {
-        let var_data = unsafe { var.el.get() };
-        let i0 = var_data.s0.get().fun_set();
-        let i1 = var_data.s1.get().fun_set();
-        // let data = DSca::new_var_d2(var_data.typ, i0, i1, fun);
-        // let el = self.sca_bag.push(data);
-        // Symbol::new(self, el).into()
-        todo!()
+        let var = unsafe { var.el.get() };
+        let i0 = var.s0.get().fun_set();
+        let i1 = var.s1.get().fun_set();
+        let data = DSca::new_var_d2::<I0, I1>(var.typ, i0, i1, fun);
+        let el = self.sca_bag.push(data);
+        Symbol::new(self, el).into()
     }
 
     // pub fn par_d1_int<'m, S0: Set<'m, 'd>>(&'m self, s0: S0) -> IntParD1<'m, 'd, S0::Meta> {

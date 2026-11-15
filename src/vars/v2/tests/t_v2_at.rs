@@ -43,22 +43,22 @@ fn v2_at_int_cint_cstr() {
         for (j, _) in it1.enumerate() {
             let exp = (s0_data[i], &s1_data[j]);
             for sca in sca1 {
-                assert_eq!(exp, unsafe { sca.el.get() }.indices_d2::<I0, I1>());
+                assert_eq!(exp, sca.data().indices_d2::<I0, I1>());
             }
 
             let exp = (s0_data[i], &s1_data[3]);
             for sca in sca2 {
-                assert_eq!(exp, unsafe { sca.el.get() }.indices_d2::<I0, I1>());
+                assert_eq!(exp, sca.data().indices_d2::<I0, I1>());
             }
 
             let exp = (s0_data[2], &s1_data[j]);
             for sca in sca3 {
-                assert_eq!(exp, unsafe { sca.el.get() }.indices_d2::<I0, I1>());
+                assert_eq!(exp, sca.data().indices_d2::<I0, I1>());
             }
 
             let exp = (s0_data[2], &s1_data[3]);
             for sca in sca4 {
-                assert_eq!(exp, unsafe { sca.el.get() }.indices_d2::<I0, I1>());
+                assert_eq!(exp, sca.data().indices_d2::<I0, I1>());
             }
         }
     }
@@ -100,22 +100,22 @@ fn v2_at_int_cstr_ord() {
         for (j, _) in it1.enumerate() {
             let exp = (&s0_data[i], s1_data[j]);
             for sca in sca1 {
-                assert_eq!(exp, unsafe { sca.el.get() }.indices_d2::<I0, I1>());
+                assert_eq!(exp, sca.data().indices_d2::<I0, I1>());
             }
 
             let exp = (&s0_data[i], s1_data[3]);
             for sca in sca2 {
-                assert_eq!(exp, unsafe { sca.el.get() }.indices_d2::<I0, I1>());
+                assert_eq!(exp, sca.data().indices_d2::<I0, I1>());
             }
 
             let exp = (&s0_data[2], s1_data[j]);
             for sca in sca3 {
-                assert_eq!(exp, unsafe { sca.el.get() }.indices_d2::<I0, I1>());
+                assert_eq!(exp, sca.data().indices_d2::<I0, I1>());
             }
 
             let exp = (&s0_data[2], s1_data[3]);
             for sca in sca4 {
-                assert_eq!(exp, unsafe { sca.el.get() }.indices_d2::<I0, I1>());
+                assert_eq!(exp, sca.data().indices_d2::<I0, I1>());
             }
         }
     }
@@ -157,22 +157,22 @@ fn v2_at_int_ord_cint() {
         for (j, _) in it1.enumerate() {
             let exp = (s0_data[i], s1_data[j]);
             for sca in sca1 {
-                assert_eq!(exp, unsafe { sca.el.get() }.indices_d2::<I0, I1>());
+                assert_eq!(exp, sca.data().indices_d2::<I0, I1>());
             }
 
             let exp = (s0_data[i], s1_data[3]);
             for sca in sca2 {
-                assert_eq!(exp, unsafe { sca.el.get() }.indices_d2::<I0, I1>());
+                assert_eq!(exp, sca.data().indices_d2::<I0, I1>());
             }
 
             let exp = (s0_data[2], s1_data[j]);
             for sca in sca3 {
-                assert_eq!(exp, unsafe { sca.el.get() }.indices_d2::<I0, I1>());
+                assert_eq!(exp, sca.data().indices_d2::<I0, I1>());
             }
 
             let exp = (s0_data[2], s1_data[3]);
             for sca in sca4 {
-                assert_eq!(exp, unsafe { sca.el.get() }.indices_d2::<I0, I1>());
+                assert_eq!(exp, sca.data().indices_d2::<I0, I1>());
             }
         }
     }
