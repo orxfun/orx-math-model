@@ -4,7 +4,9 @@ use core::mem::{transmute, ManuallyDrop};
 
 // core
 
-pub type FV1<'d, I0> = Box<dyn Fn() -> <I0 as Set>::IdxRaw<'d> + 'd>;
+type Idx<'d, I0> = <I0 as Set>::IdxRaw<'d>;
+
+pub type FV1<'d, I0> = Box<dyn Fn() -> Idx<'d, I0> + 'd>;
 
 // .
 
