@@ -41,3 +41,38 @@ fn v1_at_int_cint() {
         }
     }
 }
+
+#[test]
+fn abc() {
+    type I0 = SetCatInt;
+    type V = ValInt;
+    type El<'d> = <I0 as Set>::IdxRaw<'d>;
+
+    // data
+    let set_data = vec![0, 2, 3];
+
+    // modeling
+    let m = Model::default();
+    let s0 = m.cat_set_int();
+    let i0 = s0.idx();
+    let v1 = m.var1(VarType::Binary, s0);
+    let sca1 = [v1.at(i0)];
+    // let sca2 = [v1.at(2)];
+
+    // binding
+    // s0.bind(|| set_data.iter().copied()).unwrap();
+
+    // running
+    // let mut elements: Elements<El<'_>> = vec![].into();
+    // let iter = ElementsIter::<I0>::new(i0, &mut elements);
+    // for (i, _) in iter.enumerate() {
+    //     let exp = set_data[i];
+    //     for sca in sca1 {
+    //         assert_eq!(exp, unsafe { sca.el.get() }.indices_d1::<I0>());
+    //     }
+    //     let exp = set_data[2];
+    //     for sca in sca2 {
+    //         assert_eq!(exp, unsafe { sca.el.get() }.indices_d1::<I0>());
+    //     }
+    // }
+}
