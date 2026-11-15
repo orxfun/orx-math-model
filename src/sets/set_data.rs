@@ -1,5 +1,5 @@
 use crate::sets::{FSet, FunSet};
-use crate::{Elements, Res, ResValid, Set, SetTyp, Slot};
+use crate::{Elements, Ptr, Res, ResValid, Set, SetTyp, Slot};
 use core::mem::transmute;
 
 #[derive(derive_new::new)]
@@ -24,5 +24,9 @@ impl<'d> DSet<'d> {
         Res::assert_same_set_typ(S::typ(), self.typ()).unwrap();
         let fun = self.slot.get().get::<S>();
         fun(elements);
+    }
+
+    pub fn fun_set(&self) -> Ptr<'d, FunSet<'d>> {
+        self.slot.ptr()
     }
 }

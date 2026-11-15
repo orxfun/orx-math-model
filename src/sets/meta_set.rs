@@ -6,7 +6,7 @@ use crate::sets::{
 };
 use crate::var::DV;
 use crate::vars::v1::VarD1;
-use crate::{Model, Ptr, Res, ResValid, SetSym, Slot, Symbol, Val, ValInt, Var};
+use crate::{Dim, Model, Ptr, Res, ResValid, SetSym, Slot, Symbol, Val, ValInt, Var};
 use alloc::boxed::Box;
 use alloc::string::{String, ToString};
 use core::mem::{transmute, ManuallyDrop};
@@ -204,14 +204,17 @@ impl Set for SetCatInt {
     // v1
 
     fn v1_at<'m, 'd>(var: VarD1<'m, 'd, Self>, i0: impl Into<Self::IdxAny<'m, 'd>>) -> Var<'m, 'd> {
-        let fun = Ptr::new(var.el);
-        let a = fun.get();
+        let (typ, s0) = {
+            let data = unsafe { var.el.get() };
+            (data.typ, data.s0.get().fun_set())
+        };
 
         match i0.into() {
             IndexCatInt::Idx(i0) => {
                 let i0 = Ptr::new(i0.el);
-                // let fun = FunV::create_d1::<Self>(fun);
-                var.m.var(todo!())
+                let fun = Box::new(move || i0.get().read::<Self>());
+                let data = DV::create_d1::<Self>(typ, s0, fun);
+                var.m.var(data)
             }
             _ => todo!(),
         }
