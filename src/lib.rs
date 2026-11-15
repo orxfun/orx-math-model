@@ -36,17 +36,14 @@ mod slot;
 mod sym_refs;
 mod symbol;
 mod vals;
-// mod var;
 mod vars;
 
 // crate
 pub(crate) use bag::{new_bag, Bag};
+pub(crate) use con_vals::{ConValTyp, TConVal};
+pub(crate) use dim::Dim;
 pub(crate) use elements::{Elements, ElementsIter};
 pub(crate) use err::{Res, ResValid};
-// pub(crate) use fun::{FSet, FunSet};
-// pub(crate) use idxs::{CatIntIdxSum, CatStrIdxSum, Idx, OrdIdxSum};
-pub(crate) use con_vals::{ConValTyp, TConVal};
-pub use dim::Dim;
 pub(crate) use scalars::Var;
 pub(crate) use sets::{Set, SetCatInt, SetCatStr, SetOrd, SetSym, SetTyp};
 pub(crate) use slot::{Ptr, Slot};
