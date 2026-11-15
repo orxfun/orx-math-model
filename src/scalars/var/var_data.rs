@@ -5,7 +5,7 @@ use crate::{Dim, Ptr, Set, VarType};
 use core::mem::{transmute, ManuallyDrop};
 
 #[repr(C)]
-union UFunV<'d> {
+union UFunVar<'d> {
     d1: ManuallyDrop<FunV1<'d>>,
     d2: ManuallyDrop<FunV2<'d>>,
 }
@@ -14,7 +14,7 @@ union UFunV<'d> {
 pub struct DVar<'d> {
     dim: Dim,
     typ: VarType,
-    data: UFunV<'d>,
+    data: UFunVar<'d>,
 }
 
 impl<'d> Drop for DVar<'d> {
@@ -34,7 +34,7 @@ impl<'d> DVar<'d> {
 
     pub fn create_d1<I0: Set>(typ: VarType, i0: Ptr<'d, FunSet<'d>>, fun: FV1<'d, I0>) -> Self {
         let dim = Dim::D1;
-        let data = UFunV {
+        let data = UFunVar {
             d1: ManuallyDrop::new(FunV1::create::<I0>(i0, fun)),
         };
         Self::new(dim, typ, data)
@@ -47,7 +47,7 @@ impl<'d> DVar<'d> {
         fun: FV2<'d, I0, I1>,
     ) -> Self {
         let dim = Dim::D2;
-        let data = UFunV {
+        let data = UFunVar {
             d2: ManuallyDrop::new(FunV2::create::<I0, I1>(i0, i1, fun)),
         };
         Self::new(dim, typ, data)
