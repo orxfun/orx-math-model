@@ -1,5 +1,5 @@
 use crate::{
-    Elements, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetTyp, Val, ValInt, ValNum, ValTyp,
+    Elements, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetTyp, Val, ScaInt, ScaNum, ValTyp,
 };
 use alloc::boxed::Box;
 use core::mem::{transmute, ManuallyDrop};
@@ -73,8 +73,8 @@ impl<'d, V: Val> UFunP1_V<'d, V> {
 
 #[repr(C)]
 pub union UFunP1<'d> {
-    int: ManuallyDrop<UFunP1_V<'d, ValInt>>,
-    num: ManuallyDrop<UFunP1_V<'d, ValNum>>,
+    int: ManuallyDrop<UFunP1_V<'d, ScaInt>>,
+    num: ManuallyDrop<UFunP1_V<'d, ScaNum>>,
 }
 
 #[derive(derive_new::new)]

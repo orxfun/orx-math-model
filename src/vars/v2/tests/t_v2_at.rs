@@ -1,6 +1,6 @@
 use crate::sets::CatInt;
 use crate::{
-    Bounds, Elements, ElementsIter, Model, Set, SetCatInt, SetCatStr, SetOrd, ValInt, ValNum,
+    Bounds, Elements, ElementsIter, Model, Set, SetCatInt, SetCatStr, SetOrd, ScaInt, ScaNum,
     VarType,
 };
 use alloc::string::{String, ToString};

@@ -1,5 +1,5 @@
 use crate::sets::CatInt;
-use crate::{Elements, ElementsIter, Model, Set, SetCatInt, SetCatStr, SetOrd, ValInt, ValNum};
+use crate::{Elements, ElementsIter, Model, Set, SetCatInt, SetCatStr, SetOrd, ScaInt, ScaNum};
 use alloc::string::{String, ToString};
 use alloc::{vec, vec::Vec};
 use std::collections::HashMap;
@@ -8,7 +8,7 @@ use std::collections::HashMap;
 
 #[test]
 fn p2_at_int_cint_cstr() {
-    type V = ValInt;
+    type V = ScaInt;
     type I0 = SetCatInt;
     type I1 = SetCatStr;
     type El0<'d> = <I0 as Set>::IdxRaw<'d>;
@@ -75,7 +75,7 @@ fn p2_at_int_cint_cstr() {
 
 #[test]
 fn p2_at_int_cstr_ord() {
-    type V = ValInt;
+    type V = ScaInt;
     type I0 = SetCatStr;
     type I1 = SetOrd;
     type El0<'d> = <I0 as Set>::IdxRaw<'d>;
@@ -140,7 +140,7 @@ fn p2_at_int_cstr_ord() {
 
 #[test]
 fn p2_at_int_ord_cint() {
-    type V = ValInt;
+    type V = ScaInt;
     type I0 = SetOrd;
     type I1 = SetCatInt;
     type El0<'d> = <I0 as Set>::IdxRaw<'d>;
@@ -202,7 +202,7 @@ fn p2_at_int_ord_cint() {
 
 #[test]
 fn p2_at_num_cint_cstr() {
-    type V = ValNum;
+    type V = ScaNum;
     type I0 = SetCatInt;
     type I1 = SetCatStr;
     type El0<'d> = <I0 as Set>::IdxRaw<'d>;
@@ -269,7 +269,7 @@ fn p2_at_num_cint_cstr() {
 
 #[test]
 fn p2_at_num_cstr_ord() {
-    type V = ValNum;
+    type V = ScaNum;
     type I0 = SetCatStr;
     type I1 = SetOrd;
     type El0<'d> = <I0 as Set>::IdxRaw<'d>;
@@ -334,7 +334,7 @@ fn p2_at_num_cstr_ord() {
 
 #[test]
 fn p2_at_num_ord_cint() {
-    type V = ValNum;
+    type V = ScaNum;
     type I0 = SetOrd;
     type I1 = SetCatInt;
     type El0<'d> = <I0 as Set>::IdxRaw<'d>;

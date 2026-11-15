@@ -7,7 +7,7 @@ use crate::sets::{
 };
 use crate::vars::v1::VarD1;
 use crate::vars::v2::VarD2;
-use crate::{Dim, Model, Ptr, Res, ResValid, SetSym, Slot, Symbol, Val, ValInt, Var};
+use crate::{Dim, Model, Ptr, Res, ResValid, SetSym, Slot, Symbol, Val, ScaInt, Var};
 use alloc::boxed::Box;
 use alloc::string::{String, ToString};
 use core::mem::{transmute, ManuallyDrop};
@@ -580,7 +580,7 @@ impl Set for SetOrd {
                 let int = Ptr::new(i0.el);
                 par.m.val::<V>(move || {
                     let fun = fun.get();
-                    let idx = int.get().val_eval::<ValInt>();
+                    let idx = int.get().val_eval::<ScaInt>();
                     fun.at::<V, Self>(idx)
                 })
             }
@@ -620,7 +620,7 @@ impl Set for SetOrd {
                 let i1 = Ptr::new(i1.el);
                 par.m.val::<V>(move || {
                     let fun = fun.get();
-                    let i1 = i1.get().val_eval::<ValInt>();
+                    let i1 = i1.get().val_eval::<ScaInt>();
                     fun.at::<V, I0, Self>(i0(), i1)
                 })
             }
@@ -652,7 +652,7 @@ impl Set for SetOrd {
             }
             IndexOrd::Int(i0) => {
                 let i0 = Ptr::new(i0.el);
-                let i0 = move || i0.get().val_eval::<ValInt>();
+                let i0 = move || i0.get().val_eval::<ScaInt>();
                 I1::p2_at_i0(par, i0, i1)
             }
             IndexOrd::ConI64(i0) => I1::p2_at_i0(par, move || i0, i1),
@@ -672,7 +672,7 @@ impl Set for SetOrd {
             }
             IndexOrd::Int(i0) => {
                 let i0 = Ptr::new(i0.el);
-                let fun = Box::new(move || i0.get().val_eval::<ValInt>());
+                let fun = Box::new(move || i0.get().val_eval::<ScaInt>());
                 var.m.var_from_d1(var, fun)
             }
             IndexOrd::ConI64(i0) => {
@@ -705,7 +705,7 @@ impl Set for SetOrd {
             }
             IndexOrd::Int(i1) => {
                 let i1 = Ptr::new(i1.el);
-                let fun = Box::new(move || (i0(), i1.get().val_eval::<ValInt>()));
+                let fun = Box::new(move || (i0(), i1.get().val_eval::<ScaInt>()));
                 var.m.var_from_d2(var, fun)
             }
             IndexOrd::ConI64(i1) => {
@@ -736,7 +736,7 @@ impl Set for SetOrd {
             }
             IndexOrd::Int(i0) => {
                 let i0 = Ptr::new(i0.el);
-                let i0 = move || i0.get().val_eval::<ValInt>();
+                let i0 = move || i0.get().val_eval::<ScaInt>();
                 I1::v2_at_i0(var, i0, i1)
             }
             IndexOrd::ConI64(i0) => I1::v2_at_i0(var, move || i0, i1),

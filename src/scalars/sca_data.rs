@@ -11,8 +11,8 @@ pub union USca<'d> {
 }
 
 pub struct DSca<'d> {
-    typ: ScaTyp,
-    pub(crate) data: USca<'d>,
+    pub typ: ScaTyp,
+    pub data: USca<'d>,
 }
 
 impl<'d> Drop for DSca<'d> {

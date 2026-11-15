@@ -1,5 +1,5 @@
 use crate::sets::CatInt;
-use crate::{Bounds, Model, SetCatInt, SetCatStr, SetOrd, ValInt, ValNum, VarType};
+use crate::{Bounds, Model, SetCatInt, SetCatStr, SetOrd, ScaInt, ScaNum, VarType};
 use alloc::string::{String, ToString};
 use alloc::{vec, vec::Vec};
 use std::collections::HashMap;

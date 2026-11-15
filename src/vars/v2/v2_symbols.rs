@@ -1,6 +1,6 @@
 use crate::sets::IndexCatInt;
 use crate::vars::v2::DV2;
-use crate::{Ptr, Res, Set, SetCatInt, Symbol, Val, ValInt, Var};
+use crate::{Ptr, Res, Set, SetCatInt, Symbol, Val, ScaInt, Var};
 use alloc::boxed::Box;
 use core::ops::Index;
 use core::{marker::PhantomData, ops::Deref};

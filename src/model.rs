@@ -15,8 +15,8 @@ use crate::vars::v1::{V1Bag, VarD1};
 use crate::vars::v2::{V2Bag, VarD2};
 use crate::vars::VarType;
 use crate::{
-    Ptr, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetSym, SetTyp, Slot, Symbol, TConVal,
-    Val, ValInt, ValNum, Var,
+    Ptr, Res, ResValid, ScaInt, ScaNum, Set, SetCatInt, SetCatStr, SetOrd, SetSym, SetTyp, Slot,
+    Symbol, TConVal, Val, Var,
 };
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -121,7 +121,7 @@ impl<'d> Model<'d> {
         Symbol::new(self, el).into()
     }
 
-    pub fn par1_int<'m, S0>(&'m self, s0: S0) -> ParD1<'m, 'd, ValInt, S0::Meta>
+    pub fn par1_int<'m, S0>(&'m self, s0: S0) -> ParD1<'m, 'd, ScaInt, S0::Meta>
     where
         S0: SetSym<'m, 'd>,
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
@@ -129,7 +129,7 @@ impl<'d> Model<'d> {
         self.par1(s0)
     }
 
-    pub fn par1_num<'m, S0>(&'m self, s0: S0) -> ParD1<'m, 'd, ValNum, S0::Meta>
+    pub fn par1_num<'m, S0>(&'m self, s0: S0) -> ParD1<'m, 'd, ScaNum, S0::Meta>
     where
         S0: SetSym<'m, 'd>,
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
@@ -160,7 +160,7 @@ impl<'d> Model<'d> {
         &'m self,
         s0: S0,
         s1: S1,
-    ) -> ParD2<'m, 'd, ValInt, S0::Meta, S1::Meta>
+    ) -> ParD2<'m, 'd, ScaInt, S0::Meta, S1::Meta>
     where
         S0: SetSym<'m, 'd>,
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
@@ -174,7 +174,7 @@ impl<'d> Model<'d> {
         &'m self,
         s0: S0,
         s1: S1,
-    ) -> ParD2<'m, 'd, ValNum, S0::Meta, S1::Meta>
+    ) -> ParD2<'m, 'd, ScaNum, S0::Meta, S1::Meta>
     where
         S0: SetSym<'m, 'd>,
         S0::Meta: Set<SetSym<'m, 'd> = S0>,

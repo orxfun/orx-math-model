@@ -1,6 +1,5 @@
-use core::mem::transmute;
-
 use crate::Model;
+use core::mem::transmute;
 use orx_imp_vec::Elem;
 
 #[derive(derive_new::new)]

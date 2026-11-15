@@ -14,8 +14,12 @@ impl Default for SymRefBag<'_> {
 }
 
 impl<'d> SymRefBag<'d> {
-    pub fn push<'a, 'm, V: Val>(&'a self, val: V::Sym<'m, 'd>) -> &'a V::Sym<'m, 'd> {
-        let el = self.bag.push(SymRef::new(*val));
-        unsafe { el.get() }.get::<V>()
+    pub fn push<'a, 'm, S>(&'a self, val: S) -> &'a S
+    where
+        S: Into<SymRef<'d>>,
+    {
+        let el = self.bag.push(val.into());
+        let x = unsafe { el.get() };
+        todo!()
     }
 }

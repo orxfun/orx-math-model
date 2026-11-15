@@ -1,5 +1,5 @@
 use crate::scalars::val::{FVal, Int, Num, UFunVal};
-use crate::scalars::DSca;
+use crate::scalars::{DSca, Sca};
 use crate::{Model, Symbol};
 use core::mem::{transmute, ManuallyDrop};
 use core::ops::Deref;
@@ -15,13 +15,8 @@ pub enum ValTyp {
 
 // meta
 
-pub trait Val: Clone + Copy + 'static {
+pub trait Val: Sca {
     type Raw: Clone + Copy + Default;
-
-    type Sym<'m, 'd: 'm>: Clone
-        + Copy
-        + Deref<Target = Symbol<'m, 'd, DSca<'d>>>
-        + From<Symbol<'m, 'd, DSca<'d>>>;
 
     fn typ() -> ValTyp;
 
@@ -35,12 +30,10 @@ pub trait Val: Clone + Copy + 'static {
 // int
 
 #[derive(Clone, Copy)]
-pub struct ValInt;
+pub struct ScaInt;
 
-impl Val for ValInt {
+impl Val for ScaInt {
     type Raw = i64;
-
-    type Sym<'m, 'd: 'm> = Int<'m, 'd>;
 
     fn typ() -> ValTyp {
         ValTyp::Int
@@ -64,12 +57,10 @@ impl Val for ValInt {
 // num
 
 #[derive(Clone, Copy)]
-pub struct ValNum;
+pub struct ScaNum;
 
-impl Val for ValNum {
+impl Val for ScaNum {
     type Raw = f64;
-
-    type Sym<'m, 'd: 'm> = Num<'m, 'd>;
 
     fn typ() -> ValTyp {
         ValTyp::Num
