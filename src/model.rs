@@ -21,6 +21,12 @@ use orx_imp_vec::Elem;
 
 #[derive(Default)]
 pub struct Model<'d> {
+    // vals
+    val_bag: ValBag<'d>,
+    con_val_bag: ConValBag,
+    sym_ref_bag: SymRefBag<'d>,
+    var_bag: VarFunBag<'d>,
+
     // states
     slot_states: SlotStates,
 
@@ -40,12 +46,6 @@ pub struct Model<'d> {
     // idxs
     idx_val_bag: IdxValBag<'d>,
     idx_bag: IdxBag<'d>,
-
-    // vals
-    val_bag: ValBag<'d>,
-    con_val_bag: ConValBag,
-    sym_ref_bag: SymRefBag<'d>,
-    var_bag: VarFunBag<'d>,
     //
     // vals
     // val_bag: ValBag<'d>,
