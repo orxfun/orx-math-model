@@ -11,13 +11,13 @@ union UFunV<'d> {
 }
 
 #[derive(derive_new::new)]
-pub struct DV<'d> {
+pub struct DVar<'d> {
     dim: Dim,
     typ: VarType,
     data: UFunV<'d>,
 }
 
-impl<'d> Drop for DV<'d> {
+impl<'d> Drop for DVar<'d> {
     fn drop(&mut self) {
         unsafe {
             match self.dim {
@@ -29,7 +29,7 @@ impl<'d> Drop for DV<'d> {
     }
 }
 
-impl<'d> DV<'d> {
+impl<'d> DVar<'d> {
     // create
 
     pub fn create_d1<I0: Set>(typ: VarType, i0: Ptr<'d, FunSet<'d>>, fun: FV1<'d, I0>) -> Self {
