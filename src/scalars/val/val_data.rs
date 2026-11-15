@@ -1,19 +1,27 @@
-use crate::vals::{FVal, FunVal};
-use crate::{Elements, Res, ResValid, Slot, Val, ValTyp};
+use crate::scalars::val::UFunVal;
+use crate::scalars::{FVal, Val, ValTyp};
+use crate::{Elements, Res, ResValid, Slot};
 use core::mem::transmute;
 
-#[derive(derive_new::new)]
 pub struct DVal<'d> {
-    fun: FunVal<'d>,
+    pub typ: ValTyp,
+    data: UFunVal<'d>,
 }
 
 impl<'d> DVal<'d> {
     pub fn typ(&self) -> ValTyp {
-        self.fun.typ
+        self.typ
     }
 
     pub fn eval<V: Val>(&self) -> V::Raw {
-        let fun = self.fun.get::<V>();
+        debug_assert_eq!(V::typ(), self.typ);
+        let fun = V::fun_from_union(&self.data);
         fun()
+    }
+
+    pub fn new<V: Val>(fun: FVal<'d, V>) -> Self {
+        let typ = V::typ();
+        let data = V::into_fun_union(fun);
+        Self { typ, data }
     }
 }
