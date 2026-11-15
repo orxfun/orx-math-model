@@ -1,5 +1,5 @@
 use crate::{
-    Elements, Res, ResValid, ScaInt, ScaNum, Set, SetCatInt, SetCatStr, SetOrd, SetTyp, Val, ValTyp,
+    Res, ResValid, ScaInt, ScaNum, Set, SetCatInt, SetCatStr, SetOrd, SetTyp, Val, ValTyp,
 };
 use alloc::boxed::Box;
 use core::mem::{transmute, ManuallyDrop};

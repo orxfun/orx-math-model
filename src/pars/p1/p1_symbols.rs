@@ -1,6 +1,5 @@
 use crate::pars::p1::{DP1, FP1};
-use crate::sets::IndexCatInt;
-use crate::{Ptr, Res, ScaInt, Set, SetCatInt, Symbol, Val};
+use crate::{Res, Set, Symbol, Val};
 use alloc::boxed::Box;
 use core::ops::Index;
 use core::{marker::PhantomData, ops::Deref};
