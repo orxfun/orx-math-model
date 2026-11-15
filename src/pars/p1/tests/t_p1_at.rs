@@ -1,6 +1,5 @@
-use crate::sets::CatInt;
 use crate::{Elements, ElementsIter, Model, ScaInt, ScaNum, Set, SetCatInt, SetCatStr, SetOrd};
-use alloc::string::{String, ToString};
+use alloc::string::ToString;
 use alloc::{vec, vec::Vec};
 use std::collections::HashMap;
 
