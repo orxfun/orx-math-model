@@ -1,5 +1,5 @@
 use crate::idxs::{IdxCatInt, IdxCatStr, IdxOrd};
-use crate::vals::Int;
+use crate::scalars::Int;
 use alloc::string::String;
 
 // cint

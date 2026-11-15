@@ -1,7 +1,6 @@
-use crate::sets::CatInt;
-use crate::{Model, SetCatInt, SetCatStr, SetOrd, ValInt, ValNum};
-use alloc::string::{String, ToString};
-use alloc::{vec, vec::Vec};
+use crate::{Model, ScaInt, ScaNum, SetCatInt, SetCatStr, SetOrd};
+use alloc::string::ToString;
+use alloc::vec;
 use std::collections::HashMap;
 
 // int
@@ -9,7 +8,7 @@ use std::collections::HashMap;
 #[test]
 fn p1_int_cint() {
     type I0 = SetCatInt;
-    type V = ValInt;
+    type V = ScaInt;
 
     // data
     let values = vec![1i64, 2, 7, 9];
@@ -32,7 +31,7 @@ fn p1_int_cint() {
 #[test]
 fn p1_int_cstr() {
     type I0 = SetCatStr;
-    type V = ValInt;
+    type V = ScaInt;
 
     // data
     let values: HashMap<_, _> = [1i64, 2, 7, 9]
@@ -59,7 +58,7 @@ fn p1_int_cstr() {
 #[test]
 fn p1_int_ord() {
     type I0 = SetOrd;
-    type V = ValInt;
+    type V = ScaInt;
 
     // data
     let values = |i: i64| i * 2;
@@ -84,7 +83,7 @@ fn p1_int_ord() {
 #[test]
 fn p1_num_cint() {
     type I0 = SetCatInt;
-    type V = ValNum;
+    type V = ScaNum;
 
     // data
     let values = vec![1.0, 2.0, 7.0, 9.0];
@@ -107,7 +106,7 @@ fn p1_num_cint() {
 #[test]
 fn p1_num_cstr() {
     type I0 = SetCatStr;
-    type V = ValNum;
+    type V = ScaNum;
 
     // data
     let values: HashMap<_, _> = [1.0, 2.0, 7.0, 9.0]
@@ -134,7 +133,7 @@ fn p1_num_cstr() {
 #[test]
 fn p1_num_ord() {
     type I0 = SetOrd;
-    type V = ValNum;
+    type V = ScaNum;
 
     // data
     let values = |i: i64| i as f64 * 2.0;

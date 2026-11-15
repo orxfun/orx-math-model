@@ -1,5 +1,5 @@
 use crate::sets::{DSet, FunSet};
-use crate::{new_bag, Bag, SetTyp, Slot};
+use crate::{new_bag, Bag, Slot};
 use orx_imp_vec::Elem;
 
 pub struct SetBag<'d> {

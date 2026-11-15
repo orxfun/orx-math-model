@@ -1,6 +1,6 @@
 use crate::{Elements, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetTyp};
 use alloc::boxed::Box;
-use core::mem::{transmute, ManuallyDrop};
+use core::mem::ManuallyDrop;
 
 pub type FSet<'d, S> = Box<dyn Fn(&mut Elements<<S as Set>::IdxRaw<'d>>) + 'd>;
 

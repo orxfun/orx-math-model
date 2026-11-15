@@ -1,7 +1,6 @@
-use crate::idxs::IdxVal;
 use crate::{elements::Elements, Model};
-use crate::{SetCatInt, SetCatStr, ElementsIter, SetOrd, Set};
-use alloc::string::{String, ToString};
+use crate::{ElementsIter, Set, SetCatInt, SetCatStr, SetOrd};
+use alloc::string::ToString;
 use alloc::{vec, vec::Vec};
 
 #[test]

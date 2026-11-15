@@ -1,7 +1,5 @@
-use crate::sets::IndexCatInt;
 use crate::vars::v2::DV2;
-use crate::{Ptr, Res, Set, SetCatInt, Symbol, Val, ValInt, Var};
-use alloc::boxed::Box;
+use crate::{ScaVar, Set, Symbol, Var};
 use core::ops::Index;
 use core::{marker::PhantomData, ops::Deref};
 
@@ -49,7 +47,6 @@ where
     type Output = Var<'m, 'd>;
 
     fn index(&self, (i0, i1): (Idx0, Idx1)) -> &Self::Output {
-        let x = self.at(i0, i1);
-        todo!()
+        self.m.sym_ref::<ScaVar>(self.at(i0, i1))
     }
 }

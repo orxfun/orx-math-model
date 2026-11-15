@@ -19,14 +19,11 @@ extern crate alloc;
 #[cfg(any(test, feature = "std"))]
 extern crate std;
 
-// mod arb_val;
 mod bag;
-mod elements;
-mod err;
-// mod fun;
-// mod idxs;
 mod con_vals;
 mod dim;
+mod elements;
+mod err;
 mod idxs;
 mod model;
 mod pars;
@@ -35,24 +32,24 @@ mod sets;
 mod slot;
 mod sym_refs;
 mod symbol;
-mod vals;
-mod var;
 mod vars;
 
 // crate
 pub(crate) use bag::{new_bag, Bag};
-pub(crate) use elements::{Elements, ElementsIter};
-pub(crate) use err::{Res, ResValid};
-// pub(crate) use fun::{FSet, FunSet};
-// pub(crate) use idxs::{CatIntIdxSum, CatStrIdxSum, Idx, OrdIdxSum};
 pub(crate) use con_vals::{ConValTyp, TConVal};
-pub use dim::Dim;
+pub(crate) use dim::Dim;
+pub(crate) use elements::Elements;
+pub(crate) use err::{Res, ResValid};
+pub(crate) use scalars::{Int, Num, Sca, ScaInt, ScaNum, ScaVar, Val, ValTyp, Var};
 pub(crate) use sets::{Set, SetCatInt, SetCatStr, SetOrd, SetSym, SetTyp};
 pub(crate) use slot::{Ptr, Slot};
 pub(crate) use symbol::Symbol;
-pub(crate) use vals::{Val, ValInt, ValNum, ValTyp};
-pub(crate) use var::Var;
-pub(crate) use vars::{Bounds, VarType};
+pub(crate) use vars::VarType;
+
+#[cfg(test)]
+pub(crate) use elements::ElementsIter;
+#[cfg(test)]
+pub(crate) use vars::Bounds;
 
 // api
 pub use model::Model;

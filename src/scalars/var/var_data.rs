@@ -2,7 +2,7 @@ use crate::scalars::var::var_fun1::{FVar1, FunV1, Idx1};
 use crate::scalars::var::var_fun2::{FVar2, FunV2, Idx2};
 use crate::sets::FunSet;
 use crate::{Dim, Ptr, Set, VarType};
-use core::mem::{transmute, ManuallyDrop};
+use core::mem::ManuallyDrop;
 
 #[repr(C)]
 union UFunVar<'d> {

@@ -1,6 +1,4 @@
-use crate::{new_bag, sets::FunSet, Bag, Set, Model, SetTyp};
-use alloc::boxed::Box;
-use core::mem::transmute;
+use crate::{new_bag, sets::FunSet, Bag, SetTyp};
 use orx_imp_vec::Elem;
 
 pub struct SetFunBag<'d> {

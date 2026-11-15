@@ -1,7 +1,5 @@
-use crate::con_vals::{ConVal, DConVal};
 use crate::sym_refs::SymRef;
-use crate::{new_bag, Bag, SetTyp, Slot, Val};
-use orx_imp_vec::Elem;
+use crate::{new_bag, Bag, Sca};
 
 pub struct SymRefBag<'d> {
     bag: Bag<SymRef<'d>>,
@@ -14,8 +12,11 @@ impl Default for SymRefBag<'_> {
 }
 
 impl<'d> SymRefBag<'d> {
-    pub fn push<'a, 'm, V: Val>(&'a self, val: V::Sym<'m, 'd>) -> &'a V::Sym<'m, 'd> {
-        let el = self.bag.push(SymRef::new(*val));
-        unsafe { el.get() }.get::<V>()
+    pub fn push<'a, 'm, S>(&'a self, sym: S::Sym<'m, 'd>) -> &'a S::Sym<'m, 'd>
+    where
+        S: Sca,
+    {
+        let el = self.bag.push(SymRef::new::<S>(sym));
+        unsafe { el.get() }.get::<S>()
     }
 }

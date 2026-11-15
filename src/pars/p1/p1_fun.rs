@@ -1,5 +1,5 @@
 use crate::{
-    Elements, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetTyp, Val, ValInt, ValNum, ValTyp,
+    Res, ResValid, ScaInt, ScaNum, Set, SetCatInt, SetCatStr, SetOrd, SetTyp, Val, ValTyp,
 };
 use alloc::boxed::Box;
 use core::mem::{transmute, ManuallyDrop};
@@ -73,8 +73,8 @@ impl<'d, V: Val> UFunP1_V<'d, V> {
 
 #[repr(C)]
 pub union UFunP1<'d> {
-    int: ManuallyDrop<UFunP1_V<'d, ValInt>>,
-    num: ManuallyDrop<UFunP1_V<'d, ValNum>>,
+    int: ManuallyDrop<UFunP1_V<'d, ScaInt>>,
+    num: ManuallyDrop<UFunP1_V<'d, ScaNum>>,
 }
 
 #[derive(derive_new::new)]
@@ -107,7 +107,7 @@ impl<'d> FunP1<'d> {
     }
 
     pub fn create<V: Val, I0: Set>(fun: FP1<'d, V, I0>) -> Self {
-        let (val_typ, i0_typ) = (V::typ(), I0::typ());
+        let (val_typ, i0_typ) = (V::val_typ(), I0::typ());
         let data = unsafe {
             match val_typ {
                 ValTyp::Int => UFunP1 {
@@ -122,10 +122,10 @@ impl<'d> FunP1<'d> {
     }
 
     pub fn get<V: Val, I0: Set>(&self) -> &FP1<'d, V, I0> {
-        Res::dbg_assert_same_val(V::typ(), self.val_typ);
+        Res::dbg_assert_same_val(V::val_typ(), self.val_typ);
         Res::dbg_assert_same_set(I0::typ(), self.i0_typ);
         unsafe {
-            match V::typ() {
+            match V::val_typ() {
                 ValTyp::Int => transmute(self.data.int.get::<I0>()),
                 ValTyp::Num => transmute(self.data.num.get::<I0>()),
             }

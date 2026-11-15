@@ -1,6 +1,6 @@
 use crate::idxs::IdxVal;
 use crate::sets::DSet;
-use crate::{Elements, Set, Ptr, Res, ResValid, SetTyp, Slot};
+use crate::{Ptr, Set, Slot};
 
 #[derive(derive_new::new)]
 pub struct DIdx<'d> {

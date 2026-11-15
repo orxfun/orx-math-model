@@ -1,7 +1,7 @@
-use crate::scalars::val::{DVal, FVal, Int, Num, UFunVal};
+use crate::scalars::val::{FVal, UFunVal};
+use crate::scalars::{DSca, Sca};
 use crate::{Model, Symbol};
-use core::mem::{transmute, ManuallyDrop};
-use core::ops::Deref;
+use core::mem::ManuallyDrop;
 use orx_imp_vec::Elem;
 
 // enums
@@ -14,34 +14,27 @@ pub enum ValTyp {
 
 // meta
 
-pub trait Val: Clone + Copy + 'static {
+pub trait Val: Sca {
     type Raw: Clone + Copy + Default;
 
-    type Sym<'m, 'd: 'm>: Clone
-        + Copy
-        + Deref<Target = Symbol<'m, 'd, DVal<'d>>>
-        + From<Symbol<'m, 'd, DVal<'d>>>;
-
-    fn typ() -> ValTyp;
+    fn val_typ() -> ValTyp;
 
     fn into_fun_union<'d>(fun: FVal<'d, Self>) -> UFunVal<'d>;
 
     fn fun_from_union<'a, 'd>(u: &'a UFunVal<'d>) -> &'a FVal<'d, Self>;
 
-    fn new_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DVal<'d>>) -> Self::Sym<'m, 'd>;
+    fn new_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSca<'d>>) -> Self::Sym<'m, 'd>;
 }
 
 // int
 
 #[derive(Clone, Copy)]
-pub struct ValInt;
+pub struct ScaInt;
 
-impl Val for ValInt {
+impl Val for ScaInt {
     type Raw = i64;
 
-    type Sym<'m, 'd: 'm> = Int<'m, 'd>;
-
-    fn typ() -> ValTyp {
+    fn val_typ() -> ValTyp {
         ValTyp::Int
     }
 
@@ -55,7 +48,7 @@ impl Val for ValInt {
         unsafe { &u.int }
     }
 
-    fn new_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DVal<'d>>) -> Self::Sym<'m, 'd> {
+    fn new_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSca<'d>>) -> Self::Sym<'m, 'd> {
         Symbol::new(m, el).into()
     }
 }
@@ -63,14 +56,12 @@ impl Val for ValInt {
 // num
 
 #[derive(Clone, Copy)]
-pub struct ValNum;
+pub struct ScaNum;
 
-impl Val for ValNum {
+impl Val for ScaNum {
     type Raw = f64;
 
-    type Sym<'m, 'd: 'm> = Num<'m, 'd>;
-
-    fn typ() -> ValTyp {
+    fn val_typ() -> ValTyp {
         ValTyp::Num
     }
 
@@ -84,7 +75,7 @@ impl Val for ValNum {
         unsafe { &u.num }
     }
 
-    fn new_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DVal<'d>>) -> Self::Sym<'m, 'd> {
+    fn new_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSca<'d>>) -> Self::Sym<'m, 'd> {
         Symbol::new(m, el).into()
     }
 }

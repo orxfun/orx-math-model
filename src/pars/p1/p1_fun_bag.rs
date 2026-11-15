@@ -1,6 +1,4 @@
-use crate::{new_bag, pars::p1::FunP1, Bag, Model, Set, SetTyp, ValTyp};
-use alloc::boxed::Box;
-use core::mem::transmute;
+use crate::{new_bag, pars::p1::FunP1, Bag, SetTyp, ValTyp};
 use orx_imp_vec::Elem;
 
 pub struct P1FunBag<'d> {

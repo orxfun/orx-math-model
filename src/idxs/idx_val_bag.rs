@@ -1,6 +1,4 @@
-use crate::{idxs::IdxVal, new_bag, Bag, Set, Model, SetTyp};
-use alloc::boxed::Box;
-use core::mem::transmute;
+use crate::{idxs::IdxVal, new_bag, Bag, SetTyp};
 use orx_imp_vec::Elem;
 
 pub struct IdxValBag<'d> {

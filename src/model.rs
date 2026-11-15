@@ -1,25 +1,20 @@
-use core::mem::ManuallyDrop;
-
 use crate::con_vals::{ConVal, ConValBag, DConVal};
 use crate::idxs::{IdxBag, IdxValBag};
 use crate::pars::p1::{P1Bag, P1FunBag, ParD1};
 use crate::pars::p2::{P2Bag, P2FunBag, ParD2};
-// use crate::arb_val::{ArbVal, ArbValBag};
-// use crate::idxs::{CatIdxInt, CatIdxStr, IdxBag, IdxSlots, OrdIdx};
-// use crate::par::p1::{IntParD1, NumParD1, P1Bag, P1Slots};
+use crate::scalars::{DSca, FVar1, FVar2, ScaBag};
 use crate::sets::{CatInt, CatStr, Ord, SetBag, SetFunBag};
 use crate::slot::{SlotStates, State};
 use crate::sym_refs::SymRefBag;
-use crate::vals::{FunVal, ValBag};
-use crate::var::{VarFunBag, DV};
 use crate::vars::v1::{V1Bag, VarD1};
 use crate::vars::v2::{V2Bag, VarD2};
 use crate::vars::VarType;
 use crate::{
-    Ptr, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetSym, SetTyp, Slot, Symbol, TConVal,
-    Val, ValInt, ValNum, Var,
+    Ptr, Res, ResValid, Sca, ScaInt, ScaNum, Set, SetCatInt, SetCatStr, SetOrd, SetSym, Slot,
+    Symbol, TConVal, Val, Var,
 };
 use alloc::boxed::Box;
+use core::mem::ManuallyDrop;
 use orx_imp_vec::Elem;
 
 #[derive(Default)]
@@ -46,16 +41,15 @@ pub struct Model<'d> {
     idx_bag: IdxBag<'d>,
 
     // vals
-    val_bag: ValBag<'d>,
+    sca_bag: ManuallyDrop<ScaBag<'d>>,
     con_val_bag: ConValBag,
     sym_ref_bag: SymRefBag<'d>,
-    var_bag: ManuallyDrop<VarFunBag<'d>>,
 }
 
 impl<'d> Drop for Model<'d> {
     fn drop(&mut self) {
         // SAFETY: needs to be dropped after set_fun_bag
-        unsafe { ManuallyDrop::drop(&mut self.var_bag) };
+        unsafe { ManuallyDrop::drop(&mut self.sca_bag) };
     }
 }
 
@@ -97,24 +91,6 @@ impl<'d> Model<'d> {
         S::new_idx_sym(self, el)
     }
 
-    // vals
-
-    pub(crate) fn val<'m, V: Val>(&'m self, fun: impl Fn() -> V::Raw + 'd) -> V::Sym<'m, 'd> {
-        let fun: Box<dyn Fn() -> <V as Val>::Raw + 'd> = Box::new(fun);
-        let fun = FunVal::new::<V>(fun);
-        let el = self.val_bag.push(fun);
-        V::new_sym(self, el)
-    }
-
-    pub(crate) fn con_val<T: TConVal>(&self, value: T) -> Ptr<'d, DConVal> {
-        let el = self.con_val_bag.push(ConVal::new(value));
-        Slot::new(self, el).ptr()
-    }
-
-    pub(crate) fn sym_ref<'m, V: Val>(&'m self, sym: V::Sym<'m, 'd>) -> &'m V::Sym<'m, 'd> {
-        self.sym_ref_bag.push::<V>(sym)
-    }
-
     // p1
 
     fn par1<'m, V, S0>(&'m self, s0: S0) -> ParD1<'m, 'd, V, S0::Meta>
@@ -123,14 +99,14 @@ impl<'d> Model<'d> {
         S0: SetSym<'m, 'd>,
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
     {
-        let fun_el = self.p1_fun_bag.push(V::typ(), <S0::Meta as Set>::typ());
+        let fun_el = self.p1_fun_bag.push(V::val_typ(), <S0::Meta as Set>::typ());
         let fun_slot = Slot::new(self, fun_el);
         let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
         let el = self.p1_bag.push(s0_ptr, fun_slot);
         Symbol::new(self, el).into()
     }
 
-    pub fn par1_int<'m, S0>(&'m self, s0: S0) -> ParD1<'m, 'd, ValInt, S0::Meta>
+    pub fn par1_int<'m, S0>(&'m self, s0: S0) -> ParD1<'m, 'd, ScaInt, S0::Meta>
     where
         S0: SetSym<'m, 'd>,
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
@@ -138,7 +114,7 @@ impl<'d> Model<'d> {
         self.par1(s0)
     }
 
-    pub fn par1_num<'m, S0>(&'m self, s0: S0) -> ParD1<'m, 'd, ValNum, S0::Meta>
+    pub fn par1_num<'m, S0>(&'m self, s0: S0) -> ParD1<'m, 'd, ScaNum, S0::Meta>
     where
         S0: SetSym<'m, 'd>,
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
@@ -157,7 +133,7 @@ impl<'d> Model<'d> {
         S1::Meta: Set<SetSym<'m, 'd> = S1>,
     {
         let [t0, t1] = [<S0::Meta as Set>::typ(), <S1::Meta as Set>::typ()];
-        let fun_el = self.p2_fun_bag.push(V::typ(), t0, t1);
+        let fun_el = self.p2_fun_bag.push(V::val_typ(), t0, t1);
         let fun_slot = Slot::new(self, fun_el);
         let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
         let s1_ptr = <S1::Meta as Set>::set_ptr(s1);
@@ -169,7 +145,7 @@ impl<'d> Model<'d> {
         &'m self,
         s0: S0,
         s1: S1,
-    ) -> ParD2<'m, 'd, ValInt, S0::Meta, S1::Meta>
+    ) -> ParD2<'m, 'd, ScaInt, S0::Meta, S1::Meta>
     where
         S0: SetSym<'m, 'd>,
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
@@ -183,7 +159,7 @@ impl<'d> Model<'d> {
         &'m self,
         s0: S0,
         s1: S1,
-    ) -> ParD2<'m, 'd, ValNum, S0::Meta, S1::Meta>
+    ) -> ParD2<'m, 'd, ScaNum, S0::Meta, S1::Meta>
     where
         S0: SetSym<'m, 'd>,
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
@@ -223,27 +199,48 @@ impl<'d> Model<'d> {
         Symbol::new(self, el).into()
     }
 
-    // var
+    // scalars
 
-    pub(crate) fn var<'m>(&'m self, data: DV<'d>) -> Var<'m, 'd> {
-        let el = self.var_bag.push(data);
+    pub(crate) fn val<'m, V: Val>(&'m self, fun: impl Fn() -> V::Raw + 'd) -> V::Sym<'m, 'd> {
+        let fun: Box<dyn Fn() -> <V as Val>::Raw + 'd> = Box::new(fun);
+        let data = DSca::new_val::<V>(fun);
+        let el = self.sca_bag.push(data);
+        V::new_sym(self, el)
+    }
+
+    pub(crate) fn var_from_d1<'m, I0: Set>(
+        &'m self,
+        var: VarD1<'m, 'd, I0>,
+        fun: FVar1<'d, I0>,
+    ) -> Var<'m, 'd> {
+        let var = unsafe { var.el.get() };
+        let i0 = var.s0.get().fun_set();
+        let data = DSca::new_var_d1::<I0>(var.typ, i0, fun);
+        let el = self.sca_bag.push(data);
         Symbol::new(self, el).into()
     }
 
-    // pub fn par_d1_int<'m, S0: Set<'m, 'd>>(&'m self, s0: S0) -> IntParD1<'m, 'd, S0::Meta> {
-    //     let par = self.p1_slots.push::<S0::Meta, MetaInt>(self);
-    //     let el = self.p1_bag.push(par, s0.slot());
-    //     Symbol::new(self, el).into()
-    // }
+    pub(crate) fn var_from_d2<'m, I0: Set, I1: Set>(
+        &'m self,
+        var: VarD2<'m, 'd, I0, I1>,
+        fun: FVar2<'d, I0, I1>,
+    ) -> Var<'m, 'd> {
+        let var = unsafe { var.el.get() };
+        let i0 = var.s0.get().fun_set();
+        let i1 = var.s1.get().fun_set();
+        let data = DSca::new_var_d2::<I0, I1>(var.typ, i0, i1, fun);
+        let el = self.sca_bag.push(data);
+        Symbol::new(self, el).into()
+    }
 
-    // pub fn par_d1_num<'m, S0: Set<'m, 'd>>(&'m self, s0: S0) -> NumParD1<'m, 'd, S0::Meta> {
-    //     let par = self.p1_slots.push::<S0::Meta, MetaNum>(self);
-    //     let el = self.p1_bag.push(par, s0.slot());
-    //     Symbol::new(self, el).into()
-    // }
+    // vals
+
+    pub(crate) fn con_val<T: TConVal>(&self, value: T) -> Ptr<'d, DConVal> {
+        let el = self.con_val_bag.push(ConVal::new(value));
+        Slot::new(self, el).ptr()
+    }
+
+    pub(crate) fn sym_ref<'m, S: Sca>(&'m self, sym: S::Sym<'m, 'd>) -> &'m S::Sym<'m, 'd> {
+        self.sym_ref_bag.push::<S>(sym)
+    }
 }
-
-// let fun_el = self.set_fun_bag.push(S::typ());
-// let fun_slot = Slot::new(self, fun_el);
-// let el = self.set_bag.push(fun_slot);
-// S::new_set_sym(self, el)

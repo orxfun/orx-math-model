@@ -6,13 +6,13 @@ use core::mem::ManuallyDrop;
 
 #[repr(C)]
 pub union USca<'d> {
-    val: ManuallyDrop<DVal<'d>>,
-    var: ManuallyDrop<DVar<'d>>,
+    pub(crate) val: ManuallyDrop<DVal<'d>>,
+    pub(crate) var: ManuallyDrop<DVar<'d>>,
 }
 
 pub struct DSca<'d> {
-    typ: ScaTyp,
-    data: USca<'d>,
+    pub typ: ScaTyp,
+    pub data: USca<'d>,
 }
 
 impl<'d> Drop for DSca<'d> {
@@ -28,7 +28,7 @@ impl<'d> Drop for DSca<'d> {
 
 impl<'d> DSca<'d> {
     pub fn new_val<V: Val>(fun: FVal<'d, V>) -> Self {
-        let typ = ScaTyp::from(V::typ());
+        let typ = V::typ();
         let data = USca {
             val: ManuallyDrop::new(DVal::new::<V>(fun)),
         };

@@ -1,11 +1,6 @@
-use crate::sets::CatInt;
-use crate::{
-    Bounds, Elements, ElementsIter, Model, Set, SetCatInt, SetCatStr, SetOrd, ValInt, ValNum,
-    VarType,
-};
-use alloc::string::{String, ToString};
+use crate::{Bounds, Elements, ElementsIter, Model, Set, SetCatInt, SetCatStr, SetOrd, VarType};
+use alloc::string::ToString;
 use alloc::{vec, vec::Vec};
-use std::collections::HashMap;
 
 #[test]
 fn v1_at_int_cint() {
@@ -32,11 +27,11 @@ fn v1_at_int_cint() {
     for (i, _) in iter.enumerate() {
         let exp = s0_data[i];
         for sca in sca1 {
-            assert_eq!(exp, unsafe { sca.el.get() }.indices_d1::<I0>());
+            assert_eq!(exp, sca.data().indices_d1::<I0>());
         }
         let exp = s0_data[2];
         for sca in sca2 {
-            assert_eq!(exp, unsafe { sca.el.get() }.indices_d1::<I0>());
+            assert_eq!(exp, sca.data().indices_d1::<I0>());
         }
     }
 }
@@ -66,11 +61,11 @@ fn v1_at_int_cstr() {
     for (i, _) in iter.enumerate() {
         let exp = &s0_data[i];
         for sca in sca1 {
-            assert_eq!(exp, unsafe { sca.el.get() }.indices_d1::<I0>());
+            assert_eq!(exp, sca.data().indices_d1::<I0>());
         }
         let exp = &s0_data[2];
         for sca in sca2 {
-            assert_eq!(exp, unsafe { sca.el.get() }.indices_d1::<I0>());
+            assert_eq!(exp, sca.data().indices_d1::<I0>());
         }
     }
 }
@@ -100,11 +95,11 @@ fn v1_at_int_ord() {
     for (i, _) in iter.enumerate() {
         let exp = s0_data[i];
         for sca in sca1 {
-            assert_eq!(exp, unsafe { sca.el.get() }.indices_d1::<I0>());
+            assert_eq!(exp, sca.data().indices_d1::<I0>());
         }
         let exp = s0_data[2];
         for sca in sca2 {
-            assert_eq!(exp, unsafe { sca.el.get() }.indices_d1::<I0>());
+            assert_eq!(exp, sca.data().indices_d1::<I0>());
         }
     }
 }

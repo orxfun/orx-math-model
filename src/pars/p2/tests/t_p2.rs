@@ -1,5 +1,4 @@
-use crate::sets::CatInt;
-use crate::{Model, SetCatInt, SetCatStr, SetOrd, ValInt, ValNum};
+use crate::{Model, ScaInt, ScaNum, SetCatInt, SetCatStr, SetOrd};
 use alloc::string::{String, ToString};
 use alloc::{vec, vec::Vec};
 use std::collections::HashMap;
@@ -8,7 +7,7 @@ use std::collections::HashMap;
 
 #[test]
 fn p2_int_cint_cstr() {
-    type V = ValInt;
+    type V = ScaInt;
     type I0 = SetCatInt;
     type I1 = SetCatStr;
 
@@ -42,7 +41,7 @@ fn p2_int_cint_cstr() {
 
 #[test]
 fn p2_int_cstr_ord() {
-    type V = ValInt;
+    type V = ScaInt;
     type I0 = SetCatStr;
     type I1 = SetOrd;
 
@@ -74,7 +73,7 @@ fn p2_int_cstr_ord() {
 
 #[test]
 fn p2_int_ord_cint() {
-    type V = ValInt;
+    type V = ScaInt;
     type I0 = SetOrd;
     type I1 = SetCatInt;
 
@@ -103,7 +102,7 @@ fn p2_int_ord_cint() {
 
 #[test]
 fn p2_num_cint_cstr() {
-    type V = ValNum;
+    type V = ScaNum;
     type I0 = SetCatInt;
     type I1 = SetCatStr;
 
@@ -137,7 +136,7 @@ fn p2_num_cint_cstr() {
 
 #[test]
 fn p2_num_cstr_ord() {
-    type V = ValNum;
+    type V = ScaNum;
     type I0 = SetCatStr;
     type I1 = SetOrd;
 
@@ -169,7 +168,7 @@ fn p2_num_cstr_ord() {
 
 #[test]
 fn p2_num_ord_cint() {
-    type V = ValNum;
+    type V = ScaNum;
     type I0 = SetOrd;
     type I1 = SetCatInt;
 
