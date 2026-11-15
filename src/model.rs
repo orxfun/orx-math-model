@@ -112,12 +112,6 @@ impl<'d> Model<'d> {
         self.sym_ref_bag.push::<V>(sym)
     }
 
-    pub(crate) fn var<'m>(&'m self, fun: DV<'d>) -> Var<'m, 'd> {
-        // let el = self.var_bag.push(fun);
-        // Symbol::new(self, el).into()
-        todo!()
-    }
-
     // p1
 
     fn par1<'m, V, S0>(&'m self, s0: S0) -> ParD1<'m, 'd, V, S0::Meta>
@@ -205,6 +199,13 @@ impl<'d> Model<'d> {
     {
         let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
         let el = self.v1_bag.push(typ, s0_ptr);
+        Symbol::new(self, el).into()
+    }
+
+    // var
+
+    pub(crate) fn var<'m>(&'m self, data: DV<'d>) -> Var<'m, 'd> {
+        let el = self.var_bag.push(data);
         Symbol::new(self, el).into()
     }
 
