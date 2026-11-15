@@ -208,16 +208,18 @@ impl Set for SetCatInt {
             let data = unsafe { var.el.get() };
             (data.typ, data.s0.get().fun_set())
         };
-
-        match i0.into() {
+        let data = match i0.into() {
             IndexCatInt::Idx(i0) => {
                 let i0 = Ptr::new(i0.el);
                 let fun = Box::new(move || i0.get().read::<Self>());
-                let data = DV::create_d1::<Self>(typ, s0, fun);
-                var.m.var(data)
+                DV::create_d1::<Self>(typ, s0, fun)
             }
-            _ => todo!(),
-        }
+            IndexCatInt::ConUsize(i0) => {
+                let fun = Box::new(move || i0);
+                DV::create_d1::<Self>(typ, s0, fun)
+            }
+        };
+        var.m.var(data)
     }
 }
 
