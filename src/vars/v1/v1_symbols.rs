@@ -1,6 +1,6 @@
 use crate::sets::IndexCatInt;
 use crate::vars::v1::DV1;
-use crate::{Ptr, Res, Set, SetCatInt, Symbol, Val, ValInt};
+use crate::{Ptr, Res, Set, SetCatInt, Symbol, Val, ValInt, Var};
 use alloc::boxed::Box;
 use core::ops::Index;
 use core::{marker::PhantomData, ops::Deref};
@@ -26,8 +26,21 @@ impl<'m, 'd, I0> VarD1<'m, 'd, I0>
 where
     I0: Set,
 {
-    pub fn at(self, i0: impl Into<I0::IdxAny<'m, 'd>>) -> (char) {
-        // I0::p1_at(self, i0)
+    pub fn at(self, i0: impl Into<I0::IdxAny<'m, 'd>>) -> Var<'m, 'd> {
+        I0::v1_at(self, i0)
+    }
+}
+
+impl<'m, 'd, I0, Idx0> Index<Idx0> for VarD1<'m, 'd, I0>
+where
+    I0: Set,
+    Idx0: Into<I0::IdxAny<'m, 'd>>,
+{
+    type Output = Var<'m, 'd>;
+
+    fn index(&self, i0: Idx0) -> &Self::Output {
+        let val = self.at(i0);
+        // self.m.sym_ref::<V>(val)
         todo!()
     }
 }

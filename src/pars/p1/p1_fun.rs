@@ -12,9 +12,9 @@ pub type FP1<'d, V, I0> = Box<dyn Fn(<I0 as Set>::IdxRaw<'d>) -> <V as Val>::Raw
 
 #[repr(C)]
 pub union UFunP1_V<'d, V: Val> {
-    pub cint: ManuallyDrop<FP1<'d, V, SetCatInt>>,
-    pub cstr: ManuallyDrop<FP1<'d, V, SetCatStr>>,
-    pub ord: ManuallyDrop<FP1<'d, V, SetOrd>>,
+    cint: ManuallyDrop<FP1<'d, V, SetCatInt>>,
+    cstr: ManuallyDrop<FP1<'d, V, SetCatStr>>,
+    ord: ManuallyDrop<FP1<'d, V, SetOrd>>,
 }
 
 impl<'d, V: Val> UFunP1_V<'d, V> {
@@ -73,8 +73,8 @@ impl<'d, V: Val> UFunP1_V<'d, V> {
 
 #[repr(C)]
 pub union UFunP1<'d> {
-    pub int: ManuallyDrop<UFunP1_V<'d, ValInt>>,
-    pub num: ManuallyDrop<UFunP1_V<'d, ValNum>>,
+    int: ManuallyDrop<UFunP1_V<'d, ValInt>>,
+    num: ManuallyDrop<UFunP1_V<'d, ValNum>>,
 }
 
 #[derive(derive_new::new)]

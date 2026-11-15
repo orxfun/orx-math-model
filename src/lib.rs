@@ -26,6 +26,7 @@ mod err;
 // mod fun;
 // mod idxs;
 mod con_vals;
+mod dim;
 mod idxs;
 mod model;
 mod pars;
@@ -34,6 +35,7 @@ mod slot;
 mod sym_refs;
 mod symbol;
 mod vals;
+mod var;
 mod vars;
 
 // crate
@@ -43,10 +45,12 @@ pub(crate) use err::{Res, ResValid};
 // pub(crate) use fun::{FSet, FunSet};
 // pub(crate) use idxs::{CatIntIdxSum, CatStrIdxSum, Idx, OrdIdxSum};
 pub(crate) use con_vals::{ConValTyp, TConVal};
+pub use dim::Dim;
 pub(crate) use sets::{Set, SetCatInt, SetCatStr, SetOrd, SetSym, SetTyp};
 pub(crate) use slot::{Ptr, Slot};
 pub(crate) use symbol::Symbol;
 pub(crate) use vals::{Val, ValInt, ValNum, ValTyp};
+pub(crate) use var::Var;
 pub(crate) use vars::{Bounds, VarType};
 
 // api
