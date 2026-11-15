@@ -1,4 +1,4 @@
-use crate::scalars::{DSca, ScaTyp};
+use crate::scalars::{DSca, Sca, ScaTyp};
 use crate::{Int, Num, Symbol, Val, ValTyp, Var};
 use core::mem::transmute;
 
@@ -30,20 +30,27 @@ impl<'m, 'd> From<Var<'m, 'd>> for SymRef<'d> {
 }
 
 impl<'d> SymRef<'d> {
-    pub fn get2<'m, S>(&self, sym_ref: SymRef<'d>) -> S
-    where
-        S: Into<SymRef<'d>>,
-    {
-        todo!()
+    pub fn new<'m, S: Sca>(sym: S::Sym<'m, 'd>) -> Self {
+        let sym = unsafe { S::sym(sym).create_sym_ref() };
+        match S::typ() {
+            ScaTyp::Int => Self::Int(sym.into()),
+            ScaTyp::Num => Self::Num(sym.into()),
+            ScaTyp::Var => Self::Var(sym.into()),
+        }
     }
-    pub fn get<'m, V: Val>(&self) -> &V::Sym<'m, 'd> {
-        match V::typ() {
-            ValTyp::Int => match self {
+
+    pub fn get<'m, S: Sca>(&self) -> &S::Sym<'m, 'd> {
+        match S::typ() {
+            ScaTyp::Int => match self {
                 Self::Int(x) => unsafe { transmute(x) },
                 _ => unreachable!(),
             },
-            ValTyp::Num => match self {
+            ScaTyp::Num => match self {
                 Self::Num(x) => unsafe { transmute(x) },
+                _ => unreachable!(),
+            },
+            ScaTyp::Var => match self {
+                Self::Var(x) => unsafe { transmute(x) },
                 _ => unreachable!(),
             },
         }

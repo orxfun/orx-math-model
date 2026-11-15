@@ -41,7 +41,7 @@ pub(crate) use con_vals::{ConValTyp, TConVal};
 pub(crate) use dim::Dim;
 pub(crate) use elements::{Elements, ElementsIter};
 pub(crate) use err::{Res, ResValid};
-pub(crate) use scalars::{Int, Num, ScaInt, ScaNum, Val, ValTyp, Var};
+pub(crate) use scalars::{Int, Num, Sca, ScaInt, ScaNum, Val, ValTyp, Var};
 pub(crate) use sets::{Set, SetCatInt, SetCatStr, SetOrd, SetSym, SetTyp};
 pub(crate) use slot::{Ptr, Slot};
 pub(crate) use symbol::Symbol;

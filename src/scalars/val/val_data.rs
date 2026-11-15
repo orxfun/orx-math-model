@@ -10,13 +10,13 @@ pub struct DVal<'d> {
 
 impl<'d> DVal<'d> {
     pub fn eval<V: Val>(&self) -> V::Raw {
-        debug_assert_eq!(V::typ(), self.typ);
+        debug_assert_eq!(V::val_typ(), self.typ);
         let fun = V::fun_from_union(&self.data);
         fun()
     }
 
     pub fn new<V: Val>(fun: FVal<'d, V>) -> Self {
-        let typ = V::typ();
+        let typ = V::val_typ();
         let data = V::into_fun_union(fun);
         Self { typ, data }
     }

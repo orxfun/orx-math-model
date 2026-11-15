@@ -15,8 +15,8 @@ use crate::vars::v1::{V1Bag, VarD1};
 use crate::vars::v2::{V2Bag, VarD2};
 use crate::vars::VarType;
 use crate::{
-    Ptr, Res, ResValid, ScaInt, ScaNum, Set, SetCatInt, SetCatStr, SetOrd, SetSym, SetTyp, Slot,
-    Symbol, TConVal, Val, Var,
+    Ptr, Res, ResValid, Sca, ScaInt, ScaNum, Set, SetCatInt, SetCatStr, SetOrd, SetSym, SetTyp,
+    Slot, Symbol, TConVal, Val, Var,
 };
 use alloc::boxed::Box;
 use orx_imp_vec::Elem;
@@ -102,8 +102,8 @@ impl<'d> Model<'d> {
         Slot::new(self, el).ptr()
     }
 
-    pub(crate) fn sym_ref<'m, V: Val>(&'m self, sym: V::Sym<'m, 'd>) -> &'m V::Sym<'m, 'd> {
-        self.sym_ref_bag.push::<V>(sym)
+    pub(crate) fn sym_ref<'m, S: Sca>(&'m self, sym: S::Sym<'m, 'd>) -> &'m S::Sym<'m, 'd> {
+        self.sym_ref_bag.push::<S>(sym)
     }
 
     // p1
@@ -114,7 +114,7 @@ impl<'d> Model<'d> {
         S0: SetSym<'m, 'd>,
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
     {
-        let fun_el = self.p1_fun_bag.push(V::typ(), <S0::Meta as Set>::typ());
+        let fun_el = self.p1_fun_bag.push(V::val_typ(), <S0::Meta as Set>::typ());
         let fun_slot = Slot::new(self, fun_el);
         let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
         let el = self.p1_bag.push(s0_ptr, fun_slot);
@@ -148,7 +148,7 @@ impl<'d> Model<'d> {
         S1::Meta: Set<SetSym<'m, 'd> = S1>,
     {
         let [t0, t1] = [<S0::Meta as Set>::typ(), <S1::Meta as Set>::typ()];
-        let fun_el = self.p2_fun_bag.push(V::typ(), t0, t1);
+        let fun_el = self.p2_fun_bag.push(V::val_typ(), t0, t1);
         let fun_slot = Slot::new(self, fun_el);
         let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
         let s1_ptr = <S1::Meta as Set>::set_ptr(s1);

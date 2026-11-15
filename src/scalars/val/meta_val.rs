@@ -18,7 +18,7 @@ pub enum ValTyp {
 pub trait Val: Sca {
     type Raw: Clone + Copy + Default;
 
-    fn typ() -> ValTyp;
+    fn val_typ() -> ValTyp;
 
     fn into_fun_union<'d>(fun: FVal<'d, Self>) -> UFunVal<'d>;
 
@@ -35,7 +35,7 @@ pub struct ScaInt;
 impl Val for ScaInt {
     type Raw = i64;
 
-    fn typ() -> ValTyp {
+    fn val_typ() -> ValTyp {
         ValTyp::Int
     }
 
@@ -62,7 +62,7 @@ pub struct ScaNum;
 impl Val for ScaNum {
     type Raw = f64;
 
-    fn typ() -> ValTyp {
+    fn val_typ() -> ValTyp {
         ValTyp::Num
     }
 

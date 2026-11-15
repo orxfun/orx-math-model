@@ -28,7 +28,7 @@ impl<'d> Drop for DSca<'d> {
 
 impl<'d> DSca<'d> {
     pub fn new_val<V: Val>(fun: FVal<'d, V>) -> Self {
-        let typ = ScaTyp::from(V::typ());
+        let typ = V::typ();
         let data = USca {
             val: ManuallyDrop::new(DVal::new::<V>(fun)),
         };

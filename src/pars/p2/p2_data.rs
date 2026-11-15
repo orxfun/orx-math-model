@@ -11,7 +11,7 @@ pub struct DP2<'d> {
 
 impl<'d> DP2<'d> {
     pub fn bind<V: Val, I0: Set, I1: Set>(&self, fun: FP2<'d, V, I0, I1>) -> Res {
-        Res::dbg_assert_same_val(V::typ(), self.slot.get().val_typ);
+        Res::dbg_assert_same_val(V::val_typ(), self.slot.get().val_typ);
         Res::dbg_assert_same_set(I0::typ(), self.slot.get().i0_typ);
         Res::dbg_assert_same_set(I1::typ(), self.slot.get().i1_typ);
         let fun = FunP2::create::<V, I0, I1>(fun);
@@ -20,7 +20,7 @@ impl<'d> DP2<'d> {
 
     pub fn at<V: Val, I0: Set, I1: Set>(&self, i0: I0::IdxRaw<'d>, i1: I1::IdxRaw<'d>) -> V::Raw {
         Res::dbg_assert_slot_bound(self.slot.state());
-        Res::dbg_assert_same_val(V::typ(), self.slot.get().val_typ);
+        Res::dbg_assert_same_val(V::val_typ(), self.slot.get().val_typ);
         Res::dbg_assert_same_set(I0::typ(), self.slot.get().i0_typ);
         Res::dbg_assert_same_set(I1::typ(), self.slot.get().i1_typ);
         let fun = self.slot.get().get::<V, I0, I1>();

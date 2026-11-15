@@ -1,5 +1,5 @@
 use crate::{
-    Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetTyp, Val, ScaInt, ScaNum, ValTyp,
+    Res, ResValid, ScaInt, ScaNum, Set, SetCatInt, SetCatStr, SetOrd, SetTyp, Val, ValTyp,
 };
 use alloc::boxed::Box;
 use core::mem::{transmute, ManuallyDrop};
@@ -170,7 +170,7 @@ impl<'d> FunP2<'d> {
     }
 
     pub fn create<V: Val, I0: Set, I1: Set>(fun: FP2<'d, V, I0, I1>) -> Self {
-        let (val_typ, i0_typ, i1_typ) = (V::typ(), I0::typ(), I1::typ());
+        let (val_typ, i0_typ, i1_typ) = (V::val_typ(), I0::typ(), I1::typ());
         let data = unsafe {
             match val_typ {
                 ValTyp::Int => UFunP2 {
@@ -185,11 +185,11 @@ impl<'d> FunP2<'d> {
     }
 
     pub fn get<V: Val, I0: Set, I1: Set>(&self) -> &FP2<'d, V, I0, I1> {
-        Res::dbg_assert_same_val(V::typ(), self.val_typ);
+        Res::dbg_assert_same_val(V::val_typ(), self.val_typ);
         Res::dbg_assert_same_set(I0::typ(), self.i0_typ);
         Res::dbg_assert_same_set(I1::typ(), self.i1_typ);
         unsafe {
-            match V::typ() {
+            match V::val_typ() {
                 ValTyp::Int => transmute(self.data.int.get::<I0, I1>()),
                 ValTyp::Num => transmute(self.data.num.get::<I0, I1>()),
             }
