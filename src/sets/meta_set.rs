@@ -369,7 +369,7 @@ impl Set for SetCatStr {
             }
             IndexCatStr::ConStringRef(i0) => I1::p2_at_i0(par, move || i0, i1),
             IndexCatStr::ConString(i0) => {
-                let i0 = par.m.con_val(i0.to_string());
+                let i0 = par.m.con_val(i0);
                 let i0 = move || i0.get().get();
                 I1::p2_at_i0(par, i0, i1)
             }
@@ -379,6 +379,37 @@ impl Set for SetCatStr {
                 I1::p2_at_i0(par, i0, i1)
             }
         }
+    }
+
+    // v1
+
+    fn v1_at<'m, 'd>(var: VarD1<'m, 'd, Self>, i0: impl Into<Self::IdxAny<'m, 'd>>) -> Var<'m, 'd> {
+        let (typ, s0) = {
+            let data = unsafe { var.el.get() };
+            (data.typ, data.s0.get().fun_set())
+        };
+        let data = match i0.into() {
+            IndexCatStr::Idx(i0) => {
+                let i0 = Ptr::new(i0.el);
+                let fun = Box::new(move || i0.get().read::<Self>());
+                DV::create_d1::<Self>(typ, s0, fun)
+            }
+            IndexCatStr::ConStringRef(i0) => {
+                let fun = Box::new(move || i0);
+                DV::create_d1::<Self>(typ, s0, fun)
+            }
+            IndexCatStr::ConString(i0) => {
+                let i0 = var.m.con_val(i0);
+                let fun = Box::new(move || i0.get().get());
+                DV::create_d1::<Self>(typ, s0, fun)
+            }
+            IndexCatStr::ConStr(i0) => {
+                let i0 = var.m.con_val(i0.to_string());
+                let fun = Box::new(move || i0.get().get());
+                DV::create_d1::<Self>(typ, s0, fun)
+            }
+        };
+        var.m.var(data)
     }
 }
 
@@ -537,5 +568,39 @@ impl Set for SetOrd {
             IndexOrd::ConUsize(i0) => I1::p2_at_i0(par, move || i0 as i64, i1),
             IndexOrd::ConI32(i0) => I1::p2_at_i0(par, move || i0 as i64, i1),
         }
+    }
+
+    // v1
+
+    fn v1_at<'m, 'd>(var: VarD1<'m, 'd, Self>, i0: impl Into<Self::IdxAny<'m, 'd>>) -> Var<'m, 'd> {
+        let (typ, s0) = {
+            let data = unsafe { var.el.get() };
+            (data.typ, data.s0.get().fun_set())
+        };
+        let data = match i0.into() {
+            IndexOrd::Idx(i0) => {
+                let i0 = Ptr::new(i0.el);
+                let fun = Box::new(move || i0.get().read::<Self>());
+                DV::create_d1::<Self>(typ, s0, fun)
+            }
+            IndexOrd::Int(i0) => {
+                let i0 = Ptr::new(i0.el);
+                let fun = Box::new(move || i0.get().eval::<ValInt>());
+                DV::create_d1::<Self>(typ, s0, fun)
+            }
+            IndexOrd::ConI64(i0) => {
+                let fun = Box::new(move || i0);
+                DV::create_d1::<Self>(typ, s0, fun)
+            }
+            IndexOrd::ConUsize(i0) => {
+                let fun = Box::new(move || i0 as i64);
+                DV::create_d1::<Self>(typ, s0, fun)
+            }
+            IndexOrd::ConI32(i0) => {
+                let fun = Box::new(move || i0 as i64);
+                DV::create_d1::<Self>(typ, s0, fun)
+            }
+        };
+        var.m.var(data)
     }
 }
