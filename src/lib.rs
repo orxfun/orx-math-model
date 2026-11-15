@@ -32,7 +32,7 @@ mod sets;
 mod slot;
 mod sym_refs;
 mod symbol;
-mod vals;
+// mod vals;
 mod vars;
 
 // crate
@@ -41,11 +41,11 @@ pub(crate) use con_vals::{ConValTyp, TConVal};
 pub(crate) use dim::Dim;
 pub(crate) use elements::{Elements, ElementsIter};
 pub(crate) use err::{Res, ResValid};
-pub(crate) use scalars::Var;
+pub(crate) use scalars::{Val, ValInt, ValNum, ValTyp, Var};
 pub(crate) use sets::{Set, SetCatInt, SetCatStr, SetOrd, SetSym, SetTyp};
 pub(crate) use slot::{Ptr, Slot};
 pub(crate) use symbol::Symbol;
-pub(crate) use vals::{Val, ValInt, ValNum, ValTyp};
+// pub(crate) use vals::{Val, ValInt, ValNum, ValTyp};
 pub(crate) use vars::{Bounds, VarType};
 
 // api

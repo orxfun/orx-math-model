@@ -1,4 +1,5 @@
-use crate::scalars::val::{DVal, FVal, Int, Num, UFunVal};
+use crate::scalars::val::{FVal, Int, Num, UFunVal};
+use crate::scalars::DSca;
 use crate::{Model, Symbol};
 use core::mem::{transmute, ManuallyDrop};
 use core::ops::Deref;
@@ -19,8 +20,8 @@ pub trait Val: Clone + Copy + 'static {
 
     type Sym<'m, 'd: 'm>: Clone
         + Copy
-        + Deref<Target = Symbol<'m, 'd, DVal<'d>>>
-        + From<Symbol<'m, 'd, DVal<'d>>>;
+        + Deref<Target = Symbol<'m, 'd, DSca<'d>>>
+        + From<Symbol<'m, 'd, DSca<'d>>>;
 
     fn typ() -> ValTyp;
 
@@ -28,7 +29,7 @@ pub trait Val: Clone + Copy + 'static {
 
     fn fun_from_union<'a, 'd>(u: &'a UFunVal<'d>) -> &'a FVal<'d, Self>;
 
-    fn new_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DVal<'d>>) -> Self::Sym<'m, 'd>;
+    fn new_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSca<'d>>) -> Self::Sym<'m, 'd>;
 }
 
 // int
@@ -55,7 +56,7 @@ impl Val for ValInt {
         unsafe { &u.int }
     }
 
-    fn new_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DVal<'d>>) -> Self::Sym<'m, 'd> {
+    fn new_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSca<'d>>) -> Self::Sym<'m, 'd> {
         Symbol::new(m, el).into()
     }
 }
@@ -84,7 +85,7 @@ impl Val for ValNum {
         unsafe { &u.num }
     }
 
-    fn new_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DVal<'d>>) -> Self::Sym<'m, 'd> {
+    fn new_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSca<'d>>) -> Self::Sym<'m, 'd> {
         Symbol::new(m, el).into()
     }
 }

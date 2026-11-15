@@ -4,14 +4,13 @@ use crate::con_vals::{ConVal, ConValBag, DConVal};
 use crate::idxs::{IdxBag, IdxValBag};
 use crate::pars::p1::{P1Bag, P1FunBag, ParD1};
 use crate::pars::p2::{P2Bag, P2FunBag, ParD2};
-use crate::scalars::{DSca, DVar, FVar1, FVar2, ScaBag};
+use crate::scalars::{DSca, DVal, DVar, FVar1, FVar2, ScaBag};
 // use crate::arb_val::{ArbVal, ArbValBag};
 // use crate::idxs::{CatIdxInt, CatIdxStr, IdxBag, IdxSlots, OrdIdx};
 // use crate::par::p1::{IntParD1, NumParD1, P1Bag, P1Slots};
 use crate::sets::{CatInt, CatStr, Ord, SetBag, SetFunBag};
 use crate::slot::{SlotStates, State};
 use crate::sym_refs::SymRefBag;
-use crate::vals::{FunVal, ValBag};
 use crate::vars::v1::{V1Bag, VarD1};
 use crate::vars::v2::{V2Bag, VarD2};
 use crate::vars::VarType;
@@ -47,7 +46,6 @@ pub struct Model<'d> {
 
     // vals
     sca_bag: ManuallyDrop<ScaBag<'d>>,
-    val_bag: ValBag<'d>,
     con_val_bag: ConValBag,
     sym_ref_bag: SymRefBag<'d>,
 }
@@ -98,13 +96,6 @@ impl<'d> Model<'d> {
     }
 
     // vals
-
-    pub(crate) fn val<'m, V: Val>(&'m self, fun: impl Fn() -> V::Raw + 'd) -> V::Sym<'m, 'd> {
-        let fun: Box<dyn Fn() -> <V as Val>::Raw + 'd> = Box::new(fun);
-        let fun = FunVal::new::<V>(fun);
-        let el = self.val_bag.push(fun);
-        V::new_sym(self, el)
-    }
 
     pub(crate) fn con_val<T: TConVal>(&self, value: T) -> Ptr<'d, DConVal> {
         let el = self.con_val_bag.push(ConVal::new(value));
@@ -223,7 +214,14 @@ impl<'d> Model<'d> {
         Symbol::new(self, el).into()
     }
 
-    // var
+    // scalars
+
+    pub(crate) fn val<'m, V: Val>(&'m self, fun: impl Fn() -> V::Raw + 'd) -> V::Sym<'m, 'd> {
+        let fun: Box<dyn Fn() -> <V as Val>::Raw + 'd> = Box::new(fun);
+        let data = DSca::new_val(fun);
+        let el = self.sca_bag.push(data);
+        V::new_sym(self, el)
+    }
 
     pub(crate) fn var_from_d1<'m, I0: Set>(
         &'m self,
