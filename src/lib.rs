@@ -30,6 +30,7 @@ mod dim;
 mod idxs;
 mod model;
 mod pars;
+mod scalars;
 mod sets;
 mod slot;
 mod sym_refs;
