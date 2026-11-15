@@ -46,7 +46,7 @@ impl<'d> DV<'d> {
         i1: Ptr<'d, FunSet<'d>>,
         fun: FV2<'d, I0, I1>,
     ) -> Self {
-        let dim = Dim::D1;
+        let dim = Dim::D2;
         let data = UFunV {
             d2: ManuallyDrop::new(FunV2::create::<I0, I1>(i0, i1, fun)),
         };
