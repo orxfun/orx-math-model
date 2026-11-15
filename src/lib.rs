@@ -34,6 +34,7 @@ mod slot;
 mod sym_refs;
 mod symbol;
 mod vals;
+mod var;
 mod vars;
 
 // crate
