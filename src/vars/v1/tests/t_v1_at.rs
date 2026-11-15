@@ -1,11 +1,6 @@
-use crate::sets::CatInt;
-use crate::{
-    Bounds, Elements, ElementsIter, Model, Set, SetCatInt, SetCatStr, SetOrd, ScaInt, ScaNum,
-    VarType,
-};
-use alloc::string::{String, ToString};
+use crate::{Bounds, Elements, ElementsIter, Model, Set, SetCatInt, SetCatStr, SetOrd, VarType};
+use alloc::string::ToString;
 use alloc::{vec, vec::Vec};
-use std::collections::HashMap;
 
 #[test]
 fn v1_at_int_cint() {

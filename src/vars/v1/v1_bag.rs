@@ -1,7 +1,6 @@
 use crate::sets::DSet;
-use crate::vars::v1::DV1;
-use crate::vars::VarType;
-use crate::{new_bag, Bag, Ptr, SetTyp, Slot};
+use crate::vars::{v1::DV1, VarType};
+use crate::{new_bag, Bag, Ptr};
 use orx_imp_vec::Elem;
 
 pub struct V1Bag<'d> {

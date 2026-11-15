@@ -1,4 +1,4 @@
-use crate::{con_vals::ConValTyp, slot::State, Model, Set, SetTyp, Symbol, ValTyp};
+use crate::{con_vals::ConValTyp, slot::State, Model, SetTyp, Symbol, ValTyp};
 use alloc::string::String;
 use core::ops::Deref;
 

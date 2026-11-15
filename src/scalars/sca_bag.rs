@@ -1,5 +1,5 @@
 use crate::scalars::DSca;
-use crate::{new_bag, Bag, SetTyp, Slot};
+use crate::{new_bag, Bag};
 use orx_imp_vec::Elem;
 
 pub struct ScaBag<'d> {
