@@ -1,4 +1,5 @@
-use crate::{Set, SetCatInt, SetCatStr, SetOrd, SetTyp};
+use crate::sets::{DSet, FunSet};
+use crate::{Ptr, Set, SetCatInt, SetCatStr, SetOrd, SetTyp};
 use alloc::boxed::Box;
 use core::mem::{transmute, ManuallyDrop};
 
@@ -19,14 +20,14 @@ pub union UFunV1<'d> {
 
 #[derive(derive_new::new)]
 pub struct FunV1<'d> {
-    pub i0_typ: SetTyp,
+    i0: Ptr<'d, FunSet<'d>>,
     data: UFunV1<'d>,
 }
 
 impl<'d> Drop for FunV1<'d> {
     fn drop(&mut self) {
         unsafe {
-            match self.i0_typ {
+            match self.i0_typ() {
                 SetTyp::CatInt => ManuallyDrop::drop(&mut self.data.cint),
                 SetTyp::CatStr => ManuallyDrop::drop(&mut self.data.cstr),
                 SetTyp::Ord => ManuallyDrop::drop(&mut self.data.ord),
@@ -36,7 +37,12 @@ impl<'d> Drop for FunV1<'d> {
 }
 
 impl<'d> FunV1<'d> {
-    pub fn create<I0: Set>(fun: FV1<'d, I0>) -> Self {
+    fn i0_typ(&self) -> SetTyp {
+        self.i0.get().typ
+    }
+
+    pub fn create<I0: Set>(i0: Ptr<'d, FunSet<'d>>, fun: FV1<'d, I0>) -> Self {
+        debug_assert_eq!(I0::typ(), i0.get().typ);
         let i0_typ = I0::typ();
         let data = unsafe {
             match i0_typ {
@@ -51,12 +57,12 @@ impl<'d> FunV1<'d> {
                 },
             }
         };
-        Self::new(i0_typ, data)
+        Self::new(i0, data)
     }
 
     pub fn get<I0: Set>(&self) -> &FV1<'d, I0> {
         unsafe {
-            match self.i0_typ {
+            match self.i0_typ() {
                 SetTyp::CatInt => transmute(&self.data.cint),
                 SetTyp::CatStr => transmute(&self.data.cstr),
                 SetTyp::Ord => transmute(&self.data.ord),

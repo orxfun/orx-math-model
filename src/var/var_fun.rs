@@ -1,6 +1,7 @@
+use crate::sets::FunSet;
 use crate::var::var_fun1::{FunV1, FV1};
 use crate::var::var_fun2::{FunV2, FV2};
-use crate::{Dim, Set};
+use crate::{Dim, Ptr, Set, VarType};
 use core::mem::{transmute, ManuallyDrop};
 
 #[repr(C)]
@@ -12,6 +13,7 @@ union UFunV<'d> {
 #[derive(derive_new::new)]
 pub struct FunV<'d> {
     dim: Dim,
+    typ: VarType,
     data: UFunV<'d>,
 }
 
@@ -30,20 +32,25 @@ impl<'d> Drop for FunV<'d> {
 impl<'d> FunV<'d> {
     // create
 
-    pub fn create_d1<I0: Set>(fun: FV1<'d, I0>) -> Self {
+    pub fn create_d1<I0: Set>(typ: VarType, i0: Ptr<'d, FunSet<'d>>, fun: FV1<'d, I0>) -> Self {
         let dim = Dim::D1;
         let data = UFunV {
-            d1: ManuallyDrop::new(FunV1::create::<I0>(fun)),
+            d1: ManuallyDrop::new(FunV1::create::<I0>(i0, fun)),
         };
-        Self::new(dim, data)
+        Self::new(dim, typ, data)
     }
 
-    pub fn create_d2<I0: Set, I1: Set>(fun: FV2<'d, I0, I1>) -> Self {
+    pub fn create_d2<I0: Set, I1: Set>(
+        typ: VarType,
+        i0: Ptr<'d, FunSet<'d>>,
+        i1: Ptr<'d, FunSet<'d>>,
+        fun: FV2<'d, I0, I1>,
+    ) -> Self {
         let dim = Dim::D1;
         let data = UFunV {
-            d2: ManuallyDrop::new(FunV2::create::<I0, I1>(fun)),
+            d2: ManuallyDrop::new(FunV2::create::<I0, I1>(i0, i1, fun)),
         };
-        Self::new(dim, data)
+        Self::new(dim, typ, data)
     }
 
     // get

@@ -1,4 +1,4 @@
-use crate::{Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetTyp};
+use crate::{sets::FunSet, Ptr, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetTyp};
 use alloc::boxed::Box;
 use core::mem::{transmute, ManuallyDrop};
 
@@ -66,26 +66,40 @@ pub union UFunV2<'d> {
 
 #[derive(derive_new::new)]
 pub struct FunV2<'d> {
-    pub i0_typ: SetTyp,
-    pub i1_typ: SetTyp,
+    i0: Ptr<'d, FunSet<'d>>,
+    i1: Ptr<'d, FunSet<'d>>,
     data: UFunV2<'d>,
 }
 
 impl<'d> Drop for FunV2<'d> {
     fn drop(&mut self) {
-        match self.i0_typ {
-            SetTyp::CatInt => unsafe { &mut self.data.cint }.man_drop(self.i1_typ),
-            SetTyp::CatStr => unsafe { &mut self.data.cstr }.man_drop(self.i1_typ),
-            SetTyp::Ord => unsafe { &mut self.data.ord }.man_drop(self.i1_typ),
+        let i1_typ = self.i1_typ();
+        match self.i0_typ() {
+            SetTyp::CatInt => unsafe { &mut self.data.cint }.man_drop(i1_typ),
+            SetTyp::CatStr => unsafe { &mut self.data.cstr }.man_drop(i1_typ),
+            SetTyp::Ord => unsafe { &mut self.data.ord }.man_drop(i1_typ),
         }
     }
 }
 
 impl<'d> FunV2<'d> {
-    pub fn create<I0: Set, I1: Set>(fun: FV2<'d, I0, I1>) -> Self {
-        let (i0_typ, i1_typ) = (I0::typ(), I1::typ());
+    fn i0_typ(&self) -> SetTyp {
+        self.i0.get().typ
+    }
+
+    fn i1_typ(&self) -> SetTyp {
+        self.i1.get().typ
+    }
+
+    pub fn create<I0: Set, I1: Set>(
+        i0: Ptr<'d, FunSet<'d>>,
+        i1: Ptr<'d, FunSet<'d>>,
+        fun: FV2<'d, I0, I1>,
+    ) -> Self {
+        debug_assert_eq!(I0::typ(), i0.get().typ);
+        debug_assert_eq!(I1::typ(), i1.get().typ);
         let data = unsafe {
-            match i0_typ {
+            match I0::typ() {
                 SetTyp::CatInt => UFunV2 {
                     cint: transmute(UFunV2_I0::<I0>::create::<I1>(fun)),
                 },
@@ -97,12 +111,12 @@ impl<'d> FunV2<'d> {
                 },
             }
         };
-        Self::new(i0_typ, i1_typ, data)
+        Self::new(i0, i1, data)
     }
 
     pub fn get<I0: Set, I1: Set>(&self) -> &FV2<'d, I0, I1> {
-        Res::dbg_assert_same_set(I0::typ(), self.i0_typ);
-        Res::dbg_assert_same_set(I1::typ(), self.i1_typ);
+        debug_assert_eq!(I0::typ(), self.i0_typ());
+        debug_assert_eq!(I1::typ(), self.i1_typ());
         unsafe {
             match I0::typ() {
                 SetTyp::CatInt => transmute(self.data.cint.get::<I1>()),

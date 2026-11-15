@@ -4,6 +4,7 @@ use crate::pars::p2::ParD2;
 use crate::sets::{
     CatInt, CatStr, DSet, FSet, FunSet, IndexCatInt, IndexCatStr, IndexOrd, Ord, UFunSet,
 };
+use crate::var::FunV;
 use crate::vars::v1::VarD1;
 use crate::{Model, Ptr, Res, ResValid, SetSym, Slot, Symbol, Val, ValInt, Var};
 use alloc::boxed::Box;
@@ -197,6 +198,22 @@ impl Set for SetCatInt {
                 I1::p2_at_i0(par, i0, i1)
             }
             IndexCatInt::ConUsize(i0) => I1::p2_at_i0(par, move || i0, i1),
+        }
+    }
+
+    // v1
+
+    fn v1_at<'m, 'd>(var: VarD1<'m, 'd, Self>, i0: impl Into<Self::IdxAny<'m, 'd>>) -> Var<'m, 'd> {
+        let fun = Ptr::new(var.el);
+        let a = fun.get();
+
+        match i0.into() {
+            IndexCatInt::Idx(i0) => {
+                let i0 = Ptr::new(i0.el);
+                // let fun = FunV::create_d1::<Self>(fun);
+                var.m.var(todo!())
+            }
+            _ => todo!(),
         }
     }
 }
