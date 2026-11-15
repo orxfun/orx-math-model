@@ -4,6 +4,7 @@ use crate::con_vals::{ConVal, ConValBag, DConVal};
 use crate::idxs::{IdxBag, IdxValBag};
 use crate::pars::p1::{P1Bag, P1FunBag, ParD1};
 use crate::pars::p2::{P2Bag, P2FunBag, ParD2};
+use crate::scalars::ScaBag;
 // use crate::arb_val::{ArbVal, ArbValBag};
 // use crate::idxs::{CatIdxInt, CatIdxStr, IdxBag, IdxSlots, OrdIdx};
 // use crate::par::p1::{IntParD1, NumParD1, P1Bag, P1Slots};
@@ -46,6 +47,7 @@ pub struct Model<'d> {
     idx_bag: IdxBag<'d>,
 
     // vals
+    sca_bag: ManuallyDrop<ScaBag<'d>>,
     val_bag: ValBag<'d>,
     con_val_bag: ConValBag,
     sym_ref_bag: SymRefBag<'d>,
@@ -55,6 +57,7 @@ pub struct Model<'d> {
 impl<'d> Drop for Model<'d> {
     fn drop(&mut self) {
         // SAFETY: needs to be dropped after set_fun_bag
+        unsafe { ManuallyDrop::drop(&mut self.sca_bag) };
         unsafe { ManuallyDrop::drop(&mut self.var_bag) };
     }
 }
