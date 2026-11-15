@@ -49,12 +49,10 @@ impl<'d> FunV<'d> {
     // get
 
     pub fn get_d1<I0: Set>(&self) -> &FV1<'d, I0> {
-        unsafe {
-            match self.dim {
-                Dim::D0 => todo!(),
-                Dim::D1 => transmute(&self.data.d1),
-                Dim::D2 => transmute(&self.data.d2),
-            }
-        }
+        unsafe { transmute(&self.data.d1) }
+    }
+
+    pub fn get_d2<I0: Set, I1: Set>(&self) -> &FV2<'d, I0, I1> {
+        unsafe { transmute(&self.data.d2) }
     }
 }
