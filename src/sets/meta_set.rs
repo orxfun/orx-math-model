@@ -93,9 +93,7 @@ pub trait Set: Clone + Copy + 'static {
         var: VarD2<'m, 'd, Self, I1>,
         i0: impl Into<Self::IdxAny<'m, 'd>>,
         i1: impl Into<I1::IdxAny<'m, 'd>>,
-    ) -> Var<'m, 'd> {
-        todo!()
-    }
+    ) -> Var<'m, 'd>;
 }
 
 // cat set int

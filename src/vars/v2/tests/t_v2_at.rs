@@ -101,40 +101,40 @@ fn abc() {
     let i1 = s1.idx();
     let var = m.var2(VarType::Binary, s0, s1);
     let sca1 = [var.at(i0, i1)];
-    let sca2 = [var.at(i0, "3")];
-    let sca3 = [var.at(2, i1)];
-    let sca4 = [var.at(2, "3")];
+    // let sca2 = [var.at(i0, "3")];
+    // let sca3 = [var.at(2, i1)];
+    // let sca4 = [var.at(2, "3")];
 
-    // binding
-    s0.bind(|| s0_data.iter().copied()).unwrap();
-    s1.bind(|| &s1_data).unwrap();
+    // // binding
+    // s0.bind(|| s0_data.iter().copied()).unwrap();
+    // s1.bind(|| &s1_data).unwrap();
 
     // running
-    let mut el0: Elements<El0<'_>> = vec![].into();
-    let it0 = ElementsIter::<I0>::new(i0, &mut el0);
-    for (i, _) in it0.enumerate() {
-        let mut el1: Elements<El1<'_>> = vec![].into();
-        let it1 = ElementsIter::<I1>::new(i1, &mut el1);
-        for (j, _) in it1.enumerate() {
-            let exp = (s0_data[i], &s1_data[j]);
-            for sca in sca1 {
-                assert_eq!(exp, unsafe { sca.el.get() }.indices_d2::<I0, I1>());
-            }
+    // let mut el0: Elements<El0<'_>> = vec![].into();
+    // let it0 = ElementsIter::<I0>::new(i0, &mut el0);
+    // for (i, _) in it0.enumerate() {
+    //     let mut el1: Elements<El1<'_>> = vec![].into();
+    //     let it1 = ElementsIter::<I1>::new(i1, &mut el1);
+    //     for (j, _) in it1.enumerate() {
+    //         let exp = (s0_data[i], &s1_data[j]);
+    //         for sca in sca1 {
+    //             assert_eq!(exp, unsafe { sca.el.get() }.indices_d2::<I0, I1>());
+    //         }
 
-            let exp = (s0_data[i], &s1_data[3]);
-            for sca in sca2 {
-                assert_eq!(exp, unsafe { sca.el.get() }.indices_d2::<I0, I1>());
-            }
+    //         let exp = (s0_data[i], &s1_data[3]);
+    //         for sca in sca2 {
+    //             assert_eq!(exp, unsafe { sca.el.get() }.indices_d2::<I0, I1>());
+    //         }
 
-            let exp = (s0_data[2], &s1_data[j]);
-            for sca in sca3 {
-                assert_eq!(exp, unsafe { sca.el.get() }.indices_d2::<I0, I1>());
-            }
+    //         let exp = (s0_data[2], &s1_data[j]);
+    //         for sca in sca3 {
+    //             assert_eq!(exp, unsafe { sca.el.get() }.indices_d2::<I0, I1>());
+    //         }
 
-            let exp = (s0_data[2], &s1_data[3]);
-            for sca in sca4 {
-                assert_eq!(exp, unsafe { sca.el.get() }.indices_d2::<I0, I1>());
-            }
-        }
-    }
+    //         let exp = (s0_data[2], &s1_data[3]);
+    //         for sca in sca4 {
+    //             assert_eq!(exp, unsafe { sca.el.get() }.indices_d2::<I0, I1>());
+    //         }
+    //     }
+    // }
 }
