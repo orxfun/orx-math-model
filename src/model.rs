@@ -1,3 +1,5 @@
+use core::mem::ManuallyDrop;
+
 use crate::con_vals::{ConVal, ConValBag, DConVal};
 use crate::idxs::{IdxBag, IdxValBag};
 use crate::pars::p1::{P1Bag, P1FunBag, ParD1};
@@ -21,12 +23,6 @@ use orx_imp_vec::Elem;
 
 #[derive(Default)]
 pub struct Model<'d> {
-    // vals
-    val_bag: ValBag<'d>,
-    con_val_bag: ConValBag,
-    sym_ref_bag: SymRefBag<'d>,
-    var_bag: VarFunBag<'d>,
-
     // states
     slot_states: SlotStates,
 
@@ -46,14 +42,19 @@ pub struct Model<'d> {
     // idxs
     idx_val_bag: IdxValBag<'d>,
     idx_bag: IdxBag<'d>,
-    //
+
     // vals
-    // val_bag: ValBag<'d>,
-    // arb_val_bag: ArbValBag<'d>,
-    //
-    // // pars
-    // p1_slots: P1Slots<'d>,
-    // p1_bag: P1Bag<'d>,
+    val_bag: ValBag<'d>,
+    con_val_bag: ConValBag,
+    sym_ref_bag: SymRefBag<'d>,
+    var_bag: ManuallyDrop<VarFunBag<'d>>,
+}
+
+impl<'d> Drop for Model<'d> {
+    fn drop(&mut self) {
+        // SAFETY: needs to be dropped after set_fun_bag
+        unsafe { ManuallyDrop::drop(&mut self.var_bag) };
+    }
 }
 
 impl<'d> Model<'d> {
