@@ -1,4 +1,4 @@
-use crate::scalars::{DVal, DVar, ScaTyp};
+use crate::scalars::{DVal, DVar, FVal, ScaTyp, Val, ValTyp};
 use core::mem::ManuallyDrop;
 
 #[repr(C)]
@@ -20,5 +20,15 @@ impl<'d> Drop for DSca<'d> {
                 ScaTyp::Var => ManuallyDrop::drop(&mut self.data.var),
             }
         }
+    }
+}
+
+impl<'d> DSca<'d> {
+    pub fn new_val<V: Val>(fun: FVal<'d, V>) -> Self {
+        let sca_typ = ScaTyp::from(V::typ());
+        let data = USca {
+            val: ManuallyDrop::new(DVal::new::<V>(fun)),
+        };
+        Self { sca_typ, data }
     }
 }
