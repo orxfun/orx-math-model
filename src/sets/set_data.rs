@@ -8,7 +8,7 @@ pub struct DSet<'d> {
 }
 
 impl<'d> DSet<'d> {
-    fn typ(&self) -> SetTyp {
+    pub fn typ(&self) -> SetTyp {
         self.slot.get().typ
     }
 

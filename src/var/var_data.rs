@@ -1,6 +1,6 @@
 use crate::sets::FunSet;
-use crate::var::var_fun1::{FunV1, FV1};
-use crate::var::var_fun2::{FunV2, FV2};
+use crate::var::var_fun1::{FunV1, Idx1, FV1};
+use crate::var::var_fun2::{FunV2, Idx2, FV2};
 use crate::{Dim, Ptr, Set, VarType};
 use core::mem::{transmute, ManuallyDrop};
 
@@ -61,5 +61,22 @@ impl<'d> DV<'d> {
 
     pub fn get_d2<I0: Set, I1: Set>(&self) -> &FV2<'d, I0, I1> {
         unsafe { transmute(&self.data.d2) }
+    }
+
+    // indices
+
+    pub fn indices_d1<I0: Set>(&self) -> Idx1<'d, I0> {
+        let data = unsafe { &self.data.d1 };
+        debug_assert_eq!(I0::typ(), data.i0.get().typ);
+        let fun = data.get::<I0>();
+        fun()
+    }
+
+    pub fn indices_d2<I0: Set, I1: Set>(&self) -> Idx2<'d, I0, I1> {
+        let data = unsafe { &self.data.d2 };
+        debug_assert_eq!(I0::typ(), data.i0.get().typ);
+        debug_assert_eq!(I1::typ(), data.i1.get().typ);
+        let fun = data.get::<I0, I1>();
+        fun()
     }
 }

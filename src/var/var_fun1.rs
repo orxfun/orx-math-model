@@ -5,9 +5,9 @@ use core::mem::{transmute, ManuallyDrop};
 
 // core
 
-type Idx<'d, I0> = <I0 as Set>::IdxRaw<'d>;
+pub type Idx1<'d, I0> = <I0 as Set>::IdxRaw<'d>;
 
-pub type FV1<'d, I0> = Box<dyn Fn() -> Idx<'d, I0> + 'd>;
+pub type FV1<'d, I0> = Box<dyn Fn() -> Idx1<'d, I0> + 'd>;
 
 // .
 
@@ -20,7 +20,7 @@ pub union UFunV1<'d> {
 
 #[derive(derive_new::new)]
 pub struct FunV1<'d> {
-    i0: Ptr<'d, FunSet<'d>>,
+    pub i0: Ptr<'d, FunSet<'d>>,
     data: UFunV1<'d>,
 }
 
