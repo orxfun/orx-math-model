@@ -33,6 +33,7 @@ impl<'d> DVar<'d> {
     // create
 
     pub fn create_d1<I0: Set>(typ: VarType, i0: Ptr<'d, FunSet<'d>>, fun: FVar1<'d, I0>) -> Self {
+        debug_assert_eq!(I0::typ(), i0.get().typ);
         let dim = Dim::D1;
         let data = UFunVar {
             d1: ManuallyDrop::new(FunV1::create::<I0>(i0, fun)),
@@ -46,6 +47,8 @@ impl<'d> DVar<'d> {
         i1: Ptr<'d, FunSet<'d>>,
         fun: FVar2<'d, I0, I1>,
     ) -> Self {
+        debug_assert_eq!(I0::typ(), i0.get().typ);
+        debug_assert_eq!(I1::typ(), i1.get().typ);
         let dim = Dim::D2;
         let data = UFunVar {
             d2: ManuallyDrop::new(FunV2::create::<I0, I1>(i0, i1, fun)),
