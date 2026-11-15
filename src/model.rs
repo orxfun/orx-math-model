@@ -95,17 +95,6 @@ impl<'d> Model<'d> {
         S::new_idx_sym(self, el)
     }
 
-    // vals
-
-    pub(crate) fn con_val<T: TConVal>(&self, value: T) -> Ptr<'d, DConVal> {
-        let el = self.con_val_bag.push(ConVal::new(value));
-        Slot::new(self, el).ptr()
-    }
-
-    pub(crate) fn sym_ref<'m, S: Sca>(&'m self, sym: S::Sym<'m, 'd>) -> &'m S::Sym<'m, 'd> {
-        self.sym_ref_bag.push::<S>(sym)
-    }
-
     // p1
 
     fn par1<'m, V, S0>(&'m self, s0: S0) -> ParD1<'m, 'd, V, S0::Meta>
@@ -246,5 +235,16 @@ impl<'d> Model<'d> {
         let data = DSca::new_var_d2::<I0, I1>(var.typ, i0, i1, fun);
         let el = self.sca_bag.push(data);
         Symbol::new(self, el).into()
+    }
+
+    // vals
+
+    pub(crate) fn con_val<T: TConVal>(&self, value: T) -> Ptr<'d, DConVal> {
+        let el = self.con_val_bag.push(ConVal::new(value));
+        Slot::new(self, el).ptr()
+    }
+
+    pub(crate) fn sym_ref<'m, S: Sca>(&'m self, sym: S::Sym<'m, 'd>) -> &'m S::Sym<'m, 'd> {
+        self.sym_ref_bag.push::<S>(sym)
     }
 }
