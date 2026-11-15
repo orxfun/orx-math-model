@@ -4,16 +4,6 @@ use alloc::string::{String, ToString};
 use alloc::{vec, vec::Vec};
 use std::collections::HashMap;
 
-#[test]
-fn abc() {
-    // modeling
-    let m = Model::default();
-    let set = m.cat_set_int();
-    let idx = set.idx();
-    let par = m.par1_int(set);
-    let a = par.at(idx);
-}
-
 // int
 
 #[test]

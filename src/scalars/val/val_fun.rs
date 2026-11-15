@@ -1,4 +1,4 @@
-use crate::scalars::val::{Val, ScaInt, ScaNum, ValTyp};
+use crate::scalars::val::{ScaInt, ScaNum, Val, ValTyp};
 use crate::{Elements, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetTyp};
 use alloc::boxed::Box;
 use core::mem::ManuallyDrop;
