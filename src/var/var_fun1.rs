@@ -17,39 +17,49 @@ pub union UFunV1<'d> {
     ord: ManuallyDrop<FV1<'d, SetOrd>>,
 }
 
-impl<'d> UFunV1<'d> {
-    fn create<I0: Set>(fun: FV1<'d, I0>) -> ManuallyDrop<Self> {
+#[derive(derive_new::new)]
+pub struct FunV1<'d> {
+    pub i0_typ: SetTyp,
+    data: UFunV1<'d>,
+}
+
+impl<'d> Drop for FunV1<'d> {
+    fn drop(&mut self) {
         unsafe {
-            ManuallyDrop::new(match I0::typ() {
-                SetTyp::CatInt => Self {
+            match self.i0_typ {
+                SetTyp::CatInt => ManuallyDrop::drop(&mut self.data.cint),
+                SetTyp::CatStr => ManuallyDrop::drop(&mut self.data.cstr),
+                SetTyp::Ord => ManuallyDrop::drop(&mut self.data.ord),
+            }
+        }
+    }
+}
+
+impl<'d> FunV1<'d> {
+    fn create<I0: Set>(fun: FV1<'d, I0>) -> Self {
+        let i0_typ = I0::typ();
+        let data = unsafe {
+            match i0_typ {
+                SetTyp::CatInt => UFunV1 {
                     cint: ManuallyDrop::new(transmute(fun)),
                 },
-                SetTyp::CatStr => Self {
+                SetTyp::CatStr => UFunV1 {
                     cstr: ManuallyDrop::new(transmute(fun)),
                 },
-                SetTyp::Ord => Self {
+                SetTyp::Ord => UFunV1 {
                     ord: ManuallyDrop::new(transmute(fun)),
                 },
-            })
-        }
+            }
+        };
+        Self::new(i0_typ, data)
     }
 
     fn get<I0: Set>(&self) -> &FV1<'d, I0> {
         unsafe {
-            match I0::typ() {
-                SetTyp::CatInt => transmute(&self.cint),
-                SetTyp::CatStr => transmute(&self.cstr),
-                SetTyp::Ord => transmute(&self.ord),
-            }
-        }
-    }
-
-    fn man_drop(&mut self, i0_typ: SetTyp) {
-        unsafe {
-            match i0_typ {
-                SetTyp::CatInt => ManuallyDrop::drop(&mut self.cint),
-                SetTyp::CatStr => ManuallyDrop::drop(&mut self.cstr),
-                SetTyp::Ord => ManuallyDrop::drop(&mut self.ord),
+            match self.i0_typ {
+                SetTyp::CatInt => transmute(&self.data.cint),
+                SetTyp::CatStr => transmute(&self.data.cstr),
+                SetTyp::Ord => transmute(&self.data.ord),
             }
         }
     }
