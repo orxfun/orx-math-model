@@ -12,7 +12,7 @@
 )]
 #![no_std]
 // TODO: clean up this
-// #![allow(dead_code, unused_imports)]
+#![allow(dead_code, unused_imports)]
 
 extern crate alloc;
 
