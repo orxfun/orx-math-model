@@ -249,21 +249,4 @@ impl<'d> Model<'d> {
         let el = self.sca_bag.push(data);
         Symbol::new(self, el).into()
     }
-
-    // pub fn par_d1_int<'m, S0: Set<'m, 'd>>(&'m self, s0: S0) -> IntParD1<'m, 'd, S0::Meta> {
-    //     let par = self.p1_slots.push::<S0::Meta, MetaInt>(self);
-    //     let el = self.p1_bag.push(par, s0.slot());
-    //     Symbol::new(self, el).into()
-    // }
-
-    // pub fn par_d1_num<'m, S0: Set<'m, 'd>>(&'m self, s0: S0) -> NumParD1<'m, 'd, S0::Meta> {
-    //     let par = self.p1_slots.push::<S0::Meta, MetaNum>(self);
-    //     let el = self.p1_bag.push(par, s0.slot());
-    //     Symbol::new(self, el).into()
-    // }
 }
-
-// let fun_el = self.set_fun_bag.push(S::typ());
-// let fun_slot = Slot::new(self, fun_el);
-// let el = self.set_bag.push(fun_slot);
-// S::new_set_sym(self, el)
