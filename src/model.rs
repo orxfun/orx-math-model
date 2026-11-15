@@ -1,3 +1,5 @@
+use core::mem::ManuallyDrop;
+
 use crate::con_vals::{ConVal, ConValBag, DConVal};
 use crate::idxs::{IdxBag, IdxValBag};
 use crate::pars::p1::{P1Bag, P1FunBag, ParD1};
@@ -11,6 +13,7 @@ use crate::sym_refs::SymRefBag;
 use crate::vals::{FunVal, ValBag};
 use crate::var::{VarFunBag, DV};
 use crate::vars::v1::{V1Bag, VarD1};
+use crate::vars::v2::{V2Bag, VarD2};
 use crate::vars::VarType;
 use crate::{
     Ptr, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetSym, SetTyp, Slot, Symbol, TConVal,
@@ -21,12 +24,6 @@ use orx_imp_vec::Elem;
 
 #[derive(Default)]
 pub struct Model<'d> {
-    // vals
-    val_bag: ValBag<'d>,
-    con_val_bag: ConValBag,
-    sym_ref_bag: SymRefBag<'d>,
-    var_bag: VarFunBag<'d>,
-
     // states
     slot_states: SlotStates,
 
@@ -42,18 +39,24 @@ pub struct Model<'d> {
 
     // vars
     v1_bag: V1Bag<'d>,
+    v2_bag: V2Bag<'d>,
 
     // idxs
     idx_val_bag: IdxValBag<'d>,
     idx_bag: IdxBag<'d>,
-    //
+
     // vals
-    // val_bag: ValBag<'d>,
-    // arb_val_bag: ArbValBag<'d>,
-    //
-    // // pars
-    // p1_slots: P1Slots<'d>,
-    // p1_bag: P1Bag<'d>,
+    val_bag: ValBag<'d>,
+    con_val_bag: ConValBag,
+    sym_ref_bag: SymRefBag<'d>,
+    var_bag: ManuallyDrop<VarFunBag<'d>>,
+}
+
+impl<'d> Drop for Model<'d> {
+    fn drop(&mut self) {
+        // SAFETY: needs to be dropped after set_fun_bag
+        unsafe { ManuallyDrop::drop(&mut self.var_bag) };
+    }
 }
 
 impl<'d> Model<'d> {
@@ -199,6 +202,24 @@ impl<'d> Model<'d> {
     {
         let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
         let el = self.v1_bag.push(typ, s0_ptr);
+        Symbol::new(self, el).into()
+    }
+
+    pub fn var2<'m, S0, S1>(
+        &'m self,
+        typ: VarType,
+        s0: S0,
+        s1: S1,
+    ) -> VarD2<'m, 'd, S0::Meta, S1::Meta>
+    where
+        S0: SetSym<'m, 'd>,
+        S0::Meta: Set<SetSym<'m, 'd> = S0>,
+        S1: SetSym<'m, 'd>,
+        S1::Meta: Set<SetSym<'m, 'd> = S1>,
+    {
+        let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
+        let s1_ptr = <S1::Meta as Set>::set_ptr(s1);
+        let el = self.v2_bag.push(typ, s0_ptr, s1_ptr);
         Symbol::new(self, el).into()
     }
 
