@@ -2,8 +2,7 @@ use crate::idxs::{DIdx, IdxCatInt, IdxCatStr, IdxOrd, UIdxVal};
 use crate::pars::p1::ParD1;
 use crate::pars::p2::ParD2;
 use crate::sets::{CatInt, CatStr, DSet, FSet, IndexCatInt, IndexCatStr, IndexOrd, Ord, UFunSet};
-use crate::vars::v1::VarD1;
-use crate::vars::v2::VarD2;
+use crate::vars::{VarD1, VarD2};
 use crate::{Model, Ptr, ScaInt, SetSym, Symbol, Val, Var};
 use alloc::boxed::Box;
 use alloc::string::{String, ToString};
@@ -217,11 +216,11 @@ impl Set for SetCatInt {
             IndexCatInt::Idx(i0) => {
                 let i0 = Ptr::new(i0.el);
                 let fun = Box::new(move || i0.get().read::<Self>());
-                var.m.var_from_d1(var, fun)
+                var.m().var_from_d1(var, fun)
             }
             IndexCatInt::ConUsize(i0) => {
                 let fun = Box::new(move || i0);
-                var.m.var_from_d1(var, fun)
+                var.m().var_from_d1(var, fun)
             }
         }
     }
@@ -237,11 +236,11 @@ impl Set for SetCatInt {
             IndexCatInt::Idx(i1) => {
                 let i1 = Ptr::new(i1.el);
                 let fun = Box::new(move || (i0(), i1.get().read::<Self>()));
-                var.m.var_from_d2(var, fun)
+                var.m().var_from_d2(var, fun)
             }
             IndexCatInt::ConUsize(i1) => {
                 let fun = Box::new(move || (i0(), i1));
-                var.m.var_from_d2(var, fun)
+                var.m().var_from_d2(var, fun)
             }
         }
     }
@@ -427,21 +426,21 @@ impl Set for SetCatStr {
             IndexCatStr::Idx(i0) => {
                 let i0 = Ptr::new(i0.el);
                 let fun = Box::new(move || i0.get().read::<Self>());
-                var.m.var_from_d1(var, fun)
+                var.m().var_from_d1(var, fun)
             }
             IndexCatStr::ConStringRef(i0) => {
                 let fun = Box::new(move || i0);
-                var.m.var_from_d1(var, fun)
+                var.m().var_from_d1(var, fun)
             }
             IndexCatStr::ConString(i0) => {
-                let i0 = var.m.con_val(i0);
+                let i0 = var.m().con_val(i0);
                 let fun = Box::new(move || i0.get().get());
-                var.m.var_from_d1(var, fun)
+                var.m().var_from_d1(var, fun)
             }
             IndexCatStr::ConStr(i0) => {
-                let i0 = var.m.con_val(i0.to_string());
+                let i0 = var.m().con_val(i0.to_string());
                 let fun = Box::new(move || i0.get().get());
-                var.m.var_from_d1(var, fun)
+                var.m().var_from_d1(var, fun)
             }
         }
     }
@@ -457,21 +456,21 @@ impl Set for SetCatStr {
             IndexCatStr::Idx(i1) => {
                 let i1 = Ptr::new(i1.el);
                 let fun = Box::new(move || (i0(), i1.get().read::<Self>()));
-                var.m.var_from_d2(var, fun)
+                var.m().var_from_d2(var, fun)
             }
             IndexCatStr::ConStringRef(i1) => {
                 let fun = Box::new(move || (i0(), i1));
-                var.m.var_from_d2(var, fun)
+                var.m().var_from_d2(var, fun)
             }
             IndexCatStr::ConString(i1) => {
-                let i1 = var.m.con_val(i1);
+                let i1 = var.m().con_val(i1);
                 let fun = Box::new(move || (i0(), i1.get().get()));
-                var.m.var_from_d2(var, fun)
+                var.m().var_from_d2(var, fun)
             }
             IndexCatStr::ConStr(i1) => {
-                let i1 = var.m.con_val(i1.to_string());
+                let i1 = var.m().con_val(i1.to_string());
                 let fun = Box::new(move || (i0(), i1.get().get()));
-                var.m.var_from_d2(var, fun)
+                var.m().var_from_d2(var, fun)
             }
         }
     }
@@ -489,11 +488,11 @@ impl Set for SetCatStr {
             }
             IndexCatStr::ConStringRef(i0) => I1::v2_at_i0(var, move || i0, i1),
             IndexCatStr::ConString(i0) => {
-                let i0 = var.m.con_val(i0);
+                let i0 = var.m().con_val(i0);
                 I1::v2_at_i0(var, move || i0.get().get(), i1)
             }
             IndexCatStr::ConStr(i0) => {
-                let i0 = var.m.con_val(i0.to_string());
+                let i0 = var.m().con_val(i0.to_string());
                 I1::v2_at_i0(var, move || i0.get().get(), i1)
             }
         }
@@ -664,24 +663,24 @@ impl Set for SetOrd {
             IndexOrd::Idx(i0) => {
                 let i0 = Ptr::new(i0.el);
                 let fun = Box::new(move || i0.get().read::<Self>());
-                var.m.var_from_d1(var, fun)
+                var.m().var_from_d1(var, fun)
             }
             IndexOrd::Int(i0) => {
                 let i0 = Ptr::new(i0.el);
                 let fun = Box::new(move || i0.get().val_eval::<ScaInt>());
-                var.m.var_from_d1(var, fun)
+                var.m().var_from_d1(var, fun)
             }
             IndexOrd::ConI64(i0) => {
                 let fun = Box::new(move || i0);
-                var.m.var_from_d1(var, fun)
+                var.m().var_from_d1(var, fun)
             }
             IndexOrd::ConUsize(i0) => {
                 let fun = Box::new(move || i0 as i64);
-                var.m.var_from_d1(var, fun)
+                var.m().var_from_d1(var, fun)
             }
             IndexOrd::ConI32(i0) => {
                 let fun = Box::new(move || i0 as i64);
-                var.m.var_from_d1(var, fun)
+                var.m().var_from_d1(var, fun)
             }
         }
     }
@@ -697,24 +696,24 @@ impl Set for SetOrd {
             IndexOrd::Idx(i1) => {
                 let i1 = Ptr::new(i1.el);
                 let fun = Box::new(move || (i0(), i1.get().read::<Self>()));
-                var.m.var_from_d2(var, fun)
+                var.m().var_from_d2(var, fun)
             }
             IndexOrd::Int(i1) => {
                 let i1 = Ptr::new(i1.el);
                 let fun = Box::new(move || (i0(), i1.get().val_eval::<ScaInt>()));
-                var.m.var_from_d2(var, fun)
+                var.m().var_from_d2(var, fun)
             }
             IndexOrd::ConI64(i1) => {
                 let fun = Box::new(move || (i0(), i1));
-                var.m.var_from_d2(var, fun)
+                var.m().var_from_d2(var, fun)
             }
             IndexOrd::ConUsize(i1) => {
                 let fun = Box::new(move || (i0(), i1 as i64));
-                var.m.var_from_d2(var, fun)
+                var.m().var_from_d2(var, fun)
             }
             IndexOrd::ConI32(i1) => {
                 let fun = Box::new(move || (i0(), i1 as i64));
-                var.m.var_from_d2(var, fun)
+                var.m().var_from_d2(var, fun)
             }
         }
     }
