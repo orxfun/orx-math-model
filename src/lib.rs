@@ -25,7 +25,7 @@ mod dim;
 mod elements;
 mod err;
 mod idxs;
-mod lin_term;
+mod lin_expr;
 mod model;
 mod pars;
 mod scalars;
