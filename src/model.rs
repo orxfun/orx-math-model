@@ -5,7 +5,7 @@ use crate::scalars::{DSca, FVar1, FVar2, ScaBag};
 use crate::sets::{CatInt, CatStr, Ord, SetBag, SetFunBag};
 use crate::slot::{SlotStates, State};
 use crate::sym_refs::SymRefBag;
-use crate::vars::{VarBag, VarD1, VarD2, VarType, DV};
+use crate::vars::{DVars, VarBag, VarD1, VarD2, VarType};
 use crate::{
     DimVec, Int, Num, Ptr, Res, ResValid, Sca, ScaInt, ScaNum, Set, SetCatInt, SetCatStr, SetOrd,
     SetSym, Slot, Symbol, TConVal, Val, Var,
@@ -176,7 +176,7 @@ impl<'d> Model<'d> {
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
     {
         let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
-        let data = DV::new_d1(typ, s0_ptr);
+        let data = DVars::new_d1(typ, s0_ptr);
         let el = self.var_bag.push(data);
         VarD1::new(Symbol::new(self, el))
     }
@@ -195,7 +195,7 @@ impl<'d> Model<'d> {
     {
         let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
         let s1_ptr = <S1::Meta as Set>::set_ptr(s1);
-        let data = DV::new_d2(typ, s0_ptr, s1_ptr);
+        let data = DVars::new_d2(typ, s0_ptr, s1_ptr);
         let el = self.var_bag.push(data);
         VarD2::new(Symbol::new(self, el))
     }

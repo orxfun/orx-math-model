@@ -5,13 +5,13 @@ use crate::sets::DSet;
 use crate::{Dim, DimVec, Ptr, Res, ResValid, Set, Slot, Val};
 
 #[derive(derive_new::new)]
-pub struct DPar<'d> {
+pub struct DPars<'d> {
     dim: Dim,
     sets: DimVec<Ptr<'d, DSet<'d>>>,
     slot: Slot<'d, ParFun<'d>>,
 }
 
-impl<'d> DPar<'d> {
+impl<'d> DPars<'d> {
     pub fn fun_ptr(&self) -> Ptr<'d, ParFun<'d>> {
         self.slot.ptr()
     }

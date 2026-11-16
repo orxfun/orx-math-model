@@ -1,7 +1,7 @@
 use crate::pars::p1_fun::FP1;
 use crate::pars::p2_fun::FP2;
-use crate::pars::{DPar, ParFun};
-use crate::vars::DV;
+use crate::pars::{DPars, ParFun};
+use crate::vars::DVars;
 use crate::{Model, Ptr, Res, ScaVar, Set, Symbol, Val, Var};
 use alloc::boxed::Box;
 use core::marker::PhantomData;
@@ -10,18 +10,18 @@ use core::ops::Index;
 // d1
 
 #[derive(derive_new::new, Clone, Copy)]
-pub struct ParD1<'m, 'd, V: Val, I0: Set>(Symbol<'m, 'd, DPar<'d>>, PhantomData<(V, I0)>);
+pub struct ParD1<'m, 'd, V: Val, I0: Set>(Symbol<'m, 'd, DPars<'d>>, PhantomData<(V, I0)>);
 
 impl<'m, 'd, V: Val, I0: Set> ParD1<'m, 'd, V, I0> {
     pub(crate) fn m(&self) -> &'m Model<'d> {
         self.0.m
     }
 
-    pub(crate) fn data(&self) -> &DPar<'d> {
+    pub(crate) fn data(&self) -> &DPars<'d> {
         unsafe { self.0.el.get() }
     }
 
-    pub(crate) fn ptr(&self) -> Ptr<'d, DPar<'d>> {
+    pub(crate) fn ptr(&self) -> Ptr<'d, DPars<'d>> {
         Ptr::new_from_el(self.0.el)
     }
 
@@ -53,7 +53,7 @@ where
 
 #[derive(derive_new::new, Clone, Copy)]
 pub struct ParD2<'m, 'd, V: Val, I0: Set, I1: Set>(
-    Symbol<'m, 'd, DPar<'d>>,
+    Symbol<'m, 'd, DPars<'d>>,
     PhantomData<(V, I0, I1)>,
 );
 
@@ -62,11 +62,11 @@ impl<'m, 'd, V: Val, I0: Set, I1: Set> ParD2<'m, 'd, V, I0, I1> {
         self.0.m
     }
 
-    pub(crate) fn data(&self) -> &DPar<'d> {
+    pub(crate) fn data(&self) -> &DPars<'d> {
         unsafe { self.0.el.get() }
     }
 
-    pub(crate) fn ptr(&self) -> Ptr<'d, DPar<'d>> {
+    pub(crate) fn ptr(&self) -> Ptr<'d, DPars<'d>> {
         Ptr::new_from_el(self.0.el)
     }
 
