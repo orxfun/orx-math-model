@@ -139,6 +139,17 @@ pub union UFunP2<'d> {
     num: ManuallyDrop<UFunP2_V<'d, ScaNum>>,
 }
 
+impl<'d> UFunP2<'d> {
+    pub fn man_drop(&mut self, val_typ: ValTyp) {
+        unsafe {
+            match val_typ {
+                ValTyp::Int => ManuallyDrop::drop(&mut self.int),
+                ValTyp::Num => ManuallyDrop::drop(&mut self.num),
+            }
+        }
+    }
+}
+
 #[derive(derive_new::new)]
 pub struct FunP2<'d> {
     pub val_typ: ValTyp,

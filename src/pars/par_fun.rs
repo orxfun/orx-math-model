@@ -20,8 +20,8 @@ impl<'d> Drop for ParFun<'d> {
         unsafe {
             match self.dim {
                 Dim::D0 => todo!(),
-                Dim::D1 => ManuallyDrop::drop(&mut self.data.d1),
-                Dim::D2 => ManuallyDrop::drop(&mut self.data.d2),
+                Dim::D1 => (&mut self.data.d1).man_drop(self.val_typ),
+                Dim::D2 => (&mut self.data.d2).man_drop(self.val_typ),
             }
         }
     }
