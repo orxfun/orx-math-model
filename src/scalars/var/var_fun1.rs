@@ -13,9 +13,9 @@ pub type FVar1<'d, I0> = Box<dyn Fn() -> Idx1<'d, I0> + 'd>;
 
 #[repr(C)]
 pub union UFunV1<'d> {
-    cint: ManuallyDrop<FVar1<'d, SetCatInt>>,
-    cstr: ManuallyDrop<FVar1<'d, SetCatStr>>,
-    ord: ManuallyDrop<FVar1<'d, SetOrd>>,
+    pub cint: ManuallyDrop<FVar1<'d, SetCatInt>>,
+    pub cstr: ManuallyDrop<FVar1<'d, SetCatStr>>,
+    pub ord: ManuallyDrop<FVar1<'d, SetOrd>>,
 }
 
 #[derive(derive_new::new)]
