@@ -16,7 +16,7 @@ where
 
 // cat int
 
-#[derive(derive_more::From, derive_more::Deref, Clone, Copy)]
+#[derive(derive_new::new, derive_more::Deref, Clone, Copy)]
 pub struct CatInt<'m, 'd>(Symbol<'m, 'd, DSet<'d>>);
 
 impl<'m, 'd> CatInt<'m, 'd> {
@@ -31,7 +31,7 @@ impl<'m, 'd> CatInt<'m, 'd> {
 
 // cat str
 
-#[derive(derive_more::From, derive_more::Deref, Clone, Copy)]
+#[derive(derive_new::new, derive_more::Deref, Clone, Copy)]
 pub struct CatStr<'m, 'd>(Symbol<'m, 'd, DSet<'d>>);
 
 impl<'m, 'd> CatStr<'m, 'd> {
@@ -46,7 +46,7 @@ impl<'m, 'd> CatStr<'m, 'd> {
 
 // ord
 
-#[derive(derive_more::From, derive_more::Deref, Clone, Copy)]
+#[derive(derive_new::new, derive_more::Deref, Clone, Copy)]
 pub struct Ord<'m, 'd>(Symbol<'m, 'd, DSet<'d>>);
 
 impl<'m, 'd> Ord<'m, 'd> {

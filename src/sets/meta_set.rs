@@ -116,7 +116,7 @@ impl Set for SetCatInt {
     }
 
     fn new_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd> {
-        Symbol::new(m, el).into()
+        Self::SetSym::new(Symbol::new(m, el))
     }
 
     fn set_ptr<'m, 'd>(sym: Self::SetSym<'m, 'd>) -> Ptr<'d, DSet<'d>> {
@@ -286,7 +286,7 @@ impl Set for SetCatStr {
     }
 
     fn new_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd> {
-        Symbol::new(m, el).into()
+        Self::SetSym::new(Symbol::new(m, el))
     }
 
     fn set_ptr<'m, 'd>(sym: Self::SetSym<'m, 'd>) -> Ptr<'d, DSet<'d>> {
@@ -524,7 +524,7 @@ impl Set for SetOrd {
     }
 
     fn new_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd> {
-        Symbol::new(m, el).into()
+        Self::SetSym::new(Symbol::new(m, el))
     }
 
     fn set_ptr<'m, 'd>(sym: Self::SetSym<'m, 'd>) -> Ptr<'d, DSet<'d>> {
