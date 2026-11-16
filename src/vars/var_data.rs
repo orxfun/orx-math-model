@@ -1,7 +1,8 @@
-use crate::{Dim, VarType};
+use crate::sets::DSet;
+use crate::{Dim, DimVec, Ptr, VarType};
 
 pub struct DV<'d> {
     typ: VarType,
     dim: Dim,
-    a: &'d (),
+    sets: DimVec<Ptr<'d, DSet<'d>>>,
 }
