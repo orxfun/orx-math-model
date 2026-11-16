@@ -210,6 +210,10 @@ impl<'d> Model<'d> {
         Num::new(Symbol::new(self, self.sca_bag.one))
     }
 
+    pub(crate) fn minus_one_int<'m>(&'m self) -> Int<'m, 'd> {
+        Int::new(Symbol::new(self, self.sca_bag.minus_one_int))
+    }
+
     pub(crate) fn zero_int<'m>(&'m self) -> Int<'m, 'd> {
         Int::new(Symbol::new(self, self.sca_bag.zero_int))
     }

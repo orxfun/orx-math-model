@@ -11,3 +11,5 @@ impl<'m, 'd> From<Var<'m, 'd>> for LinExpr<'m, 'd> {
         value.m().lin_exp(data)
     }
 }
+
+// neg-var

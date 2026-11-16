@@ -20,6 +20,8 @@ pub trait Val: Sca {
 
     fn val_typ() -> ValTyp;
 
+    fn minus_one() -> Self::Raw;
+
     fn into_fun_union<'d>(fun: FVal<'d, Self>) -> UFunVal<'d>;
 
     fn fun_from_union<'a, 'd>(u: &'a UFunVal<'d>) -> &'a FVal<'d, Self>;
@@ -42,6 +44,10 @@ pub struct ScaInt;
 
 impl Val for ScaInt {
     type Raw = i64;
+
+    fn minus_one() -> Self::Raw {
+        -1
+    }
 
     fn val_typ() -> ValTyp {
         ValTyp::Int
@@ -84,6 +90,10 @@ pub struct ScaNum;
 
 impl Val for ScaNum {
     type Raw = f64;
+
+    fn minus_one() -> Self::Raw {
+        -1.0
+    }
 
     fn val_typ() -> ValTyp {
         ValTyp::Num

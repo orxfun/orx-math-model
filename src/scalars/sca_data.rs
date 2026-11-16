@@ -4,7 +4,7 @@ use crate::sets::FunSet;
 use crate::vars::DVars;
 use crate::{Ptr, ScaNum, Set, VarType};
 use alloc::boxed::Box;
-use core::mem::ManuallyDrop;
+use core::mem::{transmute, ManuallyDrop};
 
 #[repr(C)]
 pub union USca<'d> {
@@ -35,6 +35,10 @@ impl<'d> DSca<'d> {
 
     pub fn one() -> Self {
         Self::new_val::<ScaNum>(Box::new(|| 1.0))
+    }
+
+    pub fn minus_one<V: Val>() -> Self {
+        Self::new_val::<V>(Box::new(|| V::minus_one()))
     }
 
     pub fn new_val<V: Val>(fun: FVal<'d, V>) -> Self {
