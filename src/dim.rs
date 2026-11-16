@@ -37,6 +37,7 @@ impl<T> DimVec<T> {
 impl<T> Index<usize> for DimVec<T> {
     type Output = T;
 
+    #[inline(always)]
     fn index(&self, idx: usize) -> &Self::Output {
         self.get(idx).unwrap()
     }
@@ -72,6 +73,7 @@ impl<const N: usize, T> ConVec<N, T> {
 impl<const N: usize, T> Index<usize> for ConVec<N, T> {
     type Output = T;
 
+    #[inline(always)]
     fn index(&self, idx: usize) -> &Self::Output {
         self.get(idx).unwrap()
     }
