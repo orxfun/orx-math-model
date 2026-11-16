@@ -53,6 +53,7 @@ impl Val for ScaInt {
         }
     }
 
+    #[inline(always)]
     fn fun_from_union<'a, 'd>(u: &'a UFunVal<'d>) -> &'a FVal<'d, Self> {
         unsafe { &u.int }
     }
@@ -94,6 +95,7 @@ impl Val for ScaNum {
         }
     }
 
+    #[inline(always)]
     fn fun_from_union<'a, 'd>(u: &'a UFunVal<'d>) -> &'a FVal<'d, Self> {
         unsafe { &u.num }
     }
