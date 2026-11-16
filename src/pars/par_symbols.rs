@@ -31,8 +31,7 @@ impl<'m, 'd, V: Val, I0: Set> ParD1<'m, 'd, V, I0> {
     }
 
     pub fn at(self, i0: impl Into<I0::IdxAny<'m, 'd>>) -> V::Sym<'m, 'd> {
-        // I0::p1_at(self, i0)
-        todo!()
+        I0::p1_at(self, i0)
     }
 }
 
@@ -81,8 +80,7 @@ impl<'m, 'd, V: Val, I0: Set, I1: Set> ParD2<'m, 'd, V, I0, I1> {
         i0: impl Into<I0::IdxAny<'m, 'd>>,
         i1: impl Into<I1::IdxAny<'m, 'd>>,
     ) -> V::Sym<'m, 'd> {
-        // I0::p2_at::<V, I1>(self, i0, i1)
-        todo!()
+        I0::p2_at::<V, I1>(self, i0, i1)
     }
 }
 
