@@ -4,10 +4,15 @@ use core::ops::Neg;
 
 // var
 
+impl<'m, 'd> From<Var<'m, 'd>> for DLinTerm<'d> {
+    fn from(value: Var<'m, 'd>) -> Self {
+        DLinTerm::new(None, value.ptr())
+    }
+}
+
 impl<'m, 'd> From<Var<'m, 'd>> for LinExpr<'m, 'd> {
     fn from(value: Var<'m, 'd>) -> Self {
-        let term = DLinTerm::new(None, value.ptr());
-        let terms = ExprVec::new([term]);
+        let terms = ExprVec::new([DLinTerm::from(value)]);
         let data = DLinExpr::new(terms, None);
         value.m().lin_exp(data)
     }
