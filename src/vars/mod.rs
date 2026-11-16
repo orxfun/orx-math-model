@@ -3,4 +3,5 @@ pub mod v2;
 mod var_data;
 mod var_typ;
 
+pub use var_data::DV;
 pub use var_typ::{Bounds, VarType};
