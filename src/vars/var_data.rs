@@ -1,9 +1,9 @@
 use crate::sets::{DSet, FunSet};
-use crate::{Dim, DimVec, Ptr, VarType};
+use crate::{Dim, DimVec, Ptr, SetTyp, VarType};
 
 pub struct DVars<'d> {
-    typ: VarType,
     dim: Dim,
+    typ: VarType,
     sets: DimVec<Ptr<'d, DSet<'d>>>,
 }
 
@@ -21,6 +21,10 @@ impl<'d> DVars<'d> {
     }
 
     // get
+
+    pub fn dim(&self) -> Dim {
+        self.dim
+    }
 
     pub fn typ(&self) -> VarType {
         self.typ
