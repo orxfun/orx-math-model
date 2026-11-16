@@ -19,7 +19,7 @@ impl<'d> ParBag<'d> {
         sets: DimVec<Ptr<'d, DSet<'d>>>,
         fun: Slot<'d, ParFun<'d>>,
     ) -> Elem<'m, DPars<'d>> {
-        let data = DPars::new(sets.dim(), sets, fun);
+        let data = DPars::new(sets, fun);
         self.bag.push(data)
     }
 }

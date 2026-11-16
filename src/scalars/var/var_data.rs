@@ -32,30 +32,23 @@ impl<'d> Drop for DVar<'d> {
 impl<'d> DVar<'d> {
     // create
 
-    pub fn create_d1<I0: Set>(
-        par_var: Ptr<'d, DVars<'d>>,
-        i0: Ptr<'d, FunSet<'d>>,
-        fun: FVar1<'d, I0>,
-    ) -> Self {
+    pub fn create_d1<I0: Set>(parent: Ptr<'d, DVars<'d>>, fun: FVar1<'d, I0>) -> Self {
+        let i0 = parent.get().set_ptr(0);
         debug_assert_eq!(I0::typ(), i0.get().typ);
         let data = UFunVar {
             d1: ManuallyDrop::new(FunV1::create::<I0>(i0, fun)),
         };
-        Self::new(par_var, data)
+        Self::new(parent, data)
     }
 
-    pub fn create_d2<I0: Set, I1: Set>(
-        par_var: Ptr<'d, DVars<'d>>,
-        i0: Ptr<'d, FunSet<'d>>,
-        i1: Ptr<'d, FunSet<'d>>,
-        fun: FVar2<'d, I0, I1>,
-    ) -> Self {
+    pub fn create_d2<I0: Set, I1: Set>(parent: Ptr<'d, DVars<'d>>, fun: FVar2<'d, I0, I1>) -> Self {
+        let [i0, i1] = [0, 1].map(|i| parent.get().set_ptr(i));
         debug_assert_eq!(I0::typ(), i0.get().typ);
         debug_assert_eq!(I1::typ(), i1.get().typ);
         let data = UFunVar {
             d2: ManuallyDrop::new(FunV2::create::<I0, I1>(i0, i1, fun)),
         };
-        Self::new(par_var, data)
+        Self::new(parent, data)
     }
 
     // get

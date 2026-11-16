@@ -6,7 +6,6 @@ use crate::{Dim, DimVec, Ptr, Res, ResValid, Set, Slot, Val};
 
 #[derive(derive_new::new)]
 pub struct DPars<'d> {
-    dim: Dim,
     sets: DimVec<Ptr<'d, DSet<'d>>>,
     slot: Slot<'d, ParFun<'d>>,
 }
@@ -29,6 +28,10 @@ impl<'d> DPars<'d> {
     }
 
     // at
+
+    pub fn dim(&self) -> Dim {
+        self.sets.dim()
+    }
 
     #[inline(always)]
     pub fn d1_at<V: Val, I0: Set>(&self, i0: I0::IdxRaw<'d>) -> V::Raw {

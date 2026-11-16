@@ -226,9 +226,8 @@ impl<'d> Model<'d> {
         var: VarD1<'m, 'd, I0>,
         fun: FVar1<'d, I0>,
     ) -> Var<'m, 'd> {
-        let var = var.data();
-        let i0 = var.set_ptr(0);
-        let data = DSca::new_var_d1::<I0>(var.typ(), i0, fun);
+        let parent = var.data_ptr();
+        let data = DSca::new_var_d1::<I0>(parent, fun);
         let el = self.sca_bag.push(data);
         Var::new(Symbol::new(self, el))
     }
@@ -238,9 +237,8 @@ impl<'d> Model<'d> {
         var: VarD2<'m, 'd, I0, I1>,
         fun: FVar2<'d, I0, I1>,
     ) -> Var<'m, 'd> {
-        let var = var.data();
-        let [i0, i1] = [0, 1].map(|i| var.set_ptr(i));
-        let data = DSca::new_var_d2::<I0, I1>(var.typ(), i0, i1, fun);
+        let parent = var.data_ptr();
+        let data = DSca::new_var_d2::<I0, I1>(parent, fun);
         let el = self.sca_bag.push(data);
         Var::new(Symbol::new(self, el))
     }

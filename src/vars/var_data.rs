@@ -2,7 +2,6 @@ use crate::sets::{DSet, FunSet};
 use crate::{Dim, DimVec, Ptr, SetTyp, VarType};
 
 pub struct DVars<'d> {
-    dim: Dim,
     typ: VarType,
     sets: DimVec<Ptr<'d, DSet<'d>>>,
 }
@@ -10,20 +9,18 @@ pub struct DVars<'d> {
 impl<'d> DVars<'d> {
     pub fn new_d1(typ: VarType, s0: Ptr<'d, DSet<'d>>) -> Self {
         let sets = DimVec::new([s0]);
-        let dim = Dim::D1;
-        Self { typ, dim, sets }
+        Self { typ, sets }
     }
 
     pub fn new_d2(typ: VarType, s0: Ptr<'d, DSet<'d>>, s1: Ptr<'d, DSet<'d>>) -> Self {
         let sets = DimVec::new([s0, s1]);
-        let dim = Dim::D1;
-        Self { typ, dim, sets }
+        Self { typ, sets }
     }
 
     // get
 
     pub fn dim(&self) -> Dim {
-        self.dim
+        self.sets.dim()
     }
 
     pub fn typ(&self) -> VarType {

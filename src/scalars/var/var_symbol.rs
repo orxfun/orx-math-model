@@ -21,6 +21,6 @@ impl<'m, 'd> Var<'m, 'd> {
 
     #[cfg(test)]
     pub(crate) fn data(&self) -> &DVar<'d> {
-        unsafe { &self.0.el.get().data.var }
+        unsafe { &self.0.el.get().data().var }
     }
 }

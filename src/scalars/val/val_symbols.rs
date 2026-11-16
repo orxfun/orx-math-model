@@ -15,7 +15,7 @@ impl<'m, 'd> Int<'m, 'd> {
 
     #[cfg(test)]
     pub(crate) fn data(&self) -> &DVal<'d> {
-        unsafe { &self.0.el.get().data.val }
+        unsafe { &self.0.el.get().data().val }
     }
 
     pub(crate) fn ptr(&self) -> Ptr<'d, DSca<'d>> {
@@ -35,7 +35,7 @@ impl<'m, 'd> Num<'m, 'd> {
 
     #[cfg(test)]
     pub(crate) fn data(&self) -> &DVal<'d> {
-        unsafe { &self.0.el.get().data.val }
+        unsafe { &self.0.el.get().data().val }
     }
 
     pub(crate) fn ptr(&self) -> Ptr<'d, DSca<'d>> {
