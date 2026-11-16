@@ -20,7 +20,7 @@ impl<'m, 'd> IdxCatInt<'m, 'd> {
     }
 
     pub(crate) fn ptr(&self) -> Ptr<'d, DIdx<'d>> {
-        Ptr::new(self.0.el)
+        Ptr::new_from_el(self.0.el)
     }
 }
 
@@ -43,7 +43,7 @@ impl<'m, 'd> IdxCatStr<'m, 'd> {
     }
 
     pub(crate) fn ptr(&self) -> Ptr<'d, DIdx<'d>> {
-        Ptr::new(self.0.el)
+        Ptr::new_from_el(self.0.el)
     }
 }
 
@@ -66,6 +66,6 @@ impl<'m, 'd> IdxOrd<'m, 'd> {
     }
 
     pub(crate) fn ptr(&self) -> Ptr<'d, DIdx<'d>> {
-        Ptr::new(self.0.el)
+        Ptr::new_from_el(self.0.el)
     }
 }

@@ -19,7 +19,7 @@ impl<'m, 'd> Int<'m, 'd> {
     }
 
     pub(crate) fn ptr(&self) -> Ptr<'d, DSca<'d>> {
-        Ptr::new(self.0.el)
+        Ptr::new_from_el(self.0.el)
     }
 }
 
@@ -39,6 +39,6 @@ impl<'m, 'd> Num<'m, 'd> {
     }
 
     pub(crate) fn ptr(&self) -> Ptr<'d, DSca<'d>> {
-        Ptr::new(self.0.el)
+        Ptr::new_from_el(self.0.el)
     }
 }

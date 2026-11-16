@@ -114,7 +114,7 @@ impl<'d, T> Clone for Ptr<'d, T> {
 impl<'d, T> Copy for Ptr<'d, T> {}
 
 impl<'d, T> Ptr<'d, T> {
-    pub fn new(el: Elem<'_, T>) -> Self {
+    pub fn new_from_el(el: Elem<'_, T>) -> Self {
         Self {
             p: el.as_ptr(),
             phantom: PhantomData,
