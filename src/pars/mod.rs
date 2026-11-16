@@ -5,6 +5,7 @@ mod par_bag;
 mod par_data;
 mod par_fun;
 mod par_fun_bag;
+mod par_symbols;
 
 pub use par_bag::ParBag;
 pub use par_data::DPar;
