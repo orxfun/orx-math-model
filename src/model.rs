@@ -1,6 +1,6 @@
 use crate::con_vals::{ConVal, ConValBag, DConVal};
 use crate::idxs::{IdxBag, IdxValBag};
-use crate::lin_expr::{DLinExp, LinExpBag, LinExpr};
+use crate::lin_expr::{DLinExpr, LinExpBag, LinExpr};
 use crate::pars::{ParBag, ParD1, ParD2, ParFun, ParFunBag};
 use crate::scalars::{DSca, FVar1, FVar2, ScaBag};
 use crate::sets::{CatInt, CatStr, Ord, SetBag, SetFunBag};
@@ -259,7 +259,7 @@ impl<'d> Model<'d> {
     }
 
     // expr
-    pub(crate) fn lin_exp<'m>(&'m self, data: DLinExp<'d>) -> LinExpr<'m, 'd> {
+    pub(crate) fn lin_exp<'m>(&'m self, data: DLinExpr<'d>) -> LinExpr<'m, 'd> {
         LinExpr::new(Symbol::new(self, self.lin_exp_bag.push(data)))
     }
 }
