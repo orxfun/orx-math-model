@@ -1,4 +1,4 @@
-use crate::sets::DSet;
+use crate::sets::{DSet, FunSet};
 use crate::{Dim, DimVec, Ptr, VarType};
 
 pub struct DV<'d> {
@@ -20,5 +20,16 @@ impl<'d> DV<'d> {
         sets.extend([s0, s1]);
         let dim = Dim::D1;
         Self { typ, dim, sets }
+    }
+
+    // get
+
+    pub fn typ(&self) -> VarType {
+        self.typ
+    }
+
+    pub fn set_ptr(&self, i: usize) -> Ptr<'d, FunSet<'d>> {
+        debug_assert!(self.sets.len() > i);
+        self.sets[i].get().fun_set()
     }
 }

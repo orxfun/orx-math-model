@@ -21,6 +21,10 @@ impl<T> DimVec<T> {
         }
     }
 
+    pub fn len(&self) -> usize {
+        self.len
+    }
+
     pub fn push(&mut self, value: T) {
         debug_assert!(self.len < 4);
         self.data[self.len] = Some(value);

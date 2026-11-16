@@ -6,9 +6,7 @@ use crate::scalars::{DSca, FVar1, FVar2, ScaBag};
 use crate::sets::{CatInt, CatStr, Ord, SetBag, SetFunBag};
 use crate::slot::{SlotStates, State};
 use crate::sym_refs::SymRefBag;
-use crate::vars::v1::{V1Bag, VarD1};
-use crate::vars::v2::{V2Bag, VarD2};
-use crate::vars::{VarBag, VarType, DV};
+use crate::vars::{VarBag, VarD1, VarD2, VarType, DV};
 use crate::{
     Ptr, Res, ResValid, Sca, ScaInt, ScaNum, Set, SetCatInt, SetCatStr, SetOrd, SetSym, Slot,
     Symbol, TConVal, Val, Var,
@@ -178,7 +176,7 @@ impl<'d> Model<'d> {
         let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
         let data = DV::new_d1(typ, s0_ptr);
         let el = self.var_bag.push(data);
-        Symbol::new(self, el).into()
+        VarD1::new(Symbol::new(self, el))
     }
 
     pub fn var2<'m, S0, S1>(
@@ -197,7 +195,7 @@ impl<'d> Model<'d> {
         let s1_ptr = <S1::Meta as Set>::set_ptr(s1);
         let data = DV::new_d2(typ, s0_ptr, s1_ptr);
         let el = self.var_bag.push(data);
-        Symbol::new(self, el).into()
+        VarD2::new(Symbol::new(self, el))
     }
 
     // scalars
@@ -214,9 +212,9 @@ impl<'d> Model<'d> {
         var: VarD1<'m, 'd, I0>,
         fun: FVar1<'d, I0>,
     ) -> Var<'m, 'd> {
-        let var = unsafe { var.el.get() };
-        let i0 = var.s0.get().fun_set();
-        let data = DSca::new_var_d1::<I0>(var.typ, i0, fun);
+        let var = var.data();
+        let i0 = var.set_ptr(0);
+        let data = DSca::new_var_d1::<I0>(var.typ(), i0, fun);
         let el = self.sca_bag.push(data);
         Symbol::new(self, el).into()
     }
@@ -226,10 +224,9 @@ impl<'d> Model<'d> {
         var: VarD2<'m, 'd, I0, I1>,
         fun: FVar2<'d, I0, I1>,
     ) -> Var<'m, 'd> {
-        let var = unsafe { var.el.get() };
-        let i0 = var.s0.get().fun_set();
-        let i1 = var.s1.get().fun_set();
-        let data = DSca::new_var_d2::<I0, I1>(var.typ, i0, i1, fun);
+        let var = var.data();
+        let [i0, i1] = [0, 1].map(|i| var.set_ptr(i));
+        let data = DSca::new_var_d2::<I0, I1>(var.typ(), i0, i1, fun);
         let el = self.sca_bag.push(data);
         Symbol::new(self, el).into()
     }
