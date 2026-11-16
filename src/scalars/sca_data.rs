@@ -1,7 +1,9 @@
+use alloc::boxed::Box;
+
 use crate::scalars::var::{FVar1, FVar2, Idx1, Idx2};
 use crate::scalars::{DVal, DVar, FVal, ScaTyp, Val, ValTyp};
 use crate::sets::FunSet;
-use crate::{Ptr, Set, VarType};
+use crate::{Ptr, ScaNum, Set, VarType};
 use core::mem::ManuallyDrop;
 
 #[repr(C)]
@@ -27,6 +29,14 @@ impl<'d> Drop for DSca<'d> {
 }
 
 impl<'d> DSca<'d> {
+    pub fn zero<V: Val>() -> Self {
+        Self::new_val::<V>(Box::new(|| Default::default()))
+    }
+
+    pub fn one() -> Self {
+        Self::new_val::<ScaNum>(Box::new(|| 1.0))
+    }
+
     pub fn new_val<V: Val>(fun: FVal<'d, V>) -> Self {
         let typ = V::typ();
         let data = USca {

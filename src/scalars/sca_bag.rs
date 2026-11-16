@@ -1,5 +1,6 @@
 use crate::scalars::DSca;
-use crate::{new_bag, Bag};
+use crate::{new_bag, Bag, ScaInt, ScaNum};
+use alloc::boxed::Box;
 use orx_imp_vec::Elem;
 
 pub struct ScaBag<'d> {
@@ -8,7 +9,15 @@ pub struct ScaBag<'d> {
 
 impl Default for ScaBag<'_> {
     fn default() -> Self {
-        Self { bag: new_bag() }
+        let bag = new_bag();
+
+        let one = DSca::one();
+        let zero_int = DSca::zero::<ScaInt>();
+        let zero_num = DSca::zero::<ScaNum>();
+
+        let one = DSca::new_val::<ScaNum>(Box::new(|| 1.0));
+
+        Self { bag }
     }
 }
 
