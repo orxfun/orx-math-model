@@ -83,6 +83,6 @@ impl<'d> DSca<'d> {
     }
 
     pub fn val_typ(&self) -> ValTyp {
-        unsafe { &self.data.val }.typ
+        unsafe { &self.data.val }.typ()
     }
 }

@@ -3,7 +3,7 @@ use crate::scalars::{FVal, Val, ValTyp};
 use core::mem::ManuallyDrop;
 
 pub struct DVal<'d> {
-    pub typ: ValTyp,
+    typ: ValTyp,
     data: UFunVal<'d>,
 }
 
@@ -23,6 +23,10 @@ impl<'d> DVal<'d> {
         let typ = V::val_typ();
         let data = V::into_fun_union(fun);
         Self { typ, data }
+    }
+
+    pub fn typ(&self) -> ValTyp {
+        self.typ
     }
 
     #[inline(always)]
