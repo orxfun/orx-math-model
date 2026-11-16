@@ -1,7 +1,7 @@
-use crate::scalars::DSca;
 #[cfg(test)]
 use crate::scalars::DVal;
 use crate::Symbol;
+use crate::{scalars::DSca, Ptr};
 
 // int
 
@@ -12,6 +12,10 @@ impl<'m, 'd> Int<'m, 'd> {
     #[cfg(test)]
     pub(crate) fn data(&self) -> &DVal<'d> {
         unsafe { &self.0.el.get().data.val }
+    }
+
+    pub(crate) fn ptr(&self) -> Ptr<'d, DSca<'d>> {
+        Ptr::new(self.0.el)
     }
 }
 
@@ -24,5 +28,9 @@ impl<'m, 'd> Num<'m, 'd> {
     #[cfg(test)]
     pub(crate) fn data(&self) -> &DVal<'d> {
         unsafe { &self.0.el.get().data.val }
+    }
+
+    pub(crate) fn ptr(&self) -> Ptr<'d, DSca<'d>> {
+        Ptr::new(self.0.el)
     }
 }

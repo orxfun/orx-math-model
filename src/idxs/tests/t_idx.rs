@@ -12,10 +12,10 @@ fn idx_cat_int() {
     let idx = set.idx();
 
     // running
-    assert_eq!(unsafe { idx.el.get() }.read::<S>(), 0);
+    assert_eq!(idx.data().read::<S>(), 0);
 
-    unsafe { idx.el.get() }.write::<S>(42);
-    assert_eq!(unsafe { idx.el.get() }.read::<S>(), 42);
+    idx.data().write::<S>(42);
+    assert_eq!(idx.data().read::<S>(), 42);
 }
 
 #[test]
@@ -31,10 +31,10 @@ fn idx_cat_str() {
     let idx = set.idx();
 
     // running
-    assert_eq!(unsafe { idx.el.get() }.read::<S>(), &String::new());
+    assert_eq!(idx.data().read::<S>(), &String::new());
 
-    unsafe { idx.el.get() }.write::<S>(&s);
-    assert_eq!(unsafe { idx.el.get() }.read::<S>(), &s);
+    idx.data().write::<S>(&s);
+    assert_eq!(idx.data().read::<S>(), &s);
 }
 
 #[test]
@@ -47,8 +47,8 @@ fn idx_ord() {
     let idx = set.idx();
 
     // running
-    assert_eq!(unsafe { idx.el.get() }.read::<S>(), 0);
+    assert_eq!(idx.data().read::<S>(), 0);
 
-    unsafe { idx.el.get() }.write::<S>(42);
-    assert_eq!(unsafe { idx.el.get() }.read::<S>(), 42);
+    idx.data().write::<S>(42);
+    assert_eq!(idx.data().read::<S>(), 42);
 }
