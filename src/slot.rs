@@ -98,7 +98,7 @@ impl<'d, T> Slot<'d, T> {
 // ptr
 
 pub struct Ptr<'d, T> {
-    pub p: *const T,
+    p: *const T,
     phantom: PhantomData<fn() -> &'d ()>,
 }
 
