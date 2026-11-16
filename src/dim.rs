@@ -45,6 +45,7 @@ impl<T> Index<usize> for DimVec<T> {
 
 // con - vec
 
+#[derive(Clone)]
 pub struct ConVec<const N: usize, T> {
     len: usize,
     data: [Option<T>; N],
@@ -67,6 +68,17 @@ impl<const N: usize, T> ConVec<N, T> {
     pub fn get(&self, idx: usize) -> Option<&T> {
         debug_assert!(idx < self.len);
         self.data[idx].as_ref()
+    }
+
+    pub fn push(&self, value: T) -> Self
+    where
+        T: Clone,
+    {
+        debug_assert!(self.len < N);
+        let mut data = self.data.clone();
+        data[self.len] = Some(value);
+        let len = self.len + 1;
+        Self { len, data }
     }
 }
 
