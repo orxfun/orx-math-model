@@ -86,6 +86,13 @@ impl<'d, T> Slot<'d, T> {
             phantom: PhantomData,
         }
     }
+
+    pub fn ptr_mut(&self) -> PtrMut<'d, T> {
+        PtrMut {
+            p: self.p,
+            phantom: PhantomData,
+        }
+    }
 }
 
 // ptr
@@ -114,14 +121,38 @@ impl<'d, T> Ptr<'d, T> {
         }
     }
 
+    #[inline(always)]
     pub fn get(&self) -> &'d T {
         unsafe { &*self.p }
     }
 
+    #[inline(always)]
     pub fn val(&self) -> T
     where
         T: Copy,
     {
         *unsafe { &*self.p }
+    }
+}
+
+// ptr-mut
+
+pub struct PtrMut<'d, T> {
+    p: *mut T,
+    phantom: PhantomData<fn() -> &'d ()>,
+}
+
+impl<'d, T> PtrMut<'d, T> {
+    #[inline(always)]
+    pub fn val(&self) -> T
+    where
+        T: Copy,
+    {
+        *unsafe { &*self.p }
+    }
+
+    #[inline(always)]
+    pub fn get_mut(&self) -> &'d mut T {
+        unsafe { &mut *self.p }
     }
 }
