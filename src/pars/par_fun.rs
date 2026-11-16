@@ -1,7 +1,7 @@
 use crate::pars::p1::FP1;
 use crate::pars::p2::FP2;
 use crate::pars::{p1::UFunP1, p2::UFunP2};
-use crate::{Dim, DimVec, Set, SetTyp, Val, ValTyp};
+use crate::{Dim, DimVec, Res, Set, SetTyp, Val, ValTyp};
 use core::mem::ManuallyDrop;
 
 #[repr(C)]
@@ -65,6 +65,16 @@ impl<'d> ParFun<'d> {
         unsafe { &self.data.d1 }.get::<V, I0>()
     }
 
+    // at
+
+    pub fn d1_at<V: Val, I0: Set>(&self, i0: I0::IdxRaw<'d>) -> V::Raw {
+        debug_assert_eq!(self.dim, Dim::D1);
+        debug_assert_eq!(V::val_typ(), self.val_typ);
+        debug_assert_eq!(I0::typ(), self.set_types[0]);
+        let fun = self.d1_get::<V, I0>();
+        fun(i0)
+    }
+
     // d2
 
     pub fn d2_create<V: Val, I0: Set, I1: Set>(fun: FP2<'d, V, I0, I1>) -> Self {
@@ -76,5 +86,18 @@ impl<'d> ParFun<'d> {
 
     pub fn d2_get<V: Val, I0: Set, I1: Set>(&self) -> &FP2<'d, V, I0, I1> {
         unsafe { &self.data.d2 }.get::<V, I0, I1>()
+    }
+
+    pub fn d2_at<V: Val, I0: Set, I1: Set>(
+        &self,
+        i0: I0::IdxRaw<'d>,
+        i1: I1::IdxRaw<'d>,
+    ) -> V::Raw {
+        debug_assert_eq!(self.dim, Dim::D2);
+        debug_assert_eq!(V::val_typ(), self.val_typ);
+        debug_assert_eq!(I0::typ(), self.set_types[0]);
+        debug_assert_eq!(I1::typ(), self.set_types[1]);
+        let fun = self.d2_get::<V, I0, I1>();
+        fun(i0, i1)
     }
 }

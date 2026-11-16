@@ -11,3 +11,4 @@ pub use par_bag::ParBag;
 pub use par_data::DPar;
 pub use par_fun::ParFun;
 pub use par_fun_bag::ParFunBag;
+pub use par_symbols::{ParD1, ParD2};

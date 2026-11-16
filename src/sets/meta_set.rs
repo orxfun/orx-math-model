@@ -1,6 +1,5 @@
 use crate::idxs::{DIdx, IdxCatInt, IdxCatStr, IdxOrd, UIdxVal};
-use crate::pars::p1::ParD1;
-use crate::pars::p2::ParD2;
+use crate::pars::{ParD1, ParD2};
 use crate::sets::{CatInt, CatStr, DSet, FSet, IndexCatInt, IndexCatStr, IndexOrd, Ord, UFunSet};
 use crate::vars::{VarD1, VarD2};
 use crate::{Model, Ptr, ScaInt, SetSym, Symbol, Val, Var};
@@ -153,19 +152,19 @@ impl Set for SetCatInt {
         par: ParD1<'m, 'd, V, Self>,
         i0: impl Into<Self::IdxAny<'m, 'd>>,
     ) -> V::Sym<'m, 'd> {
-        let fun = Ptr::new(par.el);
+        let fun = par.data().fun_ptr();
         match i0.into() {
             IndexCatInt::Idx(i0) => {
                 let i0 = i0.ptr();
-                par.m.val::<V>(move || {
+                par.m().val::<V>(move || {
                     let fun = fun.get();
                     let i0 = i0.get().read::<Self>();
-                    fun.at::<V, Self>(i0)
+                    fun.d1_at::<V, Self>(i0)
                 })
             }
-            IndexCatInt::ConUsize(i0) => par.m.val::<V>(move || {
+            IndexCatInt::ConUsize(i0) => par.m().val::<V>(move || {
                 let fun = fun.get();
-                fun.at::<V, Self>(i0)
+                fun.d1_at::<V, Self>(i0)
             }),
         }
     }
@@ -177,19 +176,19 @@ impl Set for SetCatInt {
         i0: impl Fn() -> I0::IdxRaw<'d> + 'd,
         i1: impl Into<Self::IdxAny<'m, 'd>>,
     ) -> V::Sym<'m, 'd> {
-        let fun = Ptr::new(par.el);
+        let fun = par.data().fun_ptr();
         match i1.into() {
             IndexCatInt::Idx(i1) => {
                 let i1 = i1.ptr();
-                par.m.val::<V>(move || {
+                par.m().val::<V>(move || {
                     let fun = fun.get();
                     let i1 = i1.get().read::<Self>();
-                    fun.at::<V, I0, Self>(i0(), i1)
+                    fun.d2_at::<V, I0, Self>(i0(), i1)
                 })
             }
-            IndexCatInt::ConUsize(i1) => par.m.val::<V>(move || {
+            IndexCatInt::ConUsize(i1) => par.m().val::<V>(move || {
                 let fun = fun.get();
-                fun.at::<V, I0, Self>(i0(), i1)
+                fun.d2_at::<V, I0, Self>(i0(), i1)
             }),
         }
     }
@@ -323,32 +322,32 @@ impl Set for SetCatStr {
         par: ParD1<'m, 'd, V, Self>,
         i0: impl Into<Self::IdxAny<'m, 'd>>,
     ) -> V::Sym<'m, 'd> {
-        let fun = Ptr::new(par.el);
+        let fun = par.data().fun_ptr();
         match i0.into() {
             IndexCatStr::Idx(i0) => {
                 let i0 = i0.ptr();
-                par.m.val::<V>(move || {
+                par.m().val::<V>(move || {
                     let fun = fun.get();
                     let i0 = i0.get().read::<Self>();
-                    fun.at::<V, Self>(i0)
+                    fun.d1_at::<V, Self>(i0)
                 })
             }
-            IndexCatStr::ConStringRef(i0) => par.m.val::<V>(move || {
+            IndexCatStr::ConStringRef(i0) => par.m().val::<V>(move || {
                 let fun = fun.get();
-                fun.at::<V, Self>(i0)
+                fun.d1_at::<V, Self>(i0)
             }),
             IndexCatStr::ConString(i0) => {
-                let i0 = par.m.con_val(i0);
-                par.m.val::<V>(move || {
+                let i0 = par.m().con_val(i0);
+                par.m().val::<V>(move || {
                     let fun = fun.get();
-                    fun.at::<V, Self>(i0.get().get())
+                    fun.d1_at::<V, Self>(i0.get().get())
                 })
             }
             IndexCatStr::ConStr(i0) => {
-                let i0 = par.m.con_val(i0.to_string());
-                par.m.val::<V>(move || {
+                let i0 = par.m().con_val(i0.to_string());
+                par.m().val::<V>(move || {
                     let fun = fun.get();
-                    fun.at::<V, Self>(i0.get().get())
+                    fun.d1_at::<V, Self>(i0.get().get())
                 })
             }
         }
@@ -361,34 +360,34 @@ impl Set for SetCatStr {
         i0: impl Fn() -> I0::IdxRaw<'d> + 'd,
         i1: impl Into<Self::IdxAny<'m, 'd>>,
     ) -> V::Sym<'m, 'd> {
-        let fun = Ptr::new(par.el);
+        let fun = par.data().fun_ptr();
         match i1.into() {
             IndexCatStr::Idx(i1) => {
                 let i1 = i1.ptr();
-                par.m.val::<V>(move || {
+                par.m().val::<V>(move || {
                     let fun = fun.get();
                     let i1 = i1.get().read::<Self>();
-                    fun.at::<V, I0, Self>(i0(), i1)
+                    fun.d2_at::<V, I0, Self>(i0(), i1)
                 })
             }
-            IndexCatStr::ConStringRef(i1) => par.m.val::<V>(move || {
+            IndexCatStr::ConStringRef(i1) => par.m().val::<V>(move || {
                 let fun = fun.get();
-                fun.at::<V, I0, Self>(i0(), i1)
+                fun.d2_at::<V, I0, Self>(i0(), i1)
             }),
             IndexCatStr::ConString(i1) => {
-                let i1 = par.m.con_val(i1);
-                par.m.val::<V>(move || {
+                let i1 = par.m().con_val(i1);
+                par.m().val::<V>(move || {
                     let fun = fun.get();
                     let i1 = i1.get().get();
-                    fun.at::<V, I0, Self>(i0(), i1)
+                    fun.d2_at::<V, I0, Self>(i0(), i1)
                 })
             }
             IndexCatStr::ConStr(i1) => {
-                let i1 = par.m.con_val(i1.to_string());
-                par.m.val::<V>(move || {
+                let i1 = par.m().con_val(i1.to_string());
+                par.m().val::<V>(move || {
                     let fun = fun.get();
                     let i1 = i1.get().get();
-                    fun.at::<V, I0, Self>(i0(), i1)
+                    fun.d2_at::<V, I0, Self>(i0(), i1)
                 })
             }
         }
@@ -407,12 +406,12 @@ impl Set for SetCatStr {
             }
             IndexCatStr::ConStringRef(i0) => I1::p2_at_i0(par, move || i0, i1),
             IndexCatStr::ConString(i0) => {
-                let i0 = par.m.con_val(i0);
+                let i0 = par.m().con_val(i0);
                 let i0 = move || i0.get().get();
                 I1::p2_at_i0(par, i0, i1)
             }
             IndexCatStr::ConStr(i0) => {
-                let i0 = par.m.con_val(i0.to_string());
+                let i0 = par.m().con_val(i0.to_string());
                 let i0 = move || i0.get().get();
                 I1::p2_at_i0(par, i0, i1)
             }
@@ -561,35 +560,35 @@ impl Set for SetOrd {
         par: ParD1<'m, 'd, V, Self>,
         i0: impl Into<Self::IdxAny<'m, 'd>>,
     ) -> V::Sym<'m, 'd> {
-        let fun = Ptr::new(par.el);
+        let fun = par.data().fun_ptr();
         match i0.into() {
             IndexOrd::Idx(i0) => {
                 let i0 = i0.ptr();
-                par.m.val::<V>(move || {
+                par.m().val::<V>(move || {
                     let fun = fun.get();
                     let i0 = i0.get().read::<Self>();
-                    fun.at::<V, Self>(i0)
+                    fun.d1_at::<V, Self>(i0)
                 })
             }
             IndexOrd::Int(i0) => {
                 let int = i0.ptr();
-                par.m.val::<V>(move || {
+                par.m().val::<V>(move || {
                     let fun = fun.get();
                     let idx = int.get().val_eval::<ScaInt>();
-                    fun.at::<V, Self>(idx)
+                    fun.d1_at::<V, Self>(idx)
                 })
             }
-            IndexOrd::ConUsize(i0) => par.m.val::<V>(move || {
+            IndexOrd::ConUsize(i0) => par.m().val::<V>(move || {
                 let fun = fun.get();
-                fun.at::<V, Self>(i0 as i64)
+                fun.d1_at::<V, Self>(i0 as i64)
             }),
-            IndexOrd::ConI64(i0) => par.m.val::<V>(move || {
+            IndexOrd::ConI64(i0) => par.m().val::<V>(move || {
                 let fun = fun.get();
-                fun.at::<V, Self>(i0)
+                fun.d1_at::<V, Self>(i0)
             }),
-            IndexOrd::ConI32(i0) => par.m.val::<V>(move || {
+            IndexOrd::ConI32(i0) => par.m().val::<V>(move || {
                 let fun = fun.get();
-                fun.at::<V, Self>(i0 as i64)
+                fun.d1_at::<V, Self>(i0 as i64)
             }),
         }
     }
@@ -601,35 +600,35 @@ impl Set for SetOrd {
         i0: impl Fn() -> I0::IdxRaw<'d> + 'd,
         i1: impl Into<Self::IdxAny<'m, 'd>>,
     ) -> V::Sym<'m, 'd> {
-        let fun = Ptr::new(par.el);
+        let fun = par.data().fun_ptr();
         match i1.into() {
             IndexOrd::Idx(i1) => {
                 let i1 = i1.ptr();
-                par.m.val::<V>(move || {
+                par.m().val::<V>(move || {
                     let fun = fun.get();
                     let i1 = i1.get().read::<Self>();
-                    fun.at::<V, I0, Self>(i0(), i1)
+                    fun.d2_at::<V, I0, Self>(i0(), i1)
                 })
             }
             IndexOrd::Int(i1) => {
                 let i1 = i1.ptr();
-                par.m.val::<V>(move || {
+                par.m().val::<V>(move || {
                     let fun = fun.get();
                     let i1 = i1.get().val_eval::<ScaInt>();
-                    fun.at::<V, I0, Self>(i0(), i1)
+                    fun.d2_at::<V, I0, Self>(i0(), i1)
                 })
             }
-            IndexOrd::ConI64(i1) => par.m.val::<V>(move || {
+            IndexOrd::ConI64(i1) => par.m().val::<V>(move || {
                 let fun = fun.get();
-                fun.at::<V, I0, Self>(i0(), i1)
+                fun.d2_at::<V, I0, Self>(i0(), i1)
             }),
-            IndexOrd::ConUsize(i1) => par.m.val::<V>(move || {
+            IndexOrd::ConUsize(i1) => par.m().val::<V>(move || {
                 let fun = fun.get();
-                fun.at::<V, I0, Self>(i0(), i1 as i64)
+                fun.d2_at::<V, I0, Self>(i0(), i1 as i64)
             }),
-            IndexOrd::ConI32(i1) => par.m.val::<V>(move || {
+            IndexOrd::ConI32(i1) => par.m().val::<V>(move || {
                 let fun = fun.get();
-                fun.at::<V, I0, Self>(i0(), i1 as i64)
+                fun.d2_at::<V, I0, Self>(i0(), i1 as i64)
             }),
         }
     }

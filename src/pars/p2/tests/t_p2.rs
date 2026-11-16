@@ -33,7 +33,7 @@ fn p2_int_cint_cstr() {
     // running
     for (i, map) in par_data.iter().enumerate() {
         for (j, exp) in map.iter() {
-            let val = unsafe { par.el.get() }.at::<V, I0, I1>(i, j);
+            let val = par.data().d2_at::<V, I0, I1>(i, j);
             assert_eq!(*exp, val);
         }
     }
@@ -65,7 +65,7 @@ fn p2_int_cstr_ord() {
     // running
     for (i, vec) in par_data.iter() {
         for (j, exp) in vec.iter().enumerate() {
-            let val = unsafe { par.el.get() }.at::<V, I0, I1>(i, j as i64);
+            let val = par.data().d2_at::<V, I0, I1>(i, j as i64);
             assert_eq!(*exp, val);
         }
     }
@@ -92,7 +92,7 @@ fn p2_int_ord_cint() {
     // running
     for (i, vec) in par_data.iter().enumerate() {
         for (j, exp) in vec.iter().enumerate() {
-            let val = unsafe { par.el.get() }.at::<V, I0, I1>(i as i64, j);
+            let val = par.data().d2_at::<V, I0, I1>(i as i64, j);
             assert_eq!(*exp, val);
         }
     }
@@ -128,7 +128,7 @@ fn p2_num_cint_cstr() {
     // running
     for (i, map) in par_data.iter().enumerate() {
         for (j, exp) in map.iter() {
-            let val = unsafe { par.el.get() }.at::<V, I0, I1>(i, j);
+            let val = par.data().d2_at::<V, I0, I1>(i, j);
             assert_eq!(*exp, val);
         }
     }
@@ -160,7 +160,7 @@ fn p2_num_cstr_ord() {
     // running
     for (i, vec) in par_data.iter() {
         for (j, exp) in vec.iter().enumerate() {
-            let val = unsafe { par.el.get() }.at::<V, I0, I1>(i, j as i64);
+            let val = par.data().d2_at::<V, I0, I1>(i, j as i64);
             assert_eq!(*exp, val);
         }
     }
@@ -187,7 +187,7 @@ fn p2_num_ord_cint() {
     // running
     for (i, vec) in par_data.iter().enumerate() {
         for (j, exp) in vec.iter().enumerate() {
-            let val = unsafe { par.el.get() }.at::<V, I0, I1>(i as i64, j);
+            let val = par.data().d2_at::<V, I0, I1>(i as i64, j);
             assert_eq!(*exp, val);
         }
     }

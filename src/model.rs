@@ -1,15 +1,14 @@
 use crate::con_vals::{ConVal, ConValBag, DConVal};
 use crate::idxs::{IdxBag, IdxValBag};
-use crate::pars::p1::{P1Bag, P1FunBag, ParD1};
-use crate::pars::p2::{P2Bag, P2FunBag, ParD2};
+use crate::pars::{ParBag, ParD1, ParD2, ParFun, ParFunBag};
 use crate::scalars::{DSca, FVar1, FVar2, ScaBag};
 use crate::sets::{CatInt, CatStr, Ord, SetBag, SetFunBag};
 use crate::slot::{SlotStates, State};
 use crate::sym_refs::SymRefBag;
 use crate::vars::{VarBag, VarD1, VarD2, VarType, DV};
 use crate::{
-    Ptr, Res, ResValid, Sca, ScaInt, ScaNum, Set, SetCatInt, SetCatStr, SetOrd, SetSym, Slot,
-    Symbol, TConVal, Val, Var,
+    DimVec, Ptr, Res, ResValid, Sca, ScaInt, ScaNum, Set, SetCatInt, SetCatStr, SetOrd, SetSym,
+    Slot, Symbol, TConVal, Val, Var,
 };
 use alloc::boxed::Box;
 use core::mem::ManuallyDrop;
@@ -25,10 +24,8 @@ pub struct Model<'d> {
     set_bag: SetBag<'d>,
 
     // pars
-    p1_fun_bag: P1FunBag<'d>,
-    p1_bag: P1Bag<'d>,
-    p2_fun_bag: P2FunBag<'d>,
-    p2_bag: P2Bag<'d>,
+    par_fun_bag: ParFunBag<'d>,
+    par_bag: ParBag<'d>,
 
     // vars
     var_bag: VarBag<'d>,
@@ -96,11 +93,13 @@ impl<'d> Model<'d> {
         S0: SetSym<'m, 'd>,
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
     {
-        let fun_el = self.p1_fun_bag.push(V::val_typ(), <S0::Meta as Set>::typ());
+        let t = [<S0::Meta as Set>::typ()];
+        let fun = ParFun::empty(V::val_typ(), DimVec::new(t));
+        let fun_el = self.par_fun_bag.push(fun);
         let fun_slot = Slot::new(self, fun_el);
-        let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
-        let el = self.p1_bag.push(s0_ptr, fun_slot);
-        Symbol::new(self, el).into()
+        let sets = DimVec::new([<S0::Meta as Set>::set_ptr(s0)]);
+        let el = self.par_bag.push(sets, fun_slot);
+        ParD1::new(Symbol::new(self, el))
     }
 
     pub fn par1_int<'m, S0>(&'m self, s0: S0) -> ParD1<'m, 'd, ScaInt, S0::Meta>
@@ -129,13 +128,16 @@ impl<'d> Model<'d> {
         S1: SetSym<'m, 'd>,
         S1::Meta: Set<SetSym<'m, 'd> = S1>,
     {
-        let [t0, t1] = [<S0::Meta as Set>::typ(), <S1::Meta as Set>::typ()];
-        let fun_el = self.p2_fun_bag.push(V::val_typ(), t0, t1);
+        let t = [<S0::Meta as Set>::typ(), <S1::Meta as Set>::typ()];
+        let fun = ParFun::empty(V::val_typ(), DimVec::new(t));
+        let fun_el = self.par_fun_bag.push(fun);
         let fun_slot = Slot::new(self, fun_el);
-        let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
-        let s1_ptr = <S1::Meta as Set>::set_ptr(s1);
-        let el = self.p2_bag.push(s0_ptr, s1_ptr, fun_slot);
-        Symbol::new(self, el).into()
+        let sets = DimVec::new([
+            <S0::Meta as Set>::set_ptr(s0),
+            <S1::Meta as Set>::set_ptr(s1),
+        ]);
+        let el = self.par_bag.push(sets, fun_slot);
+        ParD2::new(Symbol::new(self, el))
     }
 
     pub fn par2_int<'m, S0, S1>(

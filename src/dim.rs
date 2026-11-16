@@ -1,5 +1,6 @@
 use core::ops::Index;
 
+#[derive(Debug, PartialEq)]
 pub enum Dim {
     D0,
     D1,
