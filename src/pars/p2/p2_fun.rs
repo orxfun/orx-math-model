@@ -159,6 +159,19 @@ impl<'d> UFunP2<'d> {
             },
         }
     }
+
+    pub fn create<V: Val, I0: Set, I1: Set>(fun: FP2<'d, V, I0, I1>) -> Self {
+        unsafe {
+            match V::val_typ() {
+                ValTyp::Int => UFunP2 {
+                    int: UFunP2_V::create::<I0, I1>(transmute(fun)),
+                },
+                ValTyp::Num => UFunP2 {
+                    num: UFunP2_V::create::<I0, I1>(transmute(fun)),
+                },
+            }
+        }
+    }
 }
 
 #[derive(derive_new::new)]
