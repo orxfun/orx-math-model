@@ -130,10 +130,12 @@ impl Set for SetCatInt {
 
     type IdxAny<'m, 'd: 'm> = IndexCatInt<'m, 'd>;
 
+    #[inline(always)]
     fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d> {
         unsafe { u.cat_int }
     }
 
+    #[inline(always)]
     fn idx_write<'d>(u: &mut UIdxVal<'d>, value: Self::IdxRaw<'d>) {
         u.cat_int = value;
     }
@@ -300,10 +302,12 @@ impl Set for SetCatStr {
 
     type IdxAny<'m, 'd: 'm> = IndexCatStr<'m, 'd>;
 
+    #[inline(always)]
     fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d> {
         unsafe { u.cat_str }
     }
 
+    #[inline(always)]
     fn idx_write<'d>(u: &mut UIdxVal<'d>, value: Self::IdxRaw<'d>) {
         u.cat_str = value;
     }
@@ -538,10 +542,12 @@ impl Set for SetOrd {
 
     type IdxAny<'m, 'd: 'm> = IndexOrd<'m, 'd>;
 
+    #[inline(always)]
     fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d> {
         unsafe { u.ord }
     }
 
+    #[inline(always)]
     fn idx_write<'d>(u: &mut UIdxVal<'d>, value: Self::IdxRaw<'d>) {
         u.ord = value;
     }
