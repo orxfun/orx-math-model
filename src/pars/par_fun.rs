@@ -1,6 +1,5 @@
-use crate::pars::p1::FP1;
-use crate::pars::p2::FP2;
-use crate::pars::{p1::UFunP1, p2::UFunP2};
+use crate::pars::p1_fun::{UFunP1, FP1};
+use crate::pars::p2_fun::{UFunP2, FP2};
 use crate::{Dim, DimVec, Res, Set, SetTyp, Val, ValTyp};
 use core::mem::ManuallyDrop;
 

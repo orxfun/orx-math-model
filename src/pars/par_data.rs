@@ -1,5 +1,5 @@
-use crate::pars::p1::FP1;
-use crate::pars::p2::FP2;
+use crate::pars::p1_fun::FP1;
+use crate::pars::p2_fun::FP2;
 use crate::pars::ParFun;
 use crate::sets::DSet;
 use crate::{Dim, DimVec, Ptr, Res, ResValid, Set, Slot, Val};

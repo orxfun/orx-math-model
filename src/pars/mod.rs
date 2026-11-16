@@ -1,9 +1,8 @@
 #[cfg(test)]
 mod tests;
 
-pub mod p1;
-pub mod p2;
-
+mod p1_fun;
+mod p2_fun;
 mod par_bag;
 mod par_data;
 mod par_fun;
