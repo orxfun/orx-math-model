@@ -139,6 +139,50 @@ pub union UFunP2<'d> {
     num: ManuallyDrop<UFunP2_V<'d, ScaNum>>,
 }
 
+impl<'d> UFunP2<'d> {
+    pub fn man_drop(&mut self, val_typ: ValTyp, i0_typ: SetTyp, i1_typ: SetTyp) {
+        unsafe {
+            match val_typ {
+                ValTyp::Int => (&mut self.int).man_drop(i0_typ, i1_typ),
+                ValTyp::Num => (&mut self.num).man_drop(i0_typ, i1_typ),
+            }
+        }
+    }
+
+    pub fn empty(val_typ: ValTyp, i0_typ: SetTyp, i1_typ: SetTyp) -> Self {
+        match val_typ {
+            ValTyp::Int => UFunP2 {
+                int: UFunP2_V::empty(i0_typ, i1_typ),
+            },
+            ValTyp::Num => UFunP2 {
+                num: UFunP2_V::empty(i0_typ, i1_typ),
+            },
+        }
+    }
+
+    pub fn create<V: Val, I0: Set, I1: Set>(fun: FP2<'d, V, I0, I1>) -> Self {
+        unsafe {
+            match V::val_typ() {
+                ValTyp::Int => UFunP2 {
+                    int: UFunP2_V::create::<I0, I1>(transmute(fun)),
+                },
+                ValTyp::Num => UFunP2 {
+                    num: UFunP2_V::create::<I0, I1>(transmute(fun)),
+                },
+            }
+        }
+    }
+
+    pub fn get<V: Val, I0: Set, I1: Set>(&self) -> &FP2<'d, V, I0, I1> {
+        unsafe {
+            match V::val_typ() {
+                ValTyp::Int => transmute(self.int.get::<I0, I1>()),
+                ValTyp::Num => transmute(self.num.get::<I0, I1>()),
+            }
+        }
+    }
+}
+
 #[derive(derive_new::new)]
 pub struct FunP2<'d> {
     pub val_typ: ValTyp,

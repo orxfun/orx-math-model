@@ -23,7 +23,7 @@ fn p1_int_cint() {
 
     // running
     for (i, v) in values.iter().copied().enumerate() {
-        let val = unsafe { par.el.get() }.at::<V, I0>(i);
+        let val = par.data().d1_at::<V, I0>(i);
         assert_eq!(v, val);
     }
 }
@@ -50,7 +50,7 @@ fn p1_int_cstr() {
 
     // running
     for (i, v) in values.iter() {
-        let val = unsafe { par.el.get() }.at::<V, I0>(i);
+        let val = par.data().d1_at::<V, I0>(i);
         assert_eq!(*v, val);
     }
 }
@@ -73,7 +73,7 @@ fn p1_int_ord() {
 
     // running
     for (i, v) in (0..4).map(|i| values(i)).enumerate() {
-        let val = unsafe { par.el.get() }.at::<V, I0>(i as i64);
+        let val = par.data().d1_at::<V, I0>(i as i64);
         assert_eq!(v, val);
     }
 }
@@ -98,7 +98,7 @@ fn p1_num_cint() {
 
     // running
     for (i, v) in values.iter().copied().enumerate() {
-        let val = unsafe { par.el.get() }.at::<V, I0>(i);
+        let val = par.data().d1_at::<V, I0>(i);
         assert_eq!(v, val);
     }
 }
@@ -125,7 +125,7 @@ fn p1_num_cstr() {
 
     // running
     for (i, v) in values.iter() {
-        let val = unsafe { par.el.get() }.at::<V, I0>(i);
+        let val = par.data().d1_at::<V, I0>(i);
         assert_eq!(*v, val);
     }
 }
@@ -148,7 +148,7 @@ fn p1_num_ord() {
 
     // running
     for (i, v) in (0..4).map(|i| values(i)).enumerate() {
-        let val = unsafe { par.el.get() }.at::<V, I0>(i as i64);
+        let val = par.data().d1_at::<V, I0>(i as i64);
         assert_eq!(v, val);
     }
 }
