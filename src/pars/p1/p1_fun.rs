@@ -77,6 +77,21 @@ pub union UFunP1<'d> {
     num: ManuallyDrop<UFunP1_V<'d, ScaNum>>,
 }
 
+impl<'d> UFunP1<'d> {
+    pub fn empty(val_typ: ValTyp, i0_typ: SetTyp) -> Self {
+        match val_typ {
+            ValTyp::Int => UFunP1 {
+                int: UFunP1_V::empty(i0_typ),
+            },
+            ValTyp::Num => UFunP1 {
+                num: UFunP1_V::empty(i0_typ),
+            },
+        }
+    }
+}
+
+// zzzz
+
 #[derive(derive_new::new)]
 pub struct FunP1<'d> {
     pub val_typ: ValTyp,

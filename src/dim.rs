@@ -14,27 +14,17 @@ pub struct DimVec<T> {
 }
 
 impl<T> DimVec<T> {
-    pub fn new() -> Self {
-        Self {
-            len: 0,
-            data: core::array::from_fn(|_| None),
+    pub fn new<const N: usize>(values: [T; N]) -> Self {
+        debug_assert!(N <= 4);
+        let mut data = core::array::from_fn(|_| None);
+        for (i, v) in values.into_iter().enumerate() {
+            data[i] = Some(v);
         }
+        Self { len: N, data }
     }
 
     pub fn len(&self) -> usize {
         self.len
-    }
-
-    pub fn push(&mut self, value: T) {
-        debug_assert!(self.len < 4);
-        self.data[self.len] = Some(value);
-        self.len += 1;
-    }
-
-    pub fn extend<const N: usize>(&mut self, values: [T; N]) {
-        for value in values {
-            self.push(value);
-        }
     }
 
     pub fn get(&self, idx: usize) -> Option<&T> {
