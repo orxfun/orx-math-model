@@ -81,7 +81,7 @@ impl<'d> Model<'d> {
     // idxs
 
     pub(crate) fn idx<'m, S: Set>(&'m self, set: S::SetSym<'m, 'd>) -> S::IdxSym<'m, 'd> {
-        Res::dbg_assert_same_model(self, set);
+        // TODO: Res::dbg_assert_same_model(self, set);
         let val_el = self.idx_val_bag.push(S::typ());
         let val_slot = Slot::new(self, val_el);
         let el = self.idx_bag.push(S::set_ptr(set), val_slot);

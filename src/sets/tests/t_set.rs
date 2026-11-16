@@ -17,7 +17,7 @@ fn set_cat_int() {
 
     // running
     let mut el: Elements<usize> = vec![].into();
-    unsafe { set.el.get() }.t_fill::<SetCatInt>(&mut el);
+    set.data().t_fill::<SetCatInt>(&mut el);
     assert_eq!(el.as_slice(), &[1, 2, 7, 9]);
 }
 
@@ -35,7 +35,7 @@ fn set_cat_str() {
 
     // running
     let mut el: Elements<&String> = vec![].into();
-    unsafe { set.el.get() }.t_fill::<SetCatStr>(&mut el);
+    set.data().t_fill::<SetCatStr>(&mut el);
     assert_eq!(el.as_slice(), &["1", "2", "7", "9"]);
 }
 
@@ -53,6 +53,6 @@ fn set_ord() {
 
     // running
     let mut el: Elements<i64> = vec![].into();
-    unsafe { set.el.get() }.t_fill::<SetOrd>(&mut el);
+    set.data().t_fill::<SetOrd>(&mut el);
     assert_eq!(el.as_slice(), &[1, 2, 7, 9]);
 }

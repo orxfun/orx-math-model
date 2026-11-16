@@ -120,7 +120,7 @@ impl Set for SetCatInt {
     }
 
     fn set_ptr<'m, 'd>(sym: Self::SetSym<'m, 'd>) -> Ptr<'d, DSet<'d>> {
-        Ptr::new(sym.el)
+        sym.ptr()
     }
 
     // idx
@@ -290,7 +290,7 @@ impl Set for SetCatStr {
     }
 
     fn set_ptr<'m, 'd>(sym: Self::SetSym<'m, 'd>) -> Ptr<'d, DSet<'d>> {
-        Ptr::new(sym.el)
+        sym.ptr()
     }
 
     // idx
@@ -528,7 +528,7 @@ impl Set for SetOrd {
     }
 
     fn set_ptr<'m, 'd>(sym: Self::SetSym<'m, 'd>) -> Ptr<'d, DSet<'d>> {
-        Ptr::new(sym.el)
+        sym.ptr()
     }
 
     // idx

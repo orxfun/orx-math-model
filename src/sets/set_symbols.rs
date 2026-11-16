@@ -1,6 +1,6 @@
 use crate::idxs::{IdxCatInt, IdxCatStr, IdxOrd};
 use crate::sets::DSet;
-use crate::{Elements, Model, Res, Set, SetCatInt, SetCatStr, SetOrd, Symbol};
+use crate::{Elements, Model, Ptr, Res, Set, SetCatInt, SetCatStr, SetOrd, Symbol};
 use alloc::{boxed::Box, string::String};
 
 fn bind<'d, S, I>(set: Symbol<'_, 'd, DSet<'d>>, fun: impl Fn() -> I + 'd) -> Res
@@ -27,6 +27,10 @@ impl<'m, 'd> CatInt<'m, 'd> {
         unsafe { self.0.el.get() }
     }
 
+    pub(crate) fn ptr(&self) -> Ptr<'d, DSet<'d>> {
+        Ptr::new(self.0.el)
+    }
+
     pub fn bind<I: IntoIterator<Item = usize>>(self, fun: impl Fn() -> I + 'd) -> Res {
         bind::<SetCatInt, _>(self.0, fun)
     }
@@ -50,6 +54,10 @@ impl<'m, 'd> CatStr<'m, 'd> {
         unsafe { self.0.el.get() }
     }
 
+    pub(crate) fn ptr(&self) -> Ptr<'d, DSet<'d>> {
+        Ptr::new(self.0.el)
+    }
+
     pub fn bind<I: IntoIterator<Item = &'d String>>(self, fun: impl Fn() -> I + 'd) -> Res {
         bind::<SetCatStr, _>(self.0, fun)
     }
@@ -71,6 +79,10 @@ impl<'m, 'd> Ord<'m, 'd> {
 
     pub(crate) fn data(&self) -> &DSet<'d> {
         unsafe { self.0.el.get() }
+    }
+
+    pub(crate) fn ptr(&self) -> Ptr<'d, DSet<'d>> {
+        Ptr::new(self.0.el)
     }
 
     pub fn bind<I: IntoIterator<Item = i64>>(self, fun: impl Fn() -> I + 'd) -> Res {
