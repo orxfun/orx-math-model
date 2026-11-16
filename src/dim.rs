@@ -27,6 +27,12 @@ impl<T> DimVec<T> {
         self.len += 1;
     }
 
+    pub fn extend<const N: usize>(&mut self, values: [T; N]) {
+        for value in values {
+            self.push(value);
+        }
+    }
+
     pub fn get(&self, idx: usize) -> Option<&T> {
         debug_assert!(idx < self.len);
         self.data[idx].as_ref()
