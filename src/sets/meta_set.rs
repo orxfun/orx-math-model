@@ -1,5 +1,5 @@
 use crate::idxs::{DIdx, IdxCatInt, IdxCatStr, IdxOrd, UIdxVal};
-use crate::pars::{ParD1, ParD2, UFunP1_V, FP1};
+use crate::pars::{ParD1, ParD2, UFunP1_V, UFunP2_V, UFunP2_V_I0, FP1, FP2};
 use crate::sets::{CatInt, CatStr, DSet, FSet, IndexCatInt, IndexCatStr, IndexOrd, Ord, UFunSet};
 use crate::vars::{VarD1, VarD2};
 use crate::{Model, Ptr, ScaInt, SetSym, Symbol, Val, Var};
@@ -52,9 +52,7 @@ pub trait Set: Clone + Copy + 'static {
 
     // p1
 
-    fn unpack_p1_fun_v<'a, 'd, V: Val>(u: &'a UFunP1_V<'d, V>) -> &'a FP1<'d, V, Self> {
-        todo!()
-    }
+    fn unpack_p1_fun_v<'a, 'd, V: Val>(u: &'a UFunP1_V<'d, V>) -> &'a FP1<'d, V, Self>;
 
     fn p1_at<'m, 'd, V: Val>(
         par: ParD1<'m, 'd, V, Self>,
@@ -62,6 +60,13 @@ pub trait Set: Clone + Copy + 'static {
     ) -> V::Sym<'m, 'd>;
 
     // p2
+
+    fn unpack_p2_fun_v_i0<'a, 'd, V: Val, I0: Set>(
+        u: &'a UFunP2_V_I0<'d, V, I0>,
+    ) -> &'a FP2<'d, V, I0, Self>;
+
+    fn unpack_p2_fun_v<'a, 'd, V: Val, I1: Set>(u: &'a UFunP2_V<'d, V>)
+        -> &'a FP2<'d, V, Self, I1>;
 
     fn p2_at_i0<'m, 'd, V: Val, I0: Set>(
         par: ParD2<'m, 'd, V, I0, Self>,
@@ -154,8 +159,9 @@ impl Set for SetCatInt {
 
     // p1
 
+    #[inline(always)]
     fn unpack_p1_fun_v<'a, 'd, V: Val>(u: &'a UFunP1_V<'d, V>) -> &'a FP1<'d, V, Self> {
-        unsafe { transmute(&u.cint) }
+        unsafe { &u.cint }
     }
 
     fn p1_at<'m, 'd, V: Val>(
@@ -180,6 +186,20 @@ impl Set for SetCatInt {
     }
 
     // p2
+
+    #[inline(always)]
+    fn unpack_p2_fun_v_i0<'a, 'd, V: Val, I0: Set>(
+        u: &'a UFunP2_V_I0<'d, V, I0>,
+    ) -> &'a FP2<'d, V, I0, Self> {
+        unsafe { &u.cint }
+    }
+
+    #[inline(always)]
+    fn unpack_p2_fun_v<'a, 'd, V: Val, I1: Set>(
+        u: &'a UFunP2_V<'d, V>,
+    ) -> &'a FP2<'d, V, Self, I1> {
+        I1::unpack_p2_fun_v_i0(unsafe { &u.cint })
+    }
 
     fn p2_at_i0<'m, 'd, V: Val, I0: Set>(
         par: ParD2<'m, 'd, V, I0, Self>,
@@ -330,8 +350,9 @@ impl Set for SetCatStr {
 
     // p1
 
+    #[inline(always)]
     fn unpack_p1_fun_v<'a, 'd, V: Val>(u: &'a UFunP1_V<'d, V>) -> &'a FP1<'d, V, Self> {
-        unsafe { transmute(&u.cstr) }
+        unsafe { &u.cstr }
     }
 
     fn p1_at<'m, 'd, V: Val>(
@@ -370,6 +391,20 @@ impl Set for SetCatStr {
     }
 
     // p2
+
+    #[inline(always)]
+    fn unpack_p2_fun_v_i0<'a, 'd, V: Val, I0: Set>(
+        u: &'a UFunP2_V_I0<'d, V, I0>,
+    ) -> &'a FP2<'d, V, I0, Self> {
+        unsafe { &u.cstr }
+    }
+
+    #[inline(always)]
+    fn unpack_p2_fun_v<'a, 'd, V: Val, I1: Set>(
+        u: &'a UFunP2_V<'d, V>,
+    ) -> &'a FP2<'d, V, Self, I1> {
+        I1::unpack_p2_fun_v_i0(unsafe { &u.cstr })
+    }
 
     fn p2_at_i0<'m, 'd, V: Val, I0: Set>(
         par: ParD2<'m, 'd, V, I0, Self>,
@@ -574,8 +609,9 @@ impl Set for SetOrd {
 
     // p1
 
+    #[inline(always)]
     fn unpack_p1_fun_v<'a, 'd, V: Val>(u: &'a UFunP1_V<'d, V>) -> &'a FP1<'d, V, Self> {
-        unsafe { transmute(&u.ord) }
+        unsafe { &u.ord }
     }
 
     fn p1_at<'m, 'd, V: Val>(
@@ -616,6 +652,20 @@ impl Set for SetOrd {
     }
 
     // p2
+
+    #[inline(always)]
+    fn unpack_p2_fun_v_i0<'a, 'd, V: Val, I0: Set>(
+        u: &'a UFunP2_V_I0<'d, V, I0>,
+    ) -> &'a FP2<'d, V, I0, Self> {
+        unsafe { &u.ord }
+    }
+
+    #[inline(always)]
+    fn unpack_p2_fun_v<'a, 'd, V: Val, I1: Set>(
+        u: &'a UFunP2_V<'d, V>,
+    ) -> &'a FP2<'d, V, Self, I1> {
+        I1::unpack_p2_fun_v_i0(unsafe { &u.ord })
+    }
 
     fn p2_at_i0<'m, 'd, V: Val, I0: Set>(
         par: ParD2<'m, 'd, V, I0, Self>,
