@@ -7,8 +7,8 @@ use crate::slot::{SlotStates, State};
 use crate::sym_refs::SymRefBag;
 use crate::vars::{VarBag, VarD1, VarD2, VarType, DV};
 use crate::{
-    DimVec, Ptr, Res, ResValid, Sca, ScaInt, ScaNum, Set, SetCatInt, SetCatStr, SetOrd, SetSym,
-    Slot, Symbol, TConVal, Val, Var,
+    DimVec, Int, Num, Ptr, Res, ResValid, Sca, ScaInt, ScaNum, Set, SetCatInt, SetCatStr, SetOrd,
+    SetSym, Slot, Symbol, TConVal, Val, Var,
 };
 use alloc::boxed::Box;
 use core::mem::ManuallyDrop;
@@ -201,6 +201,18 @@ impl<'d> Model<'d> {
     }
 
     // scalars
+
+    pub(crate) fn one<'m>(&'m self) -> Num<'m, 'd> {
+        Num::new(Symbol::new(self, self.sca_bag.one))
+    }
+
+    pub(crate) fn zero_int<'m>(&'m self) -> Int<'m, 'd> {
+        Int::new(Symbol::new(self, self.sca_bag.zero_int))
+    }
+
+    pub(crate) fn zero_num<'m>(&'m self) -> Num<'m, 'd> {
+        Num::new(Symbol::new(self, self.sca_bag.one))
+    }
 
     pub(crate) fn val<'m, V: Val>(&'m self, fun: impl Fn() -> V::Raw + 'd) -> V::Sym<'m, 'd> {
         let fun: Box<dyn Fn() -> <V as Val>::Raw + 'd> = Box::new(fun);

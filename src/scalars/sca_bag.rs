@@ -5,9 +5,9 @@ use orx_imp_vec::Elem;
 
 pub struct ScaBag<'d> {
     bag: Bag<DSca<'d>>,
-    one: Ptr<'d, DSca<'d>>,
-    zero_int: Ptr<'d, DSca<'d>>,
-    zero_num: Ptr<'d, DSca<'d>>,
+    pub one: Elem<'d, DSca<'d>>,
+    pub zero_int: Elem<'d, DSca<'d>>,
+    pub zero_num: Elem<'d, DSca<'d>>,
 }
 
 impl Default for ScaBag<'_> {
@@ -16,7 +16,7 @@ impl Default for ScaBag<'_> {
 
         let [one, zero_int, zero_num] =
             [DSca::one(), DSca::zero::<ScaInt>(), DSca::zero::<ScaNum>()]
-                .map(|d| Ptr::new_from_el(bag.push(d)));
+                .map(|d| unsafe { Elem::new(bag.push(d).as_mut_ptr()) });
 
         Self {
             bag,
