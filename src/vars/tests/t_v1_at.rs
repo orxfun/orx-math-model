@@ -15,8 +15,8 @@ fn v1_at_int_cint() {
     let s0 = m.cat_set_int();
     let i0 = s0.idx();
     let v1 = m.var1(VarType::Binary, s0);
-    let sca1 = [v1.at(i0)];
-    let sca2 = [v1.at(2)];
+    let sca1 = [v1.at(i0), v1[i0]];
+    let sca2 = [v1.at(2), v1[2]];
 
     // binding
     s0.bind(|| s0_data.iter().copied()).unwrap();
@@ -49,8 +49,8 @@ fn v1_at_int_cstr() {
     let s0 = m.cat_set_str();
     let i0 = s0.idx();
     let v1 = m.var1(VarType::Cont(Bounds::default()), s0);
-    let sca1 = [v1.at(i0)];
-    let sca2 = [v1.at("2")];
+    let sca1 = [v1.at(i0), v1[i0]];
+    let sca2 = [v1.at("2"), v1["2"]];
 
     // binding
     s0.bind(|| &s0_data).unwrap();
@@ -83,8 +83,8 @@ fn v1_at_int_ord() {
     let s0 = m.ord_set();
     let i0 = s0.idx();
     let v1 = m.var1(VarType::Binary, s0);
-    let sca1 = [v1.at(i0)];
-    let sca2 = [v1.at(2)];
+    let sca1 = [v1.at(i0), v1[i0]];
+    let sca2 = [v1.at(2), v1[2]];
 
     // binding
     s0.bind(|| s0_data.iter().copied()).unwrap();
