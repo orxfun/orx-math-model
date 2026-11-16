@@ -126,6 +126,7 @@ impl Set for SetCatInt {
         }
     }
 
+    #[inline(always)]
     fn fun_from_union<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self> {
         unsafe { &u.cint }
     }
@@ -332,6 +333,7 @@ impl Set for SetCatStr {
         }
     }
 
+    #[inline(always)]
     fn fun_from_union<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self> {
         unsafe { &u.cstr }
     }
@@ -606,6 +608,7 @@ impl Set for SetOrd {
         }
     }
 
+    #[inline(always)]
     fn fun_from_union<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self> {
         unsafe { &u.ord }
     }
