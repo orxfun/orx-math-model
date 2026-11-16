@@ -5,4 +5,5 @@ mod lt_data;
 
 pub use le_bag::LinExpBag;
 pub use le_data::DLinExp;
+pub use le_sym::LinExpr;
 pub use lt_data::DLinTerm;
