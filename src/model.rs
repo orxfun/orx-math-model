@@ -1,5 +1,6 @@
 use crate::con_vals::{ConVal, ConValBag, DConVal};
 use crate::idxs::{IdxBag, IdxValBag};
+use crate::lin_expr::LinExpBag;
 use crate::pars::{ParBag, ParD1, ParD2, ParFun, ParFunBag};
 use crate::scalars::{DSca, FVar1, FVar2, ScaBag};
 use crate::sets::{CatInt, CatStr, Ord, SetBag, SetFunBag};
@@ -38,6 +39,9 @@ pub struct Model<'d> {
     sca_bag: ManuallyDrop<ScaBag<'d>>,
     con_val_bag: ConValBag,
     sym_ref_bag: SymRefBag<'d>,
+
+    // expr
+    lin_exp_bag: LinExpBag<'d>,
 }
 
 impl<'d> Drop for Model<'d> {
