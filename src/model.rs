@@ -216,7 +216,7 @@ impl<'d> Model<'d> {
         let i0 = var.set_ptr(0);
         let data = DSca::new_var_d1::<I0>(var.typ(), i0, fun);
         let el = self.sca_bag.push(data);
-        Symbol::new(self, el).into()
+        Var::new(Symbol::new(self, el))
     }
 
     pub(crate) fn var_from_d2<'m, I0: Set, I1: Set>(
@@ -228,7 +228,7 @@ impl<'d> Model<'d> {
         let [i0, i1] = [0, 1].map(|i| var.set_ptr(i));
         let data = DSca::new_var_d2::<I0, I1>(var.typ(), i0, i1, fun);
         let el = self.sca_bag.push(data);
-        Symbol::new(self, el).into()
+        Var::new(Symbol::new(self, el))
     }
 
     // vals

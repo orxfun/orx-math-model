@@ -572,7 +572,7 @@ impl Set for SetOrd {
                 })
             }
             IndexOrd::Int(i0) => {
-                let int = Ptr::new(i0.el);
+                let int = i0.ptr();
                 par.m.val::<V>(move || {
                     let fun = fun.get();
                     let idx = int.get().val_eval::<ScaInt>();
@@ -730,7 +730,7 @@ impl Set for SetOrd {
                 I1::v2_at_i0(var, i0, i1)
             }
             IndexOrd::Int(i0) => {
-                let i0 = Ptr::new(i0.el);
+                let i0 = i0.ptr();
                 let i0 = move || i0.get().val_eval::<ScaInt>();
                 I1::v2_at_i0(var, i0, i1)
             }

@@ -49,7 +49,7 @@ impl Val for ScaInt {
     }
 
     fn new_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSca<'d>>) -> Self::Sym<'m, 'd> {
-        Symbol::new(m, el).into()
+        Self::Sym::new(Symbol::new(m, el))
     }
 }
 
@@ -76,6 +76,6 @@ impl Val for ScaNum {
     }
 
     fn new_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSca<'d>>) -> Self::Sym<'m, 'd> {
-        Symbol::new(m, el).into()
+        Self::Sym::new(Symbol::new(m, el))
     }
 }
