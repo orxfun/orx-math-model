@@ -17,7 +17,7 @@ where
 // cat int
 
 #[derive(derive_more::From, derive_more::Deref, Clone, Copy)]
-pub struct CatInt<'m, 'd>(pub(crate) Symbol<'m, 'd, DSet<'d>>);
+pub struct CatInt<'m, 'd>(Symbol<'m, 'd, DSet<'d>>);
 
 impl<'m, 'd> CatInt<'m, 'd> {
     pub fn bind<I: IntoIterator<Item = usize>>(self, fun: impl Fn() -> I + 'd) -> Res {
@@ -32,7 +32,7 @@ impl<'m, 'd> CatInt<'m, 'd> {
 // cat str
 
 #[derive(derive_more::From, derive_more::Deref, Clone, Copy)]
-pub struct CatStr<'m, 'd>(pub(crate) Symbol<'m, 'd, DSet<'d>>);
+pub struct CatStr<'m, 'd>(Symbol<'m, 'd, DSet<'d>>);
 
 impl<'m, 'd> CatStr<'m, 'd> {
     pub fn bind<I: IntoIterator<Item = &'d String>>(self, fun: impl Fn() -> I + 'd) -> Res {
@@ -47,7 +47,7 @@ impl<'m, 'd> CatStr<'m, 'd> {
 // ord
 
 #[derive(derive_more::From, derive_more::Deref, Clone, Copy)]
-pub struct Ord<'m, 'd>(pub(crate) Symbol<'m, 'd, DSet<'d>>);
+pub struct Ord<'m, 'd>(Symbol<'m, 'd, DSet<'d>>);
 
 impl<'m, 'd> Ord<'m, 'd> {
     pub fn bind<I: IntoIterator<Item = i64>>(self, fun: impl Fn() -> I + 'd) -> Res {
