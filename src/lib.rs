@@ -42,7 +42,7 @@ pub(crate) use elements::Elements;
 pub(crate) use err::{Res, ResValid};
 pub(crate) use scalars::{Int, Num, Sca, ScaInt, ScaNum, ScaVar, Val, ValTyp, Var};
 pub(crate) use sets::{Set, SetCatInt, SetCatStr, SetOrd, SetSym, SetTyp};
-pub(crate) use slot::{Ptr, Slot};
+pub(crate) use slot::{Ptr, PtrMut, Slot};
 pub(crate) use symbol::Symbol;
 pub(crate) use vars::VarType;
 

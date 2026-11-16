@@ -1,6 +1,7 @@
+use crate::pars::{UFunP1, UFunP2, FP1, FP2};
 use crate::scalars::val::{FVal, UFunVal};
 use crate::scalars::{DSca, Sca};
-use crate::{Model, Symbol};
+use crate::{Model, Set, Symbol};
 use core::mem::ManuallyDrop;
 use orx_imp_vec::Elem;
 
@@ -24,6 +25,14 @@ pub trait Val: Sca {
     fn fun_from_union<'a, 'd>(u: &'a UFunVal<'d>) -> &'a FVal<'d, Self>;
 
     fn new_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSca<'d>>) -> Self::Sym<'m, 'd>;
+
+    // p1
+
+    fn unpack_p1_fun<'a, 'd, I0: Set>(u: &'a UFunP1<'d>) -> &'a FP1<'d, Self, I0>;
+
+    // p2
+
+    fn unpack_p2_fun<'a, 'd, I0: Set, I1: Set>(u: &'a UFunP2<'d>) -> &'a FP2<'d, Self, I0, I1>;
 }
 
 // int
@@ -44,12 +53,27 @@ impl Val for ScaInt {
         }
     }
 
+    #[inline(always)]
     fn fun_from_union<'a, 'd>(u: &'a UFunVal<'d>) -> &'a FVal<'d, Self> {
         unsafe { &u.int }
     }
 
     fn new_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSca<'d>>) -> Self::Sym<'m, 'd> {
         Self::Sym::new(Symbol::new(m, el))
+    }
+
+    // p1
+
+    #[inline(always)]
+    fn unpack_p1_fun<'a, 'd, I0: Set>(u: &'a UFunP1<'d>) -> &'a FP1<'d, Self, I0> {
+        I0::unpack_p1_fun_v(unsafe { &u.int })
+    }
+
+    // p2
+
+    #[inline(always)]
+    fn unpack_p2_fun<'a, 'd, I0: Set, I1: Set>(u: &'a UFunP2<'d>) -> &'a FP2<'d, Self, I0, I1> {
+        I0::unpack_p2_fun_v::<Self, I1>(unsafe { &u.int })
     }
 }
 
@@ -71,11 +95,26 @@ impl Val for ScaNum {
         }
     }
 
+    #[inline(always)]
     fn fun_from_union<'a, 'd>(u: &'a UFunVal<'d>) -> &'a FVal<'d, Self> {
         unsafe { &u.num }
     }
 
     fn new_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSca<'d>>) -> Self::Sym<'m, 'd> {
         Self::Sym::new(Symbol::new(m, el))
+    }
+
+    // p1
+
+    #[inline(always)]
+    fn unpack_p1_fun<'a, 'd, I0: Set>(u: &'a UFunP1<'d>) -> &'a FP1<'d, Self, I0> {
+        I0::unpack_p1_fun_v(unsafe { &u.num })
+    }
+
+    // p2
+
+    #[inline(always)]
+    fn unpack_p2_fun<'a, 'd, I0: Set, I1: Set>(u: &'a UFunP2<'d>) -> &'a FP2<'d, Self, I0, I1> {
+        I0::unpack_p2_fun_v::<Self, I1>(unsafe { &u.num })
     }
 }

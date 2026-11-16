@@ -28,7 +28,7 @@ impl<'m, 'd> CatInt<'m, 'd> {
     }
 
     pub(crate) fn ptr(&self) -> Ptr<'d, DSet<'d>> {
-        Ptr::new(self.0.el)
+        Ptr::new_from_el(self.0.el)
     }
 
     pub fn bind<I: IntoIterator<Item = usize>>(self, fun: impl Fn() -> I + 'd) -> Res {
@@ -55,7 +55,7 @@ impl<'m, 'd> CatStr<'m, 'd> {
     }
 
     pub(crate) fn ptr(&self) -> Ptr<'d, DSet<'d>> {
-        Ptr::new(self.0.el)
+        Ptr::new_from_el(self.0.el)
     }
 
     pub fn bind<I: IntoIterator<Item = &'d String>>(self, fun: impl Fn() -> I + 'd) -> Res {
@@ -82,7 +82,7 @@ impl<'m, 'd> Ord<'m, 'd> {
     }
 
     pub(crate) fn ptr(&self) -> Ptr<'d, DSet<'d>> {
-        Ptr::new(self.0.el)
+        Ptr::new_from_el(self.0.el)
     }
 
     pub fn bind<I: IntoIterator<Item = i64>>(self, fun: impl Fn() -> I + 'd) -> Res {

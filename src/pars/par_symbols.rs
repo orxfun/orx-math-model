@@ -22,7 +22,7 @@ impl<'m, 'd, V: Val, I0: Set> ParD1<'m, 'd, V, I0> {
     }
 
     pub(crate) fn ptr(&self) -> Ptr<'d, DPar<'d>> {
-        Ptr::new(self.0.el)
+        Ptr::new_from_el(self.0.el)
     }
 
     pub fn bind(self, fun: impl Fn(I0::IdxRaw<'d>) -> V::Raw + 'd) -> Res {
@@ -67,7 +67,7 @@ impl<'m, 'd, V: Val, I0: Set, I1: Set> ParD2<'m, 'd, V, I0, I1> {
     }
 
     pub(crate) fn ptr(&self) -> Ptr<'d, DPar<'d>> {
-        Ptr::new(self.0.el)
+        Ptr::new_from_el(self.0.el)
     }
 
     pub fn bind(self, fun: impl Fn(I0::IdxRaw<'d>, I1::IdxRaw<'d>) -> V::Raw + 'd) -> Res {

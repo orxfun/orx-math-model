@@ -13,9 +13,9 @@ pub type FP2<'d, V, I0, I1> =
 
 #[repr(C)]
 pub union UFunP2_V_I0<'d, V: Val, I0: Set> {
-    cint: ManuallyDrop<FP2<'d, V, I0, SetCatInt>>,
-    cstr: ManuallyDrop<FP2<'d, V, I0, SetCatStr>>,
-    ord: ManuallyDrop<FP2<'d, V, I0, SetOrd>>,
+    pub cint: ManuallyDrop<FP2<'d, V, I0, SetCatInt>>,
+    pub cstr: ManuallyDrop<FP2<'d, V, I0, SetCatStr>>,
+    pub ord: ManuallyDrop<FP2<'d, V, I0, SetOrd>>,
 }
 
 impl<'d, V: Val, I0: Set> UFunP2_V_I0<'d, V, I0> {
@@ -74,9 +74,9 @@ impl<'d, V: Val, I0: Set> UFunP2_V_I0<'d, V, I0> {
 
 #[repr(C)]
 pub union UFunP2_V<'d, V: Val> {
-    cint: ManuallyDrop<UFunP2_V_I0<'d, V, SetCatInt>>,
-    cstr: ManuallyDrop<UFunP2_V_I0<'d, V, SetCatStr>>,
-    ord: ManuallyDrop<UFunP2_V_I0<'d, V, SetOrd>>,
+    pub cint: ManuallyDrop<UFunP2_V_I0<'d, V, SetCatInt>>,
+    pub cstr: ManuallyDrop<UFunP2_V_I0<'d, V, SetCatStr>>,
+    pub ord: ManuallyDrop<UFunP2_V_I0<'d, V, SetOrd>>,
 }
 
 impl<'d, V: Val> UFunP2_V<'d, V> {
@@ -110,16 +110,6 @@ impl<'d, V: Val> UFunP2_V<'d, V> {
         }
     }
 
-    fn get<I0: Set, I1: Set>(&self) -> &FP2<'d, V, I0, I1> {
-        unsafe {
-            match I0::typ() {
-                SetTyp::CatInt => transmute(self.cint.get::<I1>()),
-                SetTyp::CatStr => transmute(self.cstr.get::<I1>()),
-                SetTyp::Ord => transmute(self.ord.get::<I1>()),
-            }
-        }
-    }
-
     fn man_drop(&mut self, i0_typ: SetTyp, i1_typ: SetTyp) {
         unsafe {
             match i0_typ {
@@ -135,8 +125,8 @@ impl<'d, V: Val> UFunP2_V<'d, V> {
 
 #[repr(C)]
 pub union UFunP2<'d> {
-    int: ManuallyDrop<UFunP2_V<'d, ScaInt>>,
-    num: ManuallyDrop<UFunP2_V<'d, ScaNum>>,
+    pub int: ManuallyDrop<UFunP2_V<'d, ScaInt>>,
+    pub num: ManuallyDrop<UFunP2_V<'d, ScaNum>>,
 }
 
 impl<'d> UFunP2<'d> {
@@ -169,15 +159,6 @@ impl<'d> UFunP2<'d> {
                 ValTyp::Num => UFunP2 {
                     num: UFunP2_V::create::<I0, I1>(transmute(fun)),
                 },
-            }
-        }
-    }
-
-    pub fn get<V: Val, I0: Set, I1: Set>(&self) -> &FP2<'d, V, I0, I1> {
-        unsafe {
-            match V::val_typ() {
-                ValTyp::Int => transmute(self.int.get::<I0, I1>()),
-                ValTyp::Num => transmute(self.num.get::<I0, I1>()),
             }
         }
     }
@@ -226,17 +207,5 @@ impl<'d> FunP2<'d> {
             }
         };
         Self::new(val_typ, i0_typ, i1_typ, data)
-    }
-
-    pub fn get<V: Val, I0: Set, I1: Set>(&self) -> &FP2<'d, V, I0, I1> {
-        Res::dbg_assert_same_val(V::val_typ(), self.val_typ);
-        Res::dbg_assert_same_set(I0::typ(), self.i0_typ);
-        Res::dbg_assert_same_set(I1::typ(), self.i1_typ);
-        unsafe {
-            match V::val_typ() {
-                ValTyp::Int => transmute(self.data.int.get::<I0, I1>()),
-                ValTyp::Num => transmute(self.data.num.get::<I0, I1>()),
-            }
-        }
     }
 }

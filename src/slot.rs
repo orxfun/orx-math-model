@@ -86,12 +86,19 @@ impl<'d, T> Slot<'d, T> {
             phantom: PhantomData,
         }
     }
+
+    pub fn ptr_mut(&self) -> PtrMut<'d, T> {
+        PtrMut {
+            p: self.p,
+            phantom: PhantomData,
+        }
+    }
 }
 
 // ptr
 
 pub struct Ptr<'d, T> {
-    pub p: *const T,
+    p: *const T,
     phantom: PhantomData<fn() -> &'d ()>,
 }
 
@@ -107,21 +114,45 @@ impl<'d, T> Clone for Ptr<'d, T> {
 impl<'d, T> Copy for Ptr<'d, T> {}
 
 impl<'d, T> Ptr<'d, T> {
-    pub fn new(el: Elem<'_, T>) -> Self {
+    pub fn new_from_el(el: Elem<'_, T>) -> Self {
         Self {
             p: el.as_ptr(),
             phantom: PhantomData,
         }
     }
 
+    #[inline(always)]
     pub fn get(&self) -> &'d T {
         unsafe { &*self.p }
     }
 
+    #[inline(always)]
     pub fn val(&self) -> T
     where
         T: Copy,
     {
         *unsafe { &*self.p }
+    }
+}
+
+// ptr-mut
+
+pub struct PtrMut<'d, T> {
+    p: *mut T,
+    phantom: PhantomData<fn() -> &'d ()>,
+}
+
+impl<'d, T> PtrMut<'d, T> {
+    #[inline(always)]
+    pub fn val(&self) -> T
+    where
+        T: Copy,
+    {
+        *unsafe { &*self.p }
+    }
+
+    #[inline(always)]
+    pub fn get_mut(&self) -> &'d mut T {
+        unsafe { &mut *self.p }
     }
 }

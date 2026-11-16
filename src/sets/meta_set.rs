@@ -1,11 +1,12 @@
 use crate::idxs::{DIdx, IdxCatInt, IdxCatStr, IdxOrd, UIdxVal};
-use crate::pars::{ParD1, ParD2};
+use crate::pars::{ParD1, ParD2, UFunP1_V, UFunP2_V, UFunP2_V_I0, FP1, FP2};
+use crate::scalars::{FVar1, FVar2, UFunV1, UFunV2, UFunV2_I0};
 use crate::sets::{CatInt, CatStr, DSet, FSet, IndexCatInt, IndexCatStr, IndexOrd, Ord, UFunSet};
 use crate::vars::{VarD1, VarD2};
 use crate::{Model, Ptr, ScaInt, SetSym, Symbol, Val, Var};
 use alloc::boxed::Box;
 use alloc::string::{String, ToString};
-use core::mem::ManuallyDrop;
+use core::mem::{transmute, ManuallyDrop};
 use orx_imp_vec::Elem;
 
 // enums
@@ -28,7 +29,7 @@ pub trait Set: Clone + Copy + 'static {
 
     fn into_fun_union<'d>(fun: FSet<'d, Self>) -> UFunSet<'d>;
 
-    fn fun_from_union<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self>;
+    fn unpack_set_fun<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self>;
 
     fn new_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd>;
 
@@ -52,12 +53,21 @@ pub trait Set: Clone + Copy + 'static {
 
     // p1
 
+    fn unpack_p1_fun_v<'a, 'd, V: Val>(u: &'a UFunP1_V<'d, V>) -> &'a FP1<'d, V, Self>;
+
     fn p1_at<'m, 'd, V: Val>(
         par: ParD1<'m, 'd, V, Self>,
         i0: impl Into<Self::IdxAny<'m, 'd>>,
     ) -> V::Sym<'m, 'd>;
 
     // p2
+
+    fn unpack_p2_fun_v_i0<'a, 'd, V: Val, I0: Set>(
+        u: &'a UFunP2_V_I0<'d, V, I0>,
+    ) -> &'a FP2<'d, V, I0, Self>;
+
+    fn unpack_p2_fun_v<'a, 'd, V: Val, I1: Set>(u: &'a UFunP2_V<'d, V>)
+        -> &'a FP2<'d, V, Self, I1>;
 
     fn p2_at_i0<'m, 'd, V: Val, I0: Set>(
         par: ParD2<'m, 'd, V, I0, Self>,
@@ -73,9 +83,15 @@ pub trait Set: Clone + Copy + 'static {
 
     // v1
 
+    fn unpack_v1_fun<'a, 'd>(u: &'a UFunV1<'d>) -> &'a FVar1<'d, Self>;
+
     fn v1_at<'m, 'd>(var: VarD1<'m, 'd, Self>, i0: impl Into<Self::IdxAny<'m, 'd>>) -> Var<'m, 'd>;
 
     // v2
+
+    fn unpack_v2_fun_i0<'a, 'd, I0: Set>(u: &'a UFunV2_I0<'d, I0>) -> &'a FVar2<'d, I0, Self>;
+
+    fn unpack_v2_fun<'a, 'd, I1: Set>(u: &'a UFunV2<'d>) -> &'a FVar2<'d, Self, I1>;
 
     fn v2_at_i0<'m, 'd, I0: Set>(
         var: VarD2<'m, 'd, I0, Self>,
@@ -110,7 +126,8 @@ impl Set for SetCatInt {
         }
     }
 
-    fn fun_from_union<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self> {
+    #[inline(always)]
+    fn unpack_set_fun<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self> {
         unsafe { &u.cint }
     }
 
@@ -130,10 +147,12 @@ impl Set for SetCatInt {
 
     type IdxAny<'m, 'd: 'm> = IndexCatInt<'m, 'd>;
 
+    #[inline(always)]
     fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d> {
         unsafe { u.cat_int }
     }
 
+    #[inline(always)]
     fn idx_write<'d>(u: &mut UIdxVal<'d>, value: Self::IdxRaw<'d>) {
         u.cat_int = value;
     }
@@ -147,6 +166,11 @@ impl Set for SetCatInt {
     }
 
     // p1
+
+    #[inline(always)]
+    fn unpack_p1_fun_v<'a, 'd, V: Val>(u: &'a UFunP1_V<'d, V>) -> &'a FP1<'d, V, Self> {
+        unsafe { &u.cint }
+    }
 
     fn p1_at<'m, 'd, V: Val>(
         par: ParD1<'m, 'd, V, Self>,
@@ -170,6 +194,20 @@ impl Set for SetCatInt {
     }
 
     // p2
+
+    #[inline(always)]
+    fn unpack_p2_fun_v_i0<'a, 'd, V: Val, I0: Set>(
+        u: &'a UFunP2_V_I0<'d, V, I0>,
+    ) -> &'a FP2<'d, V, I0, Self> {
+        unsafe { &u.cint }
+    }
+
+    #[inline(always)]
+    fn unpack_p2_fun_v<'a, 'd, V: Val, I1: Set>(
+        u: &'a UFunP2_V<'d, V>,
+    ) -> &'a FP2<'d, V, Self, I1> {
+        I1::unpack_p2_fun_v_i0(unsafe { &u.cint })
+    }
 
     fn p2_at_i0<'m, 'd, V: Val, I0: Set>(
         par: ParD2<'m, 'd, V, I0, Self>,
@@ -210,6 +248,11 @@ impl Set for SetCatInt {
 
     // v1
 
+    #[inline(always)]
+    fn unpack_v1_fun<'a, 'd>(u: &'a UFunV1<'d>) -> &'a FVar1<'d, Self> {
+        unsafe { &u.cint }
+    }
+
     fn v1_at<'m, 'd>(var: VarD1<'m, 'd, Self>, i0: impl Into<Self::IdxAny<'m, 'd>>) -> Var<'m, 'd> {
         match i0.into() {
             IndexCatInt::Idx(i0) => {
@@ -225,6 +268,16 @@ impl Set for SetCatInt {
     }
 
     // v2
+
+    #[inline(always)]
+    fn unpack_v2_fun_i0<'a, 'd, I0: Set>(u: &'a UFunV2_I0<'d, I0>) -> &'a FVar2<'d, I0, Self> {
+        unsafe { &u.cint }
+    }
+
+    #[inline(always)]
+    fn unpack_v2_fun<'a, 'd, I1: Set>(u: &'a UFunV2<'d>) -> &'a FVar2<'d, Self, I1> {
+        I1::unpack_v2_fun_i0(unsafe { &u.cint })
+    }
 
     fn v2_at_i0<'m, 'd, I0: Set>(
         var: VarD2<'m, 'd, I0, Self>,
@@ -280,7 +333,8 @@ impl Set for SetCatStr {
         }
     }
 
-    fn fun_from_union<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self> {
+    #[inline(always)]
+    fn unpack_set_fun<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self> {
         unsafe { &u.cstr }
     }
 
@@ -300,10 +354,12 @@ impl Set for SetCatStr {
 
     type IdxAny<'m, 'd: 'm> = IndexCatStr<'m, 'd>;
 
+    #[inline(always)]
     fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d> {
         unsafe { u.cat_str }
     }
 
+    #[inline(always)]
     fn idx_write<'d>(u: &mut UIdxVal<'d>, value: Self::IdxRaw<'d>) {
         u.cat_str = value;
     }
@@ -317,6 +373,11 @@ impl Set for SetCatStr {
     }
 
     // p1
+
+    #[inline(always)]
+    fn unpack_p1_fun_v<'a, 'd, V: Val>(u: &'a UFunP1_V<'d, V>) -> &'a FP1<'d, V, Self> {
+        unsafe { &u.cstr }
+    }
 
     fn p1_at<'m, 'd, V: Val>(
         par: ParD1<'m, 'd, V, Self>,
@@ -354,6 +415,20 @@ impl Set for SetCatStr {
     }
 
     // p2
+
+    #[inline(always)]
+    fn unpack_p2_fun_v_i0<'a, 'd, V: Val, I0: Set>(
+        u: &'a UFunP2_V_I0<'d, V, I0>,
+    ) -> &'a FP2<'d, V, I0, Self> {
+        unsafe { &u.cstr }
+    }
+
+    #[inline(always)]
+    fn unpack_p2_fun_v<'a, 'd, V: Val, I1: Set>(
+        u: &'a UFunP2_V<'d, V>,
+    ) -> &'a FP2<'d, V, Self, I1> {
+        I1::unpack_p2_fun_v_i0(unsafe { &u.cstr })
+    }
 
     fn p2_at_i0<'m, 'd, V: Val, I0: Set>(
         par: ParD2<'m, 'd, V, I0, Self>,
@@ -420,6 +495,11 @@ impl Set for SetCatStr {
 
     // v1
 
+    #[inline(always)]
+    fn unpack_v1_fun<'a, 'd>(u: &'a UFunV1<'d>) -> &'a FVar1<'d, Self> {
+        unsafe { &u.cstr }
+    }
+
     fn v1_at<'m, 'd>(var: VarD1<'m, 'd, Self>, i0: impl Into<Self::IdxAny<'m, 'd>>) -> Var<'m, 'd> {
         match i0.into() {
             IndexCatStr::Idx(i0) => {
@@ -445,6 +525,16 @@ impl Set for SetCatStr {
     }
 
     // v2
+
+    #[inline(always)]
+    fn unpack_v2_fun_i0<'a, 'd, I0: Set>(u: &'a UFunV2_I0<'d, I0>) -> &'a FVar2<'d, I0, Self> {
+        unsafe { &u.cstr }
+    }
+
+    #[inline(always)]
+    fn unpack_v2_fun<'a, 'd, I1: Set>(u: &'a UFunV2<'d>) -> &'a FVar2<'d, Self, I1> {
+        I1::unpack_v2_fun_i0(unsafe { &u.cstr })
+    }
 
     fn v2_at_i0<'m, 'd, I0: Set>(
         var: VarD2<'m, 'd, I0, Self>,
@@ -518,7 +608,8 @@ impl Set for SetOrd {
         }
     }
 
-    fn fun_from_union<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self> {
+    #[inline(always)]
+    fn unpack_set_fun<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self> {
         unsafe { &u.ord }
     }
 
@@ -538,10 +629,12 @@ impl Set for SetOrd {
 
     type IdxAny<'m, 'd: 'm> = IndexOrd<'m, 'd>;
 
+    #[inline(always)]
     fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d> {
         unsafe { u.ord }
     }
 
+    #[inline(always)]
     fn idx_write<'d>(u: &mut UIdxVal<'d>, value: Self::IdxRaw<'d>) {
         u.ord = value;
     }
@@ -555,6 +648,11 @@ impl Set for SetOrd {
     }
 
     // p1
+
+    #[inline(always)]
+    fn unpack_p1_fun_v<'a, 'd, V: Val>(u: &'a UFunP1_V<'d, V>) -> &'a FP1<'d, V, Self> {
+        unsafe { &u.ord }
+    }
 
     fn p1_at<'m, 'd, V: Val>(
         par: ParD1<'m, 'd, V, Self>,
@@ -594,6 +692,20 @@ impl Set for SetOrd {
     }
 
     // p2
+
+    #[inline(always)]
+    fn unpack_p2_fun_v_i0<'a, 'd, V: Val, I0: Set>(
+        u: &'a UFunP2_V_I0<'d, V, I0>,
+    ) -> &'a FP2<'d, V, I0, Self> {
+        unsafe { &u.ord }
+    }
+
+    #[inline(always)]
+    fn unpack_p2_fun_v<'a, 'd, V: Val, I1: Set>(
+        u: &'a UFunP2_V<'d, V>,
+    ) -> &'a FP2<'d, V, Self, I1> {
+        I1::unpack_p2_fun_v_i0(unsafe { &u.ord })
+    }
 
     fn p2_at_i0<'m, 'd, V: Val, I0: Set>(
         par: ParD2<'m, 'd, V, I0, Self>,
@@ -657,6 +769,11 @@ impl Set for SetOrd {
 
     // v1
 
+    #[inline(always)]
+    fn unpack_v1_fun<'a, 'd>(u: &'a UFunV1<'d>) -> &'a FVar1<'d, Self> {
+        unsafe { &u.ord }
+    }
+
     fn v1_at<'m, 'd>(var: VarD1<'m, 'd, Self>, i0: impl Into<Self::IdxAny<'m, 'd>>) -> Var<'m, 'd> {
         match i0.into() {
             IndexOrd::Idx(i0) => {
@@ -685,6 +802,16 @@ impl Set for SetOrd {
     }
 
     // v2
+
+    #[inline(always)]
+    fn unpack_v2_fun_i0<'a, 'd, I0: Set>(u: &'a UFunV2_I0<'d, I0>) -> &'a FVar2<'d, I0, Self> {
+        unsafe { &u.ord }
+    }
+
+    #[inline(always)]
+    fn unpack_v2_fun<'a, 'd, I1: Set>(u: &'a UFunV2<'d>) -> &'a FVar2<'d, Self, I1> {
+        I1::unpack_v2_fun_i0(unsafe { &u.ord })
+    }
 
     fn v2_at_i0<'m, 'd, I0: Set>(
         var: VarD2<'m, 'd, I0, Self>,

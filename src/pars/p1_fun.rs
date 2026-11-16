@@ -12,9 +12,9 @@ pub type FP1<'d, V, I0> = Box<dyn Fn(<I0 as Set>::IdxRaw<'d>) -> <V as Val>::Raw
 
 #[repr(C)]
 pub union UFunP1_V<'d, V: Val> {
-    cint: ManuallyDrop<FP1<'d, V, SetCatInt>>,
-    cstr: ManuallyDrop<FP1<'d, V, SetCatStr>>,
-    ord: ManuallyDrop<FP1<'d, V, SetOrd>>,
+    pub cint: ManuallyDrop<FP1<'d, V, SetCatInt>>,
+    pub cstr: ManuallyDrop<FP1<'d, V, SetCatStr>>,
+    pub ord: ManuallyDrop<FP1<'d, V, SetOrd>>,
 }
 
 impl<'d, V: Val> UFunP1_V<'d, V> {
@@ -48,16 +48,6 @@ impl<'d, V: Val> UFunP1_V<'d, V> {
         }
     }
 
-    fn get<I0: Set>(&self) -> &FP1<'d, V, I0> {
-        unsafe {
-            match I0::typ() {
-                SetTyp::CatInt => transmute(&self.cint),
-                SetTyp::CatStr => transmute(&self.cstr),
-                SetTyp::Ord => transmute(&self.ord),
-            }
-        }
-    }
-
     fn man_drop(&mut self, i0_typ: SetTyp) {
         unsafe {
             match i0_typ {
@@ -73,8 +63,8 @@ impl<'d, V: Val> UFunP1_V<'d, V> {
 
 #[repr(C)]
 pub union UFunP1<'d> {
-    int: ManuallyDrop<UFunP1_V<'d, ScaInt>>,
-    num: ManuallyDrop<UFunP1_V<'d, ScaNum>>,
+    pub int: ManuallyDrop<UFunP1_V<'d, ScaInt>>,
+    pub num: ManuallyDrop<UFunP1_V<'d, ScaNum>>,
 }
 
 impl<'d> UFunP1<'d> {
@@ -110,18 +100,9 @@ impl<'d> UFunP1<'d> {
             }
         }
     }
-
-    pub fn get<V: Val, I0: Set>(&self) -> &FP1<'d, V, I0> {
-        unsafe {
-            match V::val_typ() {
-                ValTyp::Int => transmute(self.int.get::<I0>()),
-                ValTyp::Num => transmute(self.num.get::<I0>()),
-            }
-        }
-    }
 }
 
-// zzzz
+// fun
 
 #[derive(derive_new::new)]
 pub struct FunP1<'d> {
@@ -165,16 +146,5 @@ impl<'d> FunP1<'d> {
             }
         };
         Self::new(val_typ, i0_typ, data)
-    }
-
-    pub fn get<V: Val, I0: Set>(&self) -> &FP1<'d, V, I0> {
-        Res::dbg_assert_same_val(V::val_typ(), self.val_typ);
-        Res::dbg_assert_same_set(I0::typ(), self.i0_typ);
-        unsafe {
-            match V::val_typ() {
-                ValTyp::Int => transmute(self.data.int.get::<I0>()),
-                ValTyp::Num => transmute(self.data.num.get::<I0>()),
-            }
-        }
     }
 }

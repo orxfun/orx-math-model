@@ -23,13 +23,15 @@ impl<'d> IdxVal<'d> {
         Self { typ, data }
     }
 
+    #[inline(always)]
     pub fn read<S: Set>(&self) -> S::IdxRaw<'d> {
-        Res::dbg_assert_same_set(S::typ(), self.typ);
+        debug_assert_eq!(S::typ(), self.typ);
         S::idx_unpack(&self.data)
     }
 
+    #[inline(always)]
     pub fn write<S: Set>(&mut self, value: S::IdxRaw<'d>) {
-        Res::dbg_assert_same_set(S::typ(), self.typ);
+        debug_assert_eq!(S::typ(), self.typ);
         S::idx_write(&mut self.data, value);
     }
 }

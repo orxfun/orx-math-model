@@ -12,9 +12,9 @@ pub type FVar2<'d, I0, I1> = Box<dyn Fn() -> Idx2<'d, I0, I1> + 'd>;
 
 #[repr(C)]
 pub union UFunV2_I0<'d, I0: Set> {
-    cint: ManuallyDrop<FVar2<'d, I0, SetCatInt>>,
-    cstr: ManuallyDrop<FVar2<'d, I0, SetCatStr>>,
-    ord: ManuallyDrop<FVar2<'d, I0, SetOrd>>,
+    pub cint: ManuallyDrop<FVar2<'d, I0, SetCatInt>>,
+    pub cstr: ManuallyDrop<FVar2<'d, I0, SetCatStr>>,
+    pub ord: ManuallyDrop<FVar2<'d, I0, SetOrd>>,
 }
 
 impl<'d, I0: Set> UFunV2_I0<'d, I0> {
@@ -59,9 +59,9 @@ impl<'d, I0: Set> UFunV2_I0<'d, I0> {
 
 #[repr(C)]
 pub union UFunV2<'d> {
-    cint: ManuallyDrop<UFunV2_I0<'d, SetCatInt>>,
-    cstr: ManuallyDrop<UFunV2_I0<'d, SetCatStr>>,
-    ord: ManuallyDrop<UFunV2_I0<'d, SetOrd>>,
+    pub cint: ManuallyDrop<UFunV2_I0<'d, SetCatInt>>,
+    pub cstr: ManuallyDrop<UFunV2_I0<'d, SetCatStr>>,
+    pub ord: ManuallyDrop<UFunV2_I0<'d, SetOrd>>,
 }
 
 #[derive(derive_new::new)]
