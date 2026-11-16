@@ -2,8 +2,7 @@ use crate::idxs::{DIdx, IdxCatInt, IdxCatStr, IdxOrd, UIdxVal};
 use crate::pars::p1::ParD1;
 use crate::pars::p2::ParD2;
 use crate::sets::{CatInt, CatStr, DSet, FSet, IndexCatInt, IndexCatStr, IndexOrd, Ord, UFunSet};
-use crate::vars::v1::VarD1;
-use crate::vars::v2::VarD2;
+use crate::vars::{VarD1, VarD2};
 use crate::{Model, Ptr, ScaInt, SetSym, Symbol, Val, Var};
 use alloc::boxed::Box;
 use alloc::string::{String, ToString};
@@ -117,11 +116,11 @@ impl Set for SetCatInt {
     }
 
     fn new_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd> {
-        Symbol::new(m, el).into()
+        Self::SetSym::new(Symbol::new(m, el))
     }
 
     fn set_ptr<'m, 'd>(sym: Self::SetSym<'m, 'd>) -> Ptr<'d, DSet<'d>> {
-        Ptr::new(sym.el)
+        sym.ptr()
     }
 
     // idx
@@ -141,11 +140,11 @@ impl Set for SetCatInt {
     }
 
     fn new_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
-        Symbol::new(m, el).into()
+        Self::IdxSym::new(Symbol::new(m, el))
     }
 
     fn into_idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>> {
-        sym.0
+        sym.sym()
     }
 
     // p1
@@ -157,7 +156,7 @@ impl Set for SetCatInt {
         let fun = Ptr::new(par.el);
         match i0.into() {
             IndexCatInt::Idx(i0) => {
-                let i0 = Ptr::new(i0.el);
+                let i0 = i0.ptr();
                 par.m.val::<V>(move || {
                     let fun = fun.get();
                     let i0 = i0.get().read::<Self>();
@@ -181,7 +180,7 @@ impl Set for SetCatInt {
         let fun = Ptr::new(par.el);
         match i1.into() {
             IndexCatInt::Idx(i1) => {
-                let i1 = Ptr::new(i1.el);
+                let i1 = i1.ptr();
                 par.m.val::<V>(move || {
                     let fun = fun.get();
                     let i1 = i1.get().read::<Self>();
@@ -202,7 +201,7 @@ impl Set for SetCatInt {
     ) -> V::Sym<'m, 'd> {
         match i0.into() {
             IndexCatInt::Idx(i0) => {
-                let i0 = Ptr::new(i0.el);
+                let i0 = i0.ptr();
                 let i0 = move || i0.get().read::<Self>();
                 I1::p2_at_i0(par, i0, i1)
             }
@@ -215,13 +214,13 @@ impl Set for SetCatInt {
     fn v1_at<'m, 'd>(var: VarD1<'m, 'd, Self>, i0: impl Into<Self::IdxAny<'m, 'd>>) -> Var<'m, 'd> {
         match i0.into() {
             IndexCatInt::Idx(i0) => {
-                let i0 = Ptr::new(i0.el);
+                let i0 = i0.ptr();
                 let fun = Box::new(move || i0.get().read::<Self>());
-                var.m.var_from_d1(var, fun)
+                var.m().var_from_d1(var, fun)
             }
             IndexCatInt::ConUsize(i0) => {
                 let fun = Box::new(move || i0);
-                var.m.var_from_d1(var, fun)
+                var.m().var_from_d1(var, fun)
             }
         }
     }
@@ -235,13 +234,13 @@ impl Set for SetCatInt {
     ) -> Var<'m, 'd> {
         match i1.into() {
             IndexCatInt::Idx(i1) => {
-                let i1 = Ptr::new(i1.el);
+                let i1 = i1.ptr();
                 let fun = Box::new(move || (i0(), i1.get().read::<Self>()));
-                var.m.var_from_d2(var, fun)
+                var.m().var_from_d2(var, fun)
             }
             IndexCatInt::ConUsize(i1) => {
                 let fun = Box::new(move || (i0(), i1));
-                var.m.var_from_d2(var, fun)
+                var.m().var_from_d2(var, fun)
             }
         }
     }
@@ -253,7 +252,7 @@ impl Set for SetCatInt {
     ) -> Var<'m, 'd> {
         match i0.into() {
             IndexCatInt::Idx(i0) => {
-                let i0 = Ptr::new(i0.el);
+                let i0 = i0.ptr();
                 let i0 = move || i0.get().read::<Self>();
                 I1::v2_at_i0(var, i0, i1)
             }
@@ -287,11 +286,11 @@ impl Set for SetCatStr {
     }
 
     fn new_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd> {
-        Symbol::new(m, el).into()
+        Self::SetSym::new(Symbol::new(m, el))
     }
 
     fn set_ptr<'m, 'd>(sym: Self::SetSym<'m, 'd>) -> Ptr<'d, DSet<'d>> {
-        Ptr::new(sym.el)
+        sym.ptr()
     }
 
     // idx
@@ -311,11 +310,11 @@ impl Set for SetCatStr {
     }
 
     fn new_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
-        Symbol::new(m, el).into()
+        Self::IdxSym::new(Symbol::new(m, el))
     }
 
     fn into_idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>> {
-        sym.0
+        sym.sym()
     }
 
     // p1
@@ -327,7 +326,7 @@ impl Set for SetCatStr {
         let fun = Ptr::new(par.el);
         match i0.into() {
             IndexCatStr::Idx(i0) => {
-                let i0 = Ptr::new(i0.el);
+                let i0 = i0.ptr();
                 par.m.val::<V>(move || {
                     let fun = fun.get();
                     let i0 = i0.get().read::<Self>();
@@ -365,7 +364,7 @@ impl Set for SetCatStr {
         let fun = Ptr::new(par.el);
         match i1.into() {
             IndexCatStr::Idx(i1) => {
-                let i1 = Ptr::new(i1.el);
+                let i1 = i1.ptr();
                 par.m.val::<V>(move || {
                     let fun = fun.get();
                     let i1 = i1.get().read::<Self>();
@@ -402,7 +401,7 @@ impl Set for SetCatStr {
     ) -> V::Sym<'m, 'd> {
         match i0.into() {
             IndexCatStr::Idx(i0) => {
-                let i0 = Ptr::new(i0.el);
+                let i0 = i0.ptr();
                 let i0 = move || i0.get().read::<Self>();
                 I1::p2_at_i0(par, i0, i1)
             }
@@ -425,23 +424,23 @@ impl Set for SetCatStr {
     fn v1_at<'m, 'd>(var: VarD1<'m, 'd, Self>, i0: impl Into<Self::IdxAny<'m, 'd>>) -> Var<'m, 'd> {
         match i0.into() {
             IndexCatStr::Idx(i0) => {
-                let i0 = Ptr::new(i0.el);
+                let i0 = i0.ptr();
                 let fun = Box::new(move || i0.get().read::<Self>());
-                var.m.var_from_d1(var, fun)
+                var.m().var_from_d1(var, fun)
             }
             IndexCatStr::ConStringRef(i0) => {
                 let fun = Box::new(move || i0);
-                var.m.var_from_d1(var, fun)
+                var.m().var_from_d1(var, fun)
             }
             IndexCatStr::ConString(i0) => {
-                let i0 = var.m.con_val(i0);
+                let i0 = var.m().con_val(i0);
                 let fun = Box::new(move || i0.get().get());
-                var.m.var_from_d1(var, fun)
+                var.m().var_from_d1(var, fun)
             }
             IndexCatStr::ConStr(i0) => {
-                let i0 = var.m.con_val(i0.to_string());
+                let i0 = var.m().con_val(i0.to_string());
                 let fun = Box::new(move || i0.get().get());
-                var.m.var_from_d1(var, fun)
+                var.m().var_from_d1(var, fun)
             }
         }
     }
@@ -455,23 +454,23 @@ impl Set for SetCatStr {
     ) -> Var<'m, 'd> {
         match i1.into() {
             IndexCatStr::Idx(i1) => {
-                let i1 = Ptr::new(i1.el);
+                let i1 = i1.ptr();
                 let fun = Box::new(move || (i0(), i1.get().read::<Self>()));
-                var.m.var_from_d2(var, fun)
+                var.m().var_from_d2(var, fun)
             }
             IndexCatStr::ConStringRef(i1) => {
                 let fun = Box::new(move || (i0(), i1));
-                var.m.var_from_d2(var, fun)
+                var.m().var_from_d2(var, fun)
             }
             IndexCatStr::ConString(i1) => {
-                let i1 = var.m.con_val(i1);
+                let i1 = var.m().con_val(i1);
                 let fun = Box::new(move || (i0(), i1.get().get()));
-                var.m.var_from_d2(var, fun)
+                var.m().var_from_d2(var, fun)
             }
             IndexCatStr::ConStr(i1) => {
-                let i1 = var.m.con_val(i1.to_string());
+                let i1 = var.m().con_val(i1.to_string());
                 let fun = Box::new(move || (i0(), i1.get().get()));
-                var.m.var_from_d2(var, fun)
+                var.m().var_from_d2(var, fun)
             }
         }
     }
@@ -483,17 +482,17 @@ impl Set for SetCatStr {
     ) -> Var<'m, 'd> {
         match i0.into() {
             IndexCatStr::Idx(i0) => {
-                let i0 = Ptr::new(i0.el);
+                let i0 = i0.ptr();
                 let i0 = move || i0.get().read::<Self>();
                 I1::v2_at_i0(var, i0, i1)
             }
             IndexCatStr::ConStringRef(i0) => I1::v2_at_i0(var, move || i0, i1),
             IndexCatStr::ConString(i0) => {
-                let i0 = var.m.con_val(i0);
+                let i0 = var.m().con_val(i0);
                 I1::v2_at_i0(var, move || i0.get().get(), i1)
             }
             IndexCatStr::ConStr(i0) => {
-                let i0 = var.m.con_val(i0.to_string());
+                let i0 = var.m().con_val(i0.to_string());
                 I1::v2_at_i0(var, move || i0.get().get(), i1)
             }
         }
@@ -525,11 +524,11 @@ impl Set for SetOrd {
     }
 
     fn new_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd> {
-        Symbol::new(m, el).into()
+        Self::SetSym::new(Symbol::new(m, el))
     }
 
     fn set_ptr<'m, 'd>(sym: Self::SetSym<'m, 'd>) -> Ptr<'d, DSet<'d>> {
-        Ptr::new(sym.el)
+        sym.ptr()
     }
 
     // idx
@@ -549,11 +548,11 @@ impl Set for SetOrd {
     }
 
     fn new_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
-        Symbol::new(m, el).into()
+        Self::IdxSym::new(Symbol::new(m, el))
     }
 
     fn into_idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>> {
-        sym.0
+        sym.sym()
     }
 
     // p1
@@ -565,7 +564,7 @@ impl Set for SetOrd {
         let fun = Ptr::new(par.el);
         match i0.into() {
             IndexOrd::Idx(i0) => {
-                let i0 = Ptr::new(i0.el);
+                let i0 = i0.ptr();
                 par.m.val::<V>(move || {
                     let fun = fun.get();
                     let i0 = i0.get().read::<Self>();
@@ -573,7 +572,7 @@ impl Set for SetOrd {
                 })
             }
             IndexOrd::Int(i0) => {
-                let int = Ptr::new(i0.el);
+                let int = i0.ptr();
                 par.m.val::<V>(move || {
                     let fun = fun.get();
                     let idx = int.get().val_eval::<ScaInt>();
@@ -605,7 +604,7 @@ impl Set for SetOrd {
         let fun = Ptr::new(par.el);
         match i1.into() {
             IndexOrd::Idx(i1) => {
-                let i1 = Ptr::new(i1.el);
+                let i1 = i1.ptr();
                 par.m.val::<V>(move || {
                     let fun = fun.get();
                     let i1 = i1.get().read::<Self>();
@@ -613,7 +612,7 @@ impl Set for SetOrd {
                 })
             }
             IndexOrd::Int(i1) => {
-                let i1 = Ptr::new(i1.el);
+                let i1 = i1.ptr();
                 par.m.val::<V>(move || {
                     let fun = fun.get();
                     let i1 = i1.get().val_eval::<ScaInt>();
@@ -642,12 +641,12 @@ impl Set for SetOrd {
     ) -> V::Sym<'m, 'd> {
         match i0.into() {
             IndexOrd::Idx(i0) => {
-                let i0 = Ptr::new(i0.el);
+                let i0 = i0.ptr();
                 let i0 = move || i0.get().read::<Self>();
                 I1::p2_at_i0(par, i0, i1)
             }
             IndexOrd::Int(i0) => {
-                let i0 = Ptr::new(i0.el);
+                let i0 = i0.ptr();
                 let i0 = move || i0.get().val_eval::<ScaInt>();
                 I1::p2_at_i0(par, i0, i1)
             }
@@ -662,26 +661,26 @@ impl Set for SetOrd {
     fn v1_at<'m, 'd>(var: VarD1<'m, 'd, Self>, i0: impl Into<Self::IdxAny<'m, 'd>>) -> Var<'m, 'd> {
         match i0.into() {
             IndexOrd::Idx(i0) => {
-                let i0 = Ptr::new(i0.el);
+                let i0 = i0.ptr();
                 let fun = Box::new(move || i0.get().read::<Self>());
-                var.m.var_from_d1(var, fun)
+                var.m().var_from_d1(var, fun)
             }
             IndexOrd::Int(i0) => {
-                let i0 = Ptr::new(i0.el);
+                let i0 = i0.ptr();
                 let fun = Box::new(move || i0.get().val_eval::<ScaInt>());
-                var.m.var_from_d1(var, fun)
+                var.m().var_from_d1(var, fun)
             }
             IndexOrd::ConI64(i0) => {
                 let fun = Box::new(move || i0);
-                var.m.var_from_d1(var, fun)
+                var.m().var_from_d1(var, fun)
             }
             IndexOrd::ConUsize(i0) => {
                 let fun = Box::new(move || i0 as i64);
-                var.m.var_from_d1(var, fun)
+                var.m().var_from_d1(var, fun)
             }
             IndexOrd::ConI32(i0) => {
                 let fun = Box::new(move || i0 as i64);
-                var.m.var_from_d1(var, fun)
+                var.m().var_from_d1(var, fun)
             }
         }
     }
@@ -695,26 +694,26 @@ impl Set for SetOrd {
     ) -> Var<'m, 'd> {
         match i1.into() {
             IndexOrd::Idx(i1) => {
-                let i1 = Ptr::new(i1.el);
+                let i1 = i1.ptr();
                 let fun = Box::new(move || (i0(), i1.get().read::<Self>()));
-                var.m.var_from_d2(var, fun)
+                var.m().var_from_d2(var, fun)
             }
             IndexOrd::Int(i1) => {
-                let i1 = Ptr::new(i1.el);
+                let i1 = i1.ptr();
                 let fun = Box::new(move || (i0(), i1.get().val_eval::<ScaInt>()));
-                var.m.var_from_d2(var, fun)
+                var.m().var_from_d2(var, fun)
             }
             IndexOrd::ConI64(i1) => {
                 let fun = Box::new(move || (i0(), i1));
-                var.m.var_from_d2(var, fun)
+                var.m().var_from_d2(var, fun)
             }
             IndexOrd::ConUsize(i1) => {
                 let fun = Box::new(move || (i0(), i1 as i64));
-                var.m.var_from_d2(var, fun)
+                var.m().var_from_d2(var, fun)
             }
             IndexOrd::ConI32(i1) => {
                 let fun = Box::new(move || (i0(), i1 as i64));
-                var.m.var_from_d2(var, fun)
+                var.m().var_from_d2(var, fun)
             }
         }
     }
@@ -726,12 +725,12 @@ impl Set for SetOrd {
     ) -> Var<'m, 'd> {
         match i0.into() {
             IndexOrd::Idx(i0) => {
-                let i0 = Ptr::new(i0.el);
+                let i0 = i0.ptr();
                 let i0 = move || i0.get().read::<Self>();
                 I1::v2_at_i0(var, i0, i1)
             }
             IndexOrd::Int(i0) => {
-                let i0 = Ptr::new(i0.el);
+                let i0 = i0.ptr();
                 let i0 = move || i0.get().val_eval::<ScaInt>();
                 I1::v2_at_i0(var, i0, i1)
             }

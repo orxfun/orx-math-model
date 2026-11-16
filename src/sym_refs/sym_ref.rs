@@ -10,22 +10,22 @@ pub enum SymRef<'d> {
 
 impl<'m, 'd> From<Int<'m, 'd>> for SymRef<'d> {
     fn from(value: Int<'m, 'd>) -> Self {
-        let sym = unsafe { value.create_sym_ref() };
-        Self::Int(sym.into())
+        let sym = unsafe { value.sym().create_sym_ref() };
+        Self::Int(Int::new(sym))
     }
 }
 
 impl<'m, 'd> From<Num<'m, 'd>> for SymRef<'d> {
     fn from(value: Num<'m, 'd>) -> Self {
-        let sym = unsafe { value.create_sym_ref() };
-        Self::Num(sym.into())
+        let sym = unsafe { value.sym().create_sym_ref() };
+        Self::Num(Num::new(sym))
     }
 }
 
 impl<'m, 'd> From<Var<'m, 'd>> for SymRef<'d> {
     fn from(value: Var<'m, 'd>) -> Self {
-        let sym = unsafe { value.0.create_sym_ref() };
-        Self::Var(sym.into())
+        let sym = unsafe { value.sym().create_sym_ref() };
+        Self::Var(Var::new(sym))
     }
 }
 
@@ -33,9 +33,9 @@ impl<'d> SymRef<'d> {
     pub fn new<'m, S: Sca>(sym: S::Sym<'m, 'd>) -> Self {
         let sym = unsafe { S::sym(sym).create_sym_ref() };
         match S::typ() {
-            ScaTyp::Int => Self::Int(sym.into()),
-            ScaTyp::Num => Self::Num(sym.into()),
-            ScaTyp::Var => Self::Var(sym.into()),
+            ScaTyp::Int => Self::Int(Int::new(sym)),
+            ScaTyp::Num => Self::Num(Num::new(sym)),
+            ScaTyp::Var => Self::Var(Var::new(sym)),
         }
     }
 

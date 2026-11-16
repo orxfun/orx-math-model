@@ -25,7 +25,9 @@ impl From<ValTyp> for ScaTyp {
 pub struct ScaVar;
 
 pub trait Sca: Clone + Copy + 'static {
-    type Sym<'m, 'd: 'm>: Clone + Copy + From<Symbol<'m, 'd, DSca<'d>>>;
+    type Sym<'m, 'd: 'm>: Clone + Copy;
+
+    fn new_from_sym<'m, 'd>(sym: Symbol<'m, 'd, DSca<'d>>) -> Self::Sym<'m, 'd>;
 
     fn typ() -> ScaTyp;
 
@@ -35,35 +37,47 @@ pub trait Sca: Clone + Copy + 'static {
 impl Sca for ScaInt {
     type Sym<'m, 'd: 'm> = Int<'m, 'd>;
 
+    fn new_from_sym<'m, 'd>(sym: Symbol<'m, 'd, DSca<'d>>) -> Self::Sym<'m, 'd> {
+        Int::new(sym)
+    }
+
     fn typ() -> ScaTyp {
         ScaTyp::Int
     }
 
     fn sym<'m, 'd>(sym: Self::Sym<'m, 'd>) -> Symbol<'m, 'd, DSca<'d>> {
-        sym.0
+        sym.sym()
     }
 }
 
 impl Sca for ScaNum {
     type Sym<'m, 'd: 'm> = Num<'m, 'd>;
 
+    fn new_from_sym<'m, 'd>(sym: Symbol<'m, 'd, DSca<'d>>) -> Self::Sym<'m, 'd> {
+        Num::new(sym)
+    }
+
     fn typ() -> ScaTyp {
         ScaTyp::Num
     }
 
     fn sym<'m, 'd>(sym: Self::Sym<'m, 'd>) -> Symbol<'m, 'd, DSca<'d>> {
-        sym.0
+        sym.sym()
     }
 }
 
 impl Sca for ScaVar {
     type Sym<'m, 'd: 'm> = Var<'m, 'd>;
 
+    fn new_from_sym<'m, 'd>(sym: Symbol<'m, 'd, DSca<'d>>) -> Self::Sym<'m, 'd> {
+        Var::new(sym)
+    }
+
     fn typ() -> ScaTyp {
         ScaTyp::Var
     }
 
     fn sym<'m, 'd>(sym: Self::Sym<'m, 'd>) -> Symbol<'m, 'd, DSca<'d>> {
-        sym.0
+        sym.sym()
     }
 }

@@ -2,7 +2,7 @@ use crate::sets::{CatInt, CatStr, DSet, Ord};
 use crate::{Set, SetCatInt, SetCatStr, SetOrd, Symbol};
 use core::ops::Deref;
 
-pub trait SetSym<'m, 'd: 'm>: Copy + Deref<Target = Symbol<'m, 'd, DSet<'d>>> {
+pub trait SetSym<'m, 'd: 'm>: Copy {
     type Meta: Set;
 }
 
