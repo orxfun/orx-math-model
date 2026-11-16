@@ -8,7 +8,7 @@ use crate::slot::{SlotStates, State};
 use crate::sym_refs::SymRefBag;
 use crate::vars::v1::{V1Bag, VarD1};
 use crate::vars::v2::{V2Bag, VarD2};
-use crate::vars::VarType;
+use crate::vars::{VarBag, VarType, DV};
 use crate::{
     Ptr, Res, ResValid, Sca, ScaInt, ScaNum, Set, SetCatInt, SetCatStr, SetOrd, SetSym, Slot,
     Symbol, TConVal, Val, Var,
@@ -33,8 +33,7 @@ pub struct Model<'d> {
     p2_bag: P2Bag<'d>,
 
     // vars
-    v1_bag: V1Bag<'d>,
-    v2_bag: V2Bag<'d>,
+    var_bag: VarBag<'d>,
 
     // idxs
     idx_val_bag: IdxValBag<'d>,
@@ -177,7 +176,8 @@ impl<'d> Model<'d> {
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
     {
         let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
-        let el = self.v1_bag.push(typ, s0_ptr);
+        let data = DV::new_d1(typ, s0_ptr);
+        let el = self.var_bag.push(data);
         Symbol::new(self, el).into()
     }
 
@@ -195,7 +195,8 @@ impl<'d> Model<'d> {
     {
         let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
         let s1_ptr = <S1::Meta as Set>::set_ptr(s1);
-        let el = self.v2_bag.push(typ, s0_ptr, s1_ptr);
+        let data = DV::new_d2(typ, s0_ptr, s1_ptr);
+        let el = self.var_bag.push(data);
         Symbol::new(self, el).into()
     }
 
