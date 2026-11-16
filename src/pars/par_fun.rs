@@ -62,6 +62,10 @@ impl<'d> ParFun<'d> {
         Self::new(V::val_typ(), DimVec::new([I0::typ()]), data)
     }
 
+    pub fn d1_get<V: Val, I0: Set>(&self) -> &FP1<'d, V, I0> {
+        unsafe { &self.data.d1 }.get::<V, I0>()
+    }
+
     // d2
 
     pub fn d2_create<V: Val, I0: Set, I1: Set>(fun: FP2<'d, V, I0, I1>) -> Self {
@@ -69,5 +73,9 @@ impl<'d> ParFun<'d> {
             d2: ManuallyDrop::new(UFunP2::create::<V, I0, I1>(fun)),
         };
         Self::new(V::val_typ(), DimVec::new([I0::typ(), I1::typ()]), data)
+    }
+
+    pub fn d2_get<V: Val, I0: Set, I1: Set>(&self) -> &FP2<'d, V, I0, I1> {
+        unsafe { &self.data.d2 }.get::<V, I0, I1>()
     }
 }

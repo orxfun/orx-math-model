@@ -172,6 +172,15 @@ impl<'d> UFunP2<'d> {
             }
         }
     }
+
+    pub fn get<V: Val, I0: Set, I1: Set>(&self) -> &FP2<'d, V, I0, I1> {
+        unsafe {
+            match V::val_typ() {
+                ValTyp::Int => transmute(self.int.get::<I0, I1>()),
+                ValTyp::Num => transmute(self.num.get::<I0, I1>()),
+            }
+        }
+    }
 }
 
 #[derive(derive_new::new)]

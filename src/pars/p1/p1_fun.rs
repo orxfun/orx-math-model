@@ -110,6 +110,15 @@ impl<'d> UFunP1<'d> {
             }
         }
     }
+
+    pub fn get<V: Val, I0: Set>(&self) -> &FP1<'d, V, I0> {
+        unsafe {
+            match V::val_typ() {
+                ValTyp::Int => transmute(self.int.get::<I0>()),
+                ValTyp::Num => transmute(self.num.get::<I0>()),
+            }
+        }
+    }
 }
 
 // zzzz
