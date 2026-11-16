@@ -19,11 +19,12 @@ pub struct ParFun<'d> {
 
 impl<'d> Drop for ParFun<'d> {
     fn drop(&mut self) {
+        let v = self.val_typ;
         unsafe {
             match self.dim {
                 Dim::D0 => todo!(),
-                Dim::D1 => (&mut self.data.d1).man_drop(self.val_typ),
-                Dim::D2 => (&mut self.data.d2).man_drop(self.val_typ),
+                Dim::D1 => (&mut self.data.d1).man_drop(v, self.set_types[0]),
+                Dim::D2 => (&mut self.data.d2).man_drop(v, self.set_types[0], self.set_types[1]),
             }
         }
     }

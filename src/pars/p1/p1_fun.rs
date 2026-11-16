@@ -89,11 +89,11 @@ impl<'d> UFunP1<'d> {
         }
     }
 
-    pub fn man_drop(&mut self, val_typ: ValTyp) {
+    pub fn man_drop(&mut self, val_typ: ValTyp, i0_typ: SetTyp) {
         unsafe {
             match val_typ {
-                ValTyp::Int => ManuallyDrop::drop(&mut self.int),
-                ValTyp::Num => ManuallyDrop::drop(&mut self.num),
+                ValTyp::Int => (&mut self.int).man_drop(i0_typ),
+                ValTyp::Num => (&mut self.num).man_drop(i0_typ),
             }
         }
     }
