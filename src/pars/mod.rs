@@ -9,8 +9,8 @@ mod par_fun;
 mod par_fun_bag;
 mod par_symbols;
 
-pub use p1_fun::{UFunP1, UFunP1_V};
-pub use p2_fun::{UFunP2, UFunP2_V, UFunP2_V_I0};
+pub use p1_fun::{UFunP1, UFunP1_V, FP1};
+pub use p2_fun::{UFunP2, UFunP2_V, UFunP2_V_I0, FP2};
 pub use par_bag::ParBag;
 pub use par_data::DPar;
 pub use par_fun::ParFun;

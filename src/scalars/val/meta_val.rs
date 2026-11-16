@@ -1,6 +1,7 @@
+use crate::pars::{UFunP1, FP1};
 use crate::scalars::val::{FVal, UFunVal};
 use crate::scalars::{DSca, Sca};
-use crate::{Model, Symbol};
+use crate::{Model, Set, Symbol};
 use core::mem::ManuallyDrop;
 use orx_imp_vec::Elem;
 
@@ -24,6 +25,12 @@ pub trait Val: Sca {
     fn fun_from_union<'a, 'd>(u: &'a UFunVal<'d>) -> &'a FVal<'d, Self>;
 
     fn new_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSca<'d>>) -> Self::Sym<'m, 'd>;
+
+    // p1
+
+    fn unpack_p1_fun<'a, 'd, I0: Set>(u: &'a UFunP1<'d>) -> &'a FP1<'d, Self, I0> {
+        todo!()
+    }
 }
 
 // int
@@ -51,6 +58,13 @@ impl Val for ScaInt {
     fn new_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSca<'d>>) -> Self::Sym<'m, 'd> {
         Self::Sym::new(Symbol::new(m, el))
     }
+
+    // p1
+
+    #[inline(always)]
+    fn unpack_p1_fun<'a, 'd, I0: Set>(u: &'a UFunP1<'d>) -> &'a FP1<'d, Self, I0> {
+        I0::unpack_p1_fun_v(unsafe { &u.int })
+    }
 }
 
 // num
@@ -77,5 +91,12 @@ impl Val for ScaNum {
 
     fn new_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSca<'d>>) -> Self::Sym<'m, 'd> {
         Self::Sym::new(Symbol::new(m, el))
+    }
+
+    // p1
+
+    #[inline(always)]
+    fn unpack_p1_fun<'a, 'd, I0: Set>(u: &'a UFunP1<'d>) -> &'a FP1<'d, Self, I0> {
+        I0::unpack_p1_fun_v(unsafe { &u.num })
     }
 }

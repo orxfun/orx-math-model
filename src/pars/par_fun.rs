@@ -61,17 +61,13 @@ impl<'d> ParFun<'d> {
         Self::new(V::val_typ(), DimVec::new([I0::typ()]), data)
     }
 
-    pub fn d1_get<V: Val, I0: Set>(&self) -> &FP1<'d, V, I0> {
-        unsafe { &self.data.d1 }.get::<V, I0>()
-    }
-
     // at
 
     pub fn d1_at<V: Val, I0: Set>(&self, i0: I0::IdxRaw<'d>) -> V::Raw {
         debug_assert_eq!(self.dim, Dim::D1);
         debug_assert_eq!(V::val_typ(), self.val_typ);
         debug_assert_eq!(I0::typ(), self.set_types[0]);
-        let fun = self.d1_get::<V, I0>();
+        let fun = V::unpack_p1_fun::<I0>(unsafe { &self.data.d1 });
         fun(i0)
     }
 

@@ -1,11 +1,11 @@
 use crate::idxs::{DIdx, IdxCatInt, IdxCatStr, IdxOrd, UIdxVal};
-use crate::pars::{ParD1, ParD2};
+use crate::pars::{ParD1, ParD2, UFunP1_V, FP1};
 use crate::sets::{CatInt, CatStr, DSet, FSet, IndexCatInt, IndexCatStr, IndexOrd, Ord, UFunSet};
 use crate::vars::{VarD1, VarD2};
 use crate::{Model, Ptr, ScaInt, SetSym, Symbol, Val, Var};
 use alloc::boxed::Box;
 use alloc::string::{String, ToString};
-use core::mem::ManuallyDrop;
+use core::mem::{transmute, ManuallyDrop};
 use orx_imp_vec::Elem;
 
 // enums
@@ -51,6 +51,10 @@ pub trait Set: Clone + Copy + 'static {
     fn into_idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>>;
 
     // p1
+
+    fn unpack_p1_fun_v<'a, 'd, V: Val>(u: &'a UFunP1_V<'d, V>) -> &'a FP1<'d, V, Self> {
+        todo!()
+    }
 
     fn p1_at<'m, 'd, V: Val>(
         par: ParD1<'m, 'd, V, Self>,
@@ -149,6 +153,10 @@ impl Set for SetCatInt {
     }
 
     // p1
+
+    fn unpack_p1_fun_v<'a, 'd, V: Val>(u: &'a UFunP1_V<'d, V>) -> &'a FP1<'d, V, Self> {
+        unsafe { transmute(&u.cint) }
+    }
 
     fn p1_at<'m, 'd, V: Val>(
         par: ParD1<'m, 'd, V, Self>,
@@ -321,6 +329,10 @@ impl Set for SetCatStr {
     }
 
     // p1
+
+    fn unpack_p1_fun_v<'a, 'd, V: Val>(u: &'a UFunP1_V<'d, V>) -> &'a FP1<'d, V, Self> {
+        unsafe { transmute(&u.cstr) }
+    }
 
     fn p1_at<'m, 'd, V: Val>(
         par: ParD1<'m, 'd, V, Self>,
@@ -561,6 +573,10 @@ impl Set for SetOrd {
     }
 
     // p1
+
+    fn unpack_p1_fun_v<'a, 'd, V: Val>(u: &'a UFunP1_V<'d, V>) -> &'a FP1<'d, V, Self> {
+        unsafe { transmute(&u.ord) }
+    }
 
     fn p1_at<'m, 'd, V: Val>(
         par: ParD1<'m, 'd, V, Self>,
