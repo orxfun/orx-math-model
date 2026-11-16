@@ -29,7 +29,7 @@ pub trait Set: Clone + Copy + 'static {
 
     fn into_fun_union<'d>(fun: FSet<'d, Self>) -> UFunSet<'d>;
 
-    fn fun_from_union<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self>;
+    fn unpack_set_fun<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self>;
 
     fn new_set_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DSet<'d>>) -> Self::SetSym<'m, 'd>;
 
@@ -127,7 +127,7 @@ impl Set for SetCatInt {
     }
 
     #[inline(always)]
-    fn fun_from_union<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self> {
+    fn unpack_set_fun<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self> {
         unsafe { &u.cint }
     }
 
@@ -334,7 +334,7 @@ impl Set for SetCatStr {
     }
 
     #[inline(always)]
-    fn fun_from_union<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self> {
+    fn unpack_set_fun<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self> {
         unsafe { &u.cstr }
     }
 
@@ -609,7 +609,7 @@ impl Set for SetOrd {
     }
 
     #[inline(always)]
-    fn fun_from_union<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self> {
+    fn unpack_set_fun<'a, 'd>(u: &'a UFunSet<'d>) -> &'a FSet<'d, Self> {
         unsafe { &u.ord }
     }
 
