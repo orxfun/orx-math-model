@@ -30,10 +30,12 @@ impl<'d> DPar<'d> {
 
     // at
 
+    #[inline(always)]
     pub fn d1_at<V: Val, I0: Set>(&self, i0: I0::IdxRaw<'d>) -> V::Raw {
         self.slot.get().d1_at::<V, I0>(i0)
     }
 
+    #[inline(always)]
     pub fn d2_at<V: Val, I0: Set, I1: Set>(
         &self,
         i0: I0::IdxRaw<'d>,

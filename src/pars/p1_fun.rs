@@ -147,11 +147,4 @@ impl<'d> FunP1<'d> {
         };
         Self::new(val_typ, i0_typ, data)
     }
-
-    #[inline(always)]
-    pub fn get<V: Val, I0: Set>(&self) -> &FP1<'d, V, I0> {
-        Res::dbg_assert_same_val(V::val_typ(), self.val_typ);
-        Res::dbg_assert_same_set(I0::typ(), self.i0_typ);
-        V::unpack_p1_fun::<I0>(&self.data)
-    }
 }
