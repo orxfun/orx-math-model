@@ -1,9 +1,8 @@
-use alloc::boxed::Box;
-
 use crate::scalars::var::{FVar1, FVar2, Idx1, Idx2};
 use crate::scalars::{DVal, DVar, FVal, ScaTyp, Val, ValTyp};
 use crate::sets::FunSet;
 use crate::{Ptr, ScaNum, Set, VarType};
+use alloc::boxed::Box;
 use core::mem::ManuallyDrop;
 
 #[repr(C)]
