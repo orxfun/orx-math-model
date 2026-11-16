@@ -68,3 +68,11 @@ impl<const N: usize, T> ConVec<N, T> {
         self.data[idx].as_ref()
     }
 }
+
+impl<const N: usize, T> Index<usize> for ConVec<N, T> {
+    type Output = T;
+
+    fn index(&self, idx: usize) -> &Self::Output {
+        self.get(idx).unwrap()
+    }
+}
