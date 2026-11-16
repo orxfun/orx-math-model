@@ -148,6 +148,17 @@ impl<'d> UFunP2<'d> {
             }
         }
     }
+
+    pub fn empty(val_typ: ValTyp, i0_typ: SetTyp, i1_typ: SetTyp) -> Self {
+        match val_typ {
+            ValTyp::Int => UFunP2 {
+                int: UFunP2_V::empty(i0_typ, i1_typ),
+            },
+            ValTyp::Num => UFunP2 {
+                num: UFunP2_V::empty(i0_typ, i1_typ),
+            },
+        }
+    }
 }
 
 #[derive(derive_new::new)]

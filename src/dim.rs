@@ -6,6 +6,17 @@ pub enum Dim {
     D2,
 }
 
+impl Dim {
+    pub(crate) fn nth(n: usize) -> Self {
+        match n {
+            0 => Self::D0,
+            1 => Self::D1,
+            2 => Self::D2,
+            _ => unreachable!(),
+        }
+    }
+}
+
 // vec
 
 pub struct DimVec<T> {

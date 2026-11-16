@@ -28,17 +28,27 @@ impl<'d> Drop for ParFun<'d> {
 }
 
 impl<'d> ParFun<'d> {
-    // d1
-
-    pub fn d1_empty(val_typ: ValTyp, i0_typ: SetTyp) -> Self {
-        let data = UFunPar {
-            d1: ManuallyDrop::new(UFunP1::empty(val_typ, i0_typ)),
+    pub fn empty(val_typ: ValTyp, set_types: DimVec<SetTyp>) -> Self {
+        let dim = Dim::nth(set_types.len());
+        let data = match dim {
+            Dim::D0 => todo!(),
+            Dim::D1 => UFunPar {
+                d1: ManuallyDrop::new(UFunP1::empty(val_typ, set_types[0])),
+            },
+            Dim::D2 => UFunPar {
+                d2: ManuallyDrop::new(UFunP2::empty(val_typ, set_types[0], set_types[1])),
+            },
         };
+
         Self {
-            dim: Dim::D1,
+            dim,
             val_typ,
-            set_types: DimVec::new([i0_typ]),
+            set_types,
             data,
         }
     }
+
+    // d1
+
+    // d2
 }
