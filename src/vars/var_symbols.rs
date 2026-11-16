@@ -1,5 +1,5 @@
 use crate::vars::DV;
-use crate::{Model, ScaVar, Set, Symbol, Var};
+use crate::{Model, Ptr, ScaVar, Set, Symbol, Var};
 use core::marker::PhantomData;
 use core::ops::Index;
 
@@ -15,6 +15,10 @@ impl<'m, 'd, I0: Set> VarD1<'m, 'd, I0> {
 
     pub(crate) fn data(&self) -> &DV<'d> {
         unsafe { self.0.el.get() }
+    }
+
+    pub(crate) fn data_ptr(&self) -> Ptr<'d, DV<'d>> {
+        Ptr::new_from_el(self.0.el)
     }
 
     pub fn at(self, i0: impl Into<I0::IdxAny<'m, 'd>>) -> Var<'m, 'd> {
@@ -46,6 +50,10 @@ impl<'m, 'd, I0: Set, I1: Set> VarD2<'m, 'd, I0, I1> {
 
     pub(crate) fn data(&self) -> &DV<'d> {
         unsafe { self.0.el.get() }
+    }
+
+    pub(crate) fn data_ptr(&self) -> Ptr<'d, DV<'d>> {
+        Ptr::new_from_el(self.0.el)
     }
 
     pub fn at(
