@@ -1,4 +1,5 @@
 mod meta_val;
+mod num_bag;
 mod num_data;
 mod num_fun;
 mod val_symbols;

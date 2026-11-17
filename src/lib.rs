@@ -41,7 +41,7 @@ pub(crate) use con_vals::{ConValTyp, TConVal};
 pub(crate) use dim::{ConVec, Dim, DimVec};
 pub(crate) use elements::{Elements, ElementsIter};
 pub(crate) use err::{Res, ResValid};
-pub(crate) use scalars::{AsF64, AsI64, ValTyp};
+pub(crate) use scalars::num::{AsF64, AsI64, ValTyp};
 // pub(crate) use lin_expr::LinExpr;
 // pub(crate) use scalars::{Int, Num, Sca, ScaInt, ScaNum, ScaVar, Val, ValTyp, Var};
 pub(crate) use sets::{Set, SetCatInt, SetCatStr, SetOrd, SetSym, SetTyp};
