@@ -33,7 +33,7 @@ impl<'d> DVal<'d> {
     pub fn add<'m, V: Val>(&self, rhs: V::Raw) -> Self {
         match (self.typ, V::val_typ()) {
             (ValTyp::Int, ValTyp::Int) => {
-                let f1 = unsafe { &self.data.int };
+                let f1: &Box<dyn Fn() -> i64> = unsafe { &self.data.int };
                 let fun = move || {
                     // let x2: i64 = unsafe { transmute(rhs) };
                     f1()
