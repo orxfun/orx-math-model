@@ -40,7 +40,7 @@ pub trait Set: Clone + Copy + 'static {
 
     type IdxRaw<'d>: Copy;
 
-    type IdxSym<'m, 'd: 'm>: SymWrap<'m, 'd>;
+    type IdxSym<'m, 'd: 'm>;
 
     // type IdxAny<'m, 'd: 'm>;
 

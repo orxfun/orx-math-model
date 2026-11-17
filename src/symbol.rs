@@ -43,3 +43,16 @@ pub(crate) trait SymWrap<'m, 'd: 'm>: Sized {
         Ptr::new_from_el(self.sym().el)
     }
 }
+
+#[macro_export]
+macro_rules! impl_sym_wrap {
+    ($sym:ty, $data:ty) => {
+        impl<'m, 'd> $crate::SymWrap<'m, 'd> for $sym {
+            type Data = $data;
+
+            fn sym(self) -> Symbol<'m, 'd, Self::Data> {
+                self.0
+            }
+        }
+    };
+}
