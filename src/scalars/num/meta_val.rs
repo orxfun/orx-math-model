@@ -4,6 +4,18 @@ pub enum ValTyp {
     Num,
 }
 
+pub trait Val: Clone + Copy + 'static {}
+
+#[derive(Clone, Copy)]
+pub struct ValInt;
+
+impl Val for ValInt {}
+
+#[derive(Clone, Copy)]
+pub struct ValNum;
+
+impl Val for ValNum {}
+
 // as f64
 
 #[inline(always)]
