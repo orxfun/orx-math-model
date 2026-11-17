@@ -1,26 +1,16 @@
 use crate::idxs::DIdx;
-use crate::{Model, Ptr, Symbol};
+use crate::{SymWrap, Symbol};
 
 // cat int
 
 #[derive(derive_new::new, Clone, Copy)]
 pub struct IdxCatInt<'m, 'd>(Symbol<'m, 'd, DIdx<'d>>);
 
-impl<'m, 'd> IdxCatInt<'m, 'd> {
-    pub(crate) fn sym(&self) -> Symbol<'m, 'd, DIdx<'d>> {
+impl<'m, 'd> SymWrap<'m, 'd> for IdxCatInt<'m, 'd> {
+    type Data = DIdx<'d>;
+
+    fn sym(self) -> Symbol<'m, 'd, Self::Data> {
         self.0
-    }
-
-    pub(crate) fn m(&self) -> &'m Model<'d> {
-        self.0.m
-    }
-
-    pub(crate) fn data(&self) -> &DIdx<'d> {
-        unsafe { self.0.el.get() }
-    }
-
-    pub(crate) fn ptr(&self) -> Ptr<'d, DIdx<'d>> {
-        Ptr::new_from_el(self.0.el)
     }
 }
 
@@ -29,21 +19,11 @@ impl<'m, 'd> IdxCatInt<'m, 'd> {
 #[derive(derive_new::new, Clone, Copy)]
 pub struct IdxCatStr<'m, 'd>(Symbol<'m, 'd, DIdx<'d>>);
 
-impl<'m, 'd> IdxCatStr<'m, 'd> {
-    pub(crate) fn sym(&self) -> Symbol<'m, 'd, DIdx<'d>> {
+impl<'m, 'd> SymWrap<'m, 'd> for IdxCatStr<'m, 'd> {
+    type Data = DIdx<'d>;
+
+    fn sym(self) -> Symbol<'m, 'd, Self::Data> {
         self.0
-    }
-
-    pub(crate) fn m(&self) -> &'m Model<'d> {
-        self.0.m
-    }
-
-    pub(crate) fn data(&self) -> &DIdx<'d> {
-        unsafe { self.0.el.get() }
-    }
-
-    pub(crate) fn ptr(&self) -> Ptr<'d, DIdx<'d>> {
-        Ptr::new_from_el(self.0.el)
     }
 }
 
@@ -52,20 +32,10 @@ impl<'m, 'd> IdxCatStr<'m, 'd> {
 #[derive(derive_new::new, Clone, Copy)]
 pub struct IdxOrd<'m, 'd>(Symbol<'m, 'd, DIdx<'d>>);
 
-impl<'m, 'd> IdxOrd<'m, 'd> {
-    pub(crate) fn sym(&self) -> Symbol<'m, 'd, DIdx<'d>> {
+impl<'m, 'd> SymWrap<'m, 'd> for IdxOrd<'m, 'd> {
+    type Data = DIdx<'d>;
+
+    fn sym(self) -> Symbol<'m, 'd, Self::Data> {
         self.0
-    }
-
-    pub(crate) fn m(&self) -> &'m Model<'d> {
-        self.0.m
-    }
-
-    pub(crate) fn data(&self) -> &DIdx<'d> {
-        unsafe { self.0.el.get() }
-    }
-
-    pub(crate) fn ptr(&self) -> Ptr<'d, DIdx<'d>> {
-        Ptr::new_from_el(self.0.el)
     }
 }
