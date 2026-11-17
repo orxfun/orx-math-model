@@ -9,8 +9,8 @@ pub union UFunPar<'d> {
 
 #[derive(derive_new::new)]
 pub struct ParFun<'d> {
-    val_typ: ValTyp,
-    idx_types: DimVec<SetTyp>,
+    pub val_typ: ValTyp,
+    pub idx_types: DimVec<SetTyp>,
     data: ManuallyDrop<UFunPar<'d>>,
 }
 
