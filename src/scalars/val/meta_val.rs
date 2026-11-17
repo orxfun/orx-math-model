@@ -14,7 +14,7 @@ pub enum ValTyp {
 }
 
 impl ValTyp {
-    fn to_int(x: f64) -> i64 {
+    pub fn to_int(x: f64) -> i64 {
         debug_assert!(x.is_finite());
         debug_assert!(x >= i64::MIN as f64);
         debug_assert!(x <= i64::MAX as f64);
@@ -55,10 +55,10 @@ pub trait Val: Sca {
 pub struct ScaInt;
 
 impl Val for ScaInt {
-    type Raw = i64;
+    type Raw = f64;
 
     fn minus_one() -> Self::Raw {
-        -1
+        -1.0
     }
 
     fn val_typ() -> ValTyp {
