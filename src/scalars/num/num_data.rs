@@ -1,5 +1,5 @@
 use crate::scalars::num::{FInt, FNum};
-use crate::ValTyp;
+use crate::{AsF64, AsI64, ValTyp};
 use alloc::boxed::Box;
 use core::mem::{transmute, ManuallyDrop};
 
@@ -10,8 +10,16 @@ pub struct DNum<'d> {
 }
 
 impl<'d> DNum<'d> {
-    pub fn new_int(fun: impl Fn() -> i64 + 'd) -> Self {
-        todo!()
+    pub fn new_num<V: AsF64>(fun: impl Fn() -> V + 'd) -> Self {
+        let fun = Box::new(move || fun().as_f64());
+        let typ = ValTyp::Num;
+        Self { typ, fun }
+    }
+
+    pub fn new_int<V: AsI64>(fun: impl Fn() -> V + 'd) -> Self {
+        let fun = Box::new(move || fun().as_f64());
+        let typ = ValTyp::Int;
+        Self { typ, fun }
     }
 
     #[inline(always)]
