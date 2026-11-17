@@ -2,7 +2,7 @@ use crate::idxs::{DIdx, IdxCatInt, IdxCatStr, IdxOrd, UIdxVal};
 use crate::pars::{IntParD1, NumParD1, NumParD2, UFunP1, UFunP2, UFunP2_I0, FP1, FP2};
 use crate::scalars::num::{DNum, Num, Val, ValNum};
 use crate::scalars::Int;
-use crate::sets::into_idx::IndexAny;
+use crate::sets::into_idx::IdxAny;
 // use crate::pars::{ParD1, ParD2, UFunP1_V, UFunP2_V, UFunP2_V_I0, FP1, FP2};
 // use crate::scalars::{FVar1, FVar2, UFunV1, UFunV2, UFunV2_I0};
 use crate::sets::{CatInt, CatStr, DSet, FSet, IndexCatInt, IndexCatStr, IndexOrd, Ord, UFunSet};
@@ -46,7 +46,7 @@ pub trait Set: Clone + Copy + 'static {
 
     type IdxSym<'m, 'd: 'm>;
 
-    type IdxAny<'m, 'd: 'm>: IndexAny<'m, 'd, Set = Self>;
+    type IdxAny<'m, 'd: 'm>: IdxAny<'m, 'd, Set = Self>;
 
     fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d>;
 
