@@ -1,20 +1,51 @@
+use crate::{
+    scalars::{num::DNum, Int, Num},
+    Symbol,
+};
+
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum ValTyp {
     Int,
     Num,
 }
 
-pub trait Val: Clone + Copy + 'static {}
+pub trait Val: Clone + Copy + 'static {
+    type Sym<'m, 'd: 'm>;
+
+    fn typ() -> ValTyp;
+
+    fn sym<'m, 'd: 'm>(sym: Symbol<'m, 'd, DNum<'d>>) -> Self::Sym<'m, 'd>;
+}
 
 #[derive(Clone, Copy)]
 pub struct ValInt;
 
-impl Val for ValInt {}
+impl Val for ValInt {
+    type Sym<'m, 'd: 'm> = Int<'m, 'd>;
+
+    fn typ() -> ValTyp {
+        ValTyp::Int
+    }
+
+    fn sym<'m, 'd: 'm>(sym: Symbol<'m, 'd, DNum<'d>>) -> Self::Sym<'m, 'd> {
+        Self::Sym::new(sym)
+    }
+}
 
 #[derive(Clone, Copy)]
 pub struct ValNum;
 
-impl Val for ValNum {}
+impl Val for ValNum {
+    type Sym<'m, 'd: 'm> = Num<'m, 'd>;
+
+    fn typ() -> ValTyp {
+        ValTyp::Num
+    }
+
+    fn sym<'m, 'd: 'm>(sym: Symbol<'m, 'd, DNum<'d>>) -> Self::Sym<'m, 'd> {
+        Self::Sym::new(sym)
+    }
+}
 
 // as f64
 

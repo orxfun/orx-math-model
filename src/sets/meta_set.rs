@@ -1,6 +1,6 @@
 use crate::idxs::{DIdx, IdxCatInt, IdxCatStr, IdxOrd, UIdxVal};
 use crate::pars::{NumParD1, UFunP1, UFunP2, UFunP2_I0, FP1, FP2};
-use crate::scalars::num::{DNum, Num};
+use crate::scalars::num::{DNum, Num, ValNum};
 use crate::scalars::Int;
 // use crate::pars::{ParD1, ParD2, UFunP1_V, UFunP2_V, UFunP2_V_I0, FP1, FP2};
 // use crate::scalars::{FVar1, FVar2, UFunV1, UFunV2, UFunV2_I0};
@@ -185,11 +185,11 @@ impl Set for SetCatInt {
                     let i0 = i0.get().read::<Self>();
                     par.get().d1_at::<Self>(i0)
                 };
-                m.num(DNum::new(ValTyp::Num, Box::new(fun)))
+                m.val::<ValNum>(DNum::new(ValTyp::Num, Box::new(fun)))
             }
             IndexCatInt::ConUsize(i0) => {
                 let fun = move || par.get().d1_at::<Self>(i0);
-                m.num(DNum::new(ValTyp::Num, Box::new(fun)))
+                m.val::<ValNum>(DNum::new(ValTyp::Num, Box::new(fun)))
             }
         }
     }

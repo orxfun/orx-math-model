@@ -1,6 +1,6 @@
 use crate::con_vals::{ConVal, DConVal};
 use crate::idxs::{DIdx, IdxVal};
-use crate::scalars::num::{DNum, Int, Num};
+use crate::scalars::num::{DNum, Int, Num, Val};
 // use crate::lin_expr::{DLinExpr, LinExpBag, LinExpr};
 // use crate::pars::{ParBag, ParD1, ParD2, ParFun, ParFunBag};
 // use crate::scalars::{DSca, FVar1, FVar2, ScaBag};
@@ -228,16 +228,10 @@ impl<'d> Model<'d> {
     //     Num::new(Symbol::new(self, self.sca_bag.one))
     // }
 
-    pub(crate) fn num<'m>(&'m self, data: DNum<'d>) -> Num<'m, 'd> {
-        debug_assert_eq!(data.typ, ValTyp::Num);
+    pub(crate) fn val<'m, V: Val>(&'m self, data: DNum<'d>) -> V::Sym<'m, 'd> {
+        debug_assert_eq!(data.typ, V::typ());
         let el = self.num_bag.push(data);
-        Num::new(Symbol::new(self, el))
-    }
-
-    pub(crate) fn int<'m>(&'m self, data: DNum<'d>) -> Int<'m, 'd> {
-        debug_assert_eq!(data.typ, ValTyp::Int);
-        let el = self.num_bag.push(data);
-        Int::new(Symbol::new(self, el))
+        V::sym(Symbol::new(self, el))
     }
 
     // pub(crate) fn var_from_d1<'m, I0: Set>(
