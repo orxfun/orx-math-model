@@ -1,6 +1,7 @@
 use crate::idxs::{DIdx, IdxCatInt, IdxCatStr, IdxOrd, UIdxVal};
 use crate::pars::{NumParD1, UFunP1, UFunP2, UFunP2_I0, FP1, FP2};
 use crate::scalars::num::{DNum, Num};
+use crate::scalars::Int;
 // use crate::pars::{ParD1, ParD2, UFunP1_V, UFunP2_V, UFunP2_V_I0, FP1, FP2};
 // use crate::scalars::{FVar1, FVar2, UFunV1, UFunV2, UFunV2_I0};
 use crate::sets::{CatInt, CatStr, DSet, FSet, IndexCatInt, IndexCatStr, IndexOrd, Ord, UFunSet};
