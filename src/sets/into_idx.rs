@@ -9,7 +9,7 @@ use alloc::string::String;
 pub trait IndexAny<'m, 'd> {
     type Set: Set;
 
-    fn p1_at2<V: Val>(self, m: &'m Model<'d>, p1: Ptr<'d, ParFun<'d>>) -> V::Sym<'m, 'd>;
+    fn p1_at<V: Val>(self, m: &'m Model<'d>, p1: Ptr<'d, ParFun<'d>>) -> V::Sym<'m, 'd>;
 }
 
 // cint
@@ -23,7 +23,7 @@ pub enum IndexCatInt<'m, 'd> {
 impl<'m, 'd> IndexAny<'m, 'd> for IndexCatInt<'m, 'd> {
     type Set = SetCatInt;
 
-    fn p1_at2<V: Val>(self, m: &'m Model<'d>, p1: Ptr<'d, ParFun<'d>>) -> V::Sym<'m, 'd> {
+    fn p1_at<V: Val>(self, m: &'m Model<'d>, p1: Ptr<'d, ParFun<'d>>) -> V::Sym<'m, 'd> {
         match self {
             Self::Idx(i0) => {
                 let i0 = i0.ptr();
@@ -54,7 +54,7 @@ pub enum IndexCatStr<'m, 'd> {
 impl<'m, 'd> IndexAny<'m, 'd> for IndexCatStr<'m, 'd> {
     type Set = SetCatStr;
 
-    fn p1_at2<V: Val>(self, m: &'m Model<'d>, p1: Ptr<'d, ParFun<'d>>) -> V::Sym<'m, 'd> {
+    fn p1_at<V: Val>(self, m: &'m Model<'d>, p1: Ptr<'d, ParFun<'d>>) -> V::Sym<'m, 'd> {
         todo!()
     }
 }
@@ -73,7 +73,7 @@ pub enum IndexOrd<'m, 'd> {
 impl<'m, 'd> IndexAny<'m, 'd> for IndexOrd<'m, 'd> {
     type Set = SetOrd;
 
-    fn p1_at2<V: Val>(self, m: &'m Model<'d>, p1: Ptr<'d, ParFun<'d>>) -> V::Sym<'m, 'd> {
+    fn p1_at<V: Val>(self, m: &'m Model<'d>, p1: Ptr<'d, ParFun<'d>>) -> V::Sym<'m, 'd> {
         todo!()
     }
 }

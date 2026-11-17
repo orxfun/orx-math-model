@@ -1,5 +1,5 @@
 use crate::idxs::{DIdx, IdxCatInt, IdxCatStr, IdxOrd, UIdxVal};
-use crate::pars::{NumParD1, UFunP1, UFunP2, UFunP2_I0, FP1, FP2};
+use crate::pars::{IntParD1, NumParD1, UFunP1, UFunP2, UFunP2_I0, FP1, FP2};
 use crate::scalars::num::{DNum, Num, Val, ValNum};
 use crate::scalars::Int;
 use crate::sets::into_idx::IndexAny;
@@ -60,11 +60,18 @@ pub trait Set: Clone + Copy + 'static {
 
     fn unpack_p1_fun<'a, 'd>(u: &'a UFunP1<'d>) -> &'a FP1<'d, Self>;
 
-    fn p1_at<'m, 'd, V: Val>(
+    fn num_p1_at<'m, 'd, V: Val>(
         par: NumParD1<'m, 'd, Self>,
         i0: impl Into<Self::IdxAny<'m, 'd>>,
     ) -> V::Sym<'m, 'd> {
-        i0.into().p1_at2::<V>(par.m(), par.data().fun_ptr())
+        i0.into().p1_at::<V>(par.m(), par.data().fun_ptr())
+    }
+
+    fn int_p1_at<'m, 'd, V: Val>(
+        par: IntParD1<'m, 'd, Self>,
+        i0: impl Into<Self::IdxAny<'m, 'd>>,
+    ) -> V::Sym<'m, 'd> {
+        i0.into().p1_at::<V>(par.m(), par.data().fun_ptr())
     }
 
     // p2
@@ -379,7 +386,7 @@ impl Set for SetCatStr {
         unsafe { &u.cstr }
     }
 
-    fn p1_at<'m, 'd, V: Val>(
+    fn num_p1_at<'m, 'd, V: Val>(
         par: NumParD1<'m, 'd, Self>,
         i0: impl Into<Self::IdxAny<'m, 'd>>,
     ) -> V::Sym<'m, 'd> {
@@ -672,7 +679,7 @@ impl Set for SetOrd {
         unsafe { &u.ord }
     }
 
-    fn p1_at<'m, 'd, V: Val>(
+    fn num_p1_at<'m, 'd, V: Val>(
         par: NumParD1<'m, 'd, Self>,
         i0: impl Into<Self::IdxAny<'m, 'd>>,
     ) -> V::Sym<'m, 'd> {
