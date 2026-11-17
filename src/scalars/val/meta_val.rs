@@ -13,6 +13,18 @@ pub enum ValTyp {
     Num,
 }
 
+impl ValTyp {
+    fn to_int(x: f64) -> i64 {
+        debug_assert!(x.is_finite());
+        debug_assert!(x >= i64::MIN as f64);
+        debug_assert!(x <= i64::MAX as f64);
+        match x >= 0.0 {
+            true => (x + 0.5) as i64,
+            false => (x - 0.5) as i64,
+        }
+    }
+}
+
 // meta
 
 pub trait Val: Sca {
