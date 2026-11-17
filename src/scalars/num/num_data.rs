@@ -24,12 +24,12 @@ impl<'d> DNum<'d> {
     }
 
     #[inline(always)]
-    fn eval(&self) -> f64 {
+    pub fn eval(&self) -> f64 {
         (self.fun)()
     }
 
     #[inline(always)]
-    fn eval_int(&self) -> i64 {
+    pub fn eval_int(&self) -> i64 {
         round_f64((self.fun)())
     }
 }

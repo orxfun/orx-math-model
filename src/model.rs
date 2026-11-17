@@ -1,5 +1,6 @@
 use crate::con_vals::{ConVal, DConVal};
 use crate::idxs::{DIdx, IdxVal};
+use crate::scalars::num::{DNum, Int, Num};
 // use crate::lin_expr::{DLinExpr, LinExpBag, LinExpr};
 // use crate::pars::{ParBag, ParD1, ParD2, ParFun, ParFunBag};
 // use crate::scalars::{DSca, FVar1, FVar2, ScaBag};
@@ -8,8 +9,8 @@ use crate::slot::{SlotStates, State};
 // use crate::sym_refs::SymRefBag;
 // use crate::vars::{DVars, VarBag, VarD1, VarD2, VarType};
 use crate::{
-    Bag, DimVec, Ptr, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetSym, Slot, Symbol,
-    TConVal,
+    AsF64, AsI64, Bag, DimVec, Ptr, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetSym, Slot,
+    Symbol, TConVal, ValTyp,
 };
 // use crate::{Int, Num, Sca, ScaInt, ScaNum, Val, Var};
 use alloc::boxed::Box;
@@ -37,6 +38,7 @@ pub struct Model<'d> {
     idx_bag: Bag<DIdx<'d>>,
 
     // vals
+    num_bag: Bag<DNum<'d>>,
     // sca_bag: ManuallyDrop<ScaBag<'d>>,
     con_val_bag: Bag<DConVal>,
     // sym_ref_bag: SymRefBag<'d>,
@@ -226,12 +228,17 @@ impl<'d> Model<'d> {
     //     Num::new(Symbol::new(self, self.sca_bag.one))
     // }
 
-    // pub(crate) fn val<'m, V: Val>(&'m self, fun: impl Fn() -> V::Raw + 'd) -> V::Sym<'m, 'd> {
-    //     let fun: Box<dyn Fn() -> <V as Val>::Raw + 'd> = Box::new(fun);
-    //     let data = DSca::new_val::<V>(fun);
-    //     let el = self.sca_bag.push(data);
-    //     V::new_sym(self, el)
-    // }
+    pub(crate) fn num<'m, V: AsF64>(&'m self, fun: impl Fn() -> V + 'd) -> Num<'m, 'd> {
+        let data = DNum::new_num(fun);
+        let el = self.num_bag.push(data);
+        Num::new(Symbol::new(self, el))
+    }
+
+    pub(crate) fn int<'m, V: AsI64>(&'m self, fun: impl Fn() -> V + 'd) -> Int<'m, 'd> {
+        let data = DNum::new_int(fun);
+        let el = self.num_bag.push(data);
+        Int::new(Symbol::new(self, el))
+    }
 
     // pub(crate) fn var_from_d1<'m, I0: Set>(
     //     &'m self,
