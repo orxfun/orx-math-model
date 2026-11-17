@@ -1,7 +1,7 @@
 use crate::pars::p1_fun::FP1;
 use crate::pars::par_fun::ParFun;
 use crate::sets::DSet;
-use crate::{AsF64, DimVec, Ptr, Res, Set, Slot, ValTyp};
+use crate::{AsF64, Dim, DimVec, Ptr, Res, Set, Slot, ValTyp};
 use alloc::boxed::Box;
 
 #[derive(derive_new::new)]
@@ -26,5 +26,16 @@ impl<'d> DPars<'d> {
         let fun = Box::new(move |i| fun(i).as_f64());
         let fun = ParFun::d1_create::<I0>(val_typ, fun);
         self.slot.bind(fun)
+    }
+
+    // at
+
+    pub fn dim(&self) -> Dim {
+        self.sets.dim()
+    }
+
+    #[inline(always)]
+    pub fn d1_at<I0: Set>(&self, i0: I0::IdxRaw<'d>) -> f64 {
+        self.slot.get().d1_at::<I0>(i0)
     }
 }

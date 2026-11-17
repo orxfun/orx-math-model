@@ -1,4 +1,5 @@
 use crate::idxs::{DIdx, IdxCatInt, IdxCatStr, IdxOrd, UIdxVal};
+use crate::pars::{UFunP1, FP1};
 // use crate::pars::{ParD1, ParD2, UFunP1_V, UFunP2_V, UFunP2_V_I0, FP1, FP2};
 // use crate::scalars::{FVar1, FVar2, UFunV1, UFunV2, UFunV2_I0};
 use crate::sets::{CatInt, CatStr, DSet, FSet, Ord, UFunSet};
@@ -52,9 +53,9 @@ pub trait Set: Clone + Copy + 'static {
 
     fn into_idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>>;
 
-    // // p1
+    // p1
 
-    // fn unpack_p1_fun_v<'a, 'd, V: Val>(u: &'a UFunP1_V<'d, V>) -> &'a FP1<'d, V, Self>;
+    fn unpack_p1_fun_v<'a, 'd>(u: &'a UFunP1<'d>) -> &'a FP1<'d, Self>;
 
     // fn p1_at<'m, 'd, V: Val>(
     //     par: ParD1<'m, 'd, V, Self>,
@@ -166,12 +167,12 @@ impl Set for SetCatInt {
         sym.sym()
     }
 
-    // // p1
+    // p1
 
-    // #[inline(always)]
-    // fn unpack_p1_fun_v<'a, 'd, V: Val>(u: &'a UFunP1_V<'d, V>) -> &'a FP1<'d, V, Self> {
-    //     unsafe { &u.cint }
-    // }
+    #[inline(always)]
+    fn unpack_p1_fun_v<'a, 'd>(u: &'a UFunP1<'d>) -> &'a FP1<'d, Self> {
+        unsafe { &u.cint }
+    }
 
     // fn p1_at<'m, 'd, V: Val>(
     //     par: ParD1<'m, 'd, V, Self>,
@@ -373,12 +374,12 @@ impl Set for SetCatStr {
         sym.sym()
     }
 
-    // // p1
+    // p1
 
-    // #[inline(always)]
-    // fn unpack_p1_fun_v<'a, 'd, V: Val>(u: &'a UFunP1_V<'d, V>) -> &'a FP1<'d, V, Self> {
-    //     unsafe { &u.cstr }
-    // }
+    #[inline(always)]
+    fn unpack_p1_fun_v<'a, 'd>(u: &'a UFunP1<'d>) -> &'a FP1<'d, Self> {
+        unsafe { &u.cstr }
+    }
 
     // fn p1_at<'m, 'd, V: Val>(
     //     par: ParD1<'m, 'd, V, Self>,
@@ -648,12 +649,12 @@ impl Set for SetOrd {
         sym.sym()
     }
 
-    // // p1
+    // p1
 
-    // #[inline(always)]
-    // fn unpack_p1_fun_v<'a, 'd, V: Val>(u: &'a UFunP1_V<'d, V>) -> &'a FP1<'d, V, Self> {
-    //     unsafe { &u.ord }
-    // }
+    #[inline(always)]
+    fn unpack_p1_fun_v<'a, 'd>(u: &'a UFunP1<'d>) -> &'a FP1<'d, Self> {
+        unsafe { &u.ord }
+    }
 
     // fn p1_at<'m, 'd, V: Val>(
     //     par: ParD1<'m, 'd, V, Self>,

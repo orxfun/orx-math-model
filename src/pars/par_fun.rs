@@ -1,4 +1,5 @@
 use crate::pars::p1_fun::{UFunP1, FP1};
+use crate::scalars::num::round_f64;
 use crate::{Dim, DimVec, Res, Set, SetTyp, ValTyp};
 use core::mem::ManuallyDrop;
 
@@ -40,5 +41,17 @@ impl<'d> ParFun<'d> {
             d1: UFunP1::create::<I0>(fun),
         });
         Self::new(val_typ, idx_types, data)
+    }
+
+    #[inline(always)]
+    pub fn d1_at<I0: Set>(&self, i0: I0::IdxRaw<'d>) -> f64 {
+        let fun = I0::unpack_p1_fun_v(unsafe { &self.data.d1 });
+        fun(i0)
+    }
+
+    #[inline(always)]
+    pub fn d1_at_int<I0: Set>(&self, i0: I0::IdxRaw<'d>) -> i64 {
+        debug_assert_eq!(self.val_typ, ValTyp::Int);
+        round_f64(self.d1_at::<I0>(i0))
     }
 }
