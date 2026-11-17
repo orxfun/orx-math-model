@@ -1,3 +1,4 @@
+use crate::scalars::num::meta_val::round_f64;
 use crate::scalars::num::{FInt, FNum};
 use crate::{AsF64, AsI64, ValTyp};
 use alloc::boxed::Box;
@@ -27,7 +28,8 @@ impl<'d> DNum<'d> {
         (self.fun)()
     }
 
+    #[inline(always)]
     fn eval_int(&self) -> i64 {
-        todo!()
+        round_f64((self.fun)())
     }
 }
