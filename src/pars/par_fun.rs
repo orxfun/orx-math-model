@@ -1,7 +1,9 @@
+use alloc::boxed::Box;
+
 use crate::pars::p1_fun::{UFunP1, FP1};
 use crate::pars::p2_fun::{UFunP2, FP2};
 use crate::scalars::num::round_f64;
-use crate::{Dim, DimVec, Res, Set, SetTyp, ValTyp};
+use crate::{AsF64, Dim, DimVec, Res, Set, SetTyp, ValTyp};
 use core::mem::ManuallyDrop;
 
 #[repr(C)]
@@ -42,8 +44,12 @@ impl<'d> ParFun<'d> {
 
     // d1
 
-    pub fn d1_create<I0: Set>(val_typ: ValTyp, fun: FP1<'d, I0>) -> Self {
+    pub fn d1_create<V: AsF64, I0: Set>(
+        val_typ: ValTyp,
+        fun: impl Fn(I0::IdxRaw<'d>) -> V + 'd,
+    ) -> Self {
         let idx_types = DimVec::new([I0::typ()]);
+        let fun = Box::new(move |i| fun(i).as_f64());
         let data = ManuallyDrop::new(UFunPar {
             d1: UFunP1::create::<I0>(fun),
         });
@@ -64,8 +70,12 @@ impl<'d> ParFun<'d> {
 
     // d2
 
-    pub fn d2_create<I0: Set, I1: Set>(val_typ: ValTyp, fun: FP2<'d, I0, I1>) -> Self {
+    pub fn d2_create<V: AsF64, I0: Set, I1: Set>(
+        val_typ: ValTyp,
+        fun: impl Fn(I0::IdxRaw<'d>, I1::IdxRaw<'d>) -> V + 'd,
+    ) -> Self {
         let idx_types = DimVec::new([I0::typ(), I1::typ()]);
+        let fun = Box::new(move |i, j| fun(i, j).as_f64());
         let data = ManuallyDrop::new(UFunPar {
             d2: UFunP2::create::<I0, I1>(fun),
         });

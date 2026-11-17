@@ -11,6 +11,10 @@ pub struct DPars<'d> {
 }
 
 impl<'d> DPars<'d> {
+    fn fun(&self) -> &ParFun<'d> {
+        self.slot.get()
+    }
+
     pub fn fun_ptr(&self) -> Ptr<'d, ParFun<'d>> {
         self.slot.ptr()
     }
@@ -22,10 +26,17 @@ impl<'d> DPars<'d> {
         val_typ: ValTyp,
         fun: impl Fn(I0::IdxRaw<'d>) -> V + 'd,
     ) -> Res {
-        debug_assert_eq!(self.slot.get().val_typ, val_typ);
-        let fun = Box::new(move |i| fun(i).as_f64());
-        let fun = ParFun::d1_create::<I0>(val_typ, fun);
-        self.slot.bind(fun)
+        debug_assert_eq!(self.fun().val_typ, val_typ);
+        self.slot.bind(ParFun::d1_create::<V, I0>(val_typ, fun))
+    }
+
+    pub fn d2_bind<V: AsF64, I0: Set, I1: Set>(
+        &self,
+        val_typ: ValTyp,
+        fun: impl Fn(I0::IdxRaw<'d>, I1::IdxRaw<'d>) -> V + 'd,
+    ) -> Res {
+        debug_assert_eq!(self.fun().val_typ, val_typ);
+        self.slot.bind(ParFun::d2_create::<V, I0, I1>(val_typ, fun))
     }
 
     // at
@@ -36,6 +47,6 @@ impl<'d> DPars<'d> {
 
     #[inline(always)]
     pub fn d1_at<I0: Set>(&self, i0: I0::IdxRaw<'d>) -> f64 {
-        self.slot.get().d1_at::<I0>(i0)
+        self.fun().d1_at::<I0>(i0)
     }
 }
