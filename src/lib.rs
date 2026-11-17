@@ -27,7 +27,7 @@ mod err;
 mod idxs;
 // mod lin_expr;
 mod model;
-// mod pars;
+mod pars;
 mod scalars;
 mod sets;
 mod slot;
