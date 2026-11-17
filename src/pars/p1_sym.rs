@@ -36,6 +36,6 @@ impl<'m, 'd, I0: Set> SymWrap<'m, 'd> for NumParD1<'m, 'd, I0> {
 
 impl<'m, 'd, I0: Set> NumParD1<'m, 'd, I0> {
     pub fn bind<V: AsF64>(self, fun: impl Fn(I0::IdxRaw<'d>) -> V + 'd) -> Res {
-        self.data().d1_bind::<V, I0>(ValTyp::Int, fun)
+        self.data().d1_bind::<V, I0>(ValTyp::Num, fun)
     }
 }

@@ -1,6 +1,7 @@
 mod p1_fun;
 mod p1_sym;
 mod p2_fun;
+mod p2_sym;
 mod par_data;
 mod par_fun;
 
