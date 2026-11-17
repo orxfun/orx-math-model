@@ -1,4 +1,5 @@
 mod p1_fun;
+mod p1_sym;
 mod p2_fun;
 mod par_data;
 mod par_fun;
