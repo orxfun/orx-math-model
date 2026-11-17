@@ -99,21 +99,6 @@ impl<'d> Model<'d> {
 
     // p1
 
-    // fn par1<'m, V, S0>(&'m self, s0: S0) -> ParD1<'m, 'd, V, S0::Meta>
-    // where
-    //     V: Val,
-    //     S0: SetSym<'m, 'd>,
-    //     S0::Meta: Set<SetSym<'m, 'd> = S0>,
-    // {
-    //     let t = [<S0::Meta as Set>::typ()];
-    //     let fun = ParFun::empty(V::val_typ(), DimVec::new(t));
-    //     let fun_el = self.par_fun_bag.push(fun);
-    //     let fun_slot = Slot::new(self, fun_el);
-    //     let sets = DimVec::new([<S0::Meta as Set>::set_ptr(s0)]);
-    //     let el = self.par_bag.push(sets, fun_slot);
-    //     ParD1::new(Symbol::new(self, el))
-    // }
-
     fn par1_elem<'m, S0>(&'m self, val_typ: ValTyp, s0: S0) -> Elem<'m, DPars<'d>>
     where
         S0: SetSym<'m, 'd>,
@@ -182,54 +167,6 @@ impl<'d> Model<'d> {
     {
         NumParD2::new(Symbol::new(self, self.par2_elem(ValTyp::Num, s0, s1)))
     }
-
-    // fn par2<'m, V, S0, S1>(&'m self, s0: S0, s1: S1) -> ParD2<'m, 'd, V, S0::Meta, S1::Meta>
-    // where
-    //     V: Val,
-    //     S0: SetSym<'m, 'd>,
-    //     S0::Meta: Set<SetSym<'m, 'd> = S0>,
-    //     S1: SetSym<'m, 'd>,
-    //     S1::Meta: Set<SetSym<'m, 'd> = S1>,
-    // {
-    //     let t = [<S0::Meta as Set>::typ(), <S1::Meta as Set>::typ()];
-    //     let fun = ParFun::empty(V::val_typ(), DimVec::new(t));
-    //     let fun_el = self.par_fun_bag.push(fun);
-    //     let fun_slot = Slot::new(self, fun_el);
-    //     let sets = DimVec::new([
-    //         <S0::Meta as Set>::set_ptr(s0),
-    //         <S1::Meta as Set>::set_ptr(s1),
-    //     ]);
-    //     let el = self.par_bag.push(sets, fun_slot);
-    //     ParD2::new(Symbol::new(self, el))
-    // }
-
-    // pub fn par2_int<'m, S0, S1>(
-    //     &'m self,
-    //     s0: S0,
-    //     s1: S1,
-    // ) -> ParD2<'m, 'd, ScaInt, S0::Meta, S1::Meta>
-    // where
-    //     S0: SetSym<'m, 'd>,
-    //     S0::Meta: Set<SetSym<'m, 'd> = S0>,
-    //     S1: SetSym<'m, 'd>,
-    //     S1::Meta: Set<SetSym<'m, 'd> = S1>,
-    // {
-    //     self.par2(s0, s1)
-    // }
-
-    // pub fn par2_num<'m, S0, S1>(
-    //     &'m self,
-    //     s0: S0,
-    //     s1: S1,
-    // ) -> ParD2<'m, 'd, ScaNum, S0::Meta, S1::Meta>
-    // where
-    //     S0: SetSym<'m, 'd>,
-    //     S0::Meta: Set<SetSym<'m, 'd> = S0>,
-    //     S1: SetSym<'m, 'd>,
-    //     S1::Meta: Set<SetSym<'m, 'd> = S1>,
-    // {
-    //     self.par2(s0, s1)
-    // }
 
     // // vars
 
