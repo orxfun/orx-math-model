@@ -26,4 +26,8 @@ impl<'d> DNum<'d> {
     fn eval(&self) -> f64 {
         (self.fun)()
     }
+
+    fn eval_int(&self) -> i64 {
+        todo!()
+    }
 }
