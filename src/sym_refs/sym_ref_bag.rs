@@ -1,5 +1,5 @@
 use crate::sym_refs::SymRef;
-use crate::{new_bag, Bag, Sca};
+use crate::{new_bag, Bag};
 
 pub struct SymRefBag<'d> {
     bag: Bag<SymRef<'d>>,

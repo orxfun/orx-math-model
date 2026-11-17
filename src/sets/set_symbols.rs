@@ -1,4 +1,4 @@
-use crate::idxs::{IdxCatInt, IdxCatStr, IdxOrd};
+// use crate::idxs::{IdxCatInt, IdxCatStr, IdxOrd};
 use crate::sets::DSet;
 use crate::{Elements, Model, Ptr, Res, Set, SetCatInt, SetCatStr, SetOrd, Symbol};
 use alloc::{boxed::Box, string::String};
@@ -35,9 +35,9 @@ impl<'m, 'd> CatInt<'m, 'd> {
         bind::<SetCatInt, _>(self.0, fun)
     }
 
-    pub fn idx(self) -> IdxCatInt<'m, 'd> {
-        self.0.m.idx::<SetCatInt>(self)
-    }
+    // pub fn idx(self) -> IdxCatInt<'m, 'd> {
+    //     self.0.m.idx::<SetCatInt>(self)
+    // }
 }
 
 // cat str
@@ -62,9 +62,9 @@ impl<'m, 'd> CatStr<'m, 'd> {
         bind::<SetCatStr, _>(self.0, fun)
     }
 
-    pub fn idx(self) -> IdxCatStr<'m, 'd> {
-        self.0.m.idx::<SetCatStr>(self)
-    }
+    // pub fn idx(self) -> IdxCatStr<'m, 'd> {
+    //     self.0.m.idx::<SetCatStr>(self)
+    // }
 }
 
 // ord
@@ -89,7 +89,7 @@ impl<'m, 'd> Ord<'m, 'd> {
         bind::<SetOrd, _>(self.0, fun)
     }
 
-    pub fn idx(self) -> IdxOrd<'m, 'd> {
-        self.0.m.idx::<SetOrd>(self)
-    }
+    // pub fn idx(self) -> IdxOrd<'m, 'd> {
+    //     self.0.m.idx::<SetOrd>(self)
+    // }
 }
