@@ -1,4 +1,5 @@
-use crate::scalars::num::{meta_val::ValTyp, num_fun::FNum};
+use crate::scalars::num::{FInt, FNum};
+use crate::ValTyp;
 use alloc::boxed::Box;
 use core::mem::{transmute, ManuallyDrop};
 
@@ -9,6 +10,10 @@ pub struct DNum<'d> {
 }
 
 impl<'d> DNum<'d> {
+    pub fn new_int(fun: impl Fn() -> i64 + 'd) -> Self {
+        todo!()
+    }
+
     #[inline(always)]
     fn eval(&self) -> f64 {
         (self.fun)()

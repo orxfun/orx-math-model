@@ -1,3 +1,3 @@
 mod num;
 
-pub use num::ValTyp;
+pub use num::{AsF64, AsI64, ValTyp};
