@@ -14,7 +14,7 @@ pub union UFunP1<'d> {
 }
 
 impl<'d> UFunP1<'d> {
-    fn empty(i0_typ: SetTyp) -> ManuallyDrop<Self> {
+    pub fn empty(i0_typ: SetTyp) -> ManuallyDrop<Self> {
         ManuallyDrop::new(match i0_typ {
             SetTyp::CatInt => Self {
                 cint: ManuallyDrop::new(Box::new(|_| Default::default())),
@@ -28,7 +28,7 @@ impl<'d> UFunP1<'d> {
         })
     }
 
-    fn create<I0: Set>(fun: FP1<'d, I0>) -> ManuallyDrop<Self> {
+    pub fn create<I0: Set>(fun: FP1<'d, I0>) -> ManuallyDrop<Self> {
         unsafe {
             ManuallyDrop::new(match I0::typ() {
                 SetTyp::CatInt => Self {
@@ -44,7 +44,7 @@ impl<'d> UFunP1<'d> {
         }
     }
 
-    fn man_drop(&mut self, i0_typ: SetTyp) {
+    pub fn man_drop(&mut self, i0_typ: SetTyp) {
         unsafe {
             match i0_typ {
                 SetTyp::CatInt => ManuallyDrop::drop(&mut self.cint),
