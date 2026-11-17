@@ -1,4 +1,4 @@
-// use crate::idxs::{DIdx, IdxCatInt, IdxCatStr, IdxOrd, UIdxVal};
+use crate::idxs::{DIdx, IdxCatInt, IdxCatStr, IdxOrd, UIdxVal};
 // use crate::pars::{ParD1, ParD2, UFunP1_V, UFunP2_V, UFunP2_V_I0, FP1, FP2};
 // use crate::scalars::{FVar1, FVar2, UFunV1, UFunV2, UFunV2_I0};
 use crate::sets::{CatInt, CatStr, DSet, FSet, Ord, UFunSet};
@@ -40,17 +40,17 @@ pub trait Set: Clone + Copy + 'static {
 
     type IdxRaw<'d>: Copy;
 
-    // type IdxSym<'m, 'd: 'm>;
+    type IdxSym<'m, 'd: 'm>;
 
     // type IdxAny<'m, 'd: 'm>;
 
-    // fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d>;
+    fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d>;
 
-    // fn idx_write<'d>(u: &mut UIdxVal<'d>, value: Self::IdxRaw<'d>);
+    fn idx_write<'d>(u: &mut UIdxVal<'d>, value: Self::IdxRaw<'d>);
 
-    // fn new_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd>;
+    fn new_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd>;
 
-    // fn into_idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>>;
+    fn into_idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>>;
 
     // // p1
 
@@ -144,27 +144,27 @@ impl Set for SetCatInt {
 
     type IdxRaw<'d> = usize;
 
-    // type IdxSym<'m, 'd: 'm> = IdxCatInt<'m, 'd>;
+    type IdxSym<'m, 'd: 'm> = IdxCatInt<'m, 'd>;
 
     // type IdxAny<'m, 'd: 'm> = IndexCatInt<'m, 'd>;
 
-    // #[inline(always)]
-    // fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d> {
-    //     unsafe { u.cat_int }
-    // }
+    #[inline(always)]
+    fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d> {
+        unsafe { u.cat_int }
+    }
 
-    // #[inline(always)]
-    // fn idx_write<'d>(u: &mut UIdxVal<'d>, value: Self::IdxRaw<'d>) {
-    //     u.cat_int = value;
-    // }
+    #[inline(always)]
+    fn idx_write<'d>(u: &mut UIdxVal<'d>, value: Self::IdxRaw<'d>) {
+        u.cat_int = value;
+    }
 
-    // fn new_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
-    //     Self::IdxSym::new(Symbol::new(m, el))
-    // }
+    fn new_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
+        Self::IdxSym::new(Symbol::new(m, el))
+    }
 
-    // fn into_idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>> {
-    //     sym.sym()
-    // }
+    fn into_idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>> {
+        sym.sym()
+    }
 
     // // p1
 
@@ -351,27 +351,27 @@ impl Set for SetCatStr {
 
     type IdxRaw<'d> = &'d String;
 
-    // type IdxSym<'m, 'd: 'm> = IdxCatStr<'m, 'd>;
+    type IdxSym<'m, 'd: 'm> = IdxCatStr<'m, 'd>;
 
     // type IdxAny<'m, 'd: 'm> = IndexCatStr<'m, 'd>;
 
-    // #[inline(always)]
-    // fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d> {
-    //     unsafe { u.cat_str }
-    // }
+    #[inline(always)]
+    fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d> {
+        unsafe { u.cat_str }
+    }
 
-    // #[inline(always)]
-    // fn idx_write<'d>(u: &mut UIdxVal<'d>, value: Self::IdxRaw<'d>) {
-    //     u.cat_str = value;
-    // }
+    #[inline(always)]
+    fn idx_write<'d>(u: &mut UIdxVal<'d>, value: Self::IdxRaw<'d>) {
+        u.cat_str = value;
+    }
 
-    // fn new_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
-    //     Self::IdxSym::new(Symbol::new(m, el))
-    // }
+    fn new_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
+        Self::IdxSym::new(Symbol::new(m, el))
+    }
 
-    // fn into_idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>> {
-    //     sym.sym()
-    // }
+    fn into_idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>> {
+        sym.sym()
+    }
 
     // // p1
 
@@ -626,27 +626,27 @@ impl Set for SetOrd {
 
     type IdxRaw<'d> = i64;
 
-    // type IdxSym<'m, 'd: 'm> = IdxOrd<'m, 'd>;
+    type IdxSym<'m, 'd: 'm> = IdxOrd<'m, 'd>;
 
     // type IdxAny<'m, 'd: 'm> = IndexOrd<'m, 'd>;
 
-    // #[inline(always)]
-    // fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d> {
-    //     unsafe { u.ord }
-    // }
+    #[inline(always)]
+    fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d> {
+        unsafe { u.ord }
+    }
 
-    // #[inline(always)]
-    // fn idx_write<'d>(u: &mut UIdxVal<'d>, value: Self::IdxRaw<'d>) {
-    //     u.ord = value;
-    // }
+    #[inline(always)]
+    fn idx_write<'d>(u: &mut UIdxVal<'d>, value: Self::IdxRaw<'d>) {
+        u.ord = value;
+    }
 
-    // fn new_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
-    //     Self::IdxSym::new(Symbol::new(m, el))
-    // }
+    fn new_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
+        Self::IdxSym::new(Symbol::new(m, el))
+    }
 
-    // fn into_idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>> {
-    //     sym.sym()
-    // }
+    fn into_idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>> {
+        sym.sym()
+    }
 
     // // p1
 

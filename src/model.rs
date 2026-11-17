@@ -1,5 +1,5 @@
 use crate::con_vals::{ConVal, ConValBag, DConVal};
-// use crate::idxs::{IdxBag, IdxValBag};
+use crate::idxs::{IdxBag, IdxValBag};
 // use crate::lin_expr::{DLinExpr, LinExpBag, LinExpr};
 // use crate::pars::{ParBag, ParD1, ParD2, ParFun, ParFunBag};
 // use crate::scalars::{DSca, FVar1, FVar2, ScaBag};
@@ -32,8 +32,8 @@ pub struct Model<'d> {
     // var_bag: VarBag<'d>,
 
     // idxs
-    // idx_val_bag: IdxValBag<'d>,
-    // idx_bag: IdxBag<'d>,
+    idx_val_bag: IdxValBag<'d>,
+    idx_bag: IdxBag<'d>,
 
     // vals
     // sca_bag: ManuallyDrop<ScaBag<'d>>,
@@ -80,13 +80,13 @@ impl<'d> Model<'d> {
 
     // idxs
 
-    // pub(crate) fn idx<'m, S: Set>(&'m self, set: S::SetSym<'m, 'd>) -> S::IdxSym<'m, 'd> {
-    //     // TODO: Res::dbg_assert_same_model(self, set);
-    //     let val_el = self.idx_val_bag.push(S::typ());
-    //     let val_slot = Slot::new(self, val_el);
-    //     let el = self.idx_bag.push(S::set_ptr(set), val_slot);
-    //     S::new_idx_sym(self, el)
-    // }
+    pub(crate) fn idx<'m, S: Set>(&'m self, set: S::SetSym<'m, 'd>) -> S::IdxSym<'m, 'd> {
+        // TODO: Res::dbg_assert_same_model(self, set);
+        let val_el = self.idx_val_bag.push(S::typ());
+        let val_slot = Slot::new(self, val_el);
+        let el = self.idx_bag.push(S::set_ptr(set), val_slot);
+        S::new_idx_sym(self, el)
+    }
 
     // // p1
 
