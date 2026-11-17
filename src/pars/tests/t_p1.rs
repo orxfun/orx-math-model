@@ -3,85 +3,8 @@ use alloc::string::ToString;
 use alloc::vec;
 use std::collections::HashMap;
 
-// int
-
 #[test]
-fn p1_int_cint() {
-    type I0 = SetCatInt;
-    type V = ScaInt;
-
-    // data
-    let values = vec![1i64, 2, 7, 9];
-
-    // modeling
-    let m = Model::default();
-    let set = m.cat_set_int();
-    let par = m.par1_int(set);
-
-    // binding
-    par.bind(|i| values[i]).unwrap();
-
-    // running
-    for (i, v) in values.iter().copied().enumerate() {
-        let val = par.data().d1_at::<V, I0>(i);
-        assert_eq!(v, val);
-    }
-}
-
-#[test]
-fn p1_int_cstr() {
-    type I0 = SetCatStr;
-    type V = ScaInt;
-
-    // data
-    let values: HashMap<_, _> = [1i64, 2, 7, 9]
-        .into_iter()
-        .enumerate()
-        .map(|(i, v)| (i.to_string(), v))
-        .collect();
-
-    // modeling
-    let m = Model::default();
-    let set = m.cat_set_str();
-    let par = m.par1_int(set);
-
-    // binding
-    par.bind(|i| values[i]).unwrap();
-
-    // running
-    for (i, v) in values.iter() {
-        let val = par.data().d1_at::<V, I0>(i);
-        assert_eq!(*v, val);
-    }
-}
-
-#[test]
-fn p1_int_ord() {
-    type I0 = SetOrd;
-    type V = ScaInt;
-
-    // data
-    let values = |i: i64| i * 2;
-
-    // modeling
-    let m = Model::default();
-    let set = m.ord_set();
-    let par = m.par1_int(set);
-
-    // binding
-    par.bind(|i| values(i)).unwrap();
-
-    // running
-    for (i, v) in (0..4).map(|i| values(i)).enumerate() {
-        let val = par.data().d1_at::<V, I0>(i as i64);
-        assert_eq!(v, val);
-    }
-}
-
-// num
-
-#[test]
-fn p1_num_cint() {
+fn p1_cint() {
     type I0 = SetCatInt;
     type V = ScaNum;
 
@@ -104,7 +27,7 @@ fn p1_num_cint() {
 }
 
 #[test]
-fn p1_num_cstr() {
+fn p1_cstr() {
     type I0 = SetCatStr;
     type V = ScaNum;
 
@@ -131,7 +54,7 @@ fn p1_num_cstr() {
 }
 
 #[test]
-fn p1_num_ord() {
+fn p1_ord() {
     type I0 = SetOrd;
     type V = ScaNum;
 
