@@ -42,6 +42,10 @@ impl<'d> ParFun<'d> {
         Self::new(val_typ, idxs, data)
     }
 
+    pub fn dim(&self) -> Dim {
+        self.idx_types.dim()
+    }
+
     // d1
 
     pub fn d1_create<V: AsF64, I0: Set>(
