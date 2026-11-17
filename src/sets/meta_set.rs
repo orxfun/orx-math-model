@@ -1,5 +1,5 @@
 use crate::idxs::{DIdx, IdxCatInt, IdxCatStr, IdxOrd, UIdxVal};
-use crate::pars::{IntParD1, NumParD1, NumParD2, UFunP1, UFunP2, UFunP2_I0, FP1, FP2};
+use crate::pars::{IntParD1, IntParD2, NumParD1, NumParD2, UFunP1, UFunP2, UFunP2_I0, FP1, FP2};
 use crate::scalars::num::{DNum, Num, Val, ValNum};
 use crate::scalars::Int;
 use crate::sets::into_idx::IdxAny;
@@ -80,20 +80,22 @@ pub trait Set: Clone + Copy + 'static {
 
     fn unpack_p2_fun_v<'a, 'd, I1: Set>(u: &'a UFunP2<'d>) -> &'a FP2<'d, Self, I1>;
 
-    fn num_p2_at_i0<'m, 'd, V: Val, I0: Set>(
-        par: NumParD2<'m, 'd, I0, Self>,
-        i0: impl Fn() -> I0::IdxRaw<'d> + 'd,
-        i1: impl Into<Self::IdxAny<'m, 'd>>,
-    ) -> V::Sym<'m, 'd> {
-        todo!()
-    }
-
     fn num_p2_at<'m, 'd, V: Val, I1: Set>(
         par: NumParD2<'m, 'd, Self, I1>,
         i0: impl Into<Self::IdxAny<'m, 'd>>,
         i1: impl Into<I1::IdxAny<'m, 'd>>,
     ) -> V::Sym<'m, 'd> {
-        todo!()
+        i0.into()
+            .p2_at::<V, I1::IdxAny<'m, 'd>>(par.m(), par.data().fun_ptr(), i1.into())
+    }
+
+    fn int_p2_at<'m, 'd, V: Val, I1: Set>(
+        par: IntParD2<'m, 'd, Self, I1>,
+        i0: impl Into<Self::IdxAny<'m, 'd>>,
+        i1: impl Into<I1::IdxAny<'m, 'd>>,
+    ) -> V::Sym<'m, 'd> {
+        i0.into()
+            .p2_at::<V, I1::IdxAny<'m, 'd>>(par.m(), par.data().fun_ptr(), i1.into())
     }
 
     // // v1
