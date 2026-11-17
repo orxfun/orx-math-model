@@ -2,6 +2,7 @@ use crate::pars::DPars;
 use crate::scalars::{Int, Num};
 use crate::{AsF64, Res, Set, SymWrap, Symbol, ValTyp};
 use core::marker::PhantomData;
+use core::ops::Index;
 
 // int
 
@@ -23,6 +24,20 @@ impl<'m, 'd, I0: Set> IntParD1<'m, 'd, I0> {
 
     pub fn at(self, i0: impl Into<I0::IdxAny<'m, 'd>>) -> Int<'m, 'd> {
         I0::int_p1_at(self, i0)
+    }
+}
+
+impl<'m, 'd, I0, Idx0> Index<Idx0> for IntParD1<'m, 'd, I0>
+where
+    I0: Set,
+    Idx0: Into<I0::IdxAny<'m, 'd>>,
+{
+    type Output = Int<'m, 'd>;
+
+    fn index(&self, i0: Idx0) -> &Self::Output {
+        let val = self.at(i0);
+        // self.0.m.sym_ref::<V>(val)
+        todo!()
     }
 }
 
