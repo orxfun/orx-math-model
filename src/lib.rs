@@ -28,7 +28,7 @@ mod idxs;
 // mod lin_expr;
 mod model;
 // mod pars;
-// mod scalars;
+mod scalars;
 mod sets;
 mod slot;
 // mod sym_refs;
