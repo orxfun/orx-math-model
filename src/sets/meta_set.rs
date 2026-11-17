@@ -3,7 +3,7 @@ use crate::idxs::{DIdx, IdxCatInt, IdxCatStr, IdxOrd, UIdxVal};
 // use crate::scalars::{FVar1, FVar2, UFunV1, UFunV2, UFunV2_I0};
 use crate::sets::{CatInt, CatStr, DSet, FSet, Ord, UFunSet};
 // use crate::vars::{VarD1, VarD2};
-use crate::{Model, Ptr, SetSym, Symbol};
+use crate::{Model, Ptr, SetSym, SymWrap, Symbol};
 // use crate::{ScaInt, Val, ValTyp, Var};
 use alloc::boxed::Box;
 use alloc::string::{String, ToString};
