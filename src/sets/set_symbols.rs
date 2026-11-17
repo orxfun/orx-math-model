@@ -1,6 +1,6 @@
 use crate::idxs::{IdxCatInt, IdxCatStr, IdxOrd};
 use crate::sets::DSet;
-use crate::{Elements, Model, Ptr, Res, Set, SetCatInt, SetCatStr, SetOrd, Symbol};
+use crate::{Elements, Model, Ptr, Res, Set, SetCatInt, SetCatStr, SetOrd, SymWrap, Symbol};
 use alloc::{boxed::Box, string::String};
 
 fn bind<'d, S, I>(set: Symbol<'_, 'd, DSet<'d>>, fun: impl Fn() -> I + 'd) -> Res
@@ -17,6 +17,14 @@ where
 
 #[derive(derive_new::new, Clone, Copy)]
 pub struct CatInt<'m, 'd>(Symbol<'m, 'd, DSet<'d>>);
+
+impl<'m, 'd> SymWrap<'m, 'd> for CatInt<'m, 'd> {
+    type Data = DSet<'d>;
+
+    fn sym(self) -> Symbol<'m, 'd, Self::Data> {
+        self.0
+    }
+}
 
 impl<'m, 'd> CatInt<'m, 'd> {
     pub(crate) fn m(&self) -> &'m Model<'d> {
@@ -45,6 +53,14 @@ impl<'m, 'd> CatInt<'m, 'd> {
 #[derive(derive_new::new, Clone, Copy)]
 pub struct CatStr<'m, 'd>(Symbol<'m, 'd, DSet<'d>>);
 
+impl<'m, 'd> SymWrap<'m, 'd> for CatStr<'m, 'd> {
+    type Data = DSet<'d>;
+
+    fn sym(self) -> Symbol<'m, 'd, Self::Data> {
+        self.0
+    }
+}
+
 impl<'m, 'd> CatStr<'m, 'd> {
     pub(crate) fn m(&self) -> &'m Model<'d> {
         self.0.m
@@ -71,6 +87,14 @@ impl<'m, 'd> CatStr<'m, 'd> {
 
 #[derive(derive_new::new, Clone, Copy)]
 pub struct Ord<'m, 'd>(Symbol<'m, 'd, DSet<'d>>);
+
+impl<'m, 'd> SymWrap<'m, 'd> for Ord<'m, 'd> {
+    type Data = DSet<'d>;
+
+    fn sym(self) -> Symbol<'m, 'd, Self::Data> {
+        self.0
+    }
+}
 
 impl<'m, 'd> Ord<'m, 'd> {
     pub(crate) fn m(&self) -> &'m Model<'d> {

@@ -1,4 +1,4 @@
-use crate::Model;
+use crate::{Model, Ptr};
 use core::mem::transmute;
 use orx_imp_vec::Elem;
 
@@ -21,5 +21,25 @@ impl<'m, 'd, T> Symbol<'m, 'd, T> {
     pub(crate) unsafe fn create_sym_ref(self) -> Symbol<'d, 'd, T> {
         // TODO: this is dangerous
         unsafe { transmute(Self::new(self.m, self.el)) }
+    }
+}
+
+// helpers
+
+pub(crate) trait SymWrap<'m, 'd: 'm>: Sized {
+    type Data;
+
+    fn sym(self) -> Symbol<'m, 'd, Self::Data>;
+
+    fn m(self) -> &'m Model<'d> {
+        self.sym().m
+    }
+
+    fn data(self) -> &'m Self::Data {
+        unsafe { self.sym().el.get() }
+    }
+
+    fn ptr(self) -> Ptr<'d, Self::Data> {
+        Ptr::new_from_el(self.sym().el)
     }
 }

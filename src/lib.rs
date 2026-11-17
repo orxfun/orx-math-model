@@ -46,7 +46,7 @@ pub(crate) use scalars::{AsF64, AsI64, ValTyp};
 // pub(crate) use scalars::{Int, Num, Sca, ScaInt, ScaNum, ScaVar, Val, ValTyp, Var};
 pub(crate) use sets::{Set, SetCatInt, SetCatStr, SetOrd, SetSym, SetTyp};
 pub(crate) use slot::{Ptr, PtrMut, Slot};
-pub(crate) use symbol::Symbol;
+pub(crate) use symbol::{SymWrap, Symbol};
 // pub(crate) use vars::VarType;
 
 // #[cfg(test)]
