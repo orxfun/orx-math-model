@@ -1,15 +1,9 @@
 use crate::sets::{DSet, FunSet};
-use crate::{new_bag, BagKind, Slot};
+use crate::{Bag, Slot};
 use orx_imp_vec::Elem;
 
 pub struct SetBag<'d> {
-    bag: BagKind<DSet<'d>>,
-}
-
-impl Default for SetBag<'_> {
-    fn default() -> Self {
-        Self { bag: new_bag() }
-    }
+    bag: Bag<DSet<'d>>,
 }
 
 impl<'d> SetBag<'d> {

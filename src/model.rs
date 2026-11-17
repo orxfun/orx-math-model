@@ -1,14 +1,15 @@
-use crate::con_vals::{ConVal, ConValBag, DConVal};
-use crate::idxs::{IdxBag, IdxValBag};
+use crate::con_vals::{ConVal, DConVal};
+use crate::idxs::{DIdx, IdxVal};
 // use crate::lin_expr::{DLinExpr, LinExpBag, LinExpr};
 // use crate::pars::{ParBag, ParD1, ParD2, ParFun, ParFunBag};
 // use crate::scalars::{DSca, FVar1, FVar2, ScaBag};
-use crate::sets::{CatInt, CatStr, Ord, SetBag, SetFunBag};
+use crate::sets::{CatInt, CatStr, DSet, FunSet, Ord, SetBag, SetFunBag};
 use crate::slot::{SlotStates, State};
 // use crate::sym_refs::SymRefBag;
 // use crate::vars::{DVars, VarBag, VarD1, VarD2, VarType};
 use crate::{
-    DimVec, Ptr, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetSym, Slot, Symbol, TConVal,
+    Bag, DimVec, Ptr, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetSym, Slot, Symbol,
+    TConVal,
 };
 // use crate::{Int, Num, Sca, ScaInt, ScaNum, Val, Var};
 use alloc::boxed::Box;
@@ -18,11 +19,11 @@ use orx_imp_vec::Elem;
 #[derive(Default)]
 pub struct Model<'d> {
     // states
-    slot_states: SlotStates,
+    slot_states: Bag<State>,
 
     // sets
-    set_fun_bag: SetFunBag<'d>,
-    set_bag: SetBag<'d>,
+    set_fun_bag: Bag<FunSet<'d>>,
+    set_bag: Bag<DSet<'d>>,
 
     // pars
     // par_fun_bag: ParFunBag<'d>,
@@ -32,12 +33,12 @@ pub struct Model<'d> {
     // var_bag: VarBag<'d>,
 
     // idxs
-    idx_val_bag: IdxValBag<'d>,
-    idx_bag: IdxBag<'d>,
+    idx_val_bag: Bag<IdxVal<'d>>,
+    idx_bag: Bag<DIdx<'d>>,
 
     // vals
     // sca_bag: ManuallyDrop<ScaBag<'d>>,
-    con_val_bag: ConValBag,
+    con_val_bag: Bag<DConVal>,
     // sym_ref_bag: SymRefBag<'d>,
     // expr
     // lin_exp_bag: LinExpBag<'d>,
@@ -54,7 +55,7 @@ impl<'d> Model<'d> {
     // states
 
     pub(crate) fn slot_state(&self) -> Elem<'_, State> {
-        self.slot_states.push()
+        self.slot_states.push(State::Empty)
     }
 
     // sets
@@ -72,9 +73,11 @@ impl<'d> Model<'d> {
     }
 
     fn set<'m, S: Set>(&'m self) -> S::SetSym<'m, 'd> {
-        let fun_el = self.set_fun_bag.push(S::typ());
+        let fun = FunSet::empty(S::typ());
+        let fun_el = self.set_fun_bag.push(fun);
         let fun_slot = Slot::new(self, fun_el);
-        let el = self.set_bag.push(fun_slot);
+        let data = DSet::new(fun_slot);
+        let el = self.set_bag.push(data);
         S::new_set_sym(self, el)
     }
 
@@ -82,9 +85,11 @@ impl<'d> Model<'d> {
 
     pub(crate) fn idx<'m, S: Set>(&'m self, set: S::SetSym<'m, 'd>) -> S::IdxSym<'m, 'd> {
         // TODO: Res::dbg_assert_same_model(self, set);
-        let val_el = self.idx_val_bag.push(S::typ());
+        let val = IdxVal::empty(S::typ());
+        let val_el = self.idx_val_bag.push(val);
         let val_slot = Slot::new(self, val_el);
-        let el = self.idx_bag.push(S::set_ptr(set), val_slot);
+        let data = DIdx::new(S::set_ptr(set), val_slot);
+        let el = self.idx_bag.push(data);
         S::new_idx_sym(self, el)
     }
 
@@ -253,7 +258,9 @@ impl<'d> Model<'d> {
     // vals
 
     pub(crate) fn con_val<T: TConVal>(&self, value: T) -> Ptr<'d, DConVal> {
-        let el = self.con_val_bag.push(ConVal::new(value));
+        let val = ConVal::new(value);
+        let data = DConVal::new(val);
+        let el = self.con_val_bag.push(data);
         Slot::new(self, el).ptr()
     }
 
