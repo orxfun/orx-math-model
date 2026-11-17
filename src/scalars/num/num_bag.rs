@@ -1,8 +1,8 @@
-use crate::{new_bag, scalars::num::DNum, Bag, Slot};
+use crate::{new_bag, scalars::num::DNum, BagKind, Slot};
 use orx_imp_vec::Elem;
 
 pub struct SetBag<'d> {
-    bag: Bag<DNum<'d>>,
+    bag: BagKind<DNum<'d>>,
 }
 
 impl Default for SetBag<'_> {

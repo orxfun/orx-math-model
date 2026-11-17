@@ -36,7 +36,7 @@ mod symbol;
 // mod vars;
 
 // crate
-pub(crate) use bag::{new_bag, Bag};
+pub(crate) use bag::Bag;
 pub(crate) use con_vals::{ConValTyp, TConVal};
 pub(crate) use dim::{ConVec, Dim, DimVec};
 pub(crate) use elements::{Elements, ElementsIter};

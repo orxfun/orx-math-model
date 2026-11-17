@@ -1,9 +1,9 @@
 use crate::con_vals::{ConVal, DConVal};
-use crate::{new_bag, Bag};
+use crate::{new_bag, BagKind};
 use orx_imp_vec::Elem;
 
 pub struct ConValBag {
-    bag: Bag<DConVal>,
+    bag: BagKind<DConVal>,
 }
 
 impl Default for ConValBag {

@@ -1,8 +1,8 @@
-use crate::{new_bag, sets::FunSet, Bag, SetTyp};
+use crate::{new_bag, sets::FunSet, BagKind, SetTyp};
 use orx_imp_vec::Elem;
 
 pub struct SetFunBag<'d> {
-    set: Bag<FunSet<'d>>,
+    set: BagKind<FunSet<'d>>,
 }
 
 impl Default for SetFunBag<'_> {

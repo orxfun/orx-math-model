@@ -1,8 +1,8 @@
-use crate::{idxs::IdxVal, new_bag, Bag, SetTyp};
+use crate::{idxs::IdxVal, new_bag, BagKind, SetTyp};
 use orx_imp_vec::Elem;
 
 pub struct IdxValBag<'d> {
-    set: Bag<IdxVal<'d>>,
+    set: BagKind<IdxVal<'d>>,
 }
 
 impl Default for IdxValBag<'_> {

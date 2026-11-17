@@ -1,10 +1,10 @@
 use crate::idxs::{DIdx, IdxVal};
 use crate::sets::DSet;
-use crate::{new_bag, Bag, Ptr, Slot};
+use crate::{new_bag, BagKind, Ptr, Slot};
 use orx_imp_vec::Elem;
 
 pub struct IdxBag<'d> {
-    bag: Bag<DIdx<'d>>,
+    bag: BagKind<DIdx<'d>>,
 }
 
 impl Default for IdxBag<'_> {
