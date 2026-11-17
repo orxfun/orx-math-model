@@ -22,6 +22,7 @@ impl<'d> Drop for ParFun<'d> {
     fn drop(&mut self) {
         match self.idx_types.dim() {
             Dim::D1 => unsafe { &mut self.data.d1 }.man_drop(self.idx_types[0]),
+            Dim::D2 => unsafe { &mut self.data.d2 }.man_drop(self.idx_types[0], self.idx_types[1]),
             _ => todo!(),
         }
     }

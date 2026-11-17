@@ -1,11 +1,10 @@
-use crate::{Model, ScaInt, ScaNum, SetCatInt, SetCatStr, SetOrd};
+use crate::{Model, SetCatInt, SetCatStr, SetOrd, SymWrap};
 use alloc::string::{String, ToString};
 use alloc::{vec, vec::Vec};
 use std::collections::HashMap;
 
 #[test]
 fn p2_cint_cstr() {
-    type V = ScaNum;
     type I0 = SetCatInt;
     type I1 = SetCatStr;
 
@@ -31,7 +30,7 @@ fn p2_cint_cstr() {
     // running
     for (i, map) in par_data.iter().enumerate() {
         for (j, exp) in map.iter() {
-            let val = par.data().d2_at::<V, I0, I1>(i, j);
+            let val = par.data().fun().d2_at::<I0, I1>(i, j);
             assert_eq!(*exp, val);
         }
     }
@@ -39,7 +38,6 @@ fn p2_cint_cstr() {
 
 #[test]
 fn p2_cstr_ord() {
-    type V = ScaNum;
     type I0 = SetCatStr;
     type I1 = SetOrd;
 
@@ -63,7 +61,7 @@ fn p2_cstr_ord() {
     // running
     for (i, vec) in par_data.iter() {
         for (j, exp) in vec.iter().enumerate() {
-            let val = par.data().d2_at::<V, I0, I1>(i, j as i64);
+            let val = par.data().fun().d2_at::<I0, I1>(i, j as i64);
             assert_eq!(*exp, val);
         }
     }
@@ -71,18 +69,17 @@ fn p2_cstr_ord() {
 
 #[test]
 fn p2_ord_cint() {
-    type V = ScaNum;
     type I0 = SetOrd;
     type I1 = SetCatInt;
 
     // data
-    let par_data = vec![vec![0.0, 1.0], vec![2.0, 3.0, 4.0], vec![5.0]];
+    let par_data = vec![vec![0, 1], vec![2, 3, 4], vec![5]];
 
     // modeling
     let m = Model::default();
     let s0 = m.ord_set();
     let s1 = m.cat_set_int();
-    let par = m.par2_num(s0, s1);
+    let par = m.par2_int(s0, s1);
 
     // binding
     par.bind(|i, j| par_data[i as usize][j]).unwrap();
@@ -90,7 +87,7 @@ fn p2_ord_cint() {
     // running
     for (i, vec) in par_data.iter().enumerate() {
         for (j, exp) in vec.iter().enumerate() {
-            let val = par.data().d2_at::<V, I0, I1>(i as i64, j);
+            let val = par.data().fun().d2_at_int::<I0, I1>(i as i64, j);
             assert_eq!(*exp, val);
         }
     }

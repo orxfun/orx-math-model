@@ -1,4 +1,5 @@
-use crate::{Elements, ElementsIter, Model, ScaInt, ScaNum, Set, SetCatInt, SetCatStr, SetOrd};
+use crate::scalars::num::ValNum;
+use crate::{Elements, ElementsIter, Model, Set, SetCatInt, SetCatStr, SetOrd, SymWrap};
 use alloc::string::ToString;
 use alloc::{vec, vec::Vec};
 use std::collections::HashMap;
@@ -6,7 +7,6 @@ use std::collections::HashMap;
 #[test]
 fn p1_at_cint() {
     type I0 = SetCatInt;
-    type V = ScaNum;
     type El<'d> = <I0 as Set>::IdxRaw<'d>;
 
     // data
@@ -31,11 +31,11 @@ fn p1_at_cint() {
     for (i, _) in iter.enumerate() {
         let exp = par_data[set_data[i]];
         for sca in sca1 {
-            assert_eq!(exp, sca.data().eval::<V>());
+            assert_eq!(exp, sca.data().eval());
         }
         let exp = par_data[set_data[2]];
         for sca in sca2 {
-            assert_eq!(exp, sca.data().eval::<V>());
+            assert_eq!(exp, sca.data().eval());
         }
     }
 }
@@ -43,12 +43,11 @@ fn p1_at_cint() {
 #[test]
 fn p1_at_cstr() {
     type I0 = SetCatStr;
-    type V = ScaNum;
     type El<'d> = <I0 as Set>::IdxRaw<'d>;
 
     // data
     let set_data: Vec<_> = [0, 2, 3].map(|x| x.to_string()).into_iter().collect();
-    let par_data: HashMap<_, _> = [1.0, 2.0, 7.0, 9.0]
+    let par_data: HashMap<_, _> = [1, 2, 7, 9]
         .into_iter()
         .enumerate()
         .map(|(i, v)| (i.to_string(), v))
@@ -58,7 +57,7 @@ fn p1_at_cstr() {
     let m = Model::default();
     let set = m.cat_set_str();
     let idx = set.idx();
-    let par = m.par1_num(set);
+    let par = m.par1_int(set);
     let sca1 = [par.at(idx), par[idx]];
     let sca2 = [par.at(3.to_string()), par["3"], par[&set_data[2]]];
 
@@ -72,11 +71,11 @@ fn p1_at_cstr() {
     for (i, _) in iter.enumerate() {
         let exp = par_data[&set_data[i]];
         for sca in sca1 {
-            assert_eq!(exp, sca.data().eval::<V>());
+            assert_eq!(exp, sca.data().eval_int());
         }
         let exp = par_data[&set_data[2]];
         for sca in sca2 {
-            assert_eq!(exp, sca.data().eval::<V>());
+            assert_eq!(exp, sca.data().eval_int());
         }
     }
 }
@@ -84,7 +83,6 @@ fn p1_at_cstr() {
 #[test]
 fn p1_at_ord() {
     type I0 = SetOrd;
-    type V = ScaNum;
     type El<'d> = <I0 as Set>::IdxRaw<'d>;
 
     // data
@@ -110,11 +108,11 @@ fn p1_at_ord() {
     for (i, _) in iter.enumerate() {
         let exp = par_data(set_data[i]);
         for sca in sca1 {
-            assert_eq!(exp, sca.data().eval::<V>());
+            assert_eq!(exp, sca.data().eval());
         }
         let exp = par_data(set_data[2]);
         for sca in sca2 {
-            assert_eq!(exp, sca.data().eval::<V>());
+            assert_eq!(exp, sca.data().eval());
         }
     }
 }
