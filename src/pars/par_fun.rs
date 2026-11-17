@@ -58,7 +58,7 @@ impl<'d> ParFun<'d> {
 
     #[inline(always)]
     pub fn d1_at<I0: Set>(&self, i0: I0::IdxRaw<'d>) -> f64 {
-        let fun = I0::unpack_p1_fun_v(unsafe { &self.data.d1 });
+        let fun = I0::unpack_p1_fun(unsafe { &self.data.d1 });
         fun(i0)
     }
 
@@ -80,5 +80,17 @@ impl<'d> ParFun<'d> {
             d2: UFunP2::create::<I0, I1>(fun),
         });
         Self::new(val_typ, idx_types, data)
+    }
+
+    #[inline(always)]
+    pub fn d2_at<I0: Set, I1: Set>(&self, i0: I0::IdxRaw<'d>, i1: I1::IdxRaw<'d>) -> f64 {
+        let fun = I0::unpack_p2_fun_v::<I1>(unsafe { &self.data.d2 });
+        fun(i0, i1)
+    }
+
+    #[inline(always)]
+    pub fn d2_at_int<I0: Set, I1: Set>(&self, i0: I0::IdxRaw<'d>, i1: I1::IdxRaw<'d>) -> i64 {
+        debug_assert_eq!(self.val_typ, ValTyp::Int);
+        round_f64(self.d2_at::<I0, I1>(i0, i1))
     }
 }
