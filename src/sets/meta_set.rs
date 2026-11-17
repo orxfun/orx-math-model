@@ -1,6 +1,6 @@
 use crate::idxs::{DIdx, IdxCatInt, IdxCatStr, IdxOrd, UIdxVal};
 use crate::pars::{IntParD1, IntParD2, NumParD1, NumParD2, UFunP1, UFunP2, UFunP2_I0, FP1, FP2};
-use crate::scalars::num::{DNum, Num, Val, ValNum};
+use crate::scalars::num::{DNum, Num, Val, ValInt, ValNum};
 use crate::scalars::Int;
 use crate::sets::into_idx::IdxAny;
 // use crate::pars::{ParD1, ParD2, UFunP1_V, UFunP2_V, UFunP2_V_I0, FP1, FP2};
@@ -60,18 +60,18 @@ pub trait Set: Clone + Copy + 'static {
 
     fn unpack_p1_fun<'a, 'd>(u: &'a UFunP1<'d>) -> &'a FP1<'d, Self>;
 
-    fn num_p1_at<'m, 'd, V: Val>(
+    fn num_p1_at<'m, 'd>(
         par: NumParD1<'m, 'd, Self>,
         i0: impl Into<Self::IdxAny<'m, 'd>>,
-    ) -> V::Sym<'m, 'd> {
-        i0.into().p1_at::<V>(par.m(), par.data().fun_ptr())
+    ) -> Num<'m, 'd> {
+        i0.into().p1_at::<ValNum>(par.m(), par.data().fun_ptr())
     }
 
-    fn int_p1_at<'m, 'd, V: Val>(
+    fn int_p1_at<'m, 'd>(
         par: IntParD1<'m, 'd, Self>,
         i0: impl Into<Self::IdxAny<'m, 'd>>,
-    ) -> V::Sym<'m, 'd> {
-        i0.into().p1_at::<V>(par.m(), par.data().fun_ptr())
+    ) -> Int<'m, 'd> {
+        i0.into().p1_at::<ValInt>(par.m(), par.data().fun_ptr())
     }
 
     // p2
@@ -80,22 +80,22 @@ pub trait Set: Clone + Copy + 'static {
 
     fn unpack_p2_fun_v<'a, 'd, I1: Set>(u: &'a UFunP2<'d>) -> &'a FP2<'d, Self, I1>;
 
-    fn num_p2_at<'m, 'd, V: Val, I1: Set>(
+    fn num_p2_at<'m, 'd, I1: Set>(
         par: NumParD2<'m, 'd, Self, I1>,
         i0: impl Into<Self::IdxAny<'m, 'd>>,
         i1: impl Into<I1::IdxAny<'m, 'd>>,
-    ) -> V::Sym<'m, 'd> {
+    ) -> Num<'m, 'd> {
         i0.into()
-            .p2_at::<V, I1::IdxAny<'m, 'd>>(par.m(), par.data().fun_ptr(), i1.into())
+            .p2_at::<ValNum, I1::IdxAny<'m, 'd>>(par.m(), par.data().fun_ptr(), i1.into())
     }
 
-    fn int_p2_at<'m, 'd, V: Val, I1: Set>(
+    fn int_p2_at<'m, 'd, I1: Set>(
         par: IntParD2<'m, 'd, Self, I1>,
         i0: impl Into<Self::IdxAny<'m, 'd>>,
         i1: impl Into<I1::IdxAny<'m, 'd>>,
-    ) -> V::Sym<'m, 'd> {
+    ) -> Int<'m, 'd> {
         i0.into()
-            .p2_at::<V, I1::IdxAny<'m, 'd>>(par.m(), par.data().fun_ptr(), i1.into())
+            .p2_at::<ValInt, I1::IdxAny<'m, 'd>>(par.m(), par.data().fun_ptr(), i1.into())
     }
 
     // // v1

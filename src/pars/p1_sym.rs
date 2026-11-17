@@ -1,4 +1,5 @@
 use crate::pars::DPars;
+use crate::scalars::{Int, Num};
 use crate::{AsF64, Res, Set, SymWrap, Symbol, ValTyp};
 use core::marker::PhantomData;
 
@@ -19,6 +20,10 @@ impl<'m, 'd, I0: Set> IntParD1<'m, 'd, I0> {
     pub fn bind<V: AsF64>(self, fun: impl Fn(I0::IdxRaw<'d>) -> V + 'd) -> Res {
         self.data().d1_bind::<V, I0>(ValTyp::Int, fun)
     }
+
+    pub fn at(self, i0: impl Into<I0::IdxAny<'m, 'd>>) -> Int<'m, 'd> {
+        I0::int_p1_at(self, i0)
+    }
 }
 
 // num
@@ -37,5 +42,9 @@ impl<'m, 'd, I0: Set> SymWrap<'m, 'd> for NumParD1<'m, 'd, I0> {
 impl<'m, 'd, I0: Set> NumParD1<'m, 'd, I0> {
     pub fn bind<V: AsF64>(self, fun: impl Fn(I0::IdxRaw<'d>) -> V + 'd) -> Res {
         self.data().d1_bind::<V, I0>(ValTyp::Num, fun)
+    }
+
+    pub fn at(self, i0: impl Into<I0::IdxAny<'m, 'd>>) -> Num<'m, 'd> {
+        I0::num_p1_at(self, i0)
     }
 }
