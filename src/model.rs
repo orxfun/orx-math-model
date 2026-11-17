@@ -228,14 +228,14 @@ impl<'d> Model<'d> {
     //     Num::new(Symbol::new(self, self.sca_bag.one))
     // }
 
-    pub(crate) fn num<'m, V: AsF64>(&'m self, fun: impl Fn() -> V + 'd) -> Num<'m, 'd> {
-        let data = DNum::new_num(fun);
+    pub(crate) fn num<'m>(&'m self, data: DNum<'d>) -> Num<'m, 'd> {
+        debug_assert_eq!(data.typ, ValTyp::Num);
         let el = self.num_bag.push(data);
         Num::new(Symbol::new(self, el))
     }
 
-    pub(crate) fn int<'m, V: AsI64>(&'m self, fun: impl Fn() -> V + 'd) -> Int<'m, 'd> {
-        let data = DNum::new_int(fun);
+    pub(crate) fn int<'m>(&'m self, data: DNum<'d>) -> Int<'m, 'd> {
+        debug_assert_eq!(data.typ, ValTyp::Int);
         let el = self.num_bag.push(data);
         Int::new(Symbol::new(self, el))
     }

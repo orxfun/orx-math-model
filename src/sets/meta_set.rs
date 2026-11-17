@@ -1,10 +1,11 @@
 use crate::idxs::{DIdx, IdxCatInt, IdxCatStr, IdxOrd, UIdxVal};
-use crate::pars::{UFunP1, UFunP2, UFunP2_I0, FP1, FP2};
+use crate::pars::{NumParD1, UFunP1, UFunP2, UFunP2_I0, FP1, FP2};
+use crate::scalars::num::{DNum, Num};
 // use crate::pars::{ParD1, ParD2, UFunP1_V, UFunP2_V, UFunP2_V_I0, FP1, FP2};
 // use crate::scalars::{FVar1, FVar2, UFunV1, UFunV2, UFunV2_I0};
-use crate::sets::{CatInt, CatStr, DSet, FSet, Ord, UFunSet};
+use crate::sets::{CatInt, CatStr, DSet, FSet, IndexCatInt, IndexCatStr, IndexOrd, Ord, UFunSet};
 // use crate::vars::{VarD1, VarD2};
-use crate::{Model, Ptr, SetSym, SymWrap, Symbol};
+use crate::{Model, Ptr, SetSym, SymWrap, Symbol, ValTyp};
 // use crate::{ScaInt, Val, ValTyp, Var};
 use alloc::boxed::Box;
 use alloc::string::{String, ToString};
@@ -43,7 +44,7 @@ pub trait Set: Clone + Copy + 'static {
 
     type IdxSym<'m, 'd: 'm>;
 
-    // type IdxAny<'m, 'd: 'm>;
+    type IdxAny<'m, 'd: 'm>;
 
     fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d>;
 
@@ -57,10 +58,10 @@ pub trait Set: Clone + Copy + 'static {
 
     fn unpack_p1_fun<'a, 'd>(u: &'a UFunP1<'d>) -> &'a FP1<'d, Self>;
 
-    // fn p1_at<'m, 'd, V: Val>(
-    //     par: ParD1<'m, 'd, V, Self>,
-    //     i0: impl Into<Self::IdxAny<'m, 'd>>,
-    // ) -> V::Sym<'m, 'd>;
+    fn num_p1_at<'m, 'd>(
+        par: NumParD1<'m, 'd, Self>,
+        i0: impl Into<Self::IdxAny<'m, 'd>>,
+    ) -> Num<'m, 'd>;
 
     // p2
 
@@ -144,7 +145,7 @@ impl Set for SetCatInt {
 
     type IdxSym<'m, 'd: 'm> = IdxCatInt<'m, 'd>;
 
-    // type IdxAny<'m, 'd: 'm> = IndexCatInt<'m, 'd>;
+    type IdxAny<'m, 'd: 'm> = IndexCatInt<'m, 'd>;
 
     #[inline(always)]
     fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d> {
@@ -169,6 +170,27 @@ impl Set for SetCatInt {
     #[inline(always)]
     fn unpack_p1_fun<'a, 'd>(u: &'a UFunP1<'d>) -> &'a FP1<'d, Self> {
         unsafe { &u.cint }
+    }
+
+    fn num_p1_at<'m, 'd>(
+        par: NumParD1<'m, 'd, Self>,
+        i0: impl Into<Self::IdxAny<'m, 'd>>,
+    ) -> Num<'m, 'd> {
+        let (m, par) = (par.m(), par.data().fun_ptr());
+        match i0.into() {
+            IndexCatInt::Idx(i0) => {
+                let i0 = i0.ptr();
+                let fun = move || {
+                    let i0 = i0.get().read::<Self>();
+                    par.get().d1_at::<Self>(i0)
+                };
+                m.num(DNum::new(ValTyp::Num, Box::new(fun)))
+            }
+            IndexCatInt::ConUsize(i0) => {
+                let fun = move || par.get().d1_at::<Self>(i0);
+                m.num(DNum::new(ValTyp::Num, Box::new(fun)))
+            }
+        }
     }
 
     // fn p1_at<'m, 'd, V: Val>(
@@ -347,7 +369,7 @@ impl Set for SetCatStr {
 
     type IdxSym<'m, 'd: 'm> = IdxCatStr<'m, 'd>;
 
-    // type IdxAny<'m, 'd: 'm> = IndexCatStr<'m, 'd>;
+    type IdxAny<'m, 'd: 'm> = IndexCatStr<'m, 'd>;
 
     #[inline(always)]
     fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d> {
@@ -372,6 +394,13 @@ impl Set for SetCatStr {
     #[inline(always)]
     fn unpack_p1_fun<'a, 'd>(u: &'a UFunP1<'d>) -> &'a FP1<'d, Self> {
         unsafe { &u.cstr }
+    }
+
+    fn num_p1_at<'m, 'd>(
+        par: NumParD1<'m, 'd, Self>,
+        i0: impl Into<Self::IdxAny<'m, 'd>>,
+    ) -> Num<'m, 'd> {
+        todo!()
     }
 
     // fn p1_at<'m, 'd, V: Val>(
@@ -618,7 +647,7 @@ impl Set for SetOrd {
 
     type IdxSym<'m, 'd: 'm> = IdxOrd<'m, 'd>;
 
-    // type IdxAny<'m, 'd: 'm> = IndexOrd<'m, 'd>;
+    type IdxAny<'m, 'd: 'm> = IndexOrd<'m, 'd>;
 
     #[inline(always)]
     fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d> {
@@ -643,6 +672,13 @@ impl Set for SetOrd {
     #[inline(always)]
     fn unpack_p1_fun<'a, 'd>(u: &'a UFunP1<'d>) -> &'a FP1<'d, Self> {
         unsafe { &u.ord }
+    }
+
+    fn num_p1_at<'m, 'd>(
+        par: NumParD1<'m, 'd, Self>,
+        i0: impl Into<Self::IdxAny<'m, 'd>>,
+    ) -> Num<'m, 'd> {
+        todo!()
     }
 
     // fn p1_at<'m, 'd, V: Val>(

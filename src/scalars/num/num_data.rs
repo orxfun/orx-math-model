@@ -6,7 +6,7 @@ use core::mem::{transmute, ManuallyDrop};
 
 #[derive(derive_new::new)]
 pub struct DNum<'d> {
-    typ: ValTyp,
+    pub typ: ValTyp,
     fun: FNum<'d>,
 }
 
