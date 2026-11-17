@@ -35,9 +35,7 @@ where
     type Output = Int<'m, 'd>;
 
     fn index(&self, i0: Idx0) -> &Self::Output {
-        let val = self.at(i0);
-        // self.0.m.sym_ref::<V>(val)
-        todo!()
+        self.m().int_ref(self.at(i0))
     }
 }
 
@@ -61,5 +59,17 @@ impl<'m, 'd, I0: Set> NumParD1<'m, 'd, I0> {
 
     pub fn at(self, i0: impl Into<I0::IdxAny<'m, 'd>>) -> Num<'m, 'd> {
         I0::num_p1_at(self, i0)
+    }
+}
+
+impl<'m, 'd, I0, Idx0> Index<Idx0> for NumParD1<'m, 'd, I0>
+where
+    I0: Set,
+    Idx0: Into<I0::IdxAny<'m, 'd>>,
+{
+    type Output = Num<'m, 'd>;
+
+    fn index(&self, i0: Idx0) -> &Self::Output {
+        self.m().num_ref(self.at(i0))
     }
 }

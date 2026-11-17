@@ -2,6 +2,7 @@ use crate::pars::DPars;
 use crate::scalars::{Int, Num};
 use crate::{AsF64, Res, Set, SymWrap, Symbol, ValTyp};
 use core::marker::PhantomData;
+use core::ops::Index;
 
 // int
 
@@ -30,6 +31,20 @@ impl<'m, 'd, I0: Set, I1: Set> IntParD2<'m, 'd, I0, I1> {
     }
 }
 
+impl<'m, 'd, I0, I1, Idx0, Idx1> Index<(Idx0, Idx1)> for IntParD2<'m, 'd, I0, I1>
+where
+    I0: Set,
+    I1: Set,
+    Idx0: Into<I0::IdxAny<'m, 'd>>,
+    Idx1: Into<I1::IdxAny<'m, 'd>>,
+{
+    type Output = Int<'m, 'd>;
+
+    fn index(&self, (i0, i1): (Idx0, Idx1)) -> &Self::Output {
+        self.m().int_ref(self.at(i0, i1))
+    }
+}
+
 // num
 
 #[derive(derive_new::new, Clone, Copy)]
@@ -54,5 +69,19 @@ impl<'m, 'd, I0: Set, I1: Set> NumParD2<'m, 'd, I0, I1> {
         i1: impl Into<I1::IdxAny<'m, 'd>>,
     ) -> Num<'m, 'd> {
         I0::num_p2_at::<I1>(self, i0, i1)
+    }
+}
+
+impl<'m, 'd, I0, I1, Idx0, Idx1> Index<(Idx0, Idx1)> for NumParD2<'m, 'd, I0, I1>
+where
+    I0: Set,
+    I1: Set,
+    Idx0: Into<I0::IdxAny<'m, 'd>>,
+    Idx1: Into<I1::IdxAny<'m, 'd>>,
+{
+    type Output = Num<'m, 'd>;
+
+    fn index(&self, (i0, i1): (Idx0, Idx1)) -> &Self::Output {
+        self.m().num_ref(self.at(i0, i1))
     }
 }

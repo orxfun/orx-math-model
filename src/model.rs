@@ -6,6 +6,7 @@ use crate::scalars::num::{DNum, Int, Num, Val};
 // use crate::scalars::{DSca, FVar1, FVar2, ScaBag};
 use crate::sets::{CatInt, CatStr, DSet, FunSet, Ord, SetBag, SetFunBag};
 use crate::slot::{SlotStates, State};
+use crate::sym_ref::SymRef;
 // use crate::sym_refs::SymRefBag;
 // use crate::vars::{DVars, VarBag, VarD1, VarD2, VarType};
 use crate::{
@@ -41,7 +42,7 @@ pub struct Model<'d> {
     num_bag: Bag<DNum<'d>>,
     // sca_bag: ManuallyDrop<ScaBag<'d>>,
     con_val_bag: Bag<DConVal>,
-    // sym_ref_bag: SymRefBag<'d>,
+    sym_ref_bag: Bag<SymRef<'d>>,
     // expr
     // lin_exp_bag: LinExpBag<'d>,
 }
@@ -265,9 +266,15 @@ impl<'d> Model<'d> {
         Slot::new(self, el).ptr()
     }
 
-    // pub(crate) fn sym_ref<'m, S: Sca>(&'m self, sym: S::Sym<'m, 'd>) -> &'m S::Sym<'m, 'd> {
-    //     self.sym_ref_bag.push::<S>(sym)
-    // }
+    pub(crate) fn int_ref<'m>(&'m self, sym: Int<'m, 'd>) -> &'m Int<'m, 'd> {
+        let el = self.sym_ref_bag.push(SymRef::int(sym));
+        unsafe { el.get() }.get_int()
+    }
+
+    pub(crate) fn num_ref<'m>(&'m self, sym: Num<'m, 'd>) -> &'m Num<'m, 'd> {
+        let el = self.sym_ref_bag.push(SymRef::num(sym));
+        unsafe { el.get() }.get_num()
+    }
 
     // // expr
     // pub(crate) fn lin_exp<'m>(&'m self, data: DLinExpr<'d>) -> LinExpr<'m, 'd> {
