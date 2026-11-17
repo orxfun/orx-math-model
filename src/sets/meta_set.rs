@@ -1,7 +1,8 @@
 use crate::idxs::{DIdx, IdxCatInt, IdxCatStr, IdxOrd, UIdxVal};
 use crate::pars::{NumParD1, UFunP1, UFunP2, UFunP2_I0, FP1, FP2};
-use crate::scalars::num::{DNum, Num, ValNum};
+use crate::scalars::num::{DNum, Num, Val, ValNum};
 use crate::scalars::Int;
+use crate::sets::into_idx::IndexAny;
 // use crate::pars::{ParD1, ParD2, UFunP1_V, UFunP2_V, UFunP2_V_I0, FP1, FP2};
 // use crate::scalars::{FVar1, FVar2, UFunV1, UFunV2, UFunV2_I0};
 use crate::sets::{CatInt, CatStr, DSet, FSet, IndexCatInt, IndexCatStr, IndexOrd, Ord, UFunSet};
@@ -45,7 +46,7 @@ pub trait Set: Clone + Copy + 'static {
 
     type IdxSym<'m, 'd: 'm>;
 
-    type IdxAny<'m, 'd: 'm>;
+    type IdxAny<'m, 'd: 'm>: IndexAny<'m, 'd, Set = Self>;
 
     fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d>;
 
@@ -59,10 +60,12 @@ pub trait Set: Clone + Copy + 'static {
 
     fn unpack_p1_fun<'a, 'd>(u: &'a UFunP1<'d>) -> &'a FP1<'d, Self>;
 
-    fn num_p1_at<'m, 'd>(
+    fn p1_at<'m, 'd, V: Val>(
         par: NumParD1<'m, 'd, Self>,
         i0: impl Into<Self::IdxAny<'m, 'd>>,
-    ) -> Num<'m, 'd>;
+    ) -> V::Sym<'m, 'd> {
+        i0.into().p1_at2::<V>(par.m(), par.data().fun_ptr())
+    }
 
     // p2
 
@@ -171,27 +174,6 @@ impl Set for SetCatInt {
     #[inline(always)]
     fn unpack_p1_fun<'a, 'd>(u: &'a UFunP1<'d>) -> &'a FP1<'d, Self> {
         unsafe { &u.cint }
-    }
-
-    fn num_p1_at<'m, 'd>(
-        par: NumParD1<'m, 'd, Self>,
-        i0: impl Into<Self::IdxAny<'m, 'd>>,
-    ) -> Num<'m, 'd> {
-        let (m, par) = (par.m(), par.data().fun_ptr());
-        match i0.into() {
-            IndexCatInt::Idx(i0) => {
-                let i0 = i0.ptr();
-                let fun = move || {
-                    let i0 = i0.get().read::<Self>();
-                    par.get().d1_at::<Self>(i0)
-                };
-                m.val::<ValNum>(DNum::new(ValTyp::Num, Box::new(fun)))
-            }
-            IndexCatInt::ConUsize(i0) => {
-                let fun = move || par.get().d1_at::<Self>(i0);
-                m.val::<ValNum>(DNum::new(ValTyp::Num, Box::new(fun)))
-            }
-        }
     }
 
     // fn p1_at<'m, 'd, V: Val>(
@@ -397,11 +379,26 @@ impl Set for SetCatStr {
         unsafe { &u.cstr }
     }
 
-    fn num_p1_at<'m, 'd>(
+    fn p1_at<'m, 'd, V: Val>(
         par: NumParD1<'m, 'd, Self>,
         i0: impl Into<Self::IdxAny<'m, 'd>>,
-    ) -> Num<'m, 'd> {
-        todo!()
+    ) -> V::Sym<'m, 'd> {
+        let (m, par) = (par.m(), par.data().fun_ptr());
+        match i0.into() {
+            IndexCatStr::Idx(i0) => {
+                let i0 = i0.ptr();
+                let fun = move || {
+                    let i0 = i0.get().read::<Self>();
+                    par.get().d1_at::<Self>(i0)
+                };
+                m.val::<V>(DNum::new(V::typ(), Box::new(fun)))
+            }
+            IndexCatStr::ConStringRef(i0) => {
+                let fun = move || par.get().d1_at::<Self>(i0);
+                m.val::<V>(DNum::new(V::typ(), Box::new(fun)))
+            }
+            _ => todo!(),
+        }
     }
 
     // fn p1_at<'m, 'd, V: Val>(
@@ -675,10 +672,10 @@ impl Set for SetOrd {
         unsafe { &u.ord }
     }
 
-    fn num_p1_at<'m, 'd>(
+    fn p1_at<'m, 'd, V: Val>(
         par: NumParD1<'m, 'd, Self>,
         i0: impl Into<Self::IdxAny<'m, 'd>>,
-    ) -> Num<'m, 'd> {
+    ) -> V::Sym<'m, 'd> {
         todo!()
     }
 
