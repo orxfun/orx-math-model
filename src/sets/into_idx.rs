@@ -113,7 +113,30 @@ impl<'m, 'd> IdxAny<'m, 'd> for IndexCatStr<'m, 'd> {
     // p1
 
     fn p1_at<V: Val>(self, m: &'m Model<'d>, par: Ptr<'d, ParFun<'d>>) -> V::Sym<'m, 'd> {
-        todo!()
+        match self {
+            Self::Idx(i0) => {
+                let i0 = i0.ptr();
+                let fun = move || {
+                    let i0 = i0.get().read::<Self::Set>();
+                    par.get().d1_at::<Self::Set>(i0)
+                };
+                m.val::<V>(DNum::new(V::typ(), Box::new(fun)))
+            }
+            Self::ConStringRef(i0) => {
+                let fun = move || par.get().d1_at::<Self::Set>(i0);
+                m.val::<V>(DNum::new(V::typ(), Box::new(fun)))
+            }
+            Self::ConString(i0) => {
+                let i0 = m.con_val(i0);
+                let fun = move || par.get().d1_at::<Self::Set>(i0.get().get());
+                m.val::<V>(DNum::new(V::typ(), Box::new(fun)))
+            }
+            Self::ConStr(i0) => {
+                let i0 = m.con_val(i0.to_string());
+                let fun = move || par.get().d1_at::<Self::Set>(i0.get().get());
+                m.val::<V>(DNum::new(V::typ(), Box::new(fun)))
+            }
+        }
     }
 
     // p2
@@ -192,7 +215,36 @@ impl<'m, 'd> IdxAny<'m, 'd> for IndexOrd<'m, 'd> {
     // p1
 
     fn p1_at<V: Val>(self, m: &'m Model<'d>, par: Ptr<'d, ParFun<'d>>) -> V::Sym<'m, 'd> {
-        todo!()
+        match self {
+            Self::Idx(i0) => {
+                let i0 = i0.ptr();
+                let fun = move || {
+                    let i0 = i0.get().read::<Self::Set>();
+                    par.get().d1_at::<Self::Set>(i0)
+                };
+                m.val::<V>(DNum::new(V::typ(), Box::new(fun)))
+            }
+            Self::Int(i0) => {
+                let i0 = i0.ptr();
+                let fun = move || {
+                    let i0 = i0.get().eval_int();
+                    par.get().d1_at::<Self::Set>(i0)
+                };
+                m.val::<V>(DNum::new(V::typ(), Box::new(fun)))
+            }
+            Self::ConUsize(i0) => {
+                let fun = move || par.get().d1_at::<Self::Set>(i0 as i64);
+                m.val::<V>(DNum::new(V::typ(), Box::new(fun)))
+            }
+            Self::ConI64(i0) => {
+                let fun = move || par.get().d1_at::<Self::Set>(i0 as i64);
+                m.val::<V>(DNum::new(V::typ(), Box::new(fun)))
+            }
+            Self::ConI32(i0) => {
+                let fun = move || par.get().d1_at::<Self::Set>(i0 as i64);
+                m.val::<V>(DNum::new(V::typ(), Box::new(fun)))
+            }
+        }
     }
 
     // p2
