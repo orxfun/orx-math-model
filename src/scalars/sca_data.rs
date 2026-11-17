@@ -1,8 +1,10 @@
 use crate::scalars::var::{FVar1, FVar2, Idx1, Idx2};
 use crate::scalars::{DVal, DVar, FVal, ScaTyp, Val, ValTyp};
 use crate::sets::FunSet;
-use crate::{Ptr, Set, VarType};
-use core::mem::ManuallyDrop;
+use crate::vars::DVars;
+use crate::{Ptr, ScaNum, Set, VarType};
+use alloc::boxed::Box;
+use core::mem::{transmute, ManuallyDrop};
 
 #[repr(C)]
 pub union USca<'d> {
@@ -11,8 +13,8 @@ pub union USca<'d> {
 }
 
 pub struct DSca<'d> {
-    pub typ: ScaTyp,
-    pub data: USca<'d>,
+    typ: ScaTyp,
+    data: USca<'d>,
 }
 
 impl<'d> Drop for DSca<'d> {
@@ -27,6 +29,18 @@ impl<'d> Drop for DSca<'d> {
 }
 
 impl<'d> DSca<'d> {
+    pub fn zero<V: Val>() -> Self {
+        Self::new_val::<V>(Box::new(|| Default::default()))
+    }
+
+    pub fn one() -> Self {
+        Self::new_val::<ScaNum>(Box::new(|| 1.0))
+    }
+
+    pub fn minus_one<V: Val>() -> Self {
+        Self::new_val::<V>(Box::new(|| V::minus_one()))
+    }
+
     pub fn new_val<V: Val>(fun: FVal<'d, V>) -> Self {
         let typ = V::typ();
         let data = USca {
@@ -35,28 +49,30 @@ impl<'d> DSca<'d> {
         Self { typ, data }
     }
 
-    pub fn new_var_d1<I0: Set>(typ: VarType, i0: Ptr<'d, FunSet<'d>>, fun: FVar1<'d, I0>) -> Self {
+    pub fn new_var_d1<I0: Set>(parent: Ptr<'d, DVars<'d>>, fun: FVar1<'d, I0>) -> Self {
         let data = USca {
-            var: ManuallyDrop::new(DVar::create_d1::<I0>(typ, i0, fun)),
+            var: ManuallyDrop::new(DVar::create_d1::<I0>(parent, fun)),
         };
         let typ = ScaTyp::Var;
         Self { typ, data }
     }
 
     pub fn new_var_d2<I0: Set, I1: Set>(
-        typ: VarType,
-        i0: Ptr<'d, FunSet<'d>>,
-        i1: Ptr<'d, FunSet<'d>>,
+        parent: Ptr<'d, DVars<'d>>,
         fun: FVar2<'d, I0, I1>,
     ) -> Self {
         let data = USca {
-            var: ManuallyDrop::new(DVar::create_d2::<I0, I1>(typ, i0, i1, fun)),
+            var: ManuallyDrop::new(DVar::create_d2::<I0, I1>(parent, fun)),
         };
         let typ = ScaTyp::Var;
         Self { typ, data }
     }
 
     // get
+
+    pub fn data(&self) -> &USca<'d> {
+        &self.data
+    }
 
     pub fn var_indices_d1<I0: Set>(&self) -> Idx1<'d, I0> {
         unsafe { &self.data.var }.indices_d1::<I0>()
@@ -71,6 +87,6 @@ impl<'d> DSca<'d> {
     }
 
     pub fn val_typ(&self) -> ValTyp {
-        unsafe { &self.data.val }.typ
+        unsafe { &self.data.val }.typ()
     }
 }

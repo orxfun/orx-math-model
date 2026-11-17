@@ -9,13 +9,17 @@ use crate::{Model, Symbol};
 pub struct Int<'m, 'd>(Symbol<'m, 'd, DSca<'d>>);
 
 impl<'m, 'd> Int<'m, 'd> {
+    pub(crate) fn m(&self) -> &'m Model<'d> {
+        self.0.m
+    }
+
     pub(crate) fn sym(&self) -> Symbol<'m, 'd, DSca<'d>> {
         self.0
     }
 
     #[cfg(test)]
     pub(crate) fn data(&self) -> &DVal<'d> {
-        unsafe { &self.0.el.get().data.val }
+        unsafe { &self.0.el.get().data().val }
     }
 
     pub(crate) fn ptr(&self) -> Ptr<'d, DSca<'d>> {
@@ -29,13 +33,17 @@ impl<'m, 'd> Int<'m, 'd> {
 pub struct Num<'m, 'd>(Symbol<'m, 'd, DSca<'d>>);
 
 impl<'m, 'd> Num<'m, 'd> {
+    pub(crate) fn m(&self) -> &'m Model<'d> {
+        self.0.m
+    }
+
     pub(crate) fn sym(&self) -> Symbol<'m, 'd, DSca<'d>> {
         self.0
     }
 
     #[cfg(test)]
     pub(crate) fn data(&self) -> &DVal<'d> {
-        unsafe { &self.0.el.get().data.val }
+        unsafe { &self.0.el.get().data().val }
     }
 
     pub(crate) fn ptr(&self) -> Ptr<'d, DSca<'d>> {

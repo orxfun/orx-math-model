@@ -1,14 +1,15 @@
 use crate::con_vals::{ConVal, ConValBag, DConVal};
 use crate::idxs::{IdxBag, IdxValBag};
+use crate::lin_expr::{DLinExpr, LinExpBag, LinExpr};
 use crate::pars::{ParBag, ParD1, ParD2, ParFun, ParFunBag};
 use crate::scalars::{DSca, FVar1, FVar2, ScaBag};
 use crate::sets::{CatInt, CatStr, Ord, SetBag, SetFunBag};
 use crate::slot::{SlotStates, State};
 use crate::sym_refs::SymRefBag;
-use crate::vars::{VarBag, VarD1, VarD2, VarType, DV};
+use crate::vars::{DVars, VarBag, VarD1, VarD2, VarType};
 use crate::{
-    DimVec, Ptr, Res, ResValid, Sca, ScaInt, ScaNum, Set, SetCatInt, SetCatStr, SetOrd, SetSym,
-    Slot, Symbol, TConVal, Val, Var,
+    DimVec, Int, Num, Ptr, Res, ResValid, Sca, ScaInt, ScaNum, Set, SetCatInt, SetCatStr, SetOrd,
+    SetSym, Slot, Symbol, TConVal, Val, Var,
 };
 use alloc::boxed::Box;
 use core::mem::ManuallyDrop;
@@ -38,6 +39,9 @@ pub struct Model<'d> {
     sca_bag: ManuallyDrop<ScaBag<'d>>,
     con_val_bag: ConValBag,
     sym_ref_bag: SymRefBag<'d>,
+
+    // expr
+    lin_exp_bag: LinExpBag<'d>,
 }
 
 impl<'d> Drop for Model<'d> {
@@ -176,7 +180,7 @@ impl<'d> Model<'d> {
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
     {
         let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
-        let data = DV::new_d1(typ, s0_ptr);
+        let data = DVars::new_d1(typ, s0_ptr);
         let el = self.var_bag.push(data);
         VarD1::new(Symbol::new(self, el))
     }
@@ -195,12 +199,28 @@ impl<'d> Model<'d> {
     {
         let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
         let s1_ptr = <S1::Meta as Set>::set_ptr(s1);
-        let data = DV::new_d2(typ, s0_ptr, s1_ptr);
+        let data = DVars::new_d2(typ, s0_ptr, s1_ptr);
         let el = self.var_bag.push(data);
         VarD2::new(Symbol::new(self, el))
     }
 
     // scalars
+
+    pub(crate) fn one<'m>(&'m self) -> Num<'m, 'd> {
+        Num::new(Symbol::new(self, self.sca_bag.one))
+    }
+
+    pub(crate) fn minus_one_int<'m>(&'m self) -> Int<'m, 'd> {
+        Int::new(Symbol::new(self, self.sca_bag.minus_one_int))
+    }
+
+    pub(crate) fn zero_int<'m>(&'m self) -> Int<'m, 'd> {
+        Int::new(Symbol::new(self, self.sca_bag.zero_int))
+    }
+
+    pub(crate) fn zero_num<'m>(&'m self) -> Num<'m, 'd> {
+        Num::new(Symbol::new(self, self.sca_bag.one))
+    }
 
     pub(crate) fn val<'m, V: Val>(&'m self, fun: impl Fn() -> V::Raw + 'd) -> V::Sym<'m, 'd> {
         let fun: Box<dyn Fn() -> <V as Val>::Raw + 'd> = Box::new(fun);
@@ -214,9 +234,8 @@ impl<'d> Model<'d> {
         var: VarD1<'m, 'd, I0>,
         fun: FVar1<'d, I0>,
     ) -> Var<'m, 'd> {
-        let var = var.data();
-        let i0 = var.set_ptr(0);
-        let data = DSca::new_var_d1::<I0>(var.typ(), i0, fun);
+        let parent = var.data_ptr();
+        let data = DSca::new_var_d1::<I0>(parent, fun);
         let el = self.sca_bag.push(data);
         Var::new(Symbol::new(self, el))
     }
@@ -226,9 +245,8 @@ impl<'d> Model<'d> {
         var: VarD2<'m, 'd, I0, I1>,
         fun: FVar2<'d, I0, I1>,
     ) -> Var<'m, 'd> {
-        let var = var.data();
-        let [i0, i1] = [0, 1].map(|i| var.set_ptr(i));
-        let data = DSca::new_var_d2::<I0, I1>(var.typ(), i0, i1, fun);
+        let parent = var.data_ptr();
+        let data = DSca::new_var_d2::<I0, I1>(parent, fun);
         let el = self.sca_bag.push(data);
         Var::new(Symbol::new(self, el))
     }
@@ -242,5 +260,10 @@ impl<'d> Model<'d> {
 
     pub(crate) fn sym_ref<'m, S: Sca>(&'m self, sym: S::Sym<'m, 'd>) -> &'m S::Sym<'m, 'd> {
         self.sym_ref_bag.push::<S>(sym)
+    }
+
+    // expr
+    pub(crate) fn lin_exp<'m>(&'m self, data: DLinExpr<'d>) -> LinExpr<'m, 'd> {
+        LinExpr::new(Symbol::new(self, self.lin_exp_bag.push(data)))
     }
 }
