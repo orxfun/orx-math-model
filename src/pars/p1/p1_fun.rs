@@ -1,4 +1,4 @@
-use crate::{Set, SetCatInt, SetCatStr, SetOrd, SetTyp};
+use crate::{Set, SetCatInt, SetCatStr, SetOrd, SetTyp, ValTyp};
 use alloc::boxed::Box;
 use core::mem::{transmute, ManuallyDrop};
 
@@ -51,6 +51,40 @@ impl<'d> UFunP1<'d> {
                 SetTyp::CatStr => ManuallyDrop::drop(&mut self.cstr),
                 SetTyp::Ord => ManuallyDrop::drop(&mut self.ord),
             }
+        }
+    }
+}
+
+// fun
+
+pub struct FunP1<'d> {
+    val_typ: ValTyp,
+    i0_typ: SetTyp,
+    data: ManuallyDrop<UFunP1<'d>>,
+}
+
+impl<'d> Drop for FunP1<'d> {
+    fn drop(&mut self) {
+        self.data.man_drop(self.i0_typ);
+    }
+}
+
+impl<'d> FunP1<'d> {
+    pub fn empty(val_typ: ValTyp, i0_typ: SetTyp) -> Self {
+        let data = UFunP1::empty(i0_typ);
+        Self {
+            val_typ,
+            i0_typ,
+            data,
+        }
+    }
+
+    pub fn create<I0: Set>(val_typ: ValTyp, fun: FP1<'d, I0>) -> Self {
+        let data = UFunP1::create::<I0>(fun);
+        Self {
+            val_typ,
+            i0_typ: I0::typ(),
+            data,
         }
     }
 }
