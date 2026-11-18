@@ -11,6 +11,8 @@ use alloc::string::{String, ToString};
 use core::mem::{transmute, ManuallyDrop};
 use orx_imp_vec::Elem;
 
+type Formatter<'a> = core::fmt::Formatter<'a>;
+
 // idx types
 
 pub type Idx1<'d, I0> = <I0 as Set>::IdxRaw<'d>;
@@ -65,6 +67,8 @@ pub trait Set: Clone + Copy + 'static {
     fn into_idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>>;
 
     fn into_idx_enum<'d>(raw: Self::IdxRaw<'d>) -> EIdx<'d>;
+
+    fn write_idx<'d>(f: &mut Formatter<'_>, raw: Self::IdxRaw<'d>) -> Result<(), core::fmt::Error>;
 
     // p1
 
@@ -195,6 +199,11 @@ impl Set for SetCatInt {
         EIdx::CatInt(raw)
     }
 
+    #[inline(always)]
+    fn write_idx<'d>(f: &mut Formatter<'_>, raw: Self::IdxRaw<'d>) -> Result<(), core::fmt::Error> {
+        write!(f, "{raw}")
+    }
+
     // p1
 
     #[inline(always)]
@@ -298,6 +307,11 @@ impl Set for SetCatStr {
         EIdx::CatStr(raw)
     }
 
+    #[inline(always)]
+    fn write_idx<'d>(f: &mut Formatter<'_>, raw: Self::IdxRaw<'d>) -> Result<(), core::fmt::Error> {
+        write!(f, "{raw}")
+    }
+
     // p1
 
     #[inline(always)]
@@ -399,6 +413,11 @@ impl Set for SetOrd {
     #[inline(always)]
     fn into_idx_enum<'d>(raw: Self::IdxRaw<'d>) -> EIdx<'d> {
         EIdx::Ord(raw)
+    }
+
+    #[inline(always)]
+    fn write_idx<'d>(f: &mut Formatter<'_>, raw: Self::IdxRaw<'d>) -> Result<(), core::fmt::Error> {
+        write!(f, "{raw}")
     }
 
     // p1

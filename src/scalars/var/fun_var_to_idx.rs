@@ -1,5 +1,5 @@
 use crate::{ConVec, EIdx, Idx1, Idx2, Set};
-use alloc::{boxed::Box, string::String};
+use alloc::boxed::Box;
 
 pub struct IdxEvalVec<'d>(ConVec<4, EIdx<'d>>);
 
