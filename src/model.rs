@@ -272,6 +272,11 @@ impl<'d> Model<'d> {
         unsafe { el.get() }.get_num()
     }
 
+    pub(crate) fn var_ref<'m>(&'m self, sym: Var<'m, 'd>) -> &'m Var<'m, 'd> {
+        let el = self.sym_ref_bag.push(SymRef::var(sym));
+        unsafe { el.get() }.get_var()
+    }
+
     // // expr
     // pub(crate) fn lin_exp<'m>(&'m self, data: DLinExpr<'d>) -> LinExpr<'m, 'd> {
     //     LinExpr::new(Symbol::new(self, self.lin_exp_bag.push(data)))
