@@ -17,28 +17,19 @@ impl<'d> DLinExpr<'d> {
 
     pub fn neg<'m>(&self, m: &'m Model<'d>) -> Self {
         let terms = self.terms.map(|x| x.neg(m));
-        todo!()
+        let constant = self.constant.map(|c| m.val_neg(c));
+        Self { terms, constant }
     }
 
     pub fn add<'m>(&self, m: &'m Model<'d>, rhs: &Self) -> Self {
         let terms = self.terms.merge(&rhs.terms);
-        let constant = match (self.constant, rhs.constant) {
-            (Some(c1), Some(c2)) => Some(m.val_add(c1, c2)),
-            (Some(c1), None) => Some(c1),
-            (None, Some(c2)) => Some(c2),
-            (None, None) => None,
-        };
+        let constant = con_add(m, self.constant, rhs.constant);
         Self { terms, constant }
     }
 
     pub fn sub<'m>(&self, m: &'m Model<'d>, rhs: &Self) -> Self {
-        let terms = self.terms.merge(&rhs.terms);
-        let constant = match (self.constant, rhs.constant) {
-            (Some(c1), Some(c2)) => Some(m.val_sub(c1, c2)),
-            (Some(c1), None) => Some(c1),
-            (None, Some(c2)) => Some(m.val_neg(c2)),
-            (None, None) => None,
-        };
+        let terms = self.terms.merge(&rhs.terms.map(|x| x.neg(m)));
+        let constant = con_sub(m, self.constant, rhs.constant);
         Self { terms, constant }
     }
 
@@ -47,15 +38,6 @@ impl<'d> DLinExpr<'d> {
     pub fn add_term(&self, term: DLinTerm<'d>) -> Self {
         let terms = self.terms.push(term);
         Self::new(terms, self.constant)
-    }
-
-    // var
-
-    pub fn sub_var<'m>(&self, m: &'m Model<'d>, var: Var<'m, 'd>) -> Self {
-        let term = DLinTerm::new(Some(m.minus_one().ptr()), var.ptr());
-        // let terms = self.terms.push(var);
-        // Self::new(terms, self.constant)
-        todo!()
     }
 
     // con
@@ -72,5 +54,27 @@ impl<'d> DLinExpr<'d> {
             Some(c) => Self::new(self.terms.clone(), Some(m.val_sub(c, constant))),
             None => Self::new(self.terms.clone(), Some(m.val_neg(constant))),
         }
+    }
+}
+
+// ops on Option<Ptr<'d, DNum<'d>>>
+
+type Con<'d> = Option<Ptr<'d, DNum<'d>>>;
+
+fn con_add<'m, 'd>(m: &'m Model<'d>, c1: Con<'d>, c2: Con<'d>) -> Con<'d> {
+    match (c1, c2) {
+        (Some(c1), Some(c2)) => Some(m.val_add(c1, c2)),
+        (Some(c1), None) => Some(c1),
+        (None, Some(c2)) => Some(c2),
+        (None, None) => None,
+    }
+}
+
+fn con_sub<'m, 'd>(m: &'m Model<'d>, c1: Con<'d>, c2: Con<'d>) -> Con<'d> {
+    match (c1, c2) {
+        (Some(c1), Some(c2)) => Some(m.val_sub(c1, c2)),
+        (Some(c1), None) => Some(c1),
+        (None, Some(c2)) => Some(m.val_neg(c2)),
+        (None, None) => None,
     }
 }

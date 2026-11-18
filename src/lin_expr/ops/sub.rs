@@ -29,7 +29,7 @@ impl<'m, 'd> Sub<LinExpr<'m, 'd>> for Var<'m, 'd> {
     type Output = LinExpr<'m, 'd>;
 
     fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
-        todo!()
+        LinExpr::from(self) + rhs.neg()
     }
 }
 
@@ -41,7 +41,7 @@ macro_rules! expr_minus_num {
             type Output = LinExpr<'m, 'd>;
 
             fn sub(self, rhs: $n) -> Self::Output {
-                let data = self.data().add_constant(self.m(), rhs.ptr());
+                let data = self.data().sub_constant(self.m(), rhs.ptr());
                 self.m().lin_exp(data)
             }
         }
@@ -50,7 +50,7 @@ macro_rules! expr_minus_num {
             type Output = LinExpr<'m, 'd>;
 
             fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
-                rhs + self
+                self + rhs.neg()
             }
         }
     };
@@ -77,8 +77,7 @@ macro_rules! expr_minus_con {
             type Output = LinExpr<'m, 'd>;
 
             fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
-                // rhs + self
-                todo!()
+                self + rhs.neg()
             }
         }
     };
