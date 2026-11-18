@@ -1,14 +1,14 @@
 use crate::con_vals::{ConVal, DConVal};
 use crate::idxs::{DIdx, IdxVal};
 use crate::pars::{DPars, IntParD1, IntParD2, NumParD1, NumParD2, ParFun};
-use crate::scalars::{DNum, Int, Num, Val, Var};
+use crate::scalars::{DNum, DVar, Int, Num, Val, Var};
 // use crate::lin_expr::{DLinExpr, LinExpBag, LinExpr};
 // use crate::pars::{ParBag, ParD1, ParD2, ParFun, ParFunBag};
 // use crate::scalars::{DSca, FVar1, FVar2, ScaBag};
 use crate::sets::{CatInt, CatStr, DSet, FunSet, Ord, SetBag, SetFunBag};
 use crate::slot::{SlotStates, State};
 use crate::sym_ref::SymRef;
-use crate::vars::{VarD1, VarD2, DV};
+use crate::vars::{DVars, VarD1, VarD2};
 // use crate::sym_refs::SymRefBag;
 // use crate::vars::{DVars, VarBag, VarD1, VarD2, VarType};
 use crate::{
@@ -34,7 +34,7 @@ pub struct Model<'d> {
     par_bag: Bag<DPars<'d>>,
 
     // vars
-    var_bag: Bag<DV<'d>>,
+    vars_bag: Bag<DVars<'d>>,
 
     // idxs
     idx_val_bag: Bag<IdxVal<'d>>,
@@ -42,7 +42,7 @@ pub struct Model<'d> {
 
     // vals
     num_bag: Bag<DNum<'d>>,
-    v_bag: Bag<DV<'d>>,
+    var_bag: Bag<DVar<'d>>,
     // sca_bag: ManuallyDrop<ScaBag<'d>>,
     con_val_bag: Bag<DConVal>,
     sym_ref_bag: Bag<SymRef<'d>>,
@@ -178,8 +178,8 @@ impl<'d> Model<'d> {
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
     {
         let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
-        let data = DV::new_d1(typ, s0_ptr);
-        let el = self.var_bag.push(data);
+        let data = DVars::new_d1(typ, s0_ptr);
+        let el = self.vars_bag.push(data);
         VarD1::new(Symbol::new(self, el))
     }
 
@@ -197,8 +197,8 @@ impl<'d> Model<'d> {
     {
         let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
         let s1_ptr = <S1::Meta as Set>::set_ptr(s1);
-        let data = DV::new_d2(typ, s0_ptr, s1_ptr);
-        let el = self.var_bag.push(data);
+        let data = DVars::new_d2(typ, s0_ptr, s1_ptr);
+        let el = self.vars_bag.push(data);
         VarD2::new(Symbol::new(self, el))
     }
 
@@ -226,8 +226,8 @@ impl<'d> Model<'d> {
         V::sym(Symbol::new(self, el))
     }
 
-    pub(crate) fn var<'m>(&'m self, data: DV<'d>) -> Var<'m, 'd> {
-        let el = self.v_bag.push(data);
+    pub(crate) fn var<'m>(&'m self, data: DVar<'d>) -> Var<'m, 'd> {
+        let el = self.var_bag.push(data);
         Var::new(Symbol::new(self, el))
     }
 

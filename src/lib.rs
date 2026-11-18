@@ -49,7 +49,7 @@ pub(crate) use scalars::{AsF64, AsI64, ValTyp};
 pub(crate) use sets::{Set, SetCatInt, SetCatStr, SetOrd, SetSym, SetTyp};
 pub(crate) use slot::{Ptr, PtrMut, Slot};
 pub(crate) use symbol::{SymWrap, Symbol};
-pub(crate) use vars::VarType;
+pub(crate) use vars::{Bounds, VarType};
 
 // #[cfg(test)]
 // pub(crate) use elements::ElementsIter;
