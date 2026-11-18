@@ -1,20 +1,26 @@
 use crate::scalars::num::{DNum, ValInt, ValNum};
-use crate::{Model, SymWrap};
+use crate::scalars::DVar;
+use crate::{Model, SetCatInt, SetCatStr, SetOrd, SymWrap, VarType};
+use alloc::boxed::Box;
+use alloc::string::ToString;
 
 #[test]
 fn var_from_var1() {
-    let data = [3.0, 42.0, 2.0];
+    macro_rules! test_i0 {
+        ($s0:ty, $i0:expr) => {
+            // modeling
+            let m = Model::default();
+            let s0 = m.set::<$s0>();
+            let vard = m.var1(VarType::Binary, s0);
 
-    // modeling
-    let m = Model::default();
-    let v1 = m.val::<ValNum>(DNum::new_num(|| data[1]));
-    let v2 = m.val::<ValNum>(DNum::new_num(|| 42f32));
-    let v3 = m.val::<ValNum>(DNum::new_num(|| 42));
-    let v4 = m.val::<ValNum>(DNum::new_num(|| 42isize));
+            // running
+            let var = DVar::create_d1::<$s0>(vard.data_ptr(), Box::new(|| $i0));
+            assert_eq!(var.indices_d1::<$s0>(), $i0);
+        };
+    }
 
-    // running
-    assert_eq!(v1.data().eval(), 42.0);
-    assert_eq!(v2.data().eval(), 42.0);
-    assert_eq!(v3.data().eval(), 42.0);
-    assert_eq!(v4.data().eval(), 42.0);
+    let three = 3.to_string();
+    test_i0!(SetCatInt, 3);
+    test_i0!(SetCatStr, &three);
+    test_i0!(SetOrd, 3);
 }

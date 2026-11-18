@@ -78,7 +78,7 @@ impl<'d> Model<'d> {
         self.set::<SetOrd>()
     }
 
-    fn set<'m, S: Set>(&'m self) -> S::SetSym<'m, 'd> {
+    pub(crate) fn set<'m, S: Set>(&'m self) -> S::SetSym<'m, 'd> {
         let fun = FunSet::empty(S::typ());
         let fun_el = self.set_fun_bag.push(fun);
         let fun_slot = Slot::new(self, fun_el);
