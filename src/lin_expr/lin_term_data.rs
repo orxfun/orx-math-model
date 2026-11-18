@@ -11,8 +11,8 @@ pub enum Coef<'d> {
 
 #[derive(derive_new::new, Clone)]
 pub struct DLinTerm<'d> {
-    coef: Coef<'d>,
-    var: Ptr<'d, DVar<'d>>,
+    pub coef: Coef<'d>,
+    pub var: Ptr<'d, DVar<'d>>,
 }
 
 impl<'d> DLinTerm<'d> {
