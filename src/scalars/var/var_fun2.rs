@@ -65,13 +65,13 @@ pub union UFunV2<'d> {
 }
 
 #[derive(derive_new::new)]
-pub struct FunV2<'d> {
+pub struct FunVar2<'d> {
     pub i0: Ptr<'d, FunSet<'d>>,
     pub i1: Ptr<'d, FunSet<'d>>,
     data: UFunV2<'d>,
 }
 
-impl<'d> Drop for FunV2<'d> {
+impl<'d> Drop for FunVar2<'d> {
     fn drop(&mut self) {
         let i1_typ = self.i1_typ();
         match self.i0_typ() {
@@ -82,7 +82,7 @@ impl<'d> Drop for FunV2<'d> {
     }
 }
 
-impl<'d> FunV2<'d> {
+impl<'d> FunVar2<'d> {
     fn i0_typ(&self) -> SetTyp {
         self.i0.get().typ
     }

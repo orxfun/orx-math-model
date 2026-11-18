@@ -19,12 +19,12 @@ pub union UFunV1<'d> {
 }
 
 #[derive(derive_new::new)]
-pub struct FunV1<'d> {
+pub struct FunVar1<'d> {
     pub i0: Ptr<'d, FunSet<'d>>,
     data: UFunV1<'d>,
 }
 
-impl<'d> Drop for FunV1<'d> {
+impl<'d> Drop for FunVar1<'d> {
     fn drop(&mut self) {
         unsafe {
             match self.i0_typ() {
@@ -36,7 +36,7 @@ impl<'d> Drop for FunV1<'d> {
     }
 }
 
-impl<'d> FunV1<'d> {
+impl<'d> FunVar1<'d> {
     fn i0_typ(&self) -> SetTyp {
         self.i0.get().typ
     }
