@@ -1,7 +1,6 @@
 use crate::idxs::{IdxCatInt, IdxCatStr, IdxOrd};
 use crate::pars::ParFun;
-use crate::scalars::num::{DNum, Val};
-use crate::scalars::Int;
+use crate::scalars::{DNum, Int, Val};
 use crate::{Model, Ptr, Set, SetCatInt, SetCatStr, SetOrd, SymWrap};
 use alloc::boxed::Box;
 use alloc::string::{String, ToString};

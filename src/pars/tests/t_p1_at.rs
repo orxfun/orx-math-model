@@ -1,4 +1,3 @@
-use crate::scalars::num::ValNum;
 use crate::{Elements, ElementsIter, Model, Set, SetCatInt, SetCatStr, SetOrd, SymWrap};
 use alloc::string::ToString;
 use alloc::{vec, vec::Vec};

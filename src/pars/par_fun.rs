@@ -1,6 +1,6 @@
 use crate::pars::p1_fun::{UFunP1, FP1};
 use crate::pars::p2_fun::{UFunP2, FP2};
-use crate::scalars::num::round_f64;
+use crate::scalars::round_f64;
 use crate::{AsF64, Dim, DimVec, Res, Set, SetTyp, ValTyp};
 use alloc::boxed::Box;
 use core::mem::ManuallyDrop;

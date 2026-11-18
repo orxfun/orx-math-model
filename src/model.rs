@@ -1,7 +1,7 @@
 use crate::con_vals::{ConVal, DConVal};
 use crate::idxs::{DIdx, IdxVal};
 use crate::pars::{DPars, IntParD1, IntParD2, NumParD1, NumParD2, ParFun};
-use crate::scalars::num::{DNum, Int, Num, Val};
+use crate::scalars::{DNum, Int, Num, Val};
 // use crate::lin_expr::{DLinExpr, LinExpBag, LinExpr};
 // use crate::pars::{ParBag, ParD1, ParD2, ParFun, ParFunBag};
 // use crate::scalars::{DSca, FVar1, FVar2, ScaBag};

@@ -1,3 +1,3 @@
-pub mod num;
+mod num;
 
-pub use num::{Int, Num};
+pub use num::{round_f64, AsF64, AsI64, DNum, Int, Num, Val, ValInt, ValNum, ValTyp};
