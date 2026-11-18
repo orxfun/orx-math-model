@@ -14,6 +14,7 @@ impl FVarStrCtor {
         parent: Ptr<'d, DVars<'d>>,
         fun: impl Fn() -> Idx1<'d, I0> + 'd,
     ) -> FVarStr<'d> {
+        // TODO: use parent to add the variable key
         Box::new(move |f| I0::write_idx(f, fun()))
     }
 
