@@ -1,6 +1,6 @@
 use crate::idxs::{DIdx, IdxCatInt, IdxCatStr, IdxOrd, UIdxVal};
 use crate::pars::{IntParD1, IntParD2, NumParD1, NumParD2, UFunP1, UFunP2, UFunP2_I0, FP1, FP2};
-use crate::scalars::{DNum, FVar1, Num, Val, ValInt, ValNum};
+use crate::scalars::{DNum, FVar1, FVar2, Num, UFunV2, UFunV2_I0, Val, ValInt, ValNum};
 use crate::scalars::{Int, UFunV1};
 use crate::sets::into_idx::IdxAny;
 // use crate::pars::{ParD1, ParD2, UFunP1_V, UFunP2_V, UFunP2_V_I0, FP1, FP2};
@@ -104,11 +104,11 @@ pub trait Set: Clone + Copy + 'static {
 
     // fn v1_at<'m, 'd>(var: VarD1<'m, 'd, Self>, i0: impl Into<Self::IdxAny<'m, 'd>>) -> Var<'m, 'd>;
 
-    // // v2
+    // v2
 
-    // fn unpack_v2_fun_i0<'a, 'd, I0: Set>(u: &'a UFunV2_I0<'d, I0>) -> &'a FVar2<'d, I0, Self>;
+    fn unpack_v2_fun_i0<'a, 'd, I0: Set>(u: &'a UFunV2_I0<'d, I0>) -> &'a FVar2<'d, I0, Self>;
 
-    // fn unpack_v2_fun<'a, 'd, I1: Set>(u: &'a UFunV2<'d>) -> &'a FVar2<'d, Self, I1>;
+    fn unpack_v2_fun<'a, 'd, I1: Set>(u: &'a UFunV2<'d>) -> &'a FVar2<'d, Self, I1>;
 
     // fn v2_at_i0<'m, 'd, I0: Set>(
     //     var: VarD2<'m, 'd, I0, Self>,
@@ -222,17 +222,17 @@ impl Set for SetCatInt {
     //     }
     // }
 
-    // // v2
+    // v2
 
-    // #[inline(always)]
-    // fn unpack_v2_fun_i0<'a, 'd, I0: Set>(u: &'a UFunV2_I0<'d, I0>) -> &'a FVar2<'d, I0, Self> {
-    //     unsafe { &u.cint }
-    // }
+    #[inline(always)]
+    fn unpack_v2_fun_i0<'a, 'd, I0: Set>(u: &'a UFunV2_I0<'d, I0>) -> &'a FVar2<'d, I0, Self> {
+        unsafe { &u.cint }
+    }
 
-    // #[inline(always)]
-    // fn unpack_v2_fun<'a, 'd, I1: Set>(u: &'a UFunV2<'d>) -> &'a FVar2<'d, Self, I1> {
-    //     I1::unpack_v2_fun_i0(unsafe { &u.cint })
-    // }
+    #[inline(always)]
+    fn unpack_v2_fun<'a, 'd, I1: Set>(u: &'a UFunV2<'d>) -> &'a FVar2<'d, Self, I1> {
+        I1::unpack_v2_fun_i0(unsafe { &u.cint })
+    }
 
     // fn v2_at_i0<'m, 'd, I0: Set>(
     //     var: VarD2<'m, 'd, I0, Self>,
@@ -377,17 +377,17 @@ impl Set for SetCatStr {
     //     }
     // }
 
-    // // v2
+    // v2
 
-    // #[inline(always)]
-    // fn unpack_v2_fun_i0<'a, 'd, I0: Set>(u: &'a UFunV2_I0<'d, I0>) -> &'a FVar2<'d, I0, Self> {
-    //     unsafe { &u.cstr }
-    // }
+    #[inline(always)]
+    fn unpack_v2_fun_i0<'a, 'd, I0: Set>(u: &'a UFunV2_I0<'d, I0>) -> &'a FVar2<'d, I0, Self> {
+        unsafe { &u.cstr }
+    }
 
-    // #[inline(always)]
-    // fn unpack_v2_fun<'a, 'd, I1: Set>(u: &'a UFunV2<'d>) -> &'a FVar2<'d, Self, I1> {
-    //     I1::unpack_v2_fun_i0(unsafe { &u.cstr })
-    // }
+    #[inline(always)]
+    fn unpack_v2_fun<'a, 'd, I1: Set>(u: &'a UFunV2<'d>) -> &'a FVar2<'d, Self, I1> {
+        I1::unpack_v2_fun_i0(unsafe { &u.cstr })
+    }
 
     // fn v2_at_i0<'m, 'd, I0: Set>(
     //     var: VarD2<'m, 'd, I0, Self>,
@@ -553,17 +553,17 @@ impl Set for SetOrd {
     //     }
     // }
 
-    // // v2
+    // v2
 
-    // #[inline(always)]
-    // fn unpack_v2_fun_i0<'a, 'd, I0: Set>(u: &'a UFunV2_I0<'d, I0>) -> &'a FVar2<'d, I0, Self> {
-    //     unsafe { &u.ord }
-    // }
+    #[inline(always)]
+    fn unpack_v2_fun_i0<'a, 'd, I0: Set>(u: &'a UFunV2_I0<'d, I0>) -> &'a FVar2<'d, I0, Self> {
+        unsafe { &u.ord }
+    }
 
-    // #[inline(always)]
-    // fn unpack_v2_fun<'a, 'd, I1: Set>(u: &'a UFunV2<'d>) -> &'a FVar2<'d, Self, I1> {
-    //     I1::unpack_v2_fun_i0(unsafe { &u.ord })
-    // }
+    #[inline(always)]
+    fn unpack_v2_fun<'a, 'd, I1: Set>(u: &'a UFunV2<'d>) -> &'a FVar2<'d, Self, I1> {
+        I1::unpack_v2_fun_i0(unsafe { &u.ord })
+    }
 
     // fn v2_at_i0<'m, 'd, I0: Set>(
     //     var: VarD2<'m, 'd, I0, Self>,
