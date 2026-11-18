@@ -112,7 +112,7 @@ expr_con!(isize);
 
 // var * num
 
-macro_rules! var_times_num {
+macro_rules! var_num {
     ($n:ty) => {
         impl<'m, 'd> Mul<$n> for Var<'m, 'd> {
             type Output = LinExpr<'m, 'd>;
@@ -120,8 +120,7 @@ macro_rules! var_times_num {
             fn mul(self, rhs: $n) -> Self::Output {
                 let term = DLinTerm::new(Coef::Ptr(rhs.ptr()), self.ptr());
                 let terms = ExprVec::new([term]);
-                let data = DLinExpr::new(terms, None);
-                self.m().lin_exp(data)
+                self.m().lin_exp(DLinExpr::new(terms, None))
             }
         }
 
@@ -135,18 +134,20 @@ macro_rules! var_times_num {
     };
 }
 
-var_times_num!(Int<'m, 'd>);
-var_times_num!(Num<'m, 'd>);
+var_num!(Num<'m, 'd>);
+var_num!(Int<'m, 'd>);
 
 // var * con
 
-macro_rules! var_times_con {
+macro_rules! var_con {
     ($c:ty) => {
         impl<'m, 'd> Mul<$c> for Var<'m, 'd> {
             type Output = LinExpr<'m, 'd>;
 
             fn mul(self, rhs: $c) -> Self::Output {
-                self * self.m().val_num_con(rhs)
+                let term = DLinTerm::new(Coef::Con(rhs.as_f64()), self.ptr());
+                let terms = ExprVec::new([term]);
+                self.m().lin_exp(DLinExpr::new(terms, None))
             }
         }
 
@@ -160,11 +161,11 @@ macro_rules! var_times_con {
     };
 }
 
-var_times_con!(f64);
-var_times_con!(f32);
-var_times_con!(i64);
-var_times_con!(i32);
-var_times_con!(u64);
-var_times_con!(u32);
-var_times_con!(usize);
-var_times_con!(isize);
+var_con!(f64);
+var_con!(f32);
+var_con!(i64);
+var_con!(i32);
+var_con!(u64);
+var_con!(u32);
+var_con!(usize);
+var_con!(isize);
