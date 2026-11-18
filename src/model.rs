@@ -268,6 +268,14 @@ impl<'d> Model<'d> {
         self.val::<ValNum>(DNum::sub(c1, c2)).ptr()
     }
 
+    pub(crate) fn val_mul<'m>(
+        &'m self,
+        c1: Ptr<'d, DNum<'d>>,
+        c2: Ptr<'d, DNum<'d>>,
+    ) -> Ptr<'d, DNum<'d>> {
+        self.val::<ValNum>(DNum::mul(c1, c2)).ptr()
+    }
+
     pub(crate) fn val_num_con<'m>(&'m self, num: impl AsF64) -> Num<'m, 'd> {
         self.val::<ValNum>(DNum::new_num(move || num))
     }

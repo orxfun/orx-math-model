@@ -34,8 +34,9 @@ impl<'d> DLinExpr<'d> {
     }
 
     pub fn mul_num<'m>(&self, m: &'m Model<'d>, rhs: Ptr<'d, DNum<'d>>) -> Self {
-        let terms = self.terms.map(|x| x.clone());
-        todo!()
+        let terms = self.terms.map(|x| x.mul_num(m, rhs));
+        let constant = self.constant.map(|c1| m.val_mul(c1, rhs));
+        Self { terms, constant }
     }
 
     // term

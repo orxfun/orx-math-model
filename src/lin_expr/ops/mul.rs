@@ -5,13 +5,21 @@ use core::ops::Mul;
 
 // expr * num
 
-impl<'m, 'd> Mul<Num<'m, 'd>> for LinExpr<'m, 'd> {
-    type Output = LinExpr<'m, 'd>;
+macro_rules! expr_mul_num {
+    ($n:ty) => {
+        impl<'m, 'd> Mul<$n> for LinExpr<'m, 'd> {
+            type Output = LinExpr<'m, 'd>;
 
-    fn mul(self, rhs: Num<'m, 'd>) -> Self::Output {
-        todo!()
-    }
+            fn mul(self, rhs: $n) -> Self::Output {
+                let data = self.data().mul_num(self.m(), rhs.ptr());
+                self.m().lin_exp(data)
+            }
+        }
+    };
 }
+
+expr_mul_num!(Num<'m, 'd>);
+expr_mul_num!(Int<'m, 'd>);
 
 // var * num
 
