@@ -8,8 +8,7 @@ impl<'m, 'd> Add<Var<'m, 'd>> for LinExpr<'m, 'd> {
     type Output = LinExpr<'m, 'd>;
 
     fn add(self, rhs: Var<'m, 'd>) -> Self::Output {
-        let t = DLinTerm::from(rhs);
-        let data = self.data().push_term(t);
+        let data = self.data().push_term(rhs.into());
         self.m().lin_exp(data)
     }
 }

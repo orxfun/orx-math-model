@@ -20,14 +20,6 @@ impl<'m, 'd> Mul<Var<'m, 'd>> for Int<'m, 'd> {
     }
 }
 
-impl<'m, 'd> Mul<Int<'m, 'd>> for Var<'m, 'd> {
-    type Output = LinExpr<'m, 'd>;
-
-    fn mul(self, rhs: Int<'m, 'd>) -> Self::Output {
-        mul_val_var(self, rhs.ptr())
-    }
-}
-
 // num * var
 
 impl<'m, 'd> Mul<Var<'m, 'd>> for Num<'m, 'd> {
@@ -35,14 +27,6 @@ impl<'m, 'd> Mul<Var<'m, 'd>> for Num<'m, 'd> {
 
     fn mul(self, rhs: Var<'m, 'd>) -> Self::Output {
         mul_val_var(rhs, self.ptr())
-    }
-}
-
-impl<'m, 'd> Mul<Num<'m, 'd>> for Var<'m, 'd> {
-    type Output = LinExpr<'m, 'd>;
-
-    fn mul(self, rhs: Num<'m, 'd>) -> Self::Output {
-        mul_val_var(self, rhs.ptr())
     }
 }
 
@@ -101,63 +85,5 @@ impl<'m, 'd> Mul<Var<'m, 'd>> for u32 {
 
     fn mul(self, rhs: Var<'m, 'd>) -> Self::Output {
         self as i64 * rhs
-    }
-}
-
-// var * constant
-
-impl<'m, 'd> Mul<i64> for Var<'m, 'd> {
-    type Output = LinExpr<'m, 'd>;
-
-    fn mul(self, rhs: i64) -> Self::Output {
-        rhs * self
-    }
-}
-
-impl<'m, 'd> Mul<f64> for Var<'m, 'd> {
-    type Output = LinExpr<'m, 'd>;
-
-    fn mul(self, rhs: f64) -> Self::Output {
-        rhs * self
-    }
-}
-
-impl<'m, 'd> Mul<f32> for Var<'m, 'd> {
-    type Output = LinExpr<'m, 'd>;
-
-    fn mul(self, rhs: f32) -> Self::Output {
-        rhs * self
-    }
-}
-
-impl<'m, 'd> Mul<usize> for Var<'m, 'd> {
-    type Output = LinExpr<'m, 'd>;
-
-    fn mul(self, rhs: usize) -> Self::Output {
-        rhs * self
-    }
-}
-
-impl<'m, 'd> Mul<u64> for Var<'m, 'd> {
-    type Output = LinExpr<'m, 'd>;
-
-    fn mul(self, rhs: u64) -> Self::Output {
-        rhs * self
-    }
-}
-
-impl<'m, 'd> Mul<i32> for Var<'m, 'd> {
-    type Output = LinExpr<'m, 'd>;
-
-    fn mul(self, rhs: i32) -> Self::Output {
-        rhs * self
-    }
-}
-
-impl<'m, 'd> Mul<u32> for Var<'m, 'd> {
-    type Output = LinExpr<'m, 'd>;
-
-    fn mul(self, rhs: u32) -> Self::Output {
-        rhs * self
     }
 }
