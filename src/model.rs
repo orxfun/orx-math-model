@@ -8,11 +8,12 @@ use crate::scalars::num::{DNum, Int, Num, Val};
 use crate::sets::{CatInt, CatStr, DSet, FunSet, Ord, SetBag, SetFunBag};
 use crate::slot::{SlotStates, State};
 use crate::sym_ref::SymRef;
+use crate::vars::{DVars, VarD1, VarD2};
 // use crate::sym_refs::SymRefBag;
 // use crate::vars::{DVars, VarBag, VarD1, VarD2, VarType};
 use crate::{
     AsF64, AsI64, Bag, DimVec, Ptr, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetSym, Slot,
-    Symbol, TConVal, ValTyp,
+    Symbol, TConVal, ValTyp, VarType,
 };
 // use crate::{Int, Num, Sca, ScaInt, ScaNum, Val, Var};
 use alloc::boxed::Box;
@@ -33,7 +34,7 @@ pub struct Model<'d> {
     par_bag: Bag<DPars<'d>>,
 
     // vars
-    // var_bag: VarBag<'d>,
+    var_bag: Bag<DVars<'d>>,
 
     // idxs
     idx_val_bag: Bag<IdxVal<'d>>,
@@ -168,37 +169,37 @@ impl<'d> Model<'d> {
         NumParD2::new(Symbol::new(self, self.par2_elem(ValTyp::Num, s0, s1)))
     }
 
-    // // vars
+    // vars
 
-    // pub fn var1<'m, S0>(&'m self, typ: VarType, s0: S0) -> VarD1<'m, 'd, S0::Meta>
-    // where
-    //     S0: SetSym<'m, 'd>,
-    //     S0::Meta: Set<SetSym<'m, 'd> = S0>,
-    // {
-    //     let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
-    //     let data = DVars::new_d1(typ, s0_ptr);
-    //     let el = self.var_bag.push(data);
-    //     VarD1::new(Symbol::new(self, el))
-    // }
+    pub fn var1<'m, S0>(&'m self, typ: VarType, s0: S0) -> VarD1<'m, 'd, S0::Meta>
+    where
+        S0: SetSym<'m, 'd>,
+        S0::Meta: Set<SetSym<'m, 'd> = S0>,
+    {
+        let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
+        let data = DVars::new_d1(typ, s0_ptr);
+        let el = self.var_bag.push(data);
+        VarD1::new(Symbol::new(self, el))
+    }
 
-    // pub fn var2<'m, S0, S1>(
-    //     &'m self,
-    //     typ: VarType,
-    //     s0: S0,
-    //     s1: S1,
-    // ) -> VarD2<'m, 'd, S0::Meta, S1::Meta>
-    // where
-    //     S0: SetSym<'m, 'd>,
-    //     S0::Meta: Set<SetSym<'m, 'd> = S0>,
-    //     S1: SetSym<'m, 'd>,
-    //     S1::Meta: Set<SetSym<'m, 'd> = S1>,
-    // {
-    //     let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
-    //     let s1_ptr = <S1::Meta as Set>::set_ptr(s1);
-    //     let data = DVars::new_d2(typ, s0_ptr, s1_ptr);
-    //     let el = self.var_bag.push(data);
-    //     VarD2::new(Symbol::new(self, el))
-    // }
+    pub fn var2<'m, S0, S1>(
+        &'m self,
+        typ: VarType,
+        s0: S0,
+        s1: S1,
+    ) -> VarD2<'m, 'd, S0::Meta, S1::Meta>
+    where
+        S0: SetSym<'m, 'd>,
+        S0::Meta: Set<SetSym<'m, 'd> = S0>,
+        S1: SetSym<'m, 'd>,
+        S1::Meta: Set<SetSym<'m, 'd> = S1>,
+    {
+        let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
+        let s1_ptr = <S1::Meta as Set>::set_ptr(s1);
+        let data = DVars::new_d2(typ, s0_ptr, s1_ptr);
+        let el = self.var_bag.push(data);
+        VarD2::new(Symbol::new(self, el))
+    }
 
     // scalars
 
