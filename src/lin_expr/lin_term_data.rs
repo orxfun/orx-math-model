@@ -48,3 +48,19 @@ impl<'d> DLinTerm<'d> {
         Self::new(coef, self.var)
     }
 }
+
+#[cfg(test)]
+impl<'d> DLinTerm<'d> {
+    pub fn eval_coef(&self) -> f64 {
+        match self.coef {
+            Coef::One => 1.0,
+            Coef::MinusOne => -1.0,
+            Coef::Con(x) => x,
+            Coef::Ptr(p) => p.get().eval(),
+        }
+    }
+
+    pub fn var(&self) -> Ptr<'d, DVar<'d>> {
+        self.var
+    }
+}
