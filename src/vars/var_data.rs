@@ -1,12 +1,12 @@
 use crate::sets::{DSet, FunSet};
 use crate::{Dim, DimVec, Ptr, SetTyp, VarType};
 
-pub struct DVars<'d> {
+pub struct DV<'d> {
     typ: VarType,
     sets: DimVec<Ptr<'d, DSet<'d>>>,
 }
 
-impl<'d> DVars<'d> {
+impl<'d> DV<'d> {
     pub fn new_d1(typ: VarType, s0: Ptr<'d, DSet<'d>>) -> Self {
         let sets = DimVec::new([s0]);
         Self { typ, sets }

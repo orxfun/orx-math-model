@@ -8,7 +8,7 @@ use crate::scalars::{DNum, Int, Num, Val};
 use crate::sets::{CatInt, CatStr, DSet, FunSet, Ord, SetBag, SetFunBag};
 use crate::slot::{SlotStates, State};
 use crate::sym_ref::SymRef;
-use crate::vars::{DVars, VarD1, VarD2};
+use crate::vars::{VarD1, VarD2, DV};
 // use crate::sym_refs::SymRefBag;
 // use crate::vars::{DVars, VarBag, VarD1, VarD2, VarType};
 use crate::{
@@ -34,7 +34,7 @@ pub struct Model<'d> {
     par_bag: Bag<DPars<'d>>,
 
     // vars
-    var_bag: Bag<DVars<'d>>,
+    var_bag: Bag<DV<'d>>,
 
     // idxs
     idx_val_bag: Bag<IdxVal<'d>>,
@@ -42,6 +42,7 @@ pub struct Model<'d> {
 
     // vals
     num_bag: Bag<DNum<'d>>,
+    v_bag: Bag<DV<'d>>,
     // sca_bag: ManuallyDrop<ScaBag<'d>>,
     con_val_bag: Bag<DConVal>,
     sym_ref_bag: Bag<SymRef<'d>>,
@@ -177,7 +178,7 @@ impl<'d> Model<'d> {
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
     {
         let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
-        let data = DVars::new_d1(typ, s0_ptr);
+        let data = DV::new_d1(typ, s0_ptr);
         let el = self.var_bag.push(data);
         VarD1::new(Symbol::new(self, el))
     }
@@ -196,7 +197,7 @@ impl<'d> Model<'d> {
     {
         let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
         let s1_ptr = <S1::Meta as Set>::set_ptr(s1);
-        let data = DVars::new_d2(typ, s0_ptr, s1_ptr);
+        let data = DV::new_d2(typ, s0_ptr, s1_ptr);
         let el = self.var_bag.push(data);
         VarD2::new(Symbol::new(self, el))
     }
@@ -224,6 +225,8 @@ impl<'d> Model<'d> {
         let el = self.num_bag.push(data);
         V::sym(Symbol::new(self, el))
     }
+
+    // pub(crate) fn var<'m,>(&'m self, data:DV<'d>) -> Var
 
     // pub(crate) fn var_from_d1<'m, I0: Set>(
     //     &'m self,
