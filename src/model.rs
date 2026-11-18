@@ -227,21 +227,20 @@ impl<'d> Model<'d> {
 
     // scalars
 
-    // pub(crate) fn one<'m>(&'m self) -> Num<'m, 'd> {
-    //     Num::new(Symbol::new(self, self.sca_bag.one))
-    // }
+    pub(crate) fn one<'m>(&'m self) -> Int<'m, 'd> {
+        let el = unsafe { self.common_numbers.one.into_el() };
+        Int::new(Symbol::new(self, el))
+    }
 
-    // pub(crate) fn minus_one_int<'m>(&'m self) -> Int<'m, 'd> {
-    //     Int::new(Symbol::new(self, self.sca_bag.minus_one_int))
-    // }
+    pub(crate) fn minus_one<'m>(&'m self) -> Int<'m, 'd> {
+        let el = unsafe { self.common_numbers.minus_one.into_el() };
+        Int::new(Symbol::new(self, el))
+    }
 
-    // pub(crate) fn zero_int<'m>(&'m self) -> Int<'m, 'd> {
-    //     Int::new(Symbol::new(self, self.sca_bag.zero_int))
-    // }
-
-    // pub(crate) fn zero_num<'m>(&'m self) -> Num<'m, 'd> {
-    //     Num::new(Symbol::new(self, self.sca_bag.one))
-    // }
+    pub(crate) fn zero<'m>(&'m self) -> Int<'m, 'd> {
+        let el = unsafe { self.common_numbers.zero.into_el() };
+        Int::new(Symbol::new(self, el))
+    }
 
     pub(crate) fn val<'m, V: Val>(&'m self, data: DNum<'d>) -> V::Sym<'m, 'd> {
         debug_assert_eq!(data.typ, V::typ());

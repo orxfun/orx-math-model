@@ -1,5 +1,5 @@
 use crate::scalars::DNum;
-use crate::{Bag, Ptr, ValTyp};
+use crate::{Bag, Int, Model, Ptr, ValTyp};
 use alloc::boxed::Box;
 
 pub struct CommonNumbers<'d> {
