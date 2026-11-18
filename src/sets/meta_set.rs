@@ -1,15 +1,11 @@
 use crate::idxs::{DIdx, IdxCatInt, IdxCatStr, IdxOrd, UIdxVal};
 use crate::pars::{IntParD1, IntParD2, NumParD1, NumParD2, UFunP1, UFunP2, UFunP2_I0, FP1, FP2};
-use crate::scalars::{DNum, FVarIdx2, FVarIdx1, Num, UFunV2, UFunV2_I0, Val, ValInt, ValNum, Var};
+use crate::scalars::{DNum, FVarIdx1, FVarIdx2, Num, UFunV2, UFunV2_I0, Val, ValInt, ValNum, Var};
 use crate::scalars::{Int, UFunV1};
 use crate::sets::into_idx::IdxAny;
-// use crate::pars::{ParD1, ParD2, UFunP1_V, UFunP2_V, UFunP2_V_I0, FP1, FP2};
-// use crate::scalars::{FVar1, FVar2, UFunV1, UFunV2, UFunV2_I0};
 use crate::sets::{CatInt, CatStr, DSet, FSet, IndexCatInt, IndexCatStr, IndexOrd, Ord, UFunSet};
 use crate::vars::{VarD1, VarD2};
-// use crate::vars::{VarD1, VarD2};
 use crate::{Model, Ptr, SetSym, SymWrap, Symbol, ValTyp};
-// use crate::{ScaInt, Val, ValTyp, Var};
 use alloc::boxed::Box;
 use alloc::string::{String, ToString};
 use core::mem::{transmute, ManuallyDrop};
