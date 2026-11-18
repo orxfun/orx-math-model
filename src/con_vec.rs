@@ -37,6 +37,20 @@ impl<const N: usize, T> ConVec<N, T> {
         Self { len, data }
     }
 
+    pub fn push_to_front(&self, value: T) -> Self
+    where
+        T: Clone,
+    {
+        debug_assert!(self.len < N);
+        let mut data = core::array::from_fn(|_| None);
+        data[0] = Some(value);
+        for i in 0..self.len {
+            data[i + 1] = self.data[i].clone();
+        }
+        let len = self.len + 1;
+        Self { len, data }
+    }
+
     pub fn merge(&self, other: &Self) -> Self
     where
         T: Clone,
