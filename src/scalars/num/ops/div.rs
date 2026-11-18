@@ -1,44 +1,29 @@
+use super::add::val_num;
 use crate::scalars::{DNum, ValInt, ValNum};
 use crate::{Int, Num, SymWrap};
+use alloc::boxed::Box;
 use core::ops::Div;
 
 // num/int / num/int
 
-impl<'m, 'd> Div<Num<'m, 'd>> for Num<'m, 'd> {
-    type Output = Num<'m, 'd>;
+macro_rules! num_num {
+    ($n1:ty, $n2:ty, $out:ty, $fout:ident) => {
+        impl<'m, 'd> Div<$n2> for $n1 {
+            type Output = $out;
 
-    fn div(self, rhs: Num<'m, 'd>) -> Self::Output {
-        let data = DNum::div(self.ptr(), rhs.ptr());
-        self.m().val::<ValNum>(data)
-    }
+            fn div(self, rhs: $n2) -> Self::Output {
+                let [t1, t2] = [self.ptr(), rhs.ptr()];
+                let fun = Box::new(move || t1.get().eval() / t2.get().eval());
+                $fout(self.m(), fun)
+            }
+        }
+    };
 }
 
-impl<'m, 'd> Div<Int<'m, 'd>> for Num<'m, 'd> {
-    type Output = Num<'m, 'd>;
-
-    fn div(self, rhs: Int<'m, 'd>) -> Self::Output {
-        let data = DNum::div(self.ptr(), rhs.ptr());
-        self.m().val::<ValNum>(data)
-    }
-}
-
-impl<'m, 'd> Div<Num<'m, 'd>> for Int<'m, 'd> {
-    type Output = Num<'m, 'd>;
-
-    fn div(self, rhs: Num<'m, 'd>) -> Self::Output {
-        let data = DNum::div(self.ptr(), rhs.ptr());
-        self.m().val::<ValNum>(data)
-    }
-}
-
-impl<'m, 'd> Div<Int<'m, 'd>> for Int<'m, 'd> {
-    type Output = Int<'m, 'd>;
-
-    fn div(self, rhs: Int<'m, 'd>) -> Self::Output {
-        let data = DNum::div(self.ptr(), rhs.ptr());
-        self.m().val::<ValInt>(data)
-    }
-}
+num_num!(Num<'m, 'd>, Num<'m, 'd>, Num<'m, 'd>, val_num);
+num_num!(Num<'m, 'd>, Int<'m, 'd>, Num<'m, 'd>, val_num);
+num_num!(Int<'m, 'd>, Num<'m, 'd>, Num<'m, 'd>, val_num);
+num_num!(Int<'m, 'd>, Int<'m, 'd>, Num<'m, 'd>, val_num);
 
 // num/int / con
 

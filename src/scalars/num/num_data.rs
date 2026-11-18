@@ -66,6 +66,11 @@ impl<'d> DNum<'d> {
         Self { typ, fun }
     }
 
+    pub fn sub_con(typ: ValTyp, lhs: Ptr<'d, Self>, rhs: impl AsF64) -> Self {
+        let fun = Box::new(move || lhs.get().eval() - rhs.as_f64());
+        Self { typ, fun }
+    }
+
     pub fn mul(lhs: Ptr<'d, Self>, rhs: Ptr<'d, Self>) -> Self {
         let typ = Self::ops_typ(lhs, rhs);
         let fun = Box::new(move || lhs.get().eval() * rhs.get().eval());
@@ -80,7 +85,7 @@ impl<'d> DNum<'d> {
     }
 
     pub fn div(lhs: Ptr<'d, Self>, rhs: Ptr<'d, Self>) -> Self {
-        let typ = Self::ops_typ(lhs, rhs);
+        let typ = ValTyp::Num;
         let fun = Box::new(move || lhs.get().eval() / rhs.get().eval());
         Self { typ, fun }
     }

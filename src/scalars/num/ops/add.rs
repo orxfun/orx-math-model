@@ -1,129 +1,75 @@
-use crate::scalars::{DNum, ValInt, ValNum};
-use crate::{Int, Num, SymWrap};
+use crate::scalars::{DNum, FNum, ValInt, ValNum};
+use crate::{AsF64, Int, Model, Num, SymWrap, ValTyp};
+use alloc::boxed::Box;
 use core::ops::Add;
+
+pub fn val_num<'m, 'd>(m: &'m Model<'d>, fun: FNum<'d>) -> Num<'m, 'd> {
+    m.val::<ValNum>(DNum::new(ValTyp::Num, fun))
+}
+
+pub fn val_int<'m, 'd>(m: &'m Model<'d>, fun: FNum<'d>) -> Int<'m, 'd> {
+    m.val::<ValInt>(DNum::new(ValTyp::Int, fun))
+}
 
 // num/int + num/int
 
-impl<'m, 'd> Add<Num<'m, 'd>> for Num<'m, 'd> {
-    type Output = Num<'m, 'd>;
+macro_rules! num_num {
+    ($n1:ty, $n2:ty, $out:ty, $fout:ident) => {
+        impl<'m, 'd> Add<$n2> for $n1 {
+            type Output = $out;
 
-    fn add(self, rhs: Num<'m, 'd>) -> Self::Output {
-        let data = DNum::add(self.ptr(), rhs.ptr());
-        self.m().val::<ValNum>(data)
-    }
+            fn add(self, rhs: $n2) -> Self::Output {
+                let [t1, t2] = [self.ptr(), rhs.ptr()];
+                let fun = Box::new(move || t1.get().eval() + t2.get().eval());
+                $fout(self.m(), fun)
+            }
+        }
+    };
 }
 
-impl<'m, 'd> Add<Int<'m, 'd>> for Num<'m, 'd> {
-    type Output = Num<'m, 'd>;
-
-    fn add(self, rhs: Int<'m, 'd>) -> Self::Output {
-        let data = DNum::add(self.ptr(), rhs.ptr());
-        self.m().val::<ValNum>(data)
-    }
-}
-
-impl<'m, 'd> Add<Num<'m, 'd>> for Int<'m, 'd> {
-    type Output = Num<'m, 'd>;
-
-    fn add(self, rhs: Num<'m, 'd>) -> Self::Output {
-        let data = DNum::add(self.ptr(), rhs.ptr());
-        self.m().val::<ValNum>(data)
-    }
-}
-
-impl<'m, 'd> Add<Int<'m, 'd>> for Int<'m, 'd> {
-    type Output = Int<'m, 'd>;
-
-    fn add(self, rhs: Int<'m, 'd>) -> Self::Output {
-        let data = DNum::add(self.ptr(), rhs.ptr());
-        self.m().val::<ValInt>(data)
-    }
-}
+num_num!(Num<'m, 'd>, Num<'m, 'd>, Num<'m, 'd>, val_num);
+num_num!(Num<'m, 'd>, Int<'m, 'd>, Num<'m, 'd>, val_num);
+num_num!(Int<'m, 'd>, Num<'m, 'd>, Num<'m, 'd>, val_num);
+num_num!(Int<'m, 'd>, Int<'m, 'd>, Int<'m, 'd>, val_int);
 
 // num + con
 
-macro_rules! num_plus_con {
-    ($c:ty) => {
-        impl<'m, 'd> Add<$c> for Num<'m, 'd> {
-            type Output = Num<'m, 'd>;
+macro_rules! num_con {
+    ($n1:ty, $n2:ty, $out:ty, $fout:ident) => {
+        impl<'m, 'd> Add<$n2> for $n1 {
+            type Output = $out;
 
-            fn add(self, rhs: $c) -> Self::Output {
-                let data = DNum::add(self.ptr(), self.m().val_num_con(rhs).ptr());
-                self.m().val::<ValNum>(data)
+            fn add(self, rhs: $n2) -> Self::Output {
+                let t1 = self.ptr();
+                let fun = Box::new(move || t1.get().eval() + rhs.as_f64());
+                $fout(self.m(), fun)
             }
         }
 
-        impl<'m, 'd> Add<Num<'m, 'd>> for $c {
-            type Output = Num<'m, 'd>;
+        impl<'m, 'd> Add<$n1> for $n2 {
+            type Output = $out;
 
-            fn add(self, rhs: Num<'m, 'd>) -> Self::Output {
+            fn add(self, rhs: $n1) -> Self::Output {
                 rhs + self
             }
         }
     };
 }
 
-num_plus_con!(f64);
-num_plus_con!(f32);
-num_plus_con!(i64);
-num_plus_con!(i32);
-num_plus_con!(u64);
-num_plus_con!(u32);
-num_plus_con!(usize);
-num_plus_con!(isize);
+num_con!(Num<'m, 'd>, f64, Num<'m, 'd>, val_num);
+num_con!(Num<'m, 'd>, f32, Num<'m, 'd>, val_num);
+num_con!(Num<'m, 'd>, i64, Num<'m, 'd>, val_num);
+num_con!(Num<'m, 'd>, i32, Num<'m, 'd>, val_num);
+num_con!(Num<'m, 'd>, u64, Num<'m, 'd>, val_num);
+num_con!(Num<'m, 'd>, u32, Num<'m, 'd>, val_num);
+num_con!(Num<'m, 'd>, usize, Num<'m, 'd>, val_num);
+num_con!(Num<'m, 'd>, isize, Num<'m, 'd>, val_num);
 
-// int + icon
-
-macro_rules! int_plus_icon {
-    ($c:ty) => {
-        impl<'m, 'd> Add<$c> for Int<'m, 'd> {
-            type Output = Int<'m, 'd>;
-
-            fn add(self, rhs: $c) -> Self::Output {
-                let data = DNum::add(self.ptr(), self.m().val_num_con(rhs).ptr());
-                self.m().val::<ValInt>(data)
-            }
-        }
-
-        impl<'m, 'd> Add<Int<'m, 'd>> for $c {
-            type Output = Int<'m, 'd>;
-
-            fn add(self, rhs: Int<'m, 'd>) -> Self::Output {
-                rhs + self
-            }
-        }
-    };
-}
-
-int_plus_icon!(i64);
-int_plus_icon!(i32);
-int_plus_icon!(u64);
-int_plus_icon!(u32);
-int_plus_icon!(usize);
-int_plus_icon!(isize);
-
-// int + fcon
-
-macro_rules! int_plus_fcon {
-    ($c:ty) => {
-        impl<'m, 'd> Add<$c> for Int<'m, 'd> {
-            type Output = Num<'m, 'd>;
-
-            fn add(self, rhs: $c) -> Self::Output {
-                let data = DNum::add(self.ptr(), self.m().val_num_con(rhs).ptr());
-                self.m().val::<ValNum>(data)
-            }
-        }
-
-        impl<'m, 'd> Add<Int<'m, 'd>> for $c {
-            type Output = Num<'m, 'd>;
-
-            fn add(self, rhs: Int<'m, 'd>) -> Self::Output {
-                rhs + self
-            }
-        }
-    };
-}
-
-int_plus_fcon!(f64);
-int_plus_fcon!(f32);
+num_con!(Int<'m, 'd>, f64, Num<'m, 'd>, val_num);
+num_con!(Int<'m, 'd>, f32, Num<'m, 'd>, val_num);
+num_con!(Int<'m, 'd>, i64, Int<'m, 'd>, val_int);
+num_con!(Int<'m, 'd>, i32, Int<'m, 'd>, val_int);
+num_con!(Int<'m, 'd>, u64, Int<'m, 'd>, val_int);
+num_con!(Int<'m, 'd>, u32, Int<'m, 'd>, val_int);
+num_con!(Int<'m, 'd>, usize, Int<'m, 'd>, val_int);
+num_con!(Int<'m, 'd>, isize, Int<'m, 'd>, val_int);
