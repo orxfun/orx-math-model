@@ -48,6 +48,12 @@ impl<'d> DNum<'d> {
         Self { typ, fun }
     }
 
+    pub fn recip(lhs: Ptr<'d, Self>) -> Self {
+        let typ = lhs.get().typ;
+        let fun = Box::new(move || 1.0 / lhs.get().eval());
+        Self { typ, fun }
+    }
+
     pub fn add(lhs: Ptr<'d, Self>, rhs: Ptr<'d, Self>) -> Self {
         let typ = Self::ops_typ(lhs, rhs);
         let fun = Box::new(move || lhs.get().eval() + rhs.get().eval());
