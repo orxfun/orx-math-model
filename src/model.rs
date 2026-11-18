@@ -42,7 +42,7 @@ pub struct Model<'d> {
 
     // vals
     num_bag: Bag<DNum<'d>>,
-    var_bag: Bag<DVar<'d>>,
+    var_bag: ManuallyDrop<Bag<DVar<'d>>>,
     // sca_bag: ManuallyDrop<ScaBag<'d>>,
     con_val_bag: Bag<DConVal>,
     sym_ref_bag: Bag<SymRef<'d>>,
@@ -52,8 +52,8 @@ pub struct Model<'d> {
 
 impl<'d> Drop for Model<'d> {
     fn drop(&mut self) {
-        // SAFETY: needs to be dropped after set_fun_bag
-        // unsafe { ManuallyDrop::drop(&mut self.sca_bag) };
+        // SAFETY: needs to be dropped before set_fun_bag
+        unsafe { ManuallyDrop::drop(&mut self.var_bag) };
     }
 }
 
