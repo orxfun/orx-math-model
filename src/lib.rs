@@ -25,33 +25,36 @@ mod dim;
 mod elements;
 mod err;
 mod idxs;
-mod lin_expr;
+// mod lin_expr;
+mod con_vec;
 mod model;
 mod pars;
 mod scalars;
 mod sets;
 mod slot;
-mod sym_refs;
+mod sym_ref;
 mod symbol;
 mod vars;
 
 // crate
-pub(crate) use bag::{new_bag, Bag};
+pub(crate) use bag::Bag;
 pub(crate) use con_vals::{ConValTyp, TConVal};
-pub(crate) use dim::{ConVec, Dim, DimVec};
-pub(crate) use elements::Elements;
+pub(crate) use con_vec::{ConVec, DimVec};
+pub(crate) use dim::Dim;
+pub(crate) use elements::{Elements, ElementsIter};
 pub(crate) use err::{Res, ResValid};
-pub(crate) use lin_expr::LinExpr;
-pub(crate) use scalars::{Int, Num, Sca, ScaInt, ScaNum, ScaVar, Val, ValTyp, Var};
+pub(crate) use scalars::{AsF64, AsI64, ValTyp};
+// pub(crate) use lin_expr::LinExpr;
+// pub(crate) use scalars::{Int, Num, Sca, ScaInt, ScaNum, ScaVar, Val, ValTyp, Var};
 pub(crate) use sets::{Set, SetCatInt, SetCatStr, SetOrd, SetSym, SetTyp};
 pub(crate) use slot::{Ptr, PtrMut, Slot};
-pub(crate) use symbol::Symbol;
-pub(crate) use vars::VarType;
+pub(crate) use symbol::{SymWrap, Symbol};
+pub(crate) use vars::{Bounds, VarType};
 
-#[cfg(test)]
-pub(crate) use elements::ElementsIter;
-#[cfg(test)]
-pub(crate) use vars::Bounds;
+// #[cfg(test)]
+// pub(crate) use elements::ElementsIter;
+// #[cfg(test)]
+// pub(crate) use vars::Bounds;
 
 // api
 pub use model::Model;

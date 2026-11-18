@@ -1,5 +1,4 @@
-use crate::{elements::Elements, Model};
-use crate::{ElementsIter, Set, SetCatInt, SetCatStr, SetOrd};
+use crate::{Elements, ElementsIter, Model, Set, SetCatInt, SetCatStr, SetOrd, SymWrap};
 use alloc::string::ToString;
 use alloc::{vec, vec::Vec};
 

@@ -1,4 +1,4 @@
-use crate::{con_vals::ConValTyp, slot::State, Model, SetTyp, Symbol, ValTyp};
+use crate::{con_vals::ConValTyp, slot::State, Model, SetTyp, Symbol};
 use alloc::string::String;
 use core::ops::Deref;
 
@@ -40,9 +40,9 @@ pub trait ResValid {
         debug_assert_eq!(a, b, "wrong set type")
     }
 
-    fn dbg_assert_same_val(a: ValTyp, b: ValTyp) {
-        debug_assert_eq!(a, b, "wrong val type")
-    }
+    // fn dbg_assert_same_val(a: ValTyp, b: ValTyp) {
+    //     debug_assert_eq!(a, b, "wrong val type")
+    // }
 
     fn dbg_assert_same_con_val(a: ConValTyp, b: ConValTyp) {
         debug_assert_eq!(a, b, "wrong constant value type")

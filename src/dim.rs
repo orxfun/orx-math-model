@@ -1,4 +1,4 @@
-use core::ops::{Deref, Index};
+use crate::scalars::{FunVar1, FunVar2, UFunVar};
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum Dim {
@@ -7,86 +7,74 @@ pub enum Dim {
     D2,
 }
 
-// dim - vec
+// // trait
 
-pub struct DimVec<T>(ConVec<4, T>);
+// pub trait D: Clone + Copy + 'static {
+//     fn dim() -> Dim;
 
-impl<T> Deref for DimVec<T> {
-    type Target = ConVec<4, T>;
+//     // var
 
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
+//     type FunVar<'d>;
 
-impl<T> DimVec<T> {
-    pub fn new<const N: usize>(values: [T; N]) -> Self {
-        Self(ConVec::new(values))
-    }
+//     fn unpack_fun_var<'a, 'd>(u: &'a UFunVar<'d>) -> &'a Self::FunVar<'d>;
+// }
 
-    pub fn dim(&self) -> Dim {
-        match self.len {
-            0 => Dim::D0,
-            1 => Dim::D1,
-            2 => Dim::D2,
-            _ => todo!(),
-        }
-    }
-}
+// // d0
 
-impl<T> Index<usize> for DimVec<T> {
-    type Output = T;
+// #[derive(Clone, Copy)]
+// pub struct D0;
 
-    #[inline(always)]
-    fn index(&self, idx: usize) -> &Self::Output {
-        self.get(idx).unwrap()
-    }
-}
+// impl D for D0 {
+//     fn dim() -> Dim {
+//         Dim::D0
+//     }
 
-// con - vec
+//     // var
 
-#[derive(Clone)]
-pub struct ConVec<const N: usize, T> {
-    len: usize,
-    data: [Option<T>; N],
-}
+//     type FunVar<'d> = usize;
 
-impl<const N: usize, T> ConVec<N, T> {
-    pub fn new<const C: usize>(values: [T; C]) -> Self {
-        debug_assert!(C <= 4);
-        let mut data = core::array::from_fn(|_| None);
-        for (i, v) in values.into_iter().enumerate() {
-            data[i] = Some(v);
-        }
-        Self { len: C, data }
-    }
+//     #[inline(always)]
+//     fn unpack_fun_var<'a, 'd>(u: &'a UFunVar<'d>) -> &'a Self::FunVar<'d> {
+//         todo!()
+//     }
+// }
 
-    pub fn len(&self) -> usize {
-        self.len
-    }
+// // d1
 
-    pub fn get(&self, idx: usize) -> Option<&T> {
-        debug_assert!(idx < self.len);
-        self.data[idx].as_ref()
-    }
+// #[derive(Clone, Copy)]
+// pub struct D1;
 
-    pub fn push(&self, value: T) -> Self
-    where
-        T: Clone,
-    {
-        debug_assert!(self.len < N);
-        let mut data = self.data.clone();
-        data[self.len] = Some(value);
-        let len = self.len + 1;
-        Self { len, data }
-    }
-}
+// impl D for D1 {
+//     fn dim() -> Dim {
+//         Dim::D1
+//     }
 
-impl<const N: usize, T> Index<usize> for ConVec<N, T> {
-    type Output = T;
+//     // var
 
-    #[inline(always)]
-    fn index(&self, idx: usize) -> &Self::Output {
-        self.get(idx).unwrap()
-    }
-}
+//     type FunVar<'d> = FunVar1<'d>;
+
+//     #[inline(always)]
+//     fn unpack_fun_var<'a, 'd>(u: &'a UFunVar<'d>) -> &'a Self::FunVar<'d> {
+//         unsafe { &u.d1 }
+//     }
+// }
+
+// // d2
+
+// #[derive(Clone, Copy)]
+// pub struct D2;
+
+// impl D for D2 {
+//     fn dim() -> Dim {
+//         Dim::D2
+//     }
+
+//     // var
+
+//     type FunVar<'d> = FunVar2<'d>;
+
+//     #[inline(always)]
+//     fn unpack_fun_var<'a, 'd>(u: &'a UFunVar<'d>) -> &'a Self::FunVar<'d> {
+//         unsafe { &u.d2 }
+//     }
+// }

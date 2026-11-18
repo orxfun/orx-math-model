@@ -1,5 +1,4 @@
-use crate::Model;
-use crate::{SetCatInt, SetCatStr, SetOrd};
+use crate::{Model, SetCatInt, SetCatStr, SetOrd, SymWrap};
 use alloc::string::{String, ToString};
 
 #[test]

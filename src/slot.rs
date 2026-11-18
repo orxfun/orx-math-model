@@ -1,4 +1,4 @@
-use crate::{new_bag, Bag, Model, Res, ResValid};
+use crate::{Bag, Model, Res, ResValid};
 use core::marker::PhantomData;
 use orx_imp_vec::Elem;
 
@@ -12,12 +12,6 @@ pub enum State {
 
 pub struct SlotStates {
     bag: Bag<State>,
-}
-
-impl Default for SlotStates {
-    fn default() -> Self {
-        Self { bag: new_bag() }
-    }
 }
 
 impl SlotStates {

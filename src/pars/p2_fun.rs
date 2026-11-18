@@ -1,24 +1,20 @@
-use crate::{
-    Res, ResValid, ScaInt, ScaNum, Set, SetCatInt, SetCatStr, SetOrd, SetTyp, Val, ValTyp,
-};
+use crate::{Set, SetCatInt, SetCatStr, SetOrd, SetTyp, ValTyp};
 use alloc::boxed::Box;
 use core::mem::{transmute, ManuallyDrop};
 
-// core
+pub type FP2<'d, I0, I1> =
+    Box<dyn Fn(<I0 as Set>::IdxRaw<'d>, <I1 as Set>::IdxRaw<'d>) -> f64 + 'd>;
 
-pub type FP2<'d, V, I0, I1> =
-    Box<dyn Fn(<I0 as Set>::IdxRaw<'d>, <I1 as Set>::IdxRaw<'d>) -> <V as Val>::Raw + 'd>;
-
-// v-i0
+// i0
 
 #[repr(C)]
-pub union UFunP2_V_I0<'d, V: Val, I0: Set> {
-    pub cint: ManuallyDrop<FP2<'d, V, I0, SetCatInt>>,
-    pub cstr: ManuallyDrop<FP2<'d, V, I0, SetCatStr>>,
-    pub ord: ManuallyDrop<FP2<'d, V, I0, SetOrd>>,
+pub union UFunP2_I0<'d, I0: Set> {
+    pub cint: ManuallyDrop<FP2<'d, I0, SetCatInt>>,
+    pub cstr: ManuallyDrop<FP2<'d, I0, SetCatStr>>,
+    pub ord: ManuallyDrop<FP2<'d, I0, SetOrd>>,
 }
 
-impl<'d, V: Val, I0: Set> UFunP2_V_I0<'d, V, I0> {
+impl<'d, I0: Set> UFunP2_I0<'d, I0> {
     fn empty(i1_typ: SetTyp) -> ManuallyDrop<Self> {
         ManuallyDrop::new(match i1_typ {
             SetTyp::CatInt => Self {
@@ -33,7 +29,7 @@ impl<'d, V: Val, I0: Set> UFunP2_V_I0<'d, V, I0> {
         })
     }
 
-    fn create<I1: Set>(fun: FP2<'d, V, I0, I1>) -> ManuallyDrop<Self> {
+    fn create<I1: Set>(fun: FP2<'d, I0, I1>) -> ManuallyDrop<Self> {
         unsafe {
             ManuallyDrop::new(match I1::typ() {
                 SetTyp::CatInt => Self {
@@ -49,16 +45,6 @@ impl<'d, V: Val, I0: Set> UFunP2_V_I0<'d, V, I0> {
         }
     }
 
-    fn get<I1: Set>(&self) -> &FP2<'d, V, I0, I1> {
-        unsafe {
-            match I1::typ() {
-                SetTyp::CatInt => transmute(&self.cint),
-                SetTyp::CatStr => transmute(&self.cstr),
-                SetTyp::Ord => transmute(&self.ord),
-            }
-        }
-    }
-
     fn man_drop(&mut self, i1_typ: SetTyp) {
         unsafe {
             match i1_typ {
@@ -70,47 +56,47 @@ impl<'d, V: Val, I0: Set> UFunP2_V_I0<'d, V, I0> {
     }
 }
 
-// v
+// .
 
 #[repr(C)]
-pub union UFunP2_V<'d, V: Val> {
-    pub cint: ManuallyDrop<UFunP2_V_I0<'d, V, SetCatInt>>,
-    pub cstr: ManuallyDrop<UFunP2_V_I0<'d, V, SetCatStr>>,
-    pub ord: ManuallyDrop<UFunP2_V_I0<'d, V, SetOrd>>,
+pub union UFunP2<'d> {
+    pub cint: ManuallyDrop<UFunP2_I0<'d, SetCatInt>>,
+    pub cstr: ManuallyDrop<UFunP2_I0<'d, SetCatStr>>,
+    pub ord: ManuallyDrop<UFunP2_I0<'d, SetOrd>>,
 }
 
-impl<'d, V: Val> UFunP2_V<'d, V> {
-    fn empty(i0_typ: SetTyp, i1_typ: SetTyp) -> ManuallyDrop<Self> {
+impl<'d> UFunP2<'d> {
+    pub fn empty(i0_typ: SetTyp, i1_typ: SetTyp) -> ManuallyDrop<Self> {
         ManuallyDrop::new(match i0_typ {
             SetTyp::CatInt => Self {
-                cint: UFunP2_V_I0::empty(i1_typ),
+                cint: UFunP2_I0::empty(i1_typ),
             },
             SetTyp::CatStr => Self {
-                cstr: UFunP2_V_I0::empty(i1_typ),
+                cstr: UFunP2_I0::empty(i1_typ),
             },
             SetTyp::Ord => Self {
-                ord: UFunP2_V_I0::empty(i1_typ),
+                ord: UFunP2_I0::empty(i1_typ),
             },
         })
     }
 
-    fn create<I0: Set, I1: Set>(fun: FP2<'d, V, I0, I1>) -> ManuallyDrop<Self> {
+    pub fn create<I0: Set, I1: Set>(fun: FP2<'d, I0, I1>) -> ManuallyDrop<Self> {
         unsafe {
             ManuallyDrop::new(match I0::typ() {
                 SetTyp::CatInt => Self {
-                    cint: transmute(UFunP2_V_I0::<V, I0>::create::<I1>(fun)),
+                    cint: transmute(UFunP2_I0::<I0>::create::<I1>(fun)),
                 },
                 SetTyp::CatStr => Self {
-                    cstr: transmute(UFunP2_V_I0::<V, I0>::create::<I1>(fun)),
+                    cstr: transmute(UFunP2_I0::<I0>::create::<I1>(fun)),
                 },
                 SetTyp::Ord => Self {
-                    ord: transmute(UFunP2_V_I0::<V, I0>::create::<I1>(fun)),
+                    ord: transmute(UFunP2_I0::<I0>::create::<I1>(fun)),
                 },
             })
         }
     }
 
-    fn man_drop(&mut self, i0_typ: SetTyp, i1_typ: SetTyp) {
+    pub fn man_drop(&mut self, i0_typ: SetTyp, i1_typ: SetTyp) {
         unsafe {
             match i0_typ {
                 SetTyp::CatInt => self.cint.man_drop(i1_typ),
@@ -118,94 +104,5 @@ impl<'d, V: Val> UFunP2_V<'d, V> {
                 SetTyp::Ord => self.ord.man_drop(i1_typ),
             }
         }
-    }
-}
-
-// .
-
-#[repr(C)]
-pub union UFunP2<'d> {
-    pub int: ManuallyDrop<UFunP2_V<'d, ScaInt>>,
-    pub num: ManuallyDrop<UFunP2_V<'d, ScaNum>>,
-}
-
-impl<'d> UFunP2<'d> {
-    pub fn man_drop(&mut self, val_typ: ValTyp, i0_typ: SetTyp, i1_typ: SetTyp) {
-        unsafe {
-            match val_typ {
-                ValTyp::Int => (&mut self.int).man_drop(i0_typ, i1_typ),
-                ValTyp::Num => (&mut self.num).man_drop(i0_typ, i1_typ),
-            }
-        }
-    }
-
-    pub fn empty(val_typ: ValTyp, i0_typ: SetTyp, i1_typ: SetTyp) -> Self {
-        match val_typ {
-            ValTyp::Int => UFunP2 {
-                int: UFunP2_V::empty(i0_typ, i1_typ),
-            },
-            ValTyp::Num => UFunP2 {
-                num: UFunP2_V::empty(i0_typ, i1_typ),
-            },
-        }
-    }
-
-    pub fn create<V: Val, I0: Set, I1: Set>(fun: FP2<'d, V, I0, I1>) -> Self {
-        unsafe {
-            match V::val_typ() {
-                ValTyp::Int => UFunP2 {
-                    int: UFunP2_V::create::<I0, I1>(transmute(fun)),
-                },
-                ValTyp::Num => UFunP2 {
-                    num: UFunP2_V::create::<I0, I1>(transmute(fun)),
-                },
-            }
-        }
-    }
-}
-
-#[derive(derive_new::new)]
-pub struct FunP2<'d> {
-    pub val_typ: ValTyp,
-    pub i0_typ: SetTyp,
-    pub i1_typ: SetTyp,
-    data: UFunP2<'d>,
-}
-
-impl<'d> Drop for FunP2<'d> {
-    fn drop(&mut self) {
-        match self.val_typ {
-            ValTyp::Int => unsafe { &mut self.data.int }.man_drop(self.i0_typ, self.i1_typ),
-            ValTyp::Num => unsafe { &mut self.data.num }.man_drop(self.i0_typ, self.i1_typ),
-        }
-    }
-}
-
-impl<'d> FunP2<'d> {
-    pub fn empty(val_typ: ValTyp, i0_typ: SetTyp, i1_typ: SetTyp) -> Self {
-        let data = match val_typ {
-            ValTyp::Int => UFunP2 {
-                int: UFunP2_V::empty(i0_typ, i1_typ),
-            },
-            ValTyp::Num => UFunP2 {
-                num: UFunP2_V::empty(i0_typ, i1_typ),
-            },
-        };
-        Self::new(val_typ, i0_typ, i1_typ, data)
-    }
-
-    pub fn create<V: Val, I0: Set, I1: Set>(fun: FP2<'d, V, I0, I1>) -> Self {
-        let (val_typ, i0_typ, i1_typ) = (V::val_typ(), I0::typ(), I1::typ());
-        let data = unsafe {
-            match val_typ {
-                ValTyp::Int => UFunP2 {
-                    int: UFunP2_V::create::<I0, I1>(transmute(fun)),
-                },
-                ValTyp::Num => UFunP2 {
-                    num: UFunP2_V::create::<I0, I1>(transmute(fun)),
-                },
-            }
-        };
-        Self::new(val_typ, i0_typ, i1_typ, data)
     }
 }

@@ -1,8 +1,8 @@
 use crate::pars::p1_fun::FP1;
-use crate::pars::p2_fun::FP2;
-use crate::pars::ParFun;
+use crate::pars::par_fun::ParFun;
 use crate::sets::DSet;
-use crate::{Dim, DimVec, Ptr, Res, ResValid, Set, Slot, Val};
+use crate::{AsF64, DimVec, Ptr, Res, Set, Slot, ValTyp};
+use alloc::boxed::Box;
 
 #[derive(derive_new::new)]
 pub struct DPars<'d> {
@@ -11,39 +11,32 @@ pub struct DPars<'d> {
 }
 
 impl<'d> DPars<'d> {
+    #[inline(always)]
+    pub fn fun(&self) -> &ParFun<'d> {
+        self.slot.get()
+    }
+
     pub fn fun_ptr(&self) -> Ptr<'d, ParFun<'d>> {
         self.slot.ptr()
     }
 
     // bind
 
-    pub fn d1_bind<V: Val, I0: Set>(&self, fun: FP1<'d, V, I0>) -> Res {
-        let fun = ParFun::d1_create::<V, I0>(fun);
-        self.slot.bind(fun)
-    }
-
-    pub fn d2_bind<V: Val, I0: Set, I1: Set>(&self, fun: FP2<'d, V, I0, I1>) -> Res {
-        let fun = ParFun::d2_create::<V, I0, I1>(fun);
-        self.slot.bind(fun)
-    }
-
-    // at
-
-    pub fn dim(&self) -> Dim {
-        self.sets.dim()
-    }
-
-    #[inline(always)]
-    pub fn d1_at<V: Val, I0: Set>(&self, i0: I0::IdxRaw<'d>) -> V::Raw {
-        self.slot.get().d1_at::<V, I0>(i0)
-    }
-
-    #[inline(always)]
-    pub fn d2_at<V: Val, I0: Set, I1: Set>(
+    pub fn d1_bind<V: AsF64, I0: Set>(
         &self,
-        i0: I0::IdxRaw<'d>,
-        i1: I1::IdxRaw<'d>,
-    ) -> V::Raw {
-        self.slot.get().d2_at::<V, I0, I1>(i0, i1)
+        val_typ: ValTyp,
+        fun: impl Fn(I0::IdxRaw<'d>) -> V + 'd,
+    ) -> Res {
+        debug_assert_eq!(self.fun().val_typ, val_typ);
+        self.slot.bind(ParFun::d1_create::<V, I0>(val_typ, fun))
+    }
+
+    pub fn d2_bind<V: AsF64, I0: Set, I1: Set>(
+        &self,
+        val_typ: ValTyp,
+        fun: impl Fn(I0::IdxRaw<'d>, I1::IdxRaw<'d>) -> V + 'd,
+    ) -> Res {
+        debug_assert_eq!(self.fun().val_typ, val_typ);
+        self.slot.bind(ParFun::d2_create::<V, I0, I1>(val_typ, fun))
     }
 }
