@@ -4,7 +4,8 @@ use alloc::boxed::Box;
 
 type Formatter<'a> = core::fmt::Formatter<'a>;
 
-pub type FVarStr<'d> = Box<dyn Fn(&mut Formatter<'_>) + 'd>;
+pub type FVarStr<'d> =
+    Box<dyn Fn(&mut core::fmt::Formatter<'_>) -> Result<(), core::fmt::Error> + 'd>;
 
 pub struct FVarStrCtor;
 
@@ -13,11 +14,7 @@ impl FVarStrCtor {
         parent: Ptr<'d, DVars<'d>>,
         fun: impl Fn() -> Idx1<'d, I0> + 'd,
     ) -> FVarStr<'d> {
-        Box::new(move |f| {
-            let i0 = fun();
-            let arr = [I0::into_idx_enum(i0)];
-            IdxEvalVec(ConVec::new(arr))
-        })
+        Box::new(move |f| I0::write_idx(f, fun()))
     }
 
     pub fn d2<'d, I0: Set, I1: Set>(
@@ -26,8 +23,9 @@ impl FVarStrCtor {
     ) -> FVarStr<'d> {
         Box::new(move |f| {
             let (i0, i1) = fun();
-            let arr = [I0::into_idx_enum(i0), I1::into_idx_enum(i1)];
-            IdxEvalVec(ConVec::new(arr))
+            I0::write_idx(f, i0)?;
+            write!(f, "_")?;
+            I1::write_idx(f, i1)
         })
     }
 }
