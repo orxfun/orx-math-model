@@ -3,13 +3,6 @@ use crate::scalars::{DNum, ValNum};
 use crate::{Int, LinExpr, Num, Ptr, SymWrap, ValTyp, Var, VarType};
 use core::ops::Mul;
 
-fn mul_val_var<'m, 'd>(var: Var<'m, 'd>, val: Ptr<'d, DNum<'d>>) -> LinExpr<'m, 'd> {
-    let term = DLinTerm::new(Some(val), var.ptr());
-    let terms = ExprVec::new([term]);
-    let data = DLinExpr::new(terms, None);
-    var.m().lin_exp(data)
-}
-
 // var * num
 
 macro_rules! var_mul_num {
@@ -18,7 +11,10 @@ macro_rules! var_mul_num {
             type Output = LinExpr<'m, 'd>;
 
             fn mul(self, rhs: $n) -> Self::Output {
-                mul_val_var(self, rhs.ptr())
+                let term = DLinTerm::new(Some(rhs.ptr()), self.ptr());
+                let terms = ExprVec::new([term]);
+                let data = DLinExpr::new(terms, None);
+                self.m().lin_exp(data)
             }
         }
 
