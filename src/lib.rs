@@ -40,7 +40,7 @@ mod vars;
 pub(crate) use bag::Bag;
 pub(crate) use con_vals::{ConValTyp, TConVal};
 pub(crate) use con_vec::{ConVec, DimVec};
-pub(crate) use dim::Dim;
+pub(crate) use dim::{Dim, D, D0, D1, D2};
 pub(crate) use elements::{Elements, ElementsIter};
 pub(crate) use err::{Res, ResValid};
 pub(crate) use scalars::{AsF64, AsI64, ValTyp};
