@@ -1,6 +1,6 @@
 use crate::scalars::var::var_fun::UFunVar;
-use crate::scalars::var::var_fun1::{FVar1, FunVar1, Idx1};
-use crate::scalars::var::var_fun2::{FVar2, FunVar2, Idx2};
+use crate::scalars::var::var_fun1::{FVarIdx1, FunVar1, Idx1};
+use crate::scalars::var::var_fun2::{FVarIdx2, FunVar2, Idx2};
 use crate::vars::DVars;
 use crate::{Dim, Ptr, Set};
 use core::mem::ManuallyDrop;
@@ -26,7 +26,7 @@ impl<'d> Drop for DVar<'d> {
 impl<'d> DVar<'d> {
     // create
 
-    pub fn create_d1<I0: Set>(parent: Ptr<'d, DVars<'d>>, fun: FVar1<'d, I0>) -> Self {
+    pub fn create_d1<I0: Set>(parent: Ptr<'d, DVars<'d>>, fun: FVarIdx1<'d, I0>) -> Self {
         let i0 = parent.get().set_ptr(0);
         debug_assert_eq!(I0::typ(), i0.get().typ);
         let data = UFunVar {
@@ -35,7 +35,10 @@ impl<'d> DVar<'d> {
         Self::new(parent, data)
     }
 
-    pub fn create_d2<I0: Set, I1: Set>(parent: Ptr<'d, DVars<'d>>, fun: FVar2<'d, I0, I1>) -> Self {
+    pub fn create_d2<I0: Set, I1: Set>(
+        parent: Ptr<'d, DVars<'d>>,
+        fun: FVarIdx2<'d, I0, I1>,
+    ) -> Self {
         let [i0, i1] = [0, 1].map(|i| parent.get().set_ptr(i));
         debug_assert_eq!(I0::typ(), i0.get().typ);
         debug_assert_eq!(I1::typ(), i1.get().typ);
