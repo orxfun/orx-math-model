@@ -1,3 +1,6 @@
+#[cfg(test)]
+mod tests;
+
 mod lin_expr_data;
 mod lin_expr_sym;
 mod lin_term_data;

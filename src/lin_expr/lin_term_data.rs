@@ -41,8 +41,8 @@ impl<'d> DLinTerm<'d> {
     pub fn mul_con<'m>(&self, m: &'m Model<'d>, rhs: impl AsF64) -> Self {
         let coef = match self.coef {
             Coef::One => Coef::Con(rhs.as_f64()),
-            Coef::MinusOne => Coef::Con(-1.0 * rhs.as_f64()),
-            Coef::Con(c) => Coef::Con(-c * rhs.as_f64()),
+            Coef::MinusOne => Coef::Con(-rhs.as_f64()),
+            Coef::Con(c) => Coef::Con(c * rhs.as_f64()),
             Coef::Ptr(c) => Coef::Ptr(m.val::<ValNum>(DNum::mul_con(c, rhs.as_f64())).ptr()),
         };
         Self::new(coef, self.var)

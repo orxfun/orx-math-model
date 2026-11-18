@@ -132,7 +132,7 @@ impl<'d, T> Ptr<'d, T> {
         unsafe { Elem::new(self.p as *mut T) }
     }
 
-    pub fn ptr_eq(&self, other: &Self) -> bool {
+    pub fn ptr_eq(self, other: Self) -> bool {
         self.p == other.p
     }
 }
