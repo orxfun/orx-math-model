@@ -6,7 +6,7 @@ fn num() {
     let data = [3.0, 42.0, 2.0];
 
     // modeling
-    let m = Model::default();
+    let m = Model::new();
     let v1 = m.val::<ValNum>(DNum::new_num(|| data[1]));
     let v2 = m.val::<ValNum>(DNum::new_num(|| 42f32));
     let v3 = m.val::<ValNum>(DNum::new_num(|| 42));
@@ -24,7 +24,7 @@ fn int() {
     let data = [3, 42, 2];
 
     // modeling
-    let m = Model::default();
+    let m = Model::new();
     let v1 = m.val::<ValInt>(DNum::new_int(|| data[1]));
     let v2 = m.val::<ValInt>(DNum::new_int(|| 42i64));
     let v3 = m.val::<ValInt>(DNum::new_int(|| 42usize));

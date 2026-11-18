@@ -8,7 +8,7 @@ fn set_cat_int() {
     let values = vec![1usize, 2, 7, 9];
 
     // modeling
-    let m = Model::default();
+    let m = Model::new();
     let set = m.cat_set_int();
 
     // binding
@@ -26,7 +26,7 @@ fn set_cat_str() {
     let values: Vec<_> = [1, 2, 7, 9].map(|x| x.to_string()).into_iter().collect();
 
     // modeling
-    let m = Model::default();
+    let m = Model::new();
     let set = m.cat_set_str();
 
     // binding
@@ -44,7 +44,7 @@ fn set_ord() {
     let values = vec![1i64, 2, 7, 9];
 
     // modeling
-    let m = Model::default();
+    let m = Model::new();
     let set = m.ord_set();
 
     // binding

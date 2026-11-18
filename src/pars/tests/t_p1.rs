@@ -11,7 +11,7 @@ fn p1_cint() {
     let values = vec![1.0, 2.0, 7.0, 9.0];
 
     // modeling
-    let m = Model::default();
+    let m = Model::new();
     let set = m.cat_set_int();
     let par = m.par1_num(set);
 
@@ -37,7 +37,7 @@ fn p1_cstr() {
         .collect();
 
     // modeling
-    let m = Model::default();
+    let m = Model::new();
     let set = m.cat_set_str();
     let par = m.par1_int(set);
 
@@ -59,7 +59,7 @@ fn p1_ord() {
     let values = |i: i64| i as f64 * 2.0;
 
     // modeling
-    let m = Model::default();
+    let m = Model::new();
     let set = m.ord_set();
     let par = m.par1_num(set);
 

@@ -9,7 +9,7 @@ fn var_from_var1() {
     macro_rules! test_i0_i1 {
         ($s0:ty, $i0:expr, $s1:ty, $i1:expr) => {
             // modeling
-            let m = Model::default();
+            let m = Model::new();
             let s0 = m.set::<$s0>();
             let s1 = m.set::<$s1>();
             let vard = m.var2(VarType::Binary, s0, s1);

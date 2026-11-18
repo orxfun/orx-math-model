@@ -19,7 +19,7 @@ fn p2_cint_cstr() {
     let par_data: Vec<HashMap<String, f64>> = (0..4).map(|i0| values(i0)).collect();
 
     // modeling
-    let m = Model::default();
+    let m = Model::new();
     let s0 = m.cat_set_int();
     let s1 = m.cat_set_str();
     let par = m.par2_num(s0, s1);
@@ -50,7 +50,7 @@ fn p2_cstr_ord() {
         .collect();
 
     // modeling
-    let m = Model::default();
+    let m = Model::new();
     let s0 = m.cat_set_str();
     let s1 = m.ord_set();
     let par = m.par2_num(s0, s1);
@@ -76,7 +76,7 @@ fn p2_ord_cint() {
     let par_data = vec![vec![0, 1], vec![2, 3, 4], vec![5]];
 
     // modeling
-    let m = Model::default();
+    let m = Model::new();
     let s0 = m.ord_set();
     let s1 = m.cat_set_int();
     let par = m.par2_int(s0, s1);

@@ -2,7 +2,7 @@ use crate::con_vals::{ConVal, DConVal};
 use crate::idxs::{DIdx, IdxVal};
 use crate::lin_expr::DLinExpr;
 use crate::pars::{DPars, IntParD1, IntParD2, NumParD1, NumParD2, ParFun};
-use crate::scalars::{DNum, DVar, Int, Num, Val, Var};
+use crate::scalars::{CommonNumbers, DNum, DVar, Int, Num, Val, Var};
 // use crate::lin_expr::{DLinExpr, LinExpBag, LinExpr};
 // use crate::pars::{ParBag, ParD1, ParD2, ParFun, ParFunBag};
 // use crate::scalars::{DSca, FVar1, FVar2, ScaBag};
@@ -21,7 +21,6 @@ use alloc::boxed::Box;
 use core::mem::ManuallyDrop;
 use orx_imp_vec::Elem;
 
-#[derive(Default)]
 pub struct Model<'d> {
     // states
     slot_states: Bag<State>,
@@ -47,6 +46,7 @@ pub struct Model<'d> {
     // sca_bag: ManuallyDrop<ScaBag<'d>>,
     con_val_bag: Bag<DConVal>,
     sym_ref_bag: Bag<SymRef<'d>>,
+    common_numbers: CommonNumbers<'d>,
 
     // expr
     lin_exp_bag: Bag<DLinExpr<'d>>,
@@ -60,6 +60,27 @@ impl<'d> Drop for Model<'d> {
 }
 
 impl<'d> Model<'d> {
+    pub fn new() -> Self {
+        let num_bag = Bag::default();
+        let common_numbers = CommonNumbers::new(&num_bag);
+        Self {
+            slot_states: Default::default(),
+            set_fun_bag: Default::default(),
+            set_bag: Default::default(),
+            par_fun_bag: Default::default(),
+            par_bag: Default::default(),
+            vars_bag: Default::default(),
+            idx_val_bag: Default::default(),
+            idx_bag: Default::default(),
+            num_bag,
+            var_bag: Default::default(),
+            con_val_bag: Default::default(),
+            sym_ref_bag: Default::default(),
+            common_numbers,
+            lin_exp_bag: Default::default(),
+        }
+    }
+
     // states
 
     pub(crate) fn slot_state(&self) -> Elem<'_, State> {
