@@ -45,7 +45,7 @@ pub(crate) use elements::{Elements, ElementsIter};
 pub(crate) use err::{Res, ResValid};
 pub(crate) use lin_expr::LinExpr;
 pub(crate) use scalars::{AsF64, AsI64, Int, Num, ValTyp, Var};
-pub(crate) use sets::{Set, SetCatInt, SetCatStr, SetOrd, SetSym, SetTyp};
+pub(crate) use sets::{EIdx, Idx1, Idx2, Set, SetCatInt, SetCatStr, SetOrd, SetSym, SetTyp};
 pub(crate) use slot::{Ptr, PtrMut, Slot};
 pub(crate) use symbol::{SymWrap, Symbol};
 pub(crate) use vars::{Bounds, VarD1, VarD2, VarType};
