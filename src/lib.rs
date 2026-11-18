@@ -26,6 +26,7 @@ mod elements;
 mod err;
 mod idxs;
 // mod lin_expr;
+mod con_vec;
 mod model;
 mod pars;
 mod scalars;
@@ -38,7 +39,8 @@ mod vars;
 // crate
 pub(crate) use bag::Bag;
 pub(crate) use con_vals::{ConValTyp, TConVal};
-pub(crate) use dim::{ConVec, Dim, DimVec};
+pub(crate) use con_vec::{ConVec, DimVec};
+pub(crate) use dim::Dim;
 pub(crate) use elements::{Elements, ElementsIter};
 pub(crate) use err::{Res, ResValid};
 pub(crate) use scalars::{AsF64, AsI64, ValTyp};
