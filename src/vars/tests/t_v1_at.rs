@@ -27,13 +27,13 @@ fn v1_at_int_cint() {
     let mut elements: Elements<El<'_>> = vec![].into();
     let iter = ElementsIter::<I0>::new(i0, &mut elements);
     for (i, _) in iter.enumerate() {
-        let exp = s0_data[i];
+        let exp = s0_data[i].to_string();
         for sca in sca1 {
-            assert_eq!(exp, sca.data().indices_d1::<I0>());
+            assert_eq!(exp, sca.data().to_string());
         }
-        let exp = s0_data[2];
+        let exp = s0_data[2].to_string();
         for sca in sca2 {
-            assert_eq!(exp, sca.data().indices_d1::<I0>());
+            assert_eq!(exp, sca.data().to_string());
         }
     }
 }
@@ -61,13 +61,13 @@ fn v1_at_int_cstr() {
     let mut elements: Elements<El<'_>> = vec![].into();
     let iter = ElementsIter::<I0>::new(i0, &mut elements);
     for (i, _) in iter.enumerate() {
-        let exp = &s0_data[i];
+        let exp = s0_data[i].to_string();
         for sca in sca1 {
-            assert_eq!(exp, sca.data().indices_d1::<I0>());
+            assert_eq!(exp, sca.data().to_string());
         }
-        let exp = &s0_data[2];
+        let exp = s0_data[2].to_string();
         for sca in sca2 {
-            assert_eq!(exp, sca.data().indices_d1::<I0>());
+            assert_eq!(exp, sca.data().to_string());
         }
     }
 }
@@ -95,13 +95,13 @@ fn v1_at_int_ord() {
     let mut elements: Elements<El<'_>> = vec![].into();
     let iter = ElementsIter::<I0>::new(i0, &mut elements);
     for (i, _) in iter.enumerate() {
-        let exp = s0_data[i];
+        let exp = s0_data[i].to_string();
         for sca in sca1 {
-            assert_eq!(exp, sca.data().indices_d1::<I0>());
+            assert_eq!(exp, sca.data().to_string());
         }
-        let exp = s0_data[2];
+        let exp = s0_data[2].to_string();
         for sca in sca2 {
-            assert_eq!(exp, sca.data().indices_d1::<I0>());
+            assert_eq!(exp, sca.data().to_string());
         }
     }
 }

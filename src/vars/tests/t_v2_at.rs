@@ -1,8 +1,14 @@
 use crate::{
     Bounds, Elements, ElementsIter, Model, Set, SetCatInt, SetCatStr, SetOrd, SymWrap, VarType,
 };
-use alloc::string::ToString;
+use alloc::format;
+use alloc::string::{String, ToString};
 use alloc::{vec, vec::Vec};
+use core::fmt::Display;
+
+fn merge(a: impl Display, b: impl Display) -> String {
+    format!("{}_{}", a, b)
+}
 
 #[test]
 fn v2_at_int_cint_cstr() {
@@ -38,24 +44,24 @@ fn v2_at_int_cint_cstr() {
         let mut el1: Elements<El1<'_>> = vec![].into();
         let it1 = ElementsIter::<I1>::new(i1, &mut el1);
         for (j, _) in it1.enumerate() {
-            let exp = (s0_data[i], &s1_data[j]);
+            let exp = merge(s0_data[i], &s1_data[j]);
             for sca in sca1 {
-                assert_eq!(exp, sca.data().indices_d2::<I0, I1>());
+                assert_eq!(exp, sca.data().to_string());
             }
 
-            let exp = (s0_data[i], &s1_data[3]);
+            let exp = merge(s0_data[i], &s1_data[3]);
             for sca in sca2 {
-                assert_eq!(exp, sca.data().indices_d2::<I0, I1>());
+                assert_eq!(exp, sca.data().to_string());
             }
 
-            let exp = (s0_data[2], &s1_data[j]);
+            let exp = merge(s0_data[2], &s1_data[j]);
             for sca in sca3 {
-                assert_eq!(exp, sca.data().indices_d2::<I0, I1>());
+                assert_eq!(exp, sca.data().to_string());
             }
 
-            let exp = (s0_data[2], &s1_data[3]);
+            let exp = merge(s0_data[2], &s1_data[3]);
             for sca in sca4 {
-                assert_eq!(exp, sca.data().indices_d2::<I0, I1>());
+                assert_eq!(exp, sca.data().to_string());
             }
         }
     }
@@ -95,24 +101,24 @@ fn v2_at_int_cstr_ord() {
         let mut el1: Elements<El1<'_>> = vec![].into();
         let it1 = ElementsIter::<I1>::new(i1, &mut el1);
         for (j, _) in it1.enumerate() {
-            let exp = (&s0_data[i], s1_data[j]);
+            let exp = merge(&s0_data[i], s1_data[j]);
             for sca in sca1 {
-                assert_eq!(exp, sca.data().indices_d2::<I0, I1>());
+                assert_eq!(exp, sca.data().to_string());
             }
 
-            let exp = (&s0_data[i], s1_data[3]);
+            let exp = merge(&s0_data[i], s1_data[3]);
             for sca in sca2 {
-                assert_eq!(exp, sca.data().indices_d2::<I0, I1>());
+                assert_eq!(exp, sca.data().to_string());
             }
 
-            let exp = (&s0_data[2], s1_data[j]);
+            let exp = merge(&s0_data[2], s1_data[j]);
             for sca in sca3 {
-                assert_eq!(exp, sca.data().indices_d2::<I0, I1>());
+                assert_eq!(exp, sca.data().to_string());
             }
 
-            let exp = (&s0_data[2], s1_data[3]);
+            let exp = merge(&s0_data[2], s1_data[3]);
             for sca in sca4 {
-                assert_eq!(exp, sca.data().indices_d2::<I0, I1>());
+                assert_eq!(exp, sca.data().to_string());
             }
         }
     }
@@ -152,24 +158,24 @@ fn v2_at_int_ord_cint() {
         let mut el1: Elements<El1<'_>> = vec![].into();
         let it1 = ElementsIter::<I1>::new(i1, &mut el1);
         for (j, _) in it1.enumerate() {
-            let exp = (s0_data[i], s1_data[j]);
+            let exp = merge(s0_data[i], s1_data[j]);
             for sca in sca1 {
-                assert_eq!(exp, sca.data().indices_d2::<I0, I1>());
+                assert_eq!(exp, sca.data().to_string());
             }
 
-            let exp = (s0_data[i], s1_data[3]);
+            let exp = merge(s0_data[i], s1_data[3]);
             for sca in sca2 {
-                assert_eq!(exp, sca.data().indices_d2::<I0, I1>());
+                assert_eq!(exp, sca.data().to_string());
             }
 
-            let exp = (s0_data[2], s1_data[j]);
+            let exp = merge(s0_data[2], s1_data[j]);
             for sca in sca3 {
-                assert_eq!(exp, sca.data().indices_d2::<I0, I1>());
+                assert_eq!(exp, sca.data().to_string());
             }
 
-            let exp = (s0_data[2], s1_data[3]);
+            let exp = merge(s0_data[2], s1_data[3]);
             for sca in sca4 {
-                assert_eq!(exp, sca.data().indices_d2::<I0, I1>());
+                assert_eq!(exp, sca.data().to_string());
             }
         }
     }

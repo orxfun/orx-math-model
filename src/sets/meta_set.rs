@@ -8,10 +8,9 @@ use crate::vars::{VarD1, VarD2};
 use crate::{Model, Ptr, SetSym, SymWrap, Symbol, ValTyp};
 use alloc::boxed::Box;
 use alloc::string::{String, ToString};
+use core::fmt::Write;
 use core::mem::{transmute, ManuallyDrop};
 use orx_imp_vec::Elem;
-
-type Formatter<'a> = core::fmt::Formatter<'a>;
 
 // idx types
 
@@ -68,7 +67,7 @@ pub trait Set: Clone + Copy + 'static {
 
     fn into_idx_enum<'d>(raw: Self::IdxRaw<'d>) -> EIdx<'d>;
 
-    fn write_idx<'d>(f: &mut Formatter<'_>, raw: Self::IdxRaw<'d>) -> Result<(), core::fmt::Error>;
+    fn write_idx_str<'d>(f: &mut String, raw: Self::IdxRaw<'d>) -> Result<(), core::fmt::Error>;
 
     // p1
 
@@ -200,7 +199,7 @@ impl Set for SetCatInt {
     }
 
     #[inline(always)]
-    fn write_idx<'d>(f: &mut Formatter<'_>, raw: Self::IdxRaw<'d>) -> Result<(), core::fmt::Error> {
+    fn write_idx_str<'d>(f: &mut String, raw: Self::IdxRaw<'d>) -> Result<(), core::fmt::Error> {
         write!(f, "{raw}")
     }
 
@@ -308,7 +307,7 @@ impl Set for SetCatStr {
     }
 
     #[inline(always)]
-    fn write_idx<'d>(f: &mut Formatter<'_>, raw: Self::IdxRaw<'d>) -> Result<(), core::fmt::Error> {
+    fn write_idx_str<'d>(f: &mut String, raw: Self::IdxRaw<'d>) -> Result<(), core::fmt::Error> {
         write!(f, "{raw}")
     }
 
@@ -416,7 +415,7 @@ impl Set for SetOrd {
     }
 
     #[inline(always)]
-    fn write_idx<'d>(f: &mut Formatter<'_>, raw: Self::IdxRaw<'d>) -> Result<(), core::fmt::Error> {
+    fn write_idx_str<'d>(f: &mut String, raw: Self::IdxRaw<'d>) -> Result<(), core::fmt::Error> {
         write!(f, "{raw}")
     }
 

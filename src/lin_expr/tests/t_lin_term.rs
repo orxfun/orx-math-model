@@ -43,7 +43,7 @@ fn lin_term() {
     assert!(term.var().ptr_eq(v1.ptr()));
 
     let term = DLinTerm::new(Coef::One, v1.ptr()).neg(&m);
-    assert_eq!(term.eval_coef(), 1.0);
+    assert_eq!(term.eval_coef(), -1.0);
     assert!(term.var().ptr_eq(v1.ptr()));
 
     let term = DLinTerm::new(Coef::Con(7.0), v2.ptr()).neg(&m);

@@ -10,7 +10,7 @@ mod var_fun2;
 mod var_sym;
 
 pub use fun_var_to_idx::{FVarIdx, FVarIdxCtor, IdxEvalVec};
-pub use fun_var_to_str::{FVarWrite, FVarWriteCtor};
+pub use fun_var_to_str::{FVarWriteCtor, FVarWriteStr};
 pub use var_data::DVar;
 pub use var_fun::UFunVar;
 pub use var_fun1::{FVarIdx1, FunVar1, UFunV1};
