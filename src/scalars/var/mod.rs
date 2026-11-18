@@ -2,6 +2,7 @@
 mod tests;
 
 mod fun_var_to_idx;
+mod fun_var_to_str;
 mod var_data;
 mod var_fun;
 mod var_fun1;

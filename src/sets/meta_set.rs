@@ -11,6 +11,11 @@ use alloc::string::{String, ToString};
 use core::mem::{transmute, ManuallyDrop};
 use orx_imp_vec::Elem;
 
+// idx types
+
+pub type Idx1<'d, I0> = <I0 as Set>::IdxRaw<'d>;
+pub type Idx2<'d, I0, I1> = (<I0 as Set>::IdxRaw<'d>, <I1 as Set>::IdxRaw<'d>);
+
 // enums
 
 #[derive(Debug, PartialEq, Clone, Copy)]
