@@ -70,6 +70,14 @@ macro_rules! expr_num {
                 m.lin_exp(DLinExpr::new(terms, constant))
             }
         }
+
+        impl<'m, 'd> Mul<LinExpr<'m, 'd>> for $n {
+            type Output = LinExpr<'m, 'd>;
+
+            fn mul(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
+                rhs * self
+            }
+        }
     };
 }
 
