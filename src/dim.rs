@@ -1,3 +1,5 @@
+use crate::scalars::{FunVar1, FunVar2, UFunVar};
+
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum Dim {
     D0,
@@ -13,6 +15,8 @@ pub trait D: Clone + Copy + 'static {
     // var
 
     type FunVar<'d>;
+
+    fn unpack_fun_var<'a, 'd>(u: &'a UFunVar<'d>) -> &'a Self::FunVar<'d>;
 }
 
 // d0
@@ -28,6 +32,10 @@ impl D for D0 {
     // var
 
     type FunVar<'d> = usize;
+
+    fn unpack_fun_var<'a, 'd>(u: &'a UFunVar<'d>) -> &'a Self::FunVar<'d> {
+        todo!()
+    }
 }
 
 // d1
@@ -42,7 +50,11 @@ impl D for D1 {
 
     // var
 
-    type FunVar<'d> = FunV1<'d>;
+    type FunVar<'d> = FunVar1<'d>;
+
+    fn unpack_fun_var<'a, 'd>(u: &'a UFunVar<'d>) -> &'a Self::FunVar<'d> {
+        unsafe { &u.d1 }
+    }
 }
 
 // d2
@@ -53,5 +65,13 @@ pub struct D2;
 impl D for D2 {
     fn dim() -> Dim {
         Dim::D2
+    }
+
+    // var
+
+    type FunVar<'d> = FunVar2<'d>;
+
+    fn unpack_fun_var<'a, 'd>(u: &'a UFunVar<'d>) -> &'a Self::FunVar<'d> {
+        unsafe { &u.d2 }
     }
 }
