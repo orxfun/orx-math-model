@@ -4,6 +4,7 @@ mod tests;
 mod lin_expr_data;
 mod lin_expr_sym;
 mod lin_term_data;
+mod lin_term_eval;
 mod ops;
 mod sum_data;
 
