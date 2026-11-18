@@ -8,8 +8,8 @@ pub type ExprVec<'d> = ConVec<MAX_EXPR_LEN, DLinTerm<'d>>;
 
 #[derive(derive_new::new)]
 pub struct DLinExpr<'d> {
-    terms: ExprVec<'d>,
-    constant: Option<Ptr<'d, DNum<'d>>>,
+    pub(super) terms: ExprVec<'d>,
+    pub(super) constant: Option<Ptr<'d, DNum<'d>>>,
 }
 
 impl<'d> DLinExpr<'d> {
