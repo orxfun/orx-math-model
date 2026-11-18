@@ -34,7 +34,7 @@ macro_rules! num_con {
 
             fn mul(self, rhs: $n2) -> Self::Output {
                 let t1 = self.ptr();
-                let fun = Box::new(move || t1.get().eval() + rhs.as_f64());
+                let fun = Box::new(move || t1.get().eval() * rhs.as_f64());
                 $fout(self.m(), fun)
             }
         }
@@ -43,7 +43,7 @@ macro_rules! num_con {
             type Output = $out;
 
             fn mul(self, rhs: $n1) -> Self::Output {
-                rhs + self
+                rhs * self
             }
         }
     };

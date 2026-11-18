@@ -1,5 +1,5 @@
 use crate::scalars::num::{DNum, ValInt, ValNum};
-use crate::{Model, Num, SymWrap, ValTyp};
+use crate::{Int, Model, Num, SymWrap, ValTyp};
 
 #[test]
 fn ops_num() {
@@ -44,4 +44,16 @@ fn ops_int() {
     assert_eq!((v2 - v3).data().eval_int(), -1);
     assert_eq!((v3 * v4).data().eval_int(), 12);
     assert_eq!((v4 / v2).data().eval(), 2.0);
+
+    fn int<'m, 'd>(x: Int<'m, 'd>) -> Int<'m, 'd> {
+        x
+    }
+    fn num<'m, 'd>(x: Num<'m, 'd>) -> Num<'m, 'd> {
+        x
+    }
+
+    assert_eq!(int(v1 + 2).data().eval_int(), 3);
+    assert_eq!(int(2i32 - v3).data().eval_int(), -1);
+    assert_eq!(int(v3 * 4u64).data().eval_int(), 12);
+    assert_eq!(num(4usize / v2).data().eval(), 2.0);
 }
