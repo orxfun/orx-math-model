@@ -38,11 +38,11 @@ fn lin_term() {
 
     // ops - neg
 
-    let term = DLinTerm::new(Coef::One, v1.ptr()).neg(&m);
+    let term = DLinTerm::new(Coef::MinusOne, v1.ptr());
     assert_eq!(term.eval_coef(), -1.0);
     assert!(term.var().ptr_eq(v1.ptr()));
 
-    let term = DLinTerm::new(Coef::MinusOne, v1.ptr()).neg(&m);
+    let term = DLinTerm::new(Coef::One, v1.ptr()).neg(&m);
     assert_eq!(term.eval_coef(), 1.0);
     assert!(term.var().ptr_eq(v1.ptr()));
 

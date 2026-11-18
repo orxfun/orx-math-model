@@ -15,11 +15,11 @@ pub struct DLinExpr<'d> {
 impl<'d> DLinExpr<'d> {
     // expr
 
-    pub fn neg<'m>(&self, m: &'m Model<'d>) -> Self {
-        let terms = self.terms.map(|x| x.neg(m));
-        let constant = self.constant.map(|c| m.val_neg(c));
-        Self { terms, constant }
-    }
+    // pub fn neg<'m>(&self, m: &'m Model<'d>) -> Self {
+    //     let terms = self.terms.map(|x| x.neg(m));
+    //     let constant = self.constant.map(|c| m.val_neg(c));
+    //     Self { terms, constant }
+    // }
 
     pub fn add<'m>(&self, m: &'m Model<'d>, rhs: &Self) -> Self {
         let terms = self.terms.merge(&rhs.terms);
@@ -27,11 +27,11 @@ impl<'d> DLinExpr<'d> {
         Self { terms, constant }
     }
 
-    pub fn sub<'m>(&self, m: &'m Model<'d>, rhs: &Self) -> Self {
-        let terms = self.terms.merge(&rhs.terms.map(|x| x.neg(m)));
-        let constant = con_sub(m, self.constant, rhs.constant);
-        Self { terms, constant }
-    }
+    // pub fn sub<'m>(&self, m: &'m Model<'d>, rhs: &Self) -> Self {
+    //     let terms = self.terms.merge(&rhs.terms.map(|x| x.neg(m)));
+    //     let constant = con_sub(m, self.constant, rhs.constant);
+    //     Self { terms, constant }
+    // }
 
     pub fn mul_num<'m>(&self, m: &'m Model<'d>, rhs: Ptr<'d, DNum<'d>>) -> Self {
         let terms = self.terms.map(|x| x.mul_num(m, rhs));
