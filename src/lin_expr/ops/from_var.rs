@@ -1,4 +1,4 @@
-use crate::lin_expr::{DLinExpr, DLinTerm, ExprVec};
+use crate::lin_expr::{Coef, DLinExpr, DLinTerm, ExprVec};
 use crate::{LinExpr, SymWrap, Var};
 use core::ops::Neg;
 
@@ -6,7 +6,7 @@ use core::ops::Neg;
 
 impl<'m, 'd> From<Var<'m, 'd>> for DLinTerm<'d> {
     fn from(value: Var<'m, 'd>) -> Self {
-        DLinTerm::new(None, value.ptr())
+        DLinTerm::new(Coef::One, value.ptr())
     }
 }
 
@@ -24,7 +24,7 @@ impl<'m, 'd> Neg for Var<'m, 'd> {
     type Output = LinExpr<'m, 'd>;
 
     fn neg(self) -> Self::Output {
-        let term = DLinTerm::from_neg_var(self);
+        let term = DLinTerm::new(Coef::MinusOne, self.ptr());
         let terms = ExprVec::new([term]);
         let data = DLinExpr::new(terms, None);
         self.m().lin_exp(data)

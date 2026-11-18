@@ -1,4 +1,4 @@
-use crate::lin_expr::{DLinExpr, DLinTerm, ExprVec};
+use crate::lin_expr::{Coef, DLinExpr, DLinTerm, ExprVec};
 use crate::{Int, LinExpr, Num, SymWrap, Var};
 use core::ops::Sub;
 
@@ -19,7 +19,7 @@ impl<'m, 'd> Sub<Var<'m, 'd>> for LinExpr<'m, 'd> {
     type Output = LinExpr<'m, 'd>;
 
     fn sub(self, rhs: Var<'m, 'd>) -> Self::Output {
-        let rhs = DLinTerm::from_neg_var(rhs);
+        let rhs = DLinTerm::new(Coef::MinusOne, rhs.ptr());
         let data = self.data().add_term(rhs);
         self.m().lin_exp(data)
     }
@@ -95,7 +95,7 @@ impl<'m, 'd> Sub<Var<'m, 'd>> for Var<'m, 'd> {
     type Output = LinExpr<'m, 'd>;
 
     fn sub(self, rhs: Var<'m, 'd>) -> Self::Output {
-        let terms = ExprVec::new([self.into(), DLinTerm::from_neg_var(rhs)]);
+        let terms = ExprVec::new([self.into(), DLinTerm::new(Coef::MinusOne, rhs.ptr())]);
         let data = DLinExpr::new(terms, None);
         self.m().lin_exp(data)
     }
@@ -119,7 +119,7 @@ macro_rules! var_minus_num {
             type Output = LinExpr<'m, 'd>;
 
             fn sub(self, rhs: Var<'m, 'd>) -> Self::Output {
-                let terms = ExprVec::new([DLinTerm::from_neg_var(rhs)]);
+                let terms = ExprVec::new([DLinTerm::new(Coef::MinusOne, rhs.ptr())]);
                 let constant = Some(self.ptr());
                 self.m().lin_exp(DLinExpr::new(terms, constant))
             }
@@ -148,7 +148,7 @@ macro_rules! var_minus_con {
             type Output = LinExpr<'m, 'd>;
 
             fn sub(self, rhs: Var<'m, 'd>) -> Self::Output {
-                let terms = ExprVec::new([DLinTerm::from_neg_var(rhs)]);
+                let terms = ExprVec::new([DLinTerm::new(Coef::MinusOne, rhs.ptr())]);
                 let constant = Some(rhs.m().val_num_con(-self).ptr());
                 rhs.m().lin_exp(DLinExpr::new(terms, constant))
             }

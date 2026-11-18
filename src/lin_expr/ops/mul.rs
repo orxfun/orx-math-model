@@ -1,4 +1,4 @@
-use crate::lin_expr::{DLinExpr, DLinTerm, ExprVec};
+use crate::lin_expr::{Coef, DLinExpr, DLinTerm, ExprVec};
 use crate::scalars::{DNum, ValNum};
 use crate::{Int, LinExpr, Num, Ptr, SymWrap, ValTyp, Var, VarType};
 use core::ops::Mul;
@@ -21,7 +21,7 @@ macro_rules! var_mul_num {
             type Output = LinExpr<'m, 'd>;
 
             fn mul(self, rhs: $n) -> Self::Output {
-                let term = DLinTerm::new(Some(rhs.ptr()), self.ptr());
+                let term = DLinTerm::new(Coef::Any(rhs.ptr()), self.ptr());
                 let terms = ExprVec::new([term]);
                 let data = DLinExpr::new(terms, None);
                 self.m().lin_exp(data)

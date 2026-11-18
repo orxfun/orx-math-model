@@ -5,4 +5,4 @@ mod ops;
 
 pub use lin_expr_data::{DLinExpr, ExprVec};
 pub use lin_expr_sym::LinExpr;
-pub use lin_term_data::DLinTerm;
+pub use lin_term_data::{Coef, DLinTerm};
