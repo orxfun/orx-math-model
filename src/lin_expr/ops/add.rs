@@ -31,7 +31,7 @@ macro_rules! expr_add_num {
             type Output = LinExpr<'m, 'd>;
 
             fn add(self, rhs: $n) -> Self::Output {
-                let data = self.data().push_constant(rhs.ptr());
+                let data = self.data().add_constant(self.m(), rhs.ptr());
                 self.m().lin_exp(data)
             }
         }
@@ -58,7 +58,7 @@ macro_rules! expr_plus_con {
 
             fn add(self, rhs: $c) -> Self::Output {
                 let c = self.m().val_num_con(rhs).ptr();
-                let data = self.data().push_constant(c);
+                let data = self.data().add_constant(self.m(), c);
                 self.m().lin_exp(data)
             }
         }

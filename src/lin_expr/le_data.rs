@@ -1,4 +1,6 @@
-use crate::{lin_expr::DLinTerm, scalars::DNum, ConVec, Ptr};
+use crate::scalars::ValNum;
+use crate::{lin_expr::DLinTerm, scalars::DNum};
+use crate::{ConVec, Model, Ptr, SymWrap};
 
 pub const MAX_EXPR_LEN: usize = 8;
 
@@ -16,9 +18,12 @@ impl<'d> DLinExpr<'d> {
         Self::new(terms, self.constant)
     }
 
-    pub fn push_constant(&self, constant: Ptr<'d, DNum<'d>>) -> Self {
+    pub fn add_constant<'m>(&self, m: &'m Model<'d>, constant: Ptr<'d, DNum<'d>>) -> Self {
         match self.constant {
-            Some(c) => todo!(),
+            Some(c) => {
+                let constant = m.val::<ValNum>(DNum::add(c, constant)).ptr();
+                Self::new(self.terms.clone(), Some(constant))
+            }
             None => Self::new(self.terms.clone(), Some(constant)),
         }
     }
