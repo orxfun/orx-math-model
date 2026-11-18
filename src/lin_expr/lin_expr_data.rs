@@ -15,10 +15,15 @@ pub struct DLinExpr<'d> {
 impl<'d> DLinExpr<'d> {
     // expr
 
+    pub fn neg<'m>(&self, m: &'m Model<'d>) -> Self {
+        let terms = self.terms.map(|x| x.neg(m));
+        todo!()
+    }
+
     pub fn add<'m>(&self, m: &'m Model<'d>, rhs: &Self) -> Self {
         let terms = self.terms.merge(&rhs.terms);
         let constant = match (self.constant, rhs.constant) {
-            (Some(c1), Some(c2)) => Some(m.val::<ValNum>(DNum::add(c1, c2)).ptr()),
+            (Some(c1), Some(c2)) => Some(m.val_add(c1, c2)),
             (Some(c1), None) => Some(c1),
             (None, Some(c2)) => Some(c2),
             (None, None) => None,
@@ -29,9 +34,9 @@ impl<'d> DLinExpr<'d> {
     pub fn sub<'m>(&self, m: &'m Model<'d>, rhs: &Self) -> Self {
         let terms = self.terms.merge(&rhs.terms);
         let constant = match (self.constant, rhs.constant) {
-            (Some(c1), Some(c2)) => Some(m.val::<ValNum>(DNum::sub(c1, c2)).ptr()),
+            (Some(c1), Some(c2)) => Some(m.val_sub(c1, c2)),
             (Some(c1), None) => Some(c1),
-            (None, Some(c2)) => Some(m.val::<ValNum>(DNum::neg(c2)).ptr()),
+            (None, Some(c2)) => Some(m.val_neg(c2)),
             (None, None) => None,
         };
         Self { terms, constant }
@@ -57,24 +62,15 @@ impl<'d> DLinExpr<'d> {
 
     pub fn add_constant<'m>(&self, m: &'m Model<'d>, constant: Ptr<'d, DNum<'d>>) -> Self {
         match self.constant {
-            Some(c) => {
-                let constant = m.val::<ValNum>(DNum::add(c, constant)).ptr();
-                Self::new(self.terms.clone(), Some(constant))
-            }
+            Some(c) => Self::new(self.terms.clone(), Some(m.val_add(c, constant))),
             None => Self::new(self.terms.clone(), Some(constant)),
         }
     }
 
     pub fn sub_constant<'m>(&self, m: &'m Model<'d>, constant: Ptr<'d, DNum<'d>>) -> Self {
         match self.constant {
-            Some(c) => {
-                let constant = m.val::<ValNum>(DNum::sub(c, constant)).ptr();
-                Self::new(self.terms.clone(), Some(constant))
-            }
-            None => {
-                let constant = m.val::<ValNum>(DNum::neg(constant)).ptr();
-                Self::new(self.terms.clone(), Some(constant))
-            }
+            Some(c) => Self::new(self.terms.clone(), Some(m.val_sub(c, constant))),
+            None => Self::new(self.terms.clone(), Some(m.val_neg(constant))),
         }
     }
 }

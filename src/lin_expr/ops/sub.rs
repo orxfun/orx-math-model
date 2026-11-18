@@ -19,7 +19,7 @@ impl<'m, 'd> Sub<Var<'m, 'd>> for LinExpr<'m, 'd> {
     type Output = LinExpr<'m, 'd>;
 
     fn sub(self, rhs: Var<'m, 'd>) -> Self::Output {
-        let rhs = DLinTerm::new(Some(self.m().minus_one().ptr()), rhs.ptr());
+        let rhs = DLinTerm::from_neg_var(rhs);
         let data = self.data().add_term(rhs);
         self.m().lin_exp(data)
     }

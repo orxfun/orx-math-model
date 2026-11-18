@@ -1,8 +1,8 @@
-mod le_data;
-mod le_sym;
-mod lt_data;
+mod lin_expr_data;
+mod lin_expr_sym;
+mod lin_term_data;
 mod ops;
 
-pub use le_data::{DLinExpr, ExprVec};
-pub use le_sym::LinExpr;
-pub use lt_data::DLinTerm;
+pub use lin_expr_data::{DLinExpr, ExprVec};
+pub use lin_expr_sym::LinExpr;
+pub use lin_term_data::DLinTerm;

@@ -14,7 +14,7 @@ use crate::vars::{DVars, VarD1, VarD2};
 // use crate::vars::{DVars, VarBag, VarD1, VarD2, VarType};
 use crate::{
     AsF64, AsI64, Bag, DimVec, LinExpr, Ptr, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd,
-    SetSym, Slot, Symbol, TConVal, ValTyp, VarType,
+    SetSym, Slot, SymWrap, Symbol, TConVal, ValTyp, VarType,
 };
 // use crate::{Int, Num, Sca, ScaInt, ScaNum, Val, Var};
 use alloc::boxed::Box;
@@ -246,6 +246,26 @@ impl<'d> Model<'d> {
         debug_assert_eq!(data.typ, V::typ());
         let el = self.num_bag.push(data);
         V::sym(Symbol::new(self, el))
+    }
+
+    pub(crate) fn val_neg<'m>(&'m self, c: Ptr<'d, DNum<'d>>) -> Ptr<'d, DNum<'d>> {
+        self.val::<ValNum>(DNum::neg(c)).ptr()
+    }
+
+    pub(crate) fn val_add<'m>(
+        &'m self,
+        c1: Ptr<'d, DNum<'d>>,
+        c2: Ptr<'d, DNum<'d>>,
+    ) -> Ptr<'d, DNum<'d>> {
+        self.val::<ValNum>(DNum::add(c1, c2)).ptr()
+    }
+
+    pub(crate) fn val_sub<'m>(
+        &'m self,
+        c1: Ptr<'d, DNum<'d>>,
+        c2: Ptr<'d, DNum<'d>>,
+    ) -> Ptr<'d, DNum<'d>> {
+        self.val::<ValNum>(DNum::sub(c1, c2)).ptr()
     }
 
     pub(crate) fn val_num_con<'m>(&'m self, num: impl AsF64) -> Num<'m, 'd> {

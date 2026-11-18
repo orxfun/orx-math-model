@@ -50,6 +50,15 @@ impl<const N: usize, T> ConVec<N, T> {
         }
         Self { len, data }
     }
+
+    pub fn map(&self, f: impl Fn(&T) -> T) -> Self {
+        let mut data = core::array::from_fn(|_| None);
+        for i in 0..self.len {
+            data[i] = Some(f(self.data[i].as_ref().expect("i<len")));
+        }
+        let len = self.len;
+        Self { len, data }
+    }
 }
 
 impl<const N: usize, T> Index<usize> for ConVec<N, T> {
