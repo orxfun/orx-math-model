@@ -19,7 +19,7 @@ impl<'m, 'd> Sub<Var<'m, 'd>> for LinExpr<'m, 'd> {
     type Output = LinExpr<'m, 'd>;
 
     fn sub(self, rhs: Var<'m, 'd>) -> Self::Output {
-        let rhs = DLinTerm::new(Coef::MinusOne, rhs.ptr());
+        let rhs = DLinTerm::new(Coef::One, rhs.ptr());
         let data = self.data().add_term(rhs);
         self.m().lin_exp(data)
     }
@@ -95,7 +95,7 @@ impl<'m, 'd> Sub<Var<'m, 'd>> for Var<'m, 'd> {
     type Output = LinExpr<'m, 'd>;
 
     fn sub(self, rhs: Var<'m, 'd>) -> Self::Output {
-        let terms = ExprVec::new([self.into(), DLinTerm::new(Coef::MinusOne, rhs.ptr())]);
+        let terms = ExprVec::new([self.into(), DLinTerm::new(Coef::One, rhs.ptr())]);
         let data = DLinExpr::new(terms, None);
         self.m().lin_exp(data)
     }

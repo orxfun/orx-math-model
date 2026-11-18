@@ -1,6 +1,6 @@
 use crate::scalars::ValNum;
 use crate::{lin_expr::DLinTerm, scalars::DNum};
-use crate::{ConVec, Model, Ptr, SymWrap, Var};
+use crate::{AsF64, ConVec, Model, Ptr, SymWrap, Var};
 
 pub const MAX_EXPR_LEN: usize = 8;
 
@@ -37,6 +37,13 @@ impl<'d> DLinExpr<'d> {
         let terms = self.terms.map(|x| x.mul_num(m, rhs));
         let constant = self.constant.map(|c1| m.val_mul(c1, rhs));
         Self { terms, constant }
+    }
+
+    pub fn mul_con<'m>(&self, m: &'m Model<'d>, rhs: impl AsF64) -> Self {
+        // let terms = self.terms.map(|x| x.mul_num(m, rhs));
+        // let constant = self.constant.map(|c1| m.val_mul(c1, rhs));
+        // Self { terms, constant }
+        todo!()
     }
 
     // term

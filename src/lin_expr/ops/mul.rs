@@ -21,6 +21,18 @@ macro_rules! expr_mul_num {
 expr_mul_num!(Num<'m, 'd>);
 expr_mul_num!(Int<'m, 'd>);
 
+// expr * con
+
+impl<'m, 'd> Mul<f64> for LinExpr<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn mul(self, rhs: f64) -> Self::Output {
+        // let data = self.data().mul_num(self.m(), rhs.ptr());
+        // self.m().lin_exp(data)
+        todo!()
+    }
+}
+
 // var * num
 
 macro_rules! var_mul_num {
@@ -29,7 +41,7 @@ macro_rules! var_mul_num {
             type Output = LinExpr<'m, 'd>;
 
             fn mul(self, rhs: $n) -> Self::Output {
-                let term = DLinTerm::new(Coef::Any(rhs.ptr()), self.ptr());
+                let term = DLinTerm::new(Coef::Ptr(rhs.ptr()), self.ptr());
                 let terms = ExprVec::new([term]);
                 let data = DLinExpr::new(terms, None);
                 self.m().lin_exp(data)

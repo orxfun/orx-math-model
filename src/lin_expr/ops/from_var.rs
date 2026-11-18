@@ -24,7 +24,7 @@ impl<'m, 'd> Neg for Var<'m, 'd> {
     type Output = LinExpr<'m, 'd>;
 
     fn neg(self) -> Self::Output {
-        let term = DLinTerm::new(Coef::MinusOne, self.ptr());
+        let term = DLinTerm::new(Coef::One, self.ptr());
         let terms = ExprVec::new([term]);
         let data = DLinExpr::new(terms, None);
         self.m().lin_exp(data)
