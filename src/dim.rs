@@ -7,74 +7,74 @@ pub enum Dim {
     D2,
 }
 
-// trait
+// // trait
 
-pub trait D: Clone + Copy + 'static {
-    fn dim() -> Dim;
+// pub trait D: Clone + Copy + 'static {
+//     fn dim() -> Dim;
 
-    // var
+//     // var
 
-    type FunVar<'d>;
+//     type FunVar<'d>;
 
-    fn unpack_fun_var<'a, 'd>(u: &'a UFunVar<'d>) -> &'a Self::FunVar<'d>;
-}
+//     fn unpack_fun_var<'a, 'd>(u: &'a UFunVar<'d>) -> &'a Self::FunVar<'d>;
+// }
 
-// d0
+// // d0
 
-#[derive(Clone, Copy)]
-pub struct D0;
+// #[derive(Clone, Copy)]
+// pub struct D0;
 
-impl D for D0 {
-    fn dim() -> Dim {
-        Dim::D0
-    }
+// impl D for D0 {
+//     fn dim() -> Dim {
+//         Dim::D0
+//     }
 
-    // var
+//     // var
 
-    type FunVar<'d> = usize;
+//     type FunVar<'d> = usize;
 
-    #[inline(always)]
-    fn unpack_fun_var<'a, 'd>(u: &'a UFunVar<'d>) -> &'a Self::FunVar<'d> {
-        todo!()
-    }
-}
+//     #[inline(always)]
+//     fn unpack_fun_var<'a, 'd>(u: &'a UFunVar<'d>) -> &'a Self::FunVar<'d> {
+//         todo!()
+//     }
+// }
 
-// d1
+// // d1
 
-#[derive(Clone, Copy)]
-pub struct D1;
+// #[derive(Clone, Copy)]
+// pub struct D1;
 
-impl D for D1 {
-    fn dim() -> Dim {
-        Dim::D1
-    }
+// impl D for D1 {
+//     fn dim() -> Dim {
+//         Dim::D1
+//     }
 
-    // var
+//     // var
 
-    type FunVar<'d> = FunVar1<'d>;
+//     type FunVar<'d> = FunVar1<'d>;
 
-    #[inline(always)]
-    fn unpack_fun_var<'a, 'd>(u: &'a UFunVar<'d>) -> &'a Self::FunVar<'d> {
-        unsafe { &u.d1 }
-    }
-}
+//     #[inline(always)]
+//     fn unpack_fun_var<'a, 'd>(u: &'a UFunVar<'d>) -> &'a Self::FunVar<'d> {
+//         unsafe { &u.d1 }
+//     }
+// }
 
-// d2
+// // d2
 
-#[derive(Clone, Copy)]
-pub struct D2;
+// #[derive(Clone, Copy)]
+// pub struct D2;
 
-impl D for D2 {
-    fn dim() -> Dim {
-        Dim::D2
-    }
+// impl D for D2 {
+//     fn dim() -> Dim {
+//         Dim::D2
+//     }
 
-    // var
+//     // var
 
-    type FunVar<'d> = FunVar2<'d>;
+//     type FunVar<'d> = FunVar2<'d>;
 
-    #[inline(always)]
-    fn unpack_fun_var<'a, 'd>(u: &'a UFunVar<'d>) -> &'a Self::FunVar<'d> {
-        unsafe { &u.d2 }
-    }
-}
+//     #[inline(always)]
+//     fn unpack_fun_var<'a, 'd>(u: &'a UFunVar<'d>) -> &'a Self::FunVar<'d> {
+//         unsafe { &u.d2 }
+//     }
+// }
