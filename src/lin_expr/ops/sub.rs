@@ -95,9 +95,10 @@ macro_rules! expr_num {
             type Output = LinExpr<'m, 'd>;
 
             fn sub(self, rhs: $n) -> Self::Output {
+                let m = self.m();
                 let terms = self.data().terms.clone();
-                let constant = const_sub_num(self.m(), self.data().constant, rhs.ptr());
-                self.m().lin_exp(DLinExpr::new(terms, Some(constant)))
+                let constant = const_sub_num(m, self.data().constant, rhs.ptr());
+                m.lin_exp(DLinExpr::new(terms, Some(constant)))
             }
         }
 
@@ -105,9 +106,10 @@ macro_rules! expr_num {
             type Output = LinExpr<'m, 'd>;
 
             fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
-                let terms = rhs.data().terms.map(|x| x.neg(rhs.m()));
-                let constant = const_sub_num(rhs.m(), rhs.data().constant, self.ptr());
-                rhs.m().lin_exp(DLinExpr::new(terms, Some(constant)))
+                let m = rhs.m();
+                let terms = rhs.data().terms.map(|x| x.neg(m));
+                let constant = const_sub_num(m, rhs.data().constant, self.ptr());
+                m.lin_exp(DLinExpr::new(terms, Some(constant)))
             }
         }
     };
@@ -124,9 +126,10 @@ macro_rules! expr_con {
             type Output = LinExpr<'m, 'd>;
 
             fn sub(self, rhs: $c) -> Self::Output {
-                let c = self.m().val_num_con(-rhs).ptr();
-                let data = self.data().add_constant(self.m(), c);
-                self.m().lin_exp(data)
+                let m = self.m();
+                let terms = self.data().terms.clone();
+                let constant = const_sub_con(m, self.data().constant, rhs);
+                m.lin_exp(DLinExpr::new(terms, Some(constant)))
             }
         }
 
@@ -134,7 +137,10 @@ macro_rules! expr_con {
             type Output = LinExpr<'m, 'd>;
 
             fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
-                self + rhs.neg()
+                let m = rhs.m();
+                let terms = rhs.data().terms.map(|x| x.neg(m));
+                let constant = const_sub_con(m, rhs.data().constant, self);
+                m.lin_exp(DLinExpr::new(terms, Some(constant)))
             }
         }
     };
@@ -144,6 +150,9 @@ expr_con!(f64);
 expr_con!(f32);
 expr_con!(i64);
 expr_con!(i32);
+expr_con!(u64);
+expr_con!(u32);
+expr_con!(usize);
 expr_con!(isize);
 
 // var - var
@@ -152,23 +161,23 @@ impl<'m, 'd> Sub<Var<'m, 'd>> for Var<'m, 'd> {
     type Output = LinExpr<'m, 'd>;
 
     fn sub(self, rhs: Var<'m, 'd>) -> Self::Output {
-        let terms = ExprVec::new([self.into(), DLinTerm::new(Coef::One, rhs.ptr())]);
-        let data = DLinExpr::new(terms, None);
-        self.m().lin_exp(data)
+        let t2 = DLinTerm::new(Coef::MinusOne, rhs.ptr());
+        let terms = ExprVec::new([self.into(), t2]);
+        self.m().lin_exp(DLinExpr::new(terms, None))
     }
 }
 
 // var - num
 
-macro_rules! var_minus_num {
+macro_rules! var_num {
     ($n:ty) => {
         impl<'m, 'd> Sub<$n> for Var<'m, 'd> {
             type Output = LinExpr<'m, 'd>;
 
             fn sub(self, rhs: $n) -> Self::Output {
                 let terms = ExprVec::new([self.into()]);
-                let constant = Some(self.m().val_neg(rhs.ptr()));
-                self.m().lin_exp(DLinExpr::new(terms, constant))
+                let constant = const_sub_num(self.m(), None, rhs.ptr());
+                self.m().lin_exp(DLinExpr::new(terms, Some(constant)))
             }
         }
 
@@ -184,20 +193,20 @@ macro_rules! var_minus_num {
     };
 }
 
-var_minus_num!(Num<'m, 'd>);
-var_minus_num!(Int<'m, 'd>);
+var_num!(Num<'m, 'd>);
+var_num!(Int<'m, 'd>);
 
 // var - con
 
-macro_rules! var_minus_con {
+macro_rules! var_con {
     ($c:ty) => {
         impl<'m, 'd> Sub<$c> for Var<'m, 'd> {
             type Output = LinExpr<'m, 'd>;
 
             fn sub(self, rhs: $c) -> Self::Output {
                 let terms = ExprVec::new([self.into()]);
-                let constant = Some(self.m().val_num_con(rhs).ptr());
-                self.m().lin_exp(DLinExpr::new(terms, constant))
+                let constant = const_sub_con(self.m(), None, rhs);
+                self.m().lin_exp(DLinExpr::new(terms, Some(constant)))
             }
         }
 
@@ -206,15 +215,18 @@ macro_rules! var_minus_con {
 
             fn sub(self, rhs: Var<'m, 'd>) -> Self::Output {
                 let terms = ExprVec::new([DLinTerm::new(Coef::MinusOne, rhs.ptr())]);
-                let constant = Some(rhs.m().val_num_con(-self).ptr());
-                rhs.m().lin_exp(DLinExpr::new(terms, constant))
+                let constant = rhs.m().val_num_con(self).ptr();
+                rhs.m().lin_exp(DLinExpr::new(terms, Some(constant)))
             }
         }
     };
 }
 
-var_minus_con!(f64);
-var_minus_con!(f32);
-var_minus_con!(i64);
-var_minus_con!(i32);
-var_minus_con!(isize);
+var_con!(f64);
+var_con!(f32);
+var_con!(i64);
+var_con!(i32);
+var_con!(u64);
+var_con!(u32);
+var_con!(usize);
+var_con!(isize);
