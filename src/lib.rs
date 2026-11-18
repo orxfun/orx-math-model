@@ -33,7 +33,7 @@ mod sets;
 mod slot;
 mod sym_ref;
 mod symbol;
-// mod vars;
+mod vars;
 
 // crate
 pub(crate) use bag::Bag;
@@ -47,7 +47,7 @@ pub(crate) use scalars::num::{AsF64, AsI64, ValTyp};
 pub(crate) use sets::{Set, SetCatInt, SetCatStr, SetOrd, SetSym, SetTyp};
 pub(crate) use slot::{Ptr, PtrMut, Slot};
 pub(crate) use symbol::{SymWrap, Symbol};
-// pub(crate) use vars::VarType;
+pub(crate) use vars::VarType;
 
 // #[cfg(test)]
 // pub(crate) use elements::ElementsIter;
