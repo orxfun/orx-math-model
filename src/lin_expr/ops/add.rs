@@ -8,7 +8,7 @@ type Con<'d> = Option<Ptr<'d, DNum<'d>>>;
 
 fn const_add_const<'m, 'd>(m: &'m Model<'d>, c1: Con<'d>, c2: Con<'d>) -> Con<'d> {
     match (c1, c2) {
-        (Some(c1), Some(c2)) => Some(m.val_add(c1, c2)),
+        (Some(c1), Some(c2)) => Some(m.val::<ValNum>(DNum::add(c1, c2)).ptr()),
         (Some(c1), None) => Some(c1),
         (None, Some(c2)) => Some(c2),
         (None, None) => None,

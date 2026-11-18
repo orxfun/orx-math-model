@@ -1,6 +1,43 @@
 use crate::lin_expr::{Coef, DLinExpr, DLinTerm, ExprVec};
-use crate::{Int, LinExpr, Num, SymWrap, Var};
+use crate::scalars::{DNum, ValNum};
+use crate::{AsF64, Int, LinExpr, Model, Num, Ptr, SymWrap, ValTyp, Var};
+use alloc::boxed::Box;
 use core::ops::Sub;
+
+type Con<'d> = Option<Ptr<'d, DNum<'d>>>;
+
+fn const_sub_const<'m, 'd>(m: &'m Model<'d>, c1: Con<'d>, c2: Con<'d>) -> Con<'d> {
+    match (c1, c2) {
+        (Some(c1), Some(c2)) => Some(m.val::<ValNum>(DNum::sub(c1, c2)).ptr()),
+        (Some(c1), None) => Some(c1),
+        (None, Some(c2)) => Some(c2),
+        (None, None) => None,
+    }
+}
+
+fn const_sub_num<'m, 'd>(
+    m: &'m Model<'d>,
+    c1: Con<'d>,
+    c2: Ptr<'d, DNum<'d>>,
+) -> Ptr<'d, DNum<'d>> {
+    match c1 {
+        Some(c1) => {
+            let fun = Box::new(move || c1.get().eval() - c2.get().eval());
+            m.val::<ValNum>(DNum::new(ValTyp::Num, fun)).ptr()
+        }
+        None => c2,
+    }
+}
+
+fn const_sub_con<'m, 'd>(m: &'m Model<'d>, c1: Con<'d>, c2: impl AsF64) -> Ptr<'d, DNum<'d>> {
+    match c1 {
+        Some(c1) => {
+            let fun = Box::new(move || c1.get().eval() - c2.as_f64());
+            m.val::<ValNum>(DNum::new(ValTyp::Num, fun)).ptr()
+        }
+        None => m.val_num_con(c2).ptr(),
+    }
+}
 
 // expr - expr
 
@@ -8,8 +45,11 @@ impl<'m, 'd> Sub<LinExpr<'m, 'd>> for LinExpr<'m, 'd> {
     type Output = LinExpr<'m, 'd>;
 
     fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
-        let data = self.data().sub(self.m(), rhs.data());
-        self.m().lin_exp(data)
+        let m = self.m();
+        let [t1, t2] = [self.data(), rhs.data()];
+        let terms = t1.terms.merge(&t2.terms.map(|t| t.neg(m)));
+        let constant = const_sub_const(m, t1.constant, t2.constant);
+        m.lin_exp(DLinExpr::new(terms, constant))
     }
 }
 
