@@ -1,4 +1,4 @@
-use crate::Dim;
+use crate::{sets::DSet, Dim, Ptr};
 use core::ops::{Deref, Index};
 
 #[derive(Clone)]
@@ -119,3 +119,8 @@ impl<T> Index<usize> for DimVec<T> {
         self.get(idx).unwrap()
     }
 }
+
+// set - vec
+
+#[derive(Clone)]
+pub struct SetVec<'d>(ConVec<8, Ptr<'d, DSet<'d>>>);
