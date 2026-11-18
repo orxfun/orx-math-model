@@ -1,8 +1,7 @@
-use crate::scalars::DSca;
-use crate::Ptr;
+use crate::{scalars::DVar, Ptr};
 
 #[derive(derive_new::new, Clone)]
 pub struct DLinTerm<'d> {
-    coef: Option<Ptr<'d, DSca<'d>>>,
-    var: Ptr<'d, DSca<'d>>,
+    coef: Option<Ptr<'d, DVar<'d>>>,
+    var: Ptr<'d, DVar<'d>>,
 }

@@ -21,12 +21,12 @@ extern crate std;
 
 mod bag;
 mod con_vals;
+mod con_vec;
 mod dim;
 mod elements;
 mod err;
 mod idxs;
-// mod lin_expr;
-mod con_vec;
+mod lin_expr;
 mod model;
 mod pars;
 mod scalars;
