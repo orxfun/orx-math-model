@@ -7,9 +7,9 @@ type Formatter<'a> = core::fmt::Formatter<'a>;
 pub type FVarWrite<'d> =
     Box<dyn Fn(&mut core::fmt::Formatter<'_>) -> Result<(), core::fmt::Error> + 'd>;
 
-pub struct FVarStrCtor;
+pub struct FVarWriteCtor;
 
-impl FVarStrCtor {
+impl FVarWriteCtor {
     pub fn d1<'d, I0: Set>(
         parent: Ptr<'d, DVars<'d>>,
         fun: impl Fn() -> Idx1<'d, I0> + 'd,
