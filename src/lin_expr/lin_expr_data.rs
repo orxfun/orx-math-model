@@ -33,6 +33,11 @@ impl<'d> DLinExpr<'d> {
         Self { terms, constant }
     }
 
+    pub fn mul_num<'m>(&self, m: &'m Model<'d>, rhs: Ptr<'d, DNum<'d>>) -> Self {
+        let terms = self.terms.map(|x| x.clone());
+        todo!()
+    }
+
     // term
 
     pub fn add_term(&self, term: DLinTerm<'d>) -> Self {

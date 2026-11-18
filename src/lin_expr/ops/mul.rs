@@ -3,6 +3,16 @@ use crate::scalars::{DNum, ValNum};
 use crate::{Int, LinExpr, Num, Ptr, SymWrap, ValTyp, Var, VarType};
 use core::ops::Mul;
 
+// expr * num
+
+impl<'m, 'd> Mul<Num<'m, 'd>> for LinExpr<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn mul(self, rhs: Num<'m, 'd>) -> Self::Output {
+        todo!()
+    }
+}
+
 // var * num
 
 macro_rules! var_mul_num {
