@@ -33,6 +33,7 @@ impl D for D0 {
 
     type FunVar<'d> = usize;
 
+    #[inline(always)]
     fn unpack_fun_var<'a, 'd>(u: &'a UFunVar<'d>) -> &'a Self::FunVar<'d> {
         todo!()
     }
@@ -52,6 +53,7 @@ impl D for D1 {
 
     type FunVar<'d> = FunVar1<'d>;
 
+    #[inline(always)]
     fn unpack_fun_var<'a, 'd>(u: &'a UFunVar<'d>) -> &'a Self::FunVar<'d> {
         unsafe { &u.d1 }
     }
@@ -71,6 +73,7 @@ impl D for D2 {
 
     type FunVar<'d> = FunVar2<'d>;
 
+    #[inline(always)]
     fn unpack_fun_var<'a, 'd>(u: &'a UFunVar<'d>) -> &'a Self::FunVar<'d> {
         unsafe { &u.d2 }
     }
