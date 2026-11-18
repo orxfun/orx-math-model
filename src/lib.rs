@@ -19,7 +19,6 @@ extern crate alloc;
 #[cfg(any(test, feature = "std"))]
 extern crate std;
 
-mod abc;
 mod bag;
 mod con_vals;
 mod con_vec;
