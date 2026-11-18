@@ -1,4 +1,4 @@
-use crate::lin_expr::DLinTerm;
+use crate::lin_expr::{DLinExpr, DLinTerm, ExprVec};
 use crate::{Int, LinExpr, Num, SymWrap, Var};
 use core::ops::Sub;
 
@@ -88,3 +88,76 @@ expr_minus_con!(f32);
 expr_minus_con!(i64);
 expr_minus_con!(i32);
 expr_minus_con!(isize);
+
+// var - var
+
+impl<'m, 'd> Sub<Var<'m, 'd>> for Var<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn sub(self, rhs: Var<'m, 'd>) -> Self::Output {
+        let terms = ExprVec::new([self.into(), DLinTerm::from_neg_var(rhs)]);
+        let data = DLinExpr::new(terms, None);
+        self.m().lin_exp(data)
+    }
+}
+
+// var - num
+
+macro_rules! var_minus_num {
+    ($n:ty) => {
+        impl<'m, 'd> Sub<$n> for Var<'m, 'd> {
+            type Output = LinExpr<'m, 'd>;
+
+            fn sub(self, rhs: $n) -> Self::Output {
+                let terms = ExprVec::new([self.into()]);
+                let constant = Some(self.m().val_neg(rhs.ptr()));
+                self.m().lin_exp(DLinExpr::new(terms, constant))
+            }
+        }
+
+        impl<'m, 'd> Sub<Var<'m, 'd>> for $n {
+            type Output = LinExpr<'m, 'd>;
+
+            fn sub(self, rhs: Var<'m, 'd>) -> Self::Output {
+                let terms = ExprVec::new([DLinTerm::from_neg_var(rhs)]);
+                let constant = Some(self.ptr());
+                self.m().lin_exp(DLinExpr::new(terms, constant))
+            }
+        }
+    };
+}
+
+var_minus_num!(Num<'m, 'd>);
+var_minus_num!(Int<'m, 'd>);
+
+// var - con
+
+macro_rules! var_minus_con {
+    ($c:ty) => {
+        impl<'m, 'd> Sub<$c> for Var<'m, 'd> {
+            type Output = LinExpr<'m, 'd>;
+
+            fn sub(self, rhs: $c) -> Self::Output {
+                let terms = ExprVec::new([self.into()]);
+                let constant = Some(self.m().val_num_con(rhs).ptr());
+                self.m().lin_exp(DLinExpr::new(terms, constant))
+            }
+        }
+
+        impl<'m, 'd> Sub<Var<'m, 'd>> for $c {
+            type Output = LinExpr<'m, 'd>;
+
+            fn sub(self, rhs: Var<'m, 'd>) -> Self::Output {
+                let terms = ExprVec::new([DLinTerm::from_neg_var(rhs)]);
+                let constant = Some(rhs.m().val_num_con(-self).ptr());
+                rhs.m().lin_exp(DLinExpr::new(terms, constant))
+            }
+        }
+    };
+}
+
+var_minus_con!(f64);
+var_minus_con!(f32);
+var_minus_con!(i64);
+var_minus_con!(i32);
+var_minus_con!(isize);
