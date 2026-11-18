@@ -1,7 +1,8 @@
 use crate::con_vals::{ConVal, DConVal};
 use crate::idxs::{DIdx, IdxVal};
+use crate::lin_expr::DLinExpr;
 use crate::pars::{DPars, IntParD1, IntParD2, NumParD1, NumParD2, ParFun};
-use crate::scalars::{DNum, DVar, Int, Num, Val, Var};
+use crate::scalars::{CommonNumbers, DNum, DVar, Int, Num, Val, ValNum, Var};
 // use crate::lin_expr::{DLinExpr, LinExpBag, LinExpr};
 // use crate::pars::{ParBag, ParD1, ParD2, ParFun, ParFunBag};
 // use crate::scalars::{DSca, FVar1, FVar2, ScaBag};
@@ -12,15 +13,14 @@ use crate::vars::{DVars, VarD1, VarD2};
 // use crate::sym_refs::SymRefBag;
 // use crate::vars::{DVars, VarBag, VarD1, VarD2, VarType};
 use crate::{
-    AsF64, AsI64, Bag, DimVec, Ptr, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetSym, Slot,
-    Symbol, TConVal, ValTyp, VarType,
+    AsF64, AsI64, Bag, DimVec, LinExpr, Ptr, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd,
+    SetSym, Slot, SymWrap, Symbol, TConVal, ValTyp, VarType,
 };
 // use crate::{Int, Num, Sca, ScaInt, ScaNum, Val, Var};
 use alloc::boxed::Box;
 use core::mem::ManuallyDrop;
 use orx_imp_vec::Elem;
 
-#[derive(Default)]
 pub struct Model<'d> {
     // states
     slot_states: Bag<State>,
@@ -42,22 +42,45 @@ pub struct Model<'d> {
 
     // vals
     num_bag: Bag<DNum<'d>>,
-    var_bag: Bag<DVar<'d>>,
+    var_bag: ManuallyDrop<Bag<DVar<'d>>>,
     // sca_bag: ManuallyDrop<ScaBag<'d>>,
     con_val_bag: Bag<DConVal>,
     sym_ref_bag: Bag<SymRef<'d>>,
+    common_numbers: CommonNumbers<'d>,
+
     // expr
-    // lin_exp_bag: LinExpBag<'d>,
+    lin_exp_bag: Bag<DLinExpr<'d>>,
 }
 
 impl<'d> Drop for Model<'d> {
     fn drop(&mut self) {
-        // SAFETY: needs to be dropped after set_fun_bag
-        // unsafe { ManuallyDrop::drop(&mut self.sca_bag) };
+        // SAFETY: needs to be dropped before set_fun_bag
+        unsafe { ManuallyDrop::drop(&mut self.var_bag) };
     }
 }
 
 impl<'d> Model<'d> {
+    pub fn new() -> Self {
+        let num_bag = Bag::default();
+        let common_numbers = CommonNumbers::new(&num_bag);
+        Self {
+            slot_states: Default::default(),
+            set_fun_bag: Default::default(),
+            set_bag: Default::default(),
+            par_fun_bag: Default::default(),
+            par_bag: Default::default(),
+            vars_bag: Default::default(),
+            idx_val_bag: Default::default(),
+            idx_bag: Default::default(),
+            num_bag,
+            var_bag: Default::default(),
+            con_val_bag: Default::default(),
+            sym_ref_bag: Default::default(),
+            common_numbers,
+            lin_exp_bag: Default::default(),
+        }
+    }
+
     // states
 
     pub(crate) fn slot_state(&self) -> Elem<'_, State> {
@@ -204,21 +227,20 @@ impl<'d> Model<'d> {
 
     // scalars
 
-    // pub(crate) fn one<'m>(&'m self) -> Num<'m, 'd> {
-    //     Num::new(Symbol::new(self, self.sca_bag.one))
-    // }
+    pub(crate) fn one<'m>(&'m self) -> Int<'m, 'd> {
+        let el = unsafe { self.common_numbers.one.into_el() };
+        Int::new(Symbol::new(self, el))
+    }
 
-    // pub(crate) fn minus_one_int<'m>(&'m self) -> Int<'m, 'd> {
-    //     Int::new(Symbol::new(self, self.sca_bag.minus_one_int))
-    // }
+    pub(crate) fn minus_one<'m>(&'m self) -> Int<'m, 'd> {
+        let el = unsafe { self.common_numbers.minus_one.into_el() };
+        Int::new(Symbol::new(self, el))
+    }
 
-    // pub(crate) fn zero_int<'m>(&'m self) -> Int<'m, 'd> {
-    //     Int::new(Symbol::new(self, self.sca_bag.zero_int))
-    // }
-
-    // pub(crate) fn zero_num<'m>(&'m self) -> Num<'m, 'd> {
-    //     Num::new(Symbol::new(self, self.sca_bag.one))
-    // }
+    pub(crate) fn zero<'m>(&'m self) -> Int<'m, 'd> {
+        let el = unsafe { self.common_numbers.zero.into_el() };
+        Int::new(Symbol::new(self, el))
+    }
 
     pub(crate) fn val<'m, V: Val>(&'m self, data: DNum<'d>) -> V::Sym<'m, 'd> {
         debug_assert_eq!(data.typ, V::typ());
@@ -226,32 +248,42 @@ impl<'d> Model<'d> {
         V::sym(Symbol::new(self, el))
     }
 
+    pub(crate) fn val_neg<'m>(&'m self, c: Ptr<'d, DNum<'d>>) -> Ptr<'d, DNum<'d>> {
+        self.val::<ValNum>(DNum::neg(c)).ptr()
+    }
+
+    pub(crate) fn val_add<'m>(
+        &'m self,
+        c1: Ptr<'d, DNum<'d>>,
+        c2: Ptr<'d, DNum<'d>>,
+    ) -> Ptr<'d, DNum<'d>> {
+        self.val::<ValNum>(DNum::add(c1, c2)).ptr()
+    }
+
+    pub(crate) fn val_sub<'m>(
+        &'m self,
+        c1: Ptr<'d, DNum<'d>>,
+        c2: Ptr<'d, DNum<'d>>,
+    ) -> Ptr<'d, DNum<'d>> {
+        self.val::<ValNum>(DNum::sub(c1, c2)).ptr()
+    }
+
+    pub(crate) fn val_mul<'m>(
+        &'m self,
+        c1: Ptr<'d, DNum<'d>>,
+        c2: Ptr<'d, DNum<'d>>,
+    ) -> Ptr<'d, DNum<'d>> {
+        self.val::<ValNum>(DNum::mul(c1, c2)).ptr()
+    }
+
+    pub(crate) fn val_num_con<'m>(&'m self, num: impl AsF64) -> Num<'m, 'd> {
+        self.val::<ValNum>(DNum::new_num(move || num))
+    }
+
     pub(crate) fn var<'m>(&'m self, data: DVar<'d>) -> Var<'m, 'd> {
         let el = self.var_bag.push(data);
         Var::new(Symbol::new(self, el))
     }
-
-    // pub(crate) fn var_from_d1<'m, I0: Set>(
-    //     &'m self,
-    //     var: VarD1<'m, 'd, I0>,
-    //     fun: FVar1<'d, I0>,
-    // ) -> Var<'m, 'd> {
-    //     let parent = var.data_ptr();
-    //     let data = DSca::new_var_d1::<I0>(parent, fun);
-    //     let el = self.sca_bag.push(data);
-    //     Var::new(Symbol::new(self, el))
-    // }
-
-    // pub(crate) fn var_from_d2<'m, I0: Set, I1: Set>(
-    //     &'m self,
-    //     var: VarD2<'m, 'd, I0, I1>,
-    //     fun: FVar2<'d, I0, I1>,
-    // ) -> Var<'m, 'd> {
-    //     let parent = var.data_ptr();
-    //     let data = DSca::new_var_d2::<I0, I1>(parent, fun);
-    //     let el = self.sca_bag.push(data);
-    //     Var::new(Symbol::new(self, el))
-    // }
 
     // vals
 
@@ -277,8 +309,9 @@ impl<'d> Model<'d> {
         unsafe { el.get() }.get_var()
     }
 
-    // // expr
-    // pub(crate) fn lin_exp<'m>(&'m self, data: DLinExpr<'d>) -> LinExpr<'m, 'd> {
-    //     LinExpr::new(Symbol::new(self, self.lin_exp_bag.push(data)))
-    // }
+    // expr
+
+    pub(crate) fn lin_exp<'m>(&'m self, data: DLinExpr<'d>) -> LinExpr<'m, 'd> {
+        LinExpr::new(Symbol::new(self, self.lin_exp_bag.push(data)))
+    }
 }

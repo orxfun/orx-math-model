@@ -13,7 +13,7 @@ fn v1_at_int_cint() {
     let s0_data = vec![0, 2, 3];
 
     // modeling
-    let m = Model::default();
+    let m = Model::new();
     let s0 = m.cat_set_int();
     let i0 = s0.idx();
     let v1 = m.var1(VarType::Binary, s0);
@@ -47,7 +47,7 @@ fn v1_at_int_cstr() {
     let s0_data: Vec<_> = [0, 2, 3].map(|x| x.to_string()).into_iter().collect();
 
     // modeling
-    let m = Model::default();
+    let m = Model::new();
     let s0 = m.cat_set_str();
     let i0 = s0.idx();
     let v1 = m.var1(VarType::Cont(Bounds::default()), s0);
@@ -81,7 +81,7 @@ fn v1_at_int_ord() {
     let s0_data = vec![0i64, 2, 3];
 
     // modeling
-    let m = Model::default();
+    let m = Model::new();
     let s0 = m.ord_set();
     let i0 = s0.idx();
     let v1 = m.var1(VarType::Binary, s0);

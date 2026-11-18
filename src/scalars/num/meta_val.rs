@@ -60,7 +60,7 @@ pub fn round_f64(x: f64) -> i64 {
     }
 }
 
-pub trait AsF64 {
+pub trait AsF64: 'static + Clone + Copy {
     fn as_f64(self) -> f64;
 }
 

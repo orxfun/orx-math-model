@@ -127,6 +127,14 @@ impl<'d, T> Ptr<'d, T> {
     {
         *unsafe { &*self.p }
     }
+
+    pub unsafe fn into_el<'m>(&self) -> Elem<'m, T> {
+        unsafe { Elem::new(self.p as *mut T) }
+    }
+
+    pub fn ptr_eq(self, other: Self) -> bool {
+        self.p == other.p
+    }
 }
 
 // ptr-mut

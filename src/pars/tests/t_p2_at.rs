@@ -23,7 +23,7 @@ fn p2_at_cint_cstr() {
     let s1_data: Vec<_> = [0, 1, 2, 3].into_iter().map(|x| x.to_string()).collect();
 
     // modeling
-    let m = Model::default();
+    let m = Model::new();
     let s0 = m.cat_set_int();
     let s1 = m.cat_set_str();
     let i0 = s0.idx();
@@ -87,7 +87,7 @@ fn p2_at_cstr_ord() {
     let s1_data = vec![0i64, 1];
 
     // modeling
-    let m = Model::default();
+    let m = Model::new();
     let s0 = m.cat_set_str();
     let s1 = m.ord_set();
     let i0 = s0.idx();
@@ -146,7 +146,7 @@ fn p2_at_ord_cint() {
     let s1_data = vec![0, 1];
 
     // modeling
-    let m = Model::default();
+    let m = Model::new();
     let s0 = m.ord_set();
     let s1 = m.cat_set_int();
     let i0 = s0.idx();

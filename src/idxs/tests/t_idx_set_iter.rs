@@ -11,7 +11,7 @@ fn idx_set_iter_cat_int() {
     let values: Vec<El<'_>> = vec![1, 2, 7, 9];
 
     // modeling
-    let m = Model::default();
+    let m = Model::new();
     let set = m.cat_set_int();
     let idx = set.idx();
 
@@ -35,7 +35,7 @@ fn idx_set_iter_cat_str() {
     let values: Vec<_> = [1, 2, 7, 9].map(|x| x.to_string()).into_iter().collect();
 
     // modeling
-    let m = Model::default();
+    let m = Model::new();
     let set = m.cat_set_str();
     let idx = set.idx();
 
@@ -59,7 +59,7 @@ fn idx_set_iter_ord() {
     let values: Vec<El<'_>> = vec![1, 2, 7, 9];
 
     // modeling
-    let m = Model::default();
+    let m = Model::new();
     let set = m.ord_set();
     let idx = set.idx();
 

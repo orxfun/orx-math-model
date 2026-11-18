@@ -21,12 +21,12 @@ extern crate std;
 
 mod bag;
 mod con_vals;
+mod con_vec;
 mod dim;
 mod elements;
 mod err;
 mod idxs;
-// mod lin_expr;
-mod con_vec;
+mod lin_expr;
 mod model;
 mod pars;
 mod scalars;
@@ -43,18 +43,12 @@ pub(crate) use con_vec::{ConVec, DimVec};
 pub(crate) use dim::Dim;
 pub(crate) use elements::{Elements, ElementsIter};
 pub(crate) use err::{Res, ResValid};
-pub(crate) use scalars::{AsF64, AsI64, ValTyp};
-// pub(crate) use lin_expr::LinExpr;
-// pub(crate) use scalars::{Int, Num, Sca, ScaInt, ScaNum, ScaVar, Val, ValTyp, Var};
+pub(crate) use lin_expr::LinExpr;
+pub(crate) use scalars::{AsF64, AsI64, Int, Num, ValTyp, Var};
 pub(crate) use sets::{Set, SetCatInt, SetCatStr, SetOrd, SetSym, SetTyp};
 pub(crate) use slot::{Ptr, PtrMut, Slot};
 pub(crate) use symbol::{SymWrap, Symbol};
-pub(crate) use vars::{Bounds, VarType};
-
-// #[cfg(test)]
-// pub(crate) use elements::ElementsIter;
-// #[cfg(test)]
-// pub(crate) use vars::Bounds;
+pub(crate) use vars::{Bounds, VarD1, VarD2, VarType};
 
 // api
 pub use model::Model;

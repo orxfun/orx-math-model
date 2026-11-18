@@ -36,6 +36,43 @@ impl<const N: usize, T> ConVec<N, T> {
         let len = self.len + 1;
         Self { len, data }
     }
+
+    pub fn push_to_front(&self, value: T) -> Self
+    where
+        T: Clone,
+    {
+        debug_assert!(self.len < N);
+        let mut data = core::array::from_fn(|_| None);
+        data[0] = Some(value);
+        for i in 0..self.len {
+            data[i + 1] = self.data[i].clone();
+        }
+        let len = self.len + 1;
+        Self { len, data }
+    }
+
+    pub fn merge(&self, other: &Self) -> Self
+    where
+        T: Clone,
+    {
+        debug_assert!(self.len + other.len <= N);
+        let mut data = self.data.clone();
+        let mut len = data.len();
+        for i in 0..other.len {
+            data[len] = other.data[i].clone();
+            len += 1;
+        }
+        Self { len, data }
+    }
+
+    pub fn map(&self, f: impl Fn(&T) -> T) -> Self {
+        let mut data = core::array::from_fn(|_| None);
+        for i in 0..self.len {
+            data[i] = Some(f(self.data[i].as_ref().expect("i<len")));
+        }
+        let len = self.len;
+        Self { len, data }
+    }
 }
 
 impl<const N: usize, T> Index<usize> for ConVec<N, T> {
