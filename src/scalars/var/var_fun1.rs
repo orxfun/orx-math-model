@@ -21,7 +21,7 @@ pub union UFunV1<'d> {
 #[derive(derive_new::new)]
 pub struct FunVar1<'d> {
     pub i0: Ptr<'d, FunSet<'d>>,
-    data: UFunV1<'d>,
+    pub data: UFunV1<'d>,
 }
 
 impl<'d> Drop for FunVar1<'d> {

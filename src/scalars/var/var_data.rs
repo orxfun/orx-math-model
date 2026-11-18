@@ -49,18 +49,18 @@ impl<'d> DVar<'d> {
 
     #[inline(always)]
     pub fn indices_d1<I0: Set>(&self) -> Idx1<'d, I0> {
-        let data = unsafe { &self.data.d1 };
-        debug_assert_eq!(I0::typ(), data.i0.get().typ);
-        let fun = data.get::<I0>();
+        let fun = unsafe { &self.data.d1 };
+        debug_assert_eq!(I0::typ(), fun.i0.get().typ);
+        let fun = I0::unpack_v1_fun(&fun.data);
         fun()
     }
 
     #[inline(always)]
     pub fn indices_d2<I0: Set, I1: Set>(&self) -> Idx2<'d, I0, I1> {
-        let data = unsafe { &self.data.d2 };
-        debug_assert_eq!(I0::typ(), data.i0.get().typ);
-        debug_assert_eq!(I1::typ(), data.i1.get().typ);
-        let fun = data.get::<I0, I1>();
+        let fun = unsafe { &self.data.d2 };
+        debug_assert_eq!(I0::typ(), fun.i0.get().typ);
+        debug_assert_eq!(I1::typ(), fun.i1.get().typ);
+        let fun = I0::unpack_v2_fun::<I1>(&fun.data);
         fun()
     }
 }

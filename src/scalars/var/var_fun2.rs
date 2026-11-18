@@ -68,7 +68,7 @@ pub union UFunV2<'d> {
 pub struct FunVar2<'d> {
     pub i0: Ptr<'d, FunSet<'d>>,
     pub i1: Ptr<'d, FunSet<'d>>,
-    data: UFunV2<'d>,
+    pub data: UFunV2<'d>,
 }
 
 impl<'d> Drop for FunVar2<'d> {
