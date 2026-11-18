@@ -5,6 +5,7 @@ mod common_numbers;
 mod meta_val;
 mod num_data;
 mod num_fun;
+mod ops;
 mod val_symbols;
 
 pub use common_numbers::CommonNumbers;
