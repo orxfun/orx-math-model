@@ -1,5 +1,6 @@
 use crate::con_vals::{ConVal, DConVal};
 use crate::idxs::{DIdx, IdxVal};
+use crate::lin_expr::DLinExpr;
 use crate::pars::{DPars, IntParD1, IntParD2, NumParD1, NumParD2, ParFun};
 use crate::scalars::{DNum, DVar, Int, Num, Val, Var};
 // use crate::lin_expr::{DLinExpr, LinExpBag, LinExpr};
@@ -12,8 +13,8 @@ use crate::vars::{DVars, VarD1, VarD2};
 // use crate::sym_refs::SymRefBag;
 // use crate::vars::{DVars, VarBag, VarD1, VarD2, VarType};
 use crate::{
-    AsF64, AsI64, Bag, DimVec, Ptr, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd, SetSym, Slot,
-    Symbol, TConVal, ValTyp, VarType,
+    AsF64, AsI64, Bag, DimVec, LinExpr, Ptr, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd,
+    SetSym, Slot, Symbol, TConVal, ValTyp, VarType,
 };
 // use crate::{Int, Num, Sca, ScaInt, ScaNum, Val, Var};
 use alloc::boxed::Box;
@@ -46,8 +47,9 @@ pub struct Model<'d> {
     // sca_bag: ManuallyDrop<ScaBag<'d>>,
     con_val_bag: Bag<DConVal>,
     sym_ref_bag: Bag<SymRef<'d>>,
+
     // expr
-    // lin_exp_bag: LinExpBag<'d>,
+    lin_exp_bag: Bag<DLinExpr<'d>>,
 }
 
 impl<'d> Drop for Model<'d> {
@@ -231,28 +233,6 @@ impl<'d> Model<'d> {
         Var::new(Symbol::new(self, el))
     }
 
-    // pub(crate) fn var_from_d1<'m, I0: Set>(
-    //     &'m self,
-    //     var: VarD1<'m, 'd, I0>,
-    //     fun: FVar1<'d, I0>,
-    // ) -> Var<'m, 'd> {
-    //     let parent = var.data_ptr();
-    //     let data = DSca::new_var_d1::<I0>(parent, fun);
-    //     let el = self.sca_bag.push(data);
-    //     Var::new(Symbol::new(self, el))
-    // }
-
-    // pub(crate) fn var_from_d2<'m, I0: Set, I1: Set>(
-    //     &'m self,
-    //     var: VarD2<'m, 'd, I0, I1>,
-    //     fun: FVar2<'d, I0, I1>,
-    // ) -> Var<'m, 'd> {
-    //     let parent = var.data_ptr();
-    //     let data = DSca::new_var_d2::<I0, I1>(parent, fun);
-    //     let el = self.sca_bag.push(data);
-    //     Var::new(Symbol::new(self, el))
-    // }
-
     // vals
 
     pub(crate) fn con_val<T: TConVal>(&self, value: T) -> Ptr<'d, DConVal> {
@@ -277,8 +257,9 @@ impl<'d> Model<'d> {
         unsafe { el.get() }.get_var()
     }
 
-    // // expr
-    // pub(crate) fn lin_exp<'m>(&'m self, data: DLinExpr<'d>) -> LinExpr<'m, 'd> {
-    //     LinExpr::new(Symbol::new(self, self.lin_exp_bag.push(data)))
-    // }
+    // expr
+
+    pub(crate) fn lin_exp<'m>(&'m self, data: DLinExpr<'d>) -> LinExpr<'m, 'd> {
+        LinExpr::new(Symbol::new(self, self.lin_exp_bag.push(data)))
+    }
 }

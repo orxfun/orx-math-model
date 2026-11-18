@@ -1,7 +1,7 @@
 mod le_data;
 mod le_sym;
 mod lt_data;
-// mod ops;
+mod ops;
 
 pub use le_data::{DLinExpr, ExprVec};
 pub use le_sym::LinExpr;
