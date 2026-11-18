@@ -5,7 +5,7 @@ use core::ops::Mul;
 
 // expr * num
 
-macro_rules! expr_mul_num {
+macro_rules! expr_times_num {
     ($n:ty) => {
         impl<'m, 'd> Mul<$n> for LinExpr<'m, 'd> {
             type Output = LinExpr<'m, 'd>;
@@ -18,24 +18,44 @@ macro_rules! expr_mul_num {
     };
 }
 
-expr_mul_num!(Num<'m, 'd>);
-expr_mul_num!(Int<'m, 'd>);
+expr_times_num!(Num<'m, 'd>);
+expr_times_num!(Int<'m, 'd>);
 
 // expr * con
 
-impl<'m, 'd> Mul<f64> for LinExpr<'m, 'd> {
-    type Output = LinExpr<'m, 'd>;
+macro_rules! expr_times_con {
+    ($c:ty) => {
+        impl<'m, 'd> Mul<$c> for LinExpr<'m, 'd> {
+            type Output = LinExpr<'m, 'd>;
 
-    fn mul(self, rhs: f64) -> Self::Output {
-        // let data = self.data().mul_num(self.m(), rhs.ptr());
-        // self.m().lin_exp(data)
-        todo!()
-    }
+            fn mul(self, rhs: $c) -> Self::Output {
+                let data = self.data().mul_con(self.m(), rhs);
+                self.m().lin_exp(data)
+            }
+        }
+
+        impl<'m, 'd> Mul<LinExpr<'m, 'd>> for $c {
+            type Output = LinExpr<'m, 'd>;
+
+            fn mul(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
+                rhs * self
+            }
+        }
+    };
 }
+
+expr_times_con!(f64);
+expr_times_con!(f32);
+expr_times_con!(i64);
+expr_times_con!(i32);
+expr_times_con!(u64);
+expr_times_con!(u32);
+expr_times_con!(usize);
+expr_times_con!(isize);
 
 // var * num
 
-macro_rules! var_mul_num {
+macro_rules! var_times_num {
     ($n:ty) => {
         impl<'m, 'd> Mul<$n> for Var<'m, 'd> {
             type Output = LinExpr<'m, 'd>;
@@ -58,12 +78,12 @@ macro_rules! var_mul_num {
     };
 }
 
-var_mul_num!(Int<'m, 'd>);
-var_mul_num!(Num<'m, 'd>);
+var_times_num!(Int<'m, 'd>);
+var_times_num!(Num<'m, 'd>);
 
 // var * con
 
-macro_rules! var_mul_con {
+macro_rules! var_times_con {
     ($c:ty) => {
         impl<'m, 'd> Mul<$c> for Var<'m, 'd> {
             type Output = LinExpr<'m, 'd>;
@@ -83,11 +103,11 @@ macro_rules! var_mul_con {
     };
 }
 
-var_mul_con!(f64);
-var_mul_con!(f32);
-var_mul_con!(i64);
-var_mul_con!(i32);
-var_mul_con!(u64);
-var_mul_con!(u32);
-var_mul_con!(usize);
-var_mul_con!(isize);
+var_times_con!(f64);
+var_times_con!(f32);
+var_times_con!(i64);
+var_times_con!(i32);
+var_times_con!(u64);
+var_times_con!(u32);
+var_times_con!(usize);
+var_times_con!(isize);

@@ -40,10 +40,12 @@ impl<'d> DLinExpr<'d> {
     }
 
     pub fn mul_con<'m>(&self, m: &'m Model<'d>, rhs: impl AsF64) -> Self {
-        // let terms = self.terms.map(|x| x.mul_num(m, rhs));
-        // let constant = self.constant.map(|c1| m.val_mul(c1, rhs));
-        // Self { terms, constant }
-        todo!()
+        let terms = self.terms.map(|x| x.mul_con(m, rhs));
+        let constant = self.constant.map(|c1| {
+            let data = DNum::mul_con(c1, rhs);
+            m.val::<ValNum>(data).ptr()
+        });
+        Self { terms, constant }
     }
 
     // term
