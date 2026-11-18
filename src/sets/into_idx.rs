@@ -1,7 +1,7 @@
 use crate::idxs::{IdxCatInt, IdxCatStr, IdxOrd};
 use crate::pars::ParFun;
 use crate::scalars::{DNum, DVar, Int, Val, Var};
-use crate::vars::VarD1;
+use crate::vars::{VarD1, VarD2};
 use crate::{Model, Ptr, Set, SetCatInt, SetCatStr, SetOrd, SymWrap};
 use alloc::boxed::Box;
 use alloc::string::{String, ToString};
@@ -9,7 +9,11 @@ use alloc::string::{String, ToString};
 pub trait IdxAny<'m, 'd> {
     type Set: Set;
 
+    // p1
+
     fn p1_at<V: Val>(self, m: &'m Model<'d>, par: Ptr<'d, ParFun<'d>>) -> V::Sym<'m, 'd>;
+
+    // p2
 
     fn p2_at_i0<V: Val, I0: Set>(
         self,
@@ -25,7 +29,23 @@ pub trait IdxAny<'m, 'd> {
         i1: I1,
     ) -> V::Sym<'m, 'd>;
 
+    // v1
+
     fn v1_at(self, par: VarD1<'m, 'd, Self::Set>) -> Var<'m, 'd>;
+
+    // v2
+
+    fn v2_at_i0<I0: Set>(
+        self,
+        par: VarD2<'m, 'd, I0, Self::Set>,
+        i0: impl Fn() -> I0::IdxRaw<'d> + 'd,
+    ) -> Var<'m, 'd>;
+
+    fn v2_at<I1: Set>(
+        self,
+        par: VarD2<'m, 'd, Self::Set, I1>,
+        i1: I1::IdxAny<'m, 'd>,
+    ) -> Var<'m, 'd>;
 }
 
 // cint
@@ -112,6 +132,45 @@ impl<'m, 'd> IdxAny<'m, 'd> for IndexCatInt<'m, 'd> {
                 let fun = Box::new(move || i0);
                 let data = DVar::create_d1::<Self::Set>(par.data_ptr(), fun);
                 par.m().var(data)
+            }
+        }
+    }
+
+    // v2
+
+    fn v2_at_i0<I0: Set>(
+        self,
+        par: VarD2<'m, 'd, I0, Self::Set>,
+        i0: impl Fn() -> I0::IdxRaw<'d> + 'd,
+    ) -> Var<'m, 'd> {
+        match self {
+            Self::Idx(i1) => {
+                let i1 = i1.ptr();
+                let fun = Box::new(move || (i0(), i1.get().read::<Self::Set>()));
+                let data = DVar::create_d2::<I0, Self::Set>(par.data_ptr(), fun);
+                par.m().var(data)
+            }
+            Self::ConUsize(i1) => {
+                let fun = Box::new(move || (i0(), i1));
+                let data = DVar::create_d2::<I0, Self::Set>(par.data_ptr(), fun);
+                par.m().var(data)
+            }
+        }
+    }
+
+    fn v2_at<I1: Set>(
+        self,
+        par: VarD2<'m, 'd, Self::Set, I1>,
+        i1: I1::IdxAny<'m, 'd>,
+    ) -> Var<'m, 'd> {
+        match self {
+            Self::Idx(i0) => {
+                let i0 = i0.ptr();
+                let i0 = move || i0.get().read::<Self::Set>();
+                <I1::IdxAny<'m, 'd> as IdxAny<'m, 'd>>::v2_at_i0(i1, par, i0)
+            }
+            Self::ConUsize(i0) => {
+                <I1::IdxAny<'m, 'd> as IdxAny<'m, 'd>>::v2_at_i0::<Self::Set>(i1, par, move || i0)
             }
         }
     }
@@ -243,6 +302,69 @@ impl<'m, 'd> IdxAny<'m, 'd> for IndexCatStr<'m, 'd> {
                 let fun = Box::new(move || i0.get().get());
                 let data = DVar::create_d1::<Self::Set>(par.data_ptr(), fun);
                 par.m().var(data)
+            }
+        }
+    }
+
+    // v2
+
+    fn v2_at_i0<I0: Set>(
+        self,
+        par: VarD2<'m, 'd, I0, Self::Set>,
+        i0: impl Fn() -> I0::IdxRaw<'d> + 'd,
+    ) -> Var<'m, 'd> {
+        match self {
+            Self::Idx(i1) => {
+                let i1 = i1.ptr();
+                let fun = Box::new(move || (i0(), i1.get().read::<Self::Set>()));
+                let data = DVar::create_d2::<I0, Self::Set>(par.data_ptr(), fun);
+                par.m().var(data)
+            }
+            Self::ConStringRef(i1) => {
+                let fun = Box::new(move || (i0(), i1));
+                let data = DVar::create_d2::<I0, Self::Set>(par.data_ptr(), fun);
+                par.m().var(data)
+            }
+            Self::ConString(i1) => {
+                let i1 = par.m().con_val(i1);
+                let fun = Box::new(move || (i0(), i1.get().get()));
+                let data = DVar::create_d2::<I0, Self::Set>(par.data_ptr(), fun);
+                par.m().var(data)
+            }
+            Self::ConStr(i1) => {
+                let i1 = par.m().con_val(i1.to_string());
+                let fun = Box::new(move || (i0(), i1.get().get()));
+                let data = DVar::create_d2::<I0, Self::Set>(par.data_ptr(), fun);
+                par.m().var(data)
+            }
+        }
+    }
+
+    fn v2_at<I1: Set>(
+        self,
+        par: VarD2<'m, 'd, Self::Set, I1>,
+        i1: I1::IdxAny<'m, 'd>,
+    ) -> Var<'m, 'd> {
+        match self {
+            Self::Idx(i0) => {
+                let i0 = i0.ptr();
+                let i0 = move || i0.get().read::<Self::Set>();
+                <I1::IdxAny<'m, 'd> as IdxAny<'m, 'd>>::v2_at_i0::<Self::Set>(i1, par, i0)
+            }
+            Self::ConStringRef(i0) => {
+                <I1::IdxAny<'m, 'd> as IdxAny<'m, 'd>>::v2_at_i0::<Self::Set>(i1, par, move || i0)
+            }
+            Self::ConString(i0) => {
+                let i0 = par.m().con_val(i0);
+                <I1::IdxAny<'m, 'd> as IdxAny<'m, 'd>>::v2_at_i0::<Self::Set>(i1, par, move || {
+                    i0.get().get()
+                })
+            }
+            Self::ConStr(i0) => {
+                let i0 = par.m().con_val(i0.to_string());
+                <I1::IdxAny<'m, 'd> as IdxAny<'m, 'd>>::v2_at_i0::<Self::Set>(i1, par, move || {
+                    i0.get().get()
+                })
             }
         }
     }
@@ -390,6 +512,78 @@ impl<'m, 'd> IdxAny<'m, 'd> for IndexOrd<'m, 'd> {
                 let fun = Box::new(move || i0 as i64);
                 let data = DVar::create_d1::<Self::Set>(par.data_ptr(), fun);
                 par.m().var(data)
+            }
+        }
+    }
+
+    // v2
+
+    fn v2_at_i0<I0: Set>(
+        self,
+        par: VarD2<'m, 'd, I0, Self::Set>,
+        i0: impl Fn() -> I0::IdxRaw<'d> + 'd,
+    ) -> Var<'m, 'd> {
+        match self {
+            Self::Idx(i1) => {
+                let i1 = i1.ptr();
+                let fun = Box::new(move || (i0(), i1.get().read::<Self::Set>()));
+                let data = DVar::create_d2::<I0, Self::Set>(par.data_ptr(), fun);
+                par.m().var(data)
+            }
+            Self::Int(i1) => {
+                let i1 = i1.ptr();
+                let fun = Box::new(move || (i0(), i1.get().eval_int()));
+                let data = DVar::create_d2::<I0, Self::Set>(par.data_ptr(), fun);
+                par.m().var(data)
+            }
+            Self::ConUsize(i1) => {
+                let fun = Box::new(move || (i0(), i1 as i64));
+                let data = DVar::create_d2::<I0, Self::Set>(par.data_ptr(), fun);
+                par.m().var(data)
+            }
+            Self::ConI64(i1) => {
+                let fun = Box::new(move || (i0(), i1 as i64));
+                let data = DVar::create_d2::<I0, Self::Set>(par.data_ptr(), fun);
+                par.m().var(data)
+            }
+            Self::ConI32(i1) => {
+                let fun = Box::new(move || (i0(), i1 as i64));
+                let data = DVar::create_d2::<I0, Self::Set>(par.data_ptr(), fun);
+                par.m().var(data)
+            }
+        }
+    }
+
+    fn v2_at<I1: Set>(
+        self,
+        par: VarD2<'m, 'd, Self::Set, I1>,
+        i1: I1::IdxAny<'m, 'd>,
+    ) -> Var<'m, 'd> {
+        match self {
+            Self::Idx(i0) => {
+                let i0 = i0.ptr();
+                let i0 = move || i0.get().read::<Self::Set>();
+                <I1::IdxAny<'m, 'd> as IdxAny<'m, 'd>>::v2_at_i0::<Self::Set>(i1, par, i0)
+            }
+            Self::Int(i0) => {
+                let i0 = i0.ptr();
+                let i0 = move || i0.get().eval_int();
+                <I1::IdxAny<'m, 'd> as IdxAny<'m, 'd>>::v2_at_i0::<Self::Set>(i1, par, i0)
+            }
+            Self::ConUsize(i0) => {
+                <I1::IdxAny<'m, 'd> as IdxAny<'m, 'd>>::v2_at_i0::<Self::Set>(i1, par, move || {
+                    i0 as i64
+                })
+            }
+            Self::ConI64(i0) => {
+                <I1::IdxAny<'m, 'd> as IdxAny<'m, 'd>>::v2_at_i0::<Self::Set>(i1, par, move || {
+                    i0 as i64
+                })
+            }
+            Self::ConI32(i0) => {
+                <I1::IdxAny<'m, 'd> as IdxAny<'m, 'd>>::v2_at_i0::<Self::Set>(i1, par, move || {
+                    i0 as i64
+                })
             }
         }
     }
