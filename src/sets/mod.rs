@@ -11,7 +11,7 @@ mod set_fun_bag;
 mod set_symbols;
 
 pub use into_idx::{IdxAny, IndexCatInt, IndexCatStr, IndexOrd};
-pub use meta_set::{Set, SetCatInt, SetCatStr, SetOrd, SetTyp};
+pub use meta_set::{EIdx, Set, SetCatInt, SetCatStr, SetOrd, SetTyp};
 pub use meta_set_sym::SetSym;
 pub use set_bag::SetBag;
 pub use set_data::DSet;
