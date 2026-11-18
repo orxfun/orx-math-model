@@ -1,6 +1,7 @@
 #[cfg(test)]
 mod tests;
 
+mod fun_var_to_idx;
 mod var_data;
 mod var_fun;
 mod var_fun1;
