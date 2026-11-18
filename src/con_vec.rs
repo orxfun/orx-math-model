@@ -36,6 +36,20 @@ impl<const N: usize, T> ConVec<N, T> {
         let len = self.len + 1;
         Self { len, data }
     }
+
+    pub fn merge(&self, other: &Self) -> Self
+    where
+        T: Clone,
+    {
+        debug_assert!(self.len + other.len <= N);
+        let mut data = self.data.clone();
+        let mut len = data.len();
+        for i in 0..other.len {
+            data[len] = other.data[i].clone();
+            len += 1;
+        }
+        Self { len, data }
+    }
 }
 
 impl<const N: usize, T> Index<usize> for ConVec<N, T> {

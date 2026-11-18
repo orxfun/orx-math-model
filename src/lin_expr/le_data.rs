@@ -13,7 +13,7 @@ pub struct DLinExpr<'d> {
 }
 
 impl<'d> DLinExpr<'d> {
-    pub fn push_term(&self, term: DLinTerm<'d>) -> Self {
+    pub fn add_term(&self, term: DLinTerm<'d>) -> Self {
         let terms = self.terms.push(term);
         Self::new(terms, self.constant)
     }
@@ -26,5 +26,40 @@ impl<'d> DLinExpr<'d> {
             }
             None => Self::new(self.terms.clone(), Some(constant)),
         }
+    }
+
+    pub fn sub_constant<'m>(&self, m: &'m Model<'d>, constant: Ptr<'d, DNum<'d>>) -> Self {
+        match self.constant {
+            Some(c) => {
+                let constant = m.val::<ValNum>(DNum::sub(c, constant)).ptr();
+                Self::new(self.terms.clone(), Some(constant))
+            }
+            None => {
+                let constant = m.val::<ValNum>(DNum::neg(constant)).ptr();
+                Self::new(self.terms.clone(), Some(constant))
+            }
+        }
+    }
+
+    pub fn add<'m>(&self, m: &'m Model<'d>, rhs: &Self) -> Self {
+        let terms = self.terms.merge(&rhs.terms);
+        let constant = match (self.constant, rhs.constant) {
+            (Some(c1), Some(c2)) => Some(m.val::<ValNum>(DNum::add(c1, c2)).ptr()),
+            (Some(c1), None) => Some(c1),
+            (None, Some(c2)) => Some(c2),
+            (None, None) => None,
+        };
+        Self { terms, constant }
+    }
+
+    pub fn sub<'m>(&self, m: &'m Model<'d>, rhs: &Self) -> Self {
+        let terms = self.terms.merge(&rhs.terms);
+        let constant = match (self.constant, rhs.constant) {
+            (Some(c1), Some(c2)) => Some(m.val::<ValNum>(DNum::sub(c1, c2)).ptr()),
+            (Some(c1), None) => Some(c1),
+            (None, Some(c2)) => Some(m.val::<ValNum>(DNum::neg(c2)).ptr()),
+            (None, None) => None,
+        };
+        Self { terms, constant }
     }
 }

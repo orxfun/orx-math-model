@@ -4,13 +4,22 @@ use core::ops::Add;
 
 // expr + expr
 
+impl<'m, 'd> Add<LinExpr<'m, 'd>> for LinExpr<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn add(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
+        let data = self.data().add(self.m(), rhs.data());
+        self.m().lin_exp(data)
+    }
+}
+
 // expr + var
 
 impl<'m, 'd> Add<Var<'m, 'd>> for LinExpr<'m, 'd> {
     type Output = LinExpr<'m, 'd>;
 
     fn add(self, rhs: Var<'m, 'd>) -> Self::Output {
-        let data = self.data().push_term(rhs.into());
+        let data = self.data().add_term(rhs.into());
         self.m().lin_exp(data)
     }
 }
