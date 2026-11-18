@@ -12,7 +12,7 @@ impl<'m, 'd> From<Var<'m, 'd>> for DLinTerm<'d> {
 
 impl<'m, 'd> From<Var<'m, 'd>> for LinExpr<'m, 'd> {
     fn from(value: Var<'m, 'd>) -> Self {
-        let terms = ExprVec::new([DLinTerm::from(value)]);
+        let terms = ExprVec::new([value.into()]);
         let data = DLinExpr::new(terms, None);
         value.m().lin_exp(data)
     }

@@ -2,7 +2,7 @@ use crate::con_vals::{ConVal, DConVal};
 use crate::idxs::{DIdx, IdxVal};
 use crate::lin_expr::DLinExpr;
 use crate::pars::{DPars, IntParD1, IntParD2, NumParD1, NumParD2, ParFun};
-use crate::scalars::{CommonNumbers, DNum, DVar, Int, Num, Val, Var};
+use crate::scalars::{CommonNumbers, DNum, DVar, Int, Num, Val, ValNum, Var};
 // use crate::lin_expr::{DLinExpr, LinExpBag, LinExpr};
 // use crate::pars::{ParBag, ParD1, ParD2, ParFun, ParFunBag};
 // use crate::scalars::{DSca, FVar1, FVar2, ScaBag};
@@ -246,6 +246,10 @@ impl<'d> Model<'d> {
         debug_assert_eq!(data.typ, V::typ());
         let el = self.num_bag.push(data);
         V::sym(Symbol::new(self, el))
+    }
+
+    pub(crate) fn val_num_con<'m>(&'m self, num: impl AsF64) -> Num<'m, 'd> {
+        self.val::<ValNum>(DNum::new_num(move || num))
     }
 
     pub(crate) fn var<'m>(&'m self, data: DVar<'d>) -> Var<'m, 'd> {

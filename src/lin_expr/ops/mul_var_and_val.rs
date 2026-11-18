@@ -1,9 +1,9 @@
 use crate::lin_expr::{DLinExpr, DLinTerm, ExprVec};
-use crate::scalars::DSca;
-use crate::{Int, LinExpr, Num, Ptr, ScaInt, ScaNum, Var};
+use crate::scalars::{DNum, ValNum};
+use crate::{Int, LinExpr, Num, Ptr, SymWrap, ValTyp, Var, VarType};
 use core::ops::Mul;
 
-fn mul_val_var<'m, 'd>(var: Var<'m, 'd>, val: Ptr<'d, DSca<'d>>) -> LinExpr<'m, 'd> {
+fn mul_val_var<'m, 'd>(var: Var<'m, 'd>, val: Ptr<'d, DNum<'d>>) -> LinExpr<'m, 'd> {
     let term = DLinTerm::new(Some(val), var.ptr());
     let terms = ExprVec::new([term]);
     let data = DLinExpr::new(terms, None);
@@ -52,7 +52,7 @@ impl<'m, 'd> Mul<Var<'m, 'd>> for i64 {
     type Output = LinExpr<'m, 'd>;
 
     fn mul(self, rhs: Var<'m, 'd>) -> Self::Output {
-        rhs * rhs.m().val::<ScaInt>(move || self)
+        rhs * rhs.m().val_num_con(self)
     }
 }
 
@@ -60,7 +60,7 @@ impl<'m, 'd> Mul<Var<'m, 'd>> for f64 {
     type Output = LinExpr<'m, 'd>;
 
     fn mul(self, rhs: Var<'m, 'd>) -> Self::Output {
-        rhs * rhs.m().val::<ScaNum>(move || self)
+        rhs * rhs.m().val_num_con(self)
     }
 }
 
