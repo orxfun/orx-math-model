@@ -24,7 +24,10 @@ impl<'d> DSum<'d> {
         assert_eq!(self.idxs.len(), 1);
         let i0 = self.idxs[0];
         let mut elements: Elements<<I0 as Set>::IdxRaw<'d>> = Vec::new().into();
-        // let iter = ElementsIter::<I0>::new(i0, &mut elements);
+        let i0 = ElementsIter::<I0>::new(i0, &mut elements);
+        for _ in i0 {
+            op(self);
+        }
     }
 }
 
