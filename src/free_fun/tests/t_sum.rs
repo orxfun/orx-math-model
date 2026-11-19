@@ -32,4 +32,10 @@ fn t_sum() {
         e.data().eval_to_string(),
         "3 x_0 + 3 x_1 + 3 x_7 + 3 x_3 + 8"
     );
+
+    let e = sum(forall(i0), 3 * x1[i0] + 2.5 + 7 * x1[i0]);
+    assert_eq!(
+        e.data().eval_to_string(),
+        "3 x_0 + 3 x_1 + 3 x_7 + 3 x_3 + 8"
+    );
 }
