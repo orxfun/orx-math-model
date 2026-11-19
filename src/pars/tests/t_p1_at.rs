@@ -4,6 +4,42 @@ use alloc::{vec, vec::Vec};
 use std::collections::HashMap;
 
 #[test]
+fn abc() {
+    type I0 = SetCatInt;
+    type El<'d> = <I0 as Set>::IdxRaw<'d>;
+
+    // data
+    let set_data = vec![0, 2, 3];
+    let par_data = vec![1.0, 2.0, 7.0, 9.0];
+
+    // modeling
+    let m = Model::new();
+    let set = m.cat_set_int();
+    let idx = set.idx();
+    let par = m.par1_num(set);
+    let sca1 = [par.at(idx), par[idx]];
+    let sca2 = [par.at(2), par[2]];
+
+    // binding
+    par.bind(|i| par_data[i]).unwrap();
+    set.bind(|| set_data.iter().copied()).unwrap();
+
+    // running
+    let mut elements: Elements<El<'_>> = vec![].into();
+    let iter = ElementsIter::<I0>::new(idx, &mut elements);
+    for (i, _) in iter.enumerate() {
+        let exp = par_data[set_data[i]];
+        for sca in sca1 {
+            assert_eq!(exp, sca.data().eval());
+        }
+        let exp = par_data[2];
+        for sca in sca2 {
+            assert_eq!(exp, sca.data().eval());
+        }
+    }
+}
+
+#[test]
 fn p1_at_cint() {
     type I0 = SetCatInt;
     type El<'d> = <I0 as Set>::IdxRaw<'d>;
@@ -72,7 +108,7 @@ fn p1_at_cstr() {
         for sca in sca1 {
             assert_eq!(exp, sca.data().eval_int());
         }
-        let exp = par_data[&set_data[2]];
+        let exp = par_data["3"];
         for sca in sca2 {
             assert_eq!(exp, sca.data().eval_int());
         }
@@ -109,7 +145,7 @@ fn p1_at_ord() {
         for sca in sca1 {
             assert_eq!(exp, sca.data().eval());
         }
-        let exp = par_data(set_data[2]);
+        let exp = par_data(2);
         for sca in sca2 {
             assert_eq!(exp, sca.data().eval());
         }
