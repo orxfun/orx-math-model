@@ -244,11 +244,16 @@ impl<'d> Model<'d> {
 
     pub(crate) fn val<'m, V: Val>(&'m self, data: DNum<'d>) -> V::Sym<'m, 'd> {
         debug_assert_eq!(data.typ, V::typ());
+        self.val_unchecked::<V>(data)
+    }
+
+    pub(crate) fn val_unchecked<'m, V: Val>(&'m self, data: DNum<'d>) -> V::Sym<'m, 'd> {
         let el = self.num_bag.push(data);
         V::sym(Symbol::new(self, el))
     }
 
     pub(crate) fn val_neg<'m>(&'m self, c: Ptr<'d, DNum<'d>>) -> Ptr<'d, DNum<'d>> {
+        assert_eq!(3, 33);
         self.val::<ValNum>(DNum::neg(c)).ptr()
     }
 

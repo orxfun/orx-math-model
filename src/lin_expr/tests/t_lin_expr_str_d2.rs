@@ -75,8 +75,25 @@ fn t_lin_expr_str_d2() {
             // let e = -x[(i0, i1)] + 1;
             // assert_eq!(exp_str(e), format!("-{ex}_{ei}_{ej} + 1"));
 
-            let e = 3 - p[(i0, i1)] * x[(i0, i1)];
-            assert_eq!(exp_str(e), format!("-{ep} {ex}_{ei}_{ej} + 3"));
+            // let e = 3 - p[(i0, i1)] * x[(i0, i1)];
+            // assert_eq!(exp_str(e), format!("-{ep} {ex}_{ei}_{ej} + 3"));
+
+            // let e = 3 + (-p[(i0, i1)]) * x[(i0, i1)];
+            // assert_eq!(exp_str(e), format!("-{ep} {ex}_{ei}_{ej} + 3"));
+
+            // let e = 2 + (-p[(i0, i1)]) * x[(i0, i1)] + 9;
+            // assert_eq!(exp_str(e), format!("-{ep} {ex}_{ei}_{ej} + 11"));
+
+            // let e = 2 + (-p[(i0, i1)]) * x[(i0, i1)] - 9;
+            // assert_eq!(exp_str(e), format!("-{ep} {ex}_{ei}_{ej} - 7"));
+
+            let e = 2 * x[("mia", 1)] + 7 - p[(i0, i1)] * x[("sin", 3)] + 1.5 * x[(i0, i1)] - 3;
+            assert_eq!(
+                exp_str(e),
+                format!("2 {ex}_mia_1 - {ep} {ex}_sin_3 + 1.5 {ex}_{ei}_{ej} + 4")
+            );
+
+            break;
         }
     }
 }

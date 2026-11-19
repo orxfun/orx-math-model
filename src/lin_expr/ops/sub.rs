@@ -55,7 +55,7 @@ fn term_neg<'m, 'd>(m: &'m Model<'d>, term: &DLinTerm<'d>) -> DLinTerm<'d> {
         Coef::One => Coef::MinusOne,
         Coef::MinusOne => Coef::One,
         Coef::Con(c) => Coef::Con(-c),
-        Coef::Ptr(c) => Coef::Ptr(m.val_neg(c)),
+        Coef::Ptr(c) => Coef::Ptr(m.val_unchecked::<ValNum>(DNum::neg(c)).ptr()),
     };
     DLinTerm::new(coef, term.var)
 }
