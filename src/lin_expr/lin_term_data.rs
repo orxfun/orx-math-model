@@ -35,7 +35,6 @@ pub mod ext_test {
     use core::fmt::Write;
 
     impl<'d> DLinTerm<'d> {
-        #[cfg(test)]
         pub fn eval_append_string(&self, f: &mut String, prefix_sum: bool) -> bool {
             match (&self.coef, prefix_sum) {
                 (Coef::One, false) => {
@@ -89,7 +88,6 @@ pub mod ext_test {
             }
         }
 
-        #[cfg(test)]
         pub fn eval_to_string(&self) -> String {
             let mut f = String::new();
             self.eval_append_string(&mut f, false);
@@ -97,7 +95,6 @@ pub mod ext_test {
         }
     }
 
-    #[cfg(test)]
     fn write_coef(f: &mut String, c: f64) -> bool {
         match is_pos(c) {
             true => {
@@ -117,7 +114,6 @@ pub mod ext_test {
         }
     }
 
-    #[cfg(test)]
     fn write_prefix_and_coef(f: &mut String, c: f64) -> bool {
         match is_pos(c) {
             true => {
