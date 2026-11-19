@@ -1,6 +1,13 @@
+use crate::idxs::SumIdxs;
+use crate::lin_expr::DSum;
 use crate::lin_expr::{DLinExpr, SumVec, TermVec};
-use crate::{free_fun::SumOver, lin_expr::DSum};
 use crate::{LinExpr, SymWrap};
+
+pub struct SumOver<'m, 'd>(pub(crate) SumIdxs<'m, 'd>);
+
+pub fn over<'m, 'd>(indices: impl Into<SumIdxs<'m, 'd>>) -> SumOver<'m, 'd> {
+    SumOver(indices.into())
+}
 
 pub fn sum<'m, 'd>(
     forall: SumOver<'m, 'd>,

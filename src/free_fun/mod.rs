@@ -6,5 +6,4 @@ mod forall;
 mod sum;
 
 pub use con::con;
-pub use forall::{over, SumOver};
-pub use sum::sum;
+pub use sum::{over, sum, SumOver};
