@@ -100,7 +100,7 @@ pub fn con<'m, 'd>(
     con_gen(lhs, typ, rhs, idxs)
 }
 
-pub fn con1<'m, 'd, S0: SetSym<'m, 'd>>(
+pub fn forall<'m, 'd, S0: SetSym<'m, 'd>>(
     s0: S0,
     con: impl Fn(<S0::Meta as Set>::IdxSym<'m, 'd>) -> Constraint<'m, 'd>,
 ) -> Constraint<'m, 'd> {
