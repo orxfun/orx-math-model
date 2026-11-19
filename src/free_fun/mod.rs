@@ -9,4 +9,4 @@ mod sum;
 pub use con::{con, for1, for2};
 pub use ineq_op::{eq, geq, leq, IneqOp};
 pub use into_lin_expr::IntoLinExpr;
-pub use sum::{over, sum, SumOver};
+pub use sum::{sum1, sum2};
