@@ -4,7 +4,7 @@ use crate::{LinExpr, SymWrap};
 
 pub fn sum<'m, 'd>(forall: ForAll<'m, 'd>, sum_expr: LinExpr<'m, 'd>) -> LinExpr<'m, 'd> {
     let m = sum_expr.m();
-    let idxs = forall.0.destruct();
+    let idxs = forall.0.to_idx_vec();
     let sum = DSum::new(idxs, sum_expr.ptr());
     let sums = SumVec::new([sum]);
     let terms = TermVec::new([]);

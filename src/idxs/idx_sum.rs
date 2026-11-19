@@ -43,7 +43,7 @@ impl<'m, 'd> IdxSum<'m, 'd> {
         }
     }
 
-    pub(crate) fn destruct(self) -> IdxVec<'d> {
+    pub(crate) fn to_idx_vec(self) -> IdxVec<'d> {
         match self {
             IdxSum::D1(i0) => IdxVec::new([i0.ptr()]),
             IdxSum::D2(i0, i1) => IdxVec::new([i0.ptr(), i1.ptr()]),
