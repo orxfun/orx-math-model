@@ -33,6 +33,20 @@ fn const_sub_num<'m, 'd>(
     }
 }
 
+fn num_sub_const<'m, 'd>(
+    m: &'m Model<'d>,
+    c1: Ptr<'d, DNum<'d>>,
+    c2: Con<'d>,
+) -> Ptr<'d, DNum<'d>> {
+    match c2 {
+        Some(c2) => {
+            let fun = Box::new(move || c1.get().eval() - c2.get().eval());
+            m.val::<ValNum>(DNum::new(ValTyp::Num, fun)).ptr()
+        }
+        None => c1,
+    }
+}
+
 fn const_sub_con<'m, 'd>(m: &'m Model<'d>, c1: Con<'d>, c2: impl AsF64) -> Ptr<'d, DNum<'d>> {
     match c1 {
         Some(c1) => {
@@ -106,7 +120,7 @@ macro_rules! expr_num {
                 let (m, rhs) = (rhs.m(), rhs.data());
                 let terms = rhs.terms.map(|t| t.neg());
                 let sums = rhs.sums.map(|s| s.neg(m));
-                let constant = const_sub_num(m, rhs.constant, self.ptr());
+                let constant = num_sub_const(m, self.ptr(), rhs.constant);
                 m.lin_exp(DLinExpr::new(terms, sums, Some(constant)))
             }
         }
