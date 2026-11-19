@@ -19,11 +19,19 @@ impl<'d> DLinExpr<'d> {
         use alloc::string::String;
         use core::fmt::Write;
 
+        #[cfg(test)]
+        fn write_prefix_and_coef(f: &mut String, c: f64) {
+            match c >= 0.0 {
+                true => write!(f, " + {} ", c),
+                false => write!(f, " - {} ", -c),
+            }
+            .unwrap()
+        }
+
         let mut terms = self.terms.iter();
         if let Some(t) = terms.next() {
             t.eval_append_string(f, false);
             for t in terms {
-                write!(f, " + ").unwrap();
                 t.eval_append_string(f, true);
             }
         }
@@ -31,8 +39,12 @@ impl<'d> DLinExpr<'d> {
         match (self.constant, self.terms.is_empty()) {
             (Some(c), true) => write!(f, "{}", c.get().eval()).unwrap(),
             (Some(c), false) => {
-                use crate::lin_expr::lin_term_data::write_prefix_and_coef;
-                write_prefix_and_coef(f, c.get().eval());
+                let c = c.get().eval();
+                match c >= 0.0 {
+                    true => write!(f, " + {}", c),
+                    false => write!(f, " - {}", -c),
+                }
+                .unwrap();
             }
             _ => {}
         }

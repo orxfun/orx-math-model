@@ -45,7 +45,6 @@ impl<'m, 'd> Add<LinExpr<'m, 'd>> for LinExpr<'m, 'd> {
     type Output = LinExpr<'m, 'd>;
 
     fn add(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
-        assert_eq!(3, 33);
         let [t1, t2] = [self.data(), rhs.data()];
         let terms = t1.terms.merge(&t2.terms);
         let constant = const_add_const(self.m(), t1.constant, t2.constant);

@@ -67,10 +67,10 @@ impl<'d> DLinTerm<'d> {
 }
 
 #[cfg(test)]
-pub fn write_prefix_and_coef(f: &mut String, c: f64) {
+fn write_prefix_and_coef(f: &mut String, c: f64) {
     match c >= 0.0 {
-        true => write!(f, " + {}", c),
-        false => write!(f, " - {}", -c),
+        true => write!(f, " + {} ", c),
+        false => write!(f, " - {} ", -c),
     }
     .unwrap()
 }
