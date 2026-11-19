@@ -18,6 +18,7 @@ fn v2_at_int_cint_cstr() {
     type El1<'d> = <I1 as Set>::IdxRaw<'d>;
 
     // data
+    let var_name = "x"; // TODO: var-name-fix
     let s0_data = vec![0, 1, 2, 3];
     let s1_data: Vec<_> = [0, 1, 2, 3].into_iter().map(|x| x.to_string()).collect();
 
@@ -44,22 +45,22 @@ fn v2_at_int_cint_cstr() {
         let mut el1: Elements<El1<'_>> = vec![].into();
         let it1 = ElementsIter::<I1>::new(i1, &mut el1);
         for (j, _) in it1.enumerate() {
-            let exp = merge(s0_data[i], &s1_data[j]);
+            let exp = format!("{var_name}_{}", merge(s0_data[i], &s1_data[j]));
             for sca in sca1 {
                 assert_eq!(exp, sca.data().eval_to_string());
             }
 
-            let exp = merge(s0_data[i], &s1_data[3]);
+            let exp = format!("{var_name}_{}", merge(s0_data[i], &s1_data[3]));
             for sca in sca2 {
                 assert_eq!(exp, sca.data().eval_to_string());
             }
 
-            let exp = merge(s0_data[2], &s1_data[j]);
+            let exp = format!("{var_name}_{}", merge(s0_data[2], &s1_data[j]));
             for sca in sca3 {
                 assert_eq!(exp, sca.data().eval_to_string());
             }
 
-            let exp = merge(s0_data[2], &s1_data[3]);
+            let exp = format!("{var_name}_{}", merge(s0_data[2], &s1_data[3]));
             for sca in sca4 {
                 assert_eq!(exp, sca.data().eval_to_string());
             }
@@ -75,6 +76,7 @@ fn v2_at_int_cstr_ord() {
     type El1<'d> = <I1 as Set>::IdxRaw<'d>;
 
     // data
+    let var_name = "x"; // TODO: var-name-fix
     let s0_data: Vec<_> = vec![0, 1, 2].into_iter().map(|x| x.to_string()).collect();
     let s1_data = vec![0i64, 1];
 
@@ -101,22 +103,22 @@ fn v2_at_int_cstr_ord() {
         let mut el1: Elements<El1<'_>> = vec![].into();
         let it1 = ElementsIter::<I1>::new(i1, &mut el1);
         for (j, _) in it1.enumerate() {
-            let exp = merge(&s0_data[i], s1_data[j]);
+            let exp = format!("{var_name}_{}", merge(&s0_data[i], s1_data[j]));
             for sca in sca1 {
                 assert_eq!(exp, sca.data().eval_to_string());
             }
 
-            let exp = merge(&s0_data[i], s1_data[3]);
+            let exp = format!("{var_name}_{}", merge(&s0_data[i], s1_data[3]));
             for sca in sca2 {
                 assert_eq!(exp, sca.data().eval_to_string());
             }
 
-            let exp = merge(&s0_data[2], s1_data[j]);
+            let exp = format!("{var_name}_{}", merge(&s0_data[2], s1_data[j]));
             for sca in sca3 {
                 assert_eq!(exp, sca.data().eval_to_string());
             }
 
-            let exp = merge(&s0_data[2], s1_data[3]);
+            let exp = format!("{var_name}_{}", merge(&s0_data[2], s1_data[3]));
             for sca in sca4 {
                 assert_eq!(exp, sca.data().eval_to_string());
             }
@@ -132,6 +134,7 @@ fn v2_at_int_ord_cint() {
     type El1<'d> = <I1 as Set>::IdxRaw<'d>;
 
     // data
+    let var_name = "x"; // TODO: var-name-fix
     let s0_data = vec![0i64, 1, 2];
     let s1_data = vec![0, 1];
 
@@ -158,22 +161,22 @@ fn v2_at_int_ord_cint() {
         let mut el1: Elements<El1<'_>> = vec![].into();
         let it1 = ElementsIter::<I1>::new(i1, &mut el1);
         for (j, _) in it1.enumerate() {
-            let exp = merge(s0_data[i], s1_data[j]);
+            let exp = format!("{var_name}_{}", merge(s0_data[i], s1_data[j]));
             for sca in sca1 {
                 assert_eq!(exp, sca.data().eval_to_string());
             }
 
-            let exp = merge(s0_data[i], s1_data[3]);
+            let exp = format!("{var_name}_{}", merge(s0_data[i], s1_data[3]));
             for sca in sca2 {
                 assert_eq!(exp, sca.data().eval_to_string());
             }
 
-            let exp = merge(s0_data[2], s1_data[j]);
+            let exp = format!("{var_name}_{}", merge(s0_data[2], s1_data[j]));
             for sca in sca3 {
                 assert_eq!(exp, sca.data().eval_to_string());
             }
 
-            let exp = merge(s0_data[2], s1_data[3]);
+            let exp = format!("{var_name}_{}", merge(s0_data[2], s1_data[3]));
             for sca in sca4 {
                 assert_eq!(exp, sca.data().eval_to_string());
             }
