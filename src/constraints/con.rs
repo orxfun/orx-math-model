@@ -1,4 +1,4 @@
-use crate::constraints::{DIneq, Ineq, IneqTyp};
+use crate::constraints::IneqTyp;
 use crate::sets::CatInt;
 use crate::{LinExpr, SetCatInt, SymWrap};
 
@@ -20,29 +20,29 @@ use crate::{LinExpr, SetCatInt, SymWrap};
 // };
 // }
 
-fn ineq<'m, 'd>(lhs: LinExpr<'m, 'd>, rhs: LinExpr<'m, 'd>, typ: IneqTyp) -> Ineq<'m, 'd> {
-    let data = DIneq::new(lhs.ptr(), rhs.ptr(), typ);
-    lhs.m().ineq(data)
-}
+// fn ineq<'m, 'd>(lhs: LinExpr<'m, 'd>, rhs: LinExpr<'m, 'd>, typ: IneqTyp) -> Ineq<'m, 'd> {
+//     let data = DIneq::new(lhs.ptr(), rhs.ptr(), typ);
+//     lhs.m().ineq(data)
+// }
 
-macro_rules! con {
-    // d0
-    ($lhs:tt <= $rhs:tt) => {
-        ineq($lhs, $rhs, IneqTyp::Leq)
-    };
-    ($lhs:tt >= $rhs:tt) => {
-        ineq($lhs, $rhs, IneqTyp::Geq)
-    };
-    ($lhs:tt == $rhs:tt) => {
-        ineq($lhs, $rhs, IneqTyp::Eq)
-    };
+// macro_rules! con {
+//     // d0
+//     ($lhs:tt <= $rhs:tt) => {
+//         ineq($lhs, $rhs, IneqTyp::Leq)
+//     };
+//     ($lhs:tt >= $rhs:tt) => {
+//         ineq($lhs, $rhs, IneqTyp::Geq)
+//     };
+//     ($lhs:tt == $rhs:tt) => {
+//         ineq($lhs, $rhs, IneqTyp::Eq)
+//     };
 
-    // d1
-    ($lhs:tt <= $rhs:tt | forall $i0:ident in $s0:tt) => {
-        ineq($lhs, $rhs, IneqTyp::Leq)
-    };
-}
+//     // d1
+//     ($lhs:tt <= $rhs:tt | forall $i0:ident in $s0:tt) => {
+//         ineq($lhs, $rhs, IneqTyp::Leq)
+//     };
+// }
 
-fn abc<'m, 'd>(lhs: LinExpr<'m, 'd>, rhs: LinExpr<'m, 'd>, set: CatInt<'m, 'd>) {
-    let a = con!(lhs <= rhs | forall i in set);
-}
+// fn abc<'m, 'd>(lhs: LinExpr<'m, 'd>, rhs: LinExpr<'m, 'd>, set: CatInt<'m, 'd>) {
+//     let a = con!(lhs <= rhs | forall i in set);
+// }

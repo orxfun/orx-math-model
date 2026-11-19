@@ -1,7 +1,7 @@
 mod con;
 mod con_data;
 mod ineq_data;
-mod ineq_sym;
+// mod ineq_sym;
 
-pub use ineq_data::{DIneq, IneqTyp};
-pub use ineq_sym::Ineq;
+pub use con_data::{DCon, IneqTyp};
+// pub use ineq_sym::Ineq;
