@@ -2,7 +2,7 @@ use crate::idxs::IdxVec;
 use crate::{Elements, ElementsIter, Set, SetCatInt, SetCatStr, SetOrd, SetTyp};
 use alloc::vec::Vec;
 
-fn expand_d1<'d, T>(idxs: &IdxVec<'d>, value: &T, op: impl FnMut(&T)) {
+pub fn expand_d1<'d, T>(idxs: &IdxVec<'d>, value: &T, op: impl FnMut(&T)) {
     match idxs.set_typ(0) {
         SetTyp::CatInt => expand_d1_i0::<T, SetCatInt>(idxs, value, op),
         SetTyp::CatStr => expand_d1_i0::<T, SetCatStr>(idxs, value, op),
