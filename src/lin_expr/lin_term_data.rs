@@ -15,4 +15,19 @@ pub struct DLinTerm<'d> {
     pub var: Ptr<'d, DVar<'d>>,
 }
 
-impl<'d> DLinTerm<'d> {}
+impl<'d> DLinTerm<'d> {
+    // get
+
+    #[cfg(test)]
+    pub fn to_string(&self) -> alloc::string::String {
+        use alloc::format;
+        use alloc::string::String;
+        let var = self.var.get().to_string();
+        match self.coef {
+            Coef::One => var,
+            Coef::MinusOne => format!("-{var}"),
+            Coef::Con(c) => format!("{c} {var}"),
+            Coef::Ptr(c) => format!("{} {var}", c.get().eval()),
+        }
+    }
+}
