@@ -84,6 +84,9 @@ impl<'d> DLinTerm<'d> {
 fn write_coef(f: &mut alloc::string::String, c: f64) -> bool {
     use crate::constants::{is_neg, is_pos, is_zero};
     use core::fmt::Write;
+    use std::dbg;
+
+    dbg!(c);
 
     match is_pos(c) {
         true => {
