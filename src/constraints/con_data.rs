@@ -62,7 +62,6 @@ pub mod ext_test {
                 Dim::D0 => op(self),
                 Dim::D1 => self.expand_d1(op),
                 Dim::D2 => self.expand_d2(op),
-                _ => todo!(),
             }
         }
 
