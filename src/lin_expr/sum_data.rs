@@ -47,16 +47,18 @@ pub mod ext_test {
     use core::fmt::Write;
 
     impl<'d> DSum<'d> {
-        pub fn eval_append_string(&self, f: &mut String, prefix_sum: bool) {
-            let mut has_terms = prefix_sum;
+        pub fn eval_append_string(&self, f: &mut String, pre_exists: bool) -> bool {
+            let mut pre_exists = pre_exists;
             let op = |s: &Self| {
-                has_terms = s.expr.get().eval_append_string(f, has_terms);
+                pre_exists = s.expr.get().eval_append_string(f, pre_exists);
             };
 
             match self.idxs.dim() {
                 Dim::D1 => self.expand_d1(op),
                 _ => todo!(),
             }
+
+            pre_exists
         }
 
         pub fn eval_to_string(&self) -> String {

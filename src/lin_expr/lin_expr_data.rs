@@ -58,23 +58,34 @@ pub mod ext_test {
     use core::fmt::Write;
 
     impl<'d> DLinExpr<'d> {
-        pub fn eval_append_string(&self, f: &mut String, prefix_sum: bool) -> bool {
-            let mut has_terms = prefix_sum;
+        pub fn eval_append_string(&self, f: &mut String, pre_exists: bool) -> bool {
+            let mut pre_exists = pre_exists;
+
             let mut terms = self.terms.iter();
             if let Some(t) = terms.next() {
-                let added = t.eval_append_string(f, has_terms);
-                has_terms |= added;
+                let added = t.eval_append_string(f, pre_exists);
+                pre_exists |= added;
                 for t in terms {
-                    let added = t.eval_append_string(f, has_terms);
-                    has_terms |= added;
+                    let added = t.eval_append_string(f, pre_exists);
+                    pre_exists |= added;
+                }
+            }
+
+            let mut sums = self.sums.iter();
+            if let Some(s) = sums.next() {
+                let added = s.eval_append_string(f, pre_exists);
+                pre_exists |= added;
+                for s in sums {
+                    let added = s.eval_append_string(f, pre_exists);
+                    pre_exists |= added;
                 }
             }
 
             if let Some(c) = self.constant {
-                has_terms |= write_constant(f, has_terms, c.get().eval());
+                pre_exists |= write_constant(f, pre_exists, c.get().eval());
             }
 
-            has_terms
+            pre_exists
         }
 
         pub fn eval_to_string(&self) -> String {
