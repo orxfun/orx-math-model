@@ -108,7 +108,7 @@ impl<'m, 'd> Sub<LinExpr<'m, 'd>> for Var<'m, 'd> {
     type Output = LinExpr<'m, 'd>;
 
     fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
-        let (m, rhs) = (self.m(), rhs.data());
+        let (m, rhs) = (rhs.m(), rhs.data());
         let lhs = DLinTerm::new(Coef::One, self.ptr());
         let terms = rhs.terms.map(|t| term_neg(m, t)).push_to_front(lhs);
         let sums = rhs.sums.map(|s| sum_neg(m, s));
@@ -137,7 +137,7 @@ macro_rules! expr_num {
             type Output = LinExpr<'m, 'd>;
 
             fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
-                let (m, rhs) = (self.m(), rhs.data());
+                let (m, rhs) = (rhs.m(), rhs.data());
                 let terms = rhs.terms.map(|t| term_neg(m, t));
                 let sums = rhs.sums.map(|s| sum_neg(m, s));
                 let constant = const_sub_num(m, rhs.constant, self.ptr());
@@ -150,42 +150,44 @@ macro_rules! expr_num {
 expr_num!(Num<'m, 'd>);
 expr_num!(Int<'m, 'd>);
 
-// // expr - const
+// expr - const
 
-// macro_rules! expr_con {
-//     ($c:ty) => {
-//         impl<'m, 'd> Sub<$c> for LinExpr<'m, 'd> {
-//             type Output = LinExpr<'m, 'd>;
+macro_rules! expr_con {
+    ($c:ty) => {
+        impl<'m, 'd> Sub<$c> for LinExpr<'m, 'd> {
+            type Output = LinExpr<'m, 'd>;
 
-//             fn sub(self, rhs: $c) -> Self::Output {
-//                 let m = self.m();
-//                 let terms = self.data().terms.clone();
-//                 let constant = const_sub_con(m, self.data().constant, rhs);
-//                 m.lin_exp(DLinExpr::new(terms, Some(constant)))
-//             }
-//         }
+            fn sub(self, rhs: $c) -> Self::Output {
+                let (m, lhs) = (self.m(), self.data());
+                let terms = lhs.terms.clone();
+                let sums = lhs.sums.clone();
+                let constant = const_sub_con(m, lhs.constant, rhs);
+                m.lin_exp(DLinExpr::new(terms, sums, Some(constant)))
+            }
+        }
 
-//         impl<'m, 'd> Sub<LinExpr<'m, 'd>> for $c {
-//             type Output = LinExpr<'m, 'd>;
+        impl<'m, 'd> Sub<LinExpr<'m, 'd>> for $c {
+            type Output = LinExpr<'m, 'd>;
 
-//             fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
-//                 let m = rhs.m();
-//                 let terms = rhs.data().terms.map(|t| term_neg(m, t));
-//                 let constant = const_add_con(m, rhs.data().constant, self);
-//                 m.lin_exp(DLinExpr::new(terms, Some(constant)))
-//             }
-//         }
-//     };
-// }
+            fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
+                let (m, rhs) = (rhs.m(), rhs.data());
+                let terms = rhs.terms.map(|t| term_neg(m, t));
+                let sums = rhs.sums.map(|s| sum_neg(m, s));
+                let constant = const_add_con(m, rhs.constant, self);
+                m.lin_exp(DLinExpr::new(terms, sums, Some(constant)))
+            }
+        }
+    };
+}
 
-// expr_con!(f64);
-// expr_con!(f32);
-// expr_con!(i64);
-// expr_con!(i32);
-// expr_con!(u64);
-// expr_con!(u32);
-// expr_con!(usize);
-// expr_con!(isize);
+expr_con!(f64);
+expr_con!(f32);
+expr_con!(i64);
+expr_con!(i32);
+expr_con!(u64);
+expr_con!(u32);
+expr_con!(usize);
+expr_con!(isize);
 
 // // var - var
 
