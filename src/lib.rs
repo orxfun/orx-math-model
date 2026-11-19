@@ -26,6 +26,7 @@ mod constants;
 mod dim;
 mod elements;
 mod err;
+mod forall;
 mod idxs;
 mod lin_expr;
 mod model;
@@ -33,7 +34,6 @@ mod pars;
 mod scalars;
 mod sets;
 mod slot;
-mod sum;
 mod sym_ref;
 mod symbol;
 mod vars;
@@ -53,4 +53,5 @@ pub(crate) use symbol::{SymWrap, Symbol};
 pub(crate) use vars::{Bounds, VarD1, VarD2, VarType};
 
 // api
+pub use forall::forall;
 pub use model::Model;
