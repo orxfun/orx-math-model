@@ -106,3 +106,6 @@ fn t_lin_expr_str_d1() {
         );
     }
 }
+
+#[test]
+fn t_lin_expr_str_d1_zeroes() {}

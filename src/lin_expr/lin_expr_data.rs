@@ -28,25 +28,19 @@ impl<'d> DLinExpr<'d> {
             .unwrap()
         }
 
+        let mut has_terms = false;
         let mut terms = self.terms.iter();
         if let Some(t) = terms.next() {
-            t.eval_append_string(f, false);
+            let added = t.eval_append_string(f, has_terms);
+            has_terms |= added;
             for t in terms {
-                t.eval_append_string(f, true);
+                let added = t.eval_append_string(f, has_terms);
+                has_terms |= added;
             }
         }
 
-        match (self.constant, self.terms.is_empty()) {
-            (Some(c), true) => write!(f, "{}", c.get().eval()).unwrap(),
-            (Some(c), false) => {
-                let c = c.get().eval();
-                match c >= 0.0 {
-                    true => write!(f, " + {}", c),
-                    false => write!(f, " - {}", -c),
-                }
-                .unwrap();
-            }
-            _ => {}
+        if let Some(c) = self.constant {
+            write_constant(f, has_terms, c.get().eval());
         }
     }
 
@@ -55,5 +49,32 @@ impl<'d> DLinExpr<'d> {
         let mut f = alloc::string::String::new();
         self.eval_append_string(&mut f);
         f
+    }
+}
+
+#[cfg(test)]
+fn write_constant(f: &mut alloc::string::String, has_terms: bool, c: f64) {
+    use crate::constants::{is_neg, is_pos, is_zero};
+    use core::fmt::Write;
+
+    match has_terms {
+        true => match is_pos(c) {
+            true => write!(f, " + {}", c).unwrap(),
+            false => match is_neg(c) {
+                true => write!(f, " - {}", -c).unwrap(),
+                false => {
+                    debug_assert!(is_zero(c))
+                }
+            },
+        },
+        false => match is_pos(c) {
+            true => write!(f, "{}", c).unwrap(),
+            false => match is_neg(c) {
+                true => write!(f, "-{}", -c).unwrap(),
+                false => {
+                    debug_assert!(is_zero(c))
+                }
+            },
+        },
     }
 }

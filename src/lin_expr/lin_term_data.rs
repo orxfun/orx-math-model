@@ -1,11 +1,5 @@
-#[cfg(test)]
-use crate::constants::{is_neg, is_pos, is_zero};
 use crate::scalars::{DNum, DVar, ValNum};
 use crate::{AsF64, Model, Ptr, SymWrap, Var};
-#[cfg(test)]
-use alloc::string::String;
-#[cfg(test)]
-use core::fmt::Write;
 
 #[derive(Clone)]
 pub enum Coef<'d> {
@@ -25,60 +19,109 @@ impl<'d> DLinTerm<'d> {
     // get
 
     #[cfg(test)]
-    pub fn eval_append_string(&self, f: &mut String, prefix_sum: bool) {
+    pub fn eval_append_string(&self, f: &mut alloc::string::String, prefix_sum: bool) -> bool {
         match (&self.coef, prefix_sum) {
-            (Coef::One, false) => self.var.get().eval_append_string(f),
+            (Coef::One, false) => {
+                self.var.get().eval_append_string(f);
+                true
+            }
             (Coef::MinusOne, false) => {
                 f.push_str("-");
                 self.var.get().eval_append_string(f);
+                true
             }
-            (Coef::Con(c), false) => {
-                write!(f, "{} ", c).unwrap();
-                self.var.get().eval_append_string(f);
-            }
-            (Coef::Ptr(c), false) => {
-                write!(f, "{} ", c.get().eval()).unwrap();
-                self.var.get().eval_append_string(f);
-            }
+            (Coef::Con(c), false) => match write_coef(f, *c) {
+                true => {
+                    self.var.get().eval_append_string(f);
+                    true
+                }
+                false => false,
+            },
+            (Coef::Ptr(c), false) => match write_coef(f, c.get().eval()) {
+                true => {
+                    self.var.get().eval_append_string(f);
+                    true
+                }
+                false => false,
+            },
 
             (Coef::One, true) => {
                 f.push_str(" + ");
                 self.var.get().eval_append_string(f);
+                true
             }
             (Coef::MinusOne, true) => {
                 f.push_str(" - ");
                 self.var.get().eval_append_string(f);
+                true
             }
-            (Coef::Con(c), true) => {
-                write_prefix_and_coef(f, *c);
-                self.var.get().eval_append_string(f);
-            }
-            (Coef::Ptr(c), true) => {
-                write_prefix_and_coef(f, c.get().eval());
-                self.var.get().eval_append_string(f);
-            }
+            (Coef::Con(c), true) => match write_prefix_and_coef(f, *c) {
+                true => {
+                    self.var.get().eval_append_string(f);
+                    true
+                }
+                false => false,
+            },
+            (Coef::Ptr(c), true) => match write_prefix_and_coef(f, c.get().eval()) {
+                true => {
+                    self.var.get().eval_append_string(f);
+                    true
+                }
+                false => false,
+            },
         }
     }
 
     #[cfg(test)]
-    pub fn eval_to_string(&self) -> String {
-        let mut f = String::new();
+    pub fn eval_to_string(&self) -> alloc::string::String {
+        let mut f = alloc::string::String::new();
         self.eval_append_string(&mut f, false);
         f
     }
 }
 
 #[cfg(test)]
-fn write_prefix_and_coef(f: &mut String, c: f64) {
+fn write_coef(f: &mut alloc::string::String, c: f64) -> bool {
+    use crate::constants::{is_neg, is_pos, is_zero};
+    use core::fmt::Write;
+
     match is_pos(c) {
-        true => write!(f, " + {} ", c),
+        true => {
+            write!(f, "{} ", c).unwrap();
+            true
+        }
         false => match is_neg(c) {
-            true => write!(f, " - {} ", -c),
+            true => {
+                write!(f, "-{} ", -c).unwrap();
+                true
+            }
             false => {
                 debug_assert!(is_zero(c));
-                write!(f, " + 0 ")
+                false
             }
         },
     }
-    .unwrap()
+}
+
+#[cfg(test)]
+fn write_prefix_and_coef(f: &mut alloc::string::String, c: f64) -> bool {
+    use crate::constants::{is_neg, is_pos, is_zero};
+    use core::fmt::Write;
+
+    match is_pos(c) {
+        true => {
+            write!(f, " + {} ", c).unwrap();
+            true
+        }
+        false => match is_neg(c) {
+            true => {
+                write!(f, " - {} ", -c).unwrap();
+                true
+            }
+            false => {
+                debug_assert!(is_zero(c));
+                false
+            }
+        },
+    }
 }
