@@ -1,7 +1,5 @@
+use crate::{constants::MAX_EXPR_LEN, ConVec, Ptr};
 use crate::{lin_expr::DLinTerm, scalars::DNum};
-use crate::{ConVec, Ptr};
-
-pub const MAX_EXPR_LEN: usize = 8;
 
 pub type ExprVec<'d> = ConVec<MAX_EXPR_LEN, DLinTerm<'d>>;
 
