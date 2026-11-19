@@ -59,7 +59,7 @@ pub mod ext_test {
 
     impl<'d> DLinExpr<'d> {
         pub fn eval_append_string(&self, f: &mut String, prefix_sum: bool) {
-            let mut has_terms = false;
+            let mut has_terms = prefix_sum;
             let mut terms = self.terms.iter();
             if let Some(t) = terms.next() {
                 let added = t.eval_append_string(f, has_terms);
