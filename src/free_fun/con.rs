@@ -2,7 +2,7 @@ use crate::constraints::{Constraint, DCon, IneqTyp};
 use crate::free_fun::IneqOp;
 use crate::idxs::{ConIdxs, IdxVec};
 use crate::lin_expr::{DLinExpr, DLinTerm, SumVec, TermVec};
-use crate::{AsF64, Int, LinExpr, Model, Num, Set, SymWrap, Var};
+use crate::{AsF64, Int, LinExpr, Model, Num, Set, SetSym, SymWrap, Var};
 
 pub struct Forall<'m, 'd>(pub(crate) ConIdxs<'m, 'd>);
 
@@ -130,10 +130,9 @@ pub fn con<'m, 'd>(
     con_gen(lhs, typ, rhs, idxs)
 }
 
-pub fn con1<'m, 'd, S0: Set>(
-    s0: S0::SetSym<'m, 'd>,
-    con: impl Fn(S0::IdxSym<'m, 'd>) -> Constraint<'m, 'd>,
+pub fn con1<'m, 'd, S0: SetSym<'m, 'd>>(
+    s0: S0,
+    con: impl Fn(<S0::Meta as Set>::IdxSym<'m, 'd>) -> Constraint<'m, 'd>,
 ) -> Constraint<'m, 'd> {
-    let i0 = S0::create_idx_from_set(s0);
-    con(i0)
+    con(s0.idx())
 }
