@@ -34,68 +34,75 @@ fn t_lin_expr_str_d1() {
     for (i, _) in iter.enumerate() {
         let ei = s0_data[i];
         let ep = p1_data[s0_data[i]];
+        let ex = "x"; // TODO: var-name-fix
 
         let e = LinExpr::from(x[i0]);
-        assert_eq!(exp_str(e), format!("x_{ei}"));
+        assert_eq!(exp_str(e), format!("{ex}_{ei}"));
 
         let e = 3 * x[2];
-        assert_eq!(exp_str(e), format!("3 x_2"));
+        assert_eq!(exp_str(e), format!("3 {ex}_2"));
 
         let e = -3.2 * x[i0];
-        assert_eq!(exp_str(e), format!("-3.2 x_{ei}"));
+        assert_eq!(exp_str(e), format!("-3.2 {ex}_{ei}"));
 
         let e = p[2] * x[i0];
-        assert_eq!(exp_str(e), format!("7 x_{ei}"));
+        assert_eq!(exp_str(e), format!("7 {ex}_{ei}"));
 
         let e = -p[i0] * x[i0];
-        assert_eq!(exp_str(e), format!("-{ep} x_{ei}"));
+        assert_eq!(exp_str(e), format!("-{ep} {ex}_{ei}"));
 
         let e = x[i0] + 1;
-        assert_eq!(exp_str(e), format!("x_{ei} + 1"));
+        assert_eq!(exp_str(e), format!("{ex}_{ei} + 1"));
 
         let e = -x[i0] + 1;
-        assert_eq!(exp_str(e), format!("-x_{ei} + 1"));
+        assert_eq!(exp_str(e), format!("-{ex}_{ei} + 1"));
 
         let e = 3 - p[i0] * x[i0];
-        assert_eq!(exp_str(e), format!("-{ep} x_{ei} + 3"));
+        assert_eq!(exp_str(e), format!("-{ep} {ex}_{ei} + 3"));
 
         let e = 3 + (-p[i0]) * x[i0];
-        assert_eq!(exp_str(e), format!("-{ep} x_{ei} + 3"));
+        assert_eq!(exp_str(e), format!("-{ep} {ex}_{ei} + 3"));
 
         let e = 2 + (-p[i0]) * x[i0] + 9;
-        assert_eq!(exp_str(e), format!("-{ep} x_{ei} + 11"));
+        assert_eq!(exp_str(e), format!("-{ep} {ex}_{ei} + 11"));
 
         let e = 2 + (-p[i0]) * x[i0] - 9;
-        assert_eq!(exp_str(e), format!("-{ep} x_{ei} - 7"));
+        assert_eq!(exp_str(e), format!("-{ep} {ex}_{ei} - 7"));
 
         let e = 2 * x[0] + 7 - p[i0] * x[2] + 1.5 * x[i0] - 3;
-        assert_eq!(exp_str(e), format!("2 x_0 - {ep} x_2 + 1.5 x_{ei} + 4"));
+        assert_eq!(
+            exp_str(e),
+            format!("2 {ex}_0 - {ep} {ex}_2 + 1.5 {ex}_{ei} + 4")
+        );
 
         let e = 2 * x[0] + 7 - p[i0] * x[2] + 1.5 * x[i0] - 30.5;
-        assert_eq!(exp_str(e), format!("2 x_0 - {ep} x_2 + 1.5 x_{ei} - 23.5"));
+        assert_eq!(
+            exp_str(e),
+            format!("2 {ex}_0 - {ep} {ex}_2 + 1.5 {ex}_{ei} - 23.5")
+        );
 
         let e = 4 * (2 * x[0] + 7 - p[i0] * x[2]) + 1.5 * x[i0] - 30.5;
         assert_eq!(
             exp_str(e),
-            format!("8 x_0 - {} x_2 + 1.5 x_{ei} - 2.5", 4.0 * ep)
+            format!("8 {ex}_0 - {} {ex}_2 + 1.5 {ex}_{ei} - 2.5", 4.0 * ep)
         );
 
         let e = (4 * (2 * x[0] + 7 - p[i0] * x[2]) + 1.5 * x[i0] - 30.5) / 2.0;
         assert_eq!(
             exp_str(e),
-            format!("4 x_0 - {} x_2 + 0.75 x_{ei} - 1.25", 2.0 * ep)
+            format!("4 {ex}_0 - {} {ex}_2 + 0.75 {ex}_{ei} - 1.25", 2.0 * ep)
         );
 
         let e = (2 * p[1] * (2 * x[0] + 7 - p[i0] * x[2]) + 1.5 * x[i0] - 30.5) / p[1];
         assert_eq!(
             exp_str(e),
-            format!("4 x_0 - {} x_2 + 0.75 x_{ei} - 1.25", 2.0 * ep)
+            format!("4 {ex}_0 - {} {ex}_2 + 0.75 {ex}_{ei} - 1.25", 2.0 * ep)
         );
 
         let e = (2 * p[1] * (2 * x[0] + 7 - p[i0] * x[2]) + 1.5 * x[i0] - 30.5) / p[1] + 30;
         assert_eq!(
             exp_str(e),
-            format!("4 x_0 - {} x_2 + 0.75 x_{ei} + 28.75", 2.0 * ep)
+            format!("4 {ex}_0 - {} {ex}_2 + 0.75 {ex}_{ei} + 28.75", 2.0 * ep)
         );
     }
 }
