@@ -25,4 +25,6 @@ fn con_d0() {
     let c = con(3, leq, x[2]);
 
     let c = forall(s0, |i| con(3, leq, x[2]));
+
+    let c = forall(s0, |i| con(3, leq, x[2]));
 }
