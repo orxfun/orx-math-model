@@ -26,7 +26,7 @@ impl<'d> DLinExpr<'d> {
             })
         }
 
-        let expr_terms = self.terms.map(|t| t.neg());
+        let expr_terms = self.terms.map(|t| t.neg(m));
         let expr_sums = self.sums.map(|s| s.neg(m));
         let expr_constant = const_neg(m, self.constant);
         let expr = DLinExpr::new(expr_terms, expr_sums, expr_constant);
@@ -43,7 +43,7 @@ impl<'d> DLinExpr<'d> {
         constant: Option<Ptr<'d, DNum<'d>>>,
     ) -> Self {
         Self::new(
-            self.terms.map(|t| t.neg()),
+            self.terms.map(|t| t.neg(m)),
             self.sums.map(|s| s.neg(m)),
             constant,
         )

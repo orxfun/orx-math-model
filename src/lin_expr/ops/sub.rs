@@ -57,6 +57,16 @@ fn const_sub_con<'m, 'd>(m: &'m Model<'d>, c1: Con<'d>, c2: impl AsF64) -> Ptr<'
     }
 }
 
+fn con_sub_const<'m, 'd>(m: &'m Model<'d>, c1: impl AsF64, c2: Con<'d>) -> Ptr<'d, DNum<'d>> {
+    match c2 {
+        Some(c2) => {
+            let fun = Box::new(move || c1.as_f64() - c2.get().eval());
+            m.val::<ValNum>(DNum::new(ValTyp::Num, fun)).ptr()
+        }
+        None => m.val_num_con(c1.as_f64()).ptr(),
+    }
+}
+
 // expr - expr
 
 impl<'m, 'd> Sub<LinExpr<'m, 'd>> for LinExpr<'m, 'd> {
@@ -65,7 +75,7 @@ impl<'m, 'd> Sub<LinExpr<'m, 'd>> for LinExpr<'m, 'd> {
     fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
         let m = self.m();
         let [t1, t2] = [self.data(), rhs.data()];
-        let terms = t1.terms.merge(&t2.terms.map(|t| t.neg()));
+        let terms = t1.terms.merge(&t2.terms.map(|t| t.neg(m)));
         let sums = t1.sums.merge(&t2.sums.map(|s| s.neg(m)));
         let constant = const_sub_const(m, t1.constant, t2.constant);
         m.lin_exp(DLinExpr::new(terms, sums, constant))
@@ -92,7 +102,7 @@ impl<'m, 'd> Sub<LinExpr<'m, 'd>> for Var<'m, 'd> {
     fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
         let (m, rhs) = (rhs.m(), rhs.data());
         let lhs = DLinTerm::new(Coef::One, self.ptr());
-        let terms = rhs.terms.map(|t| t.neg()).push_to_front(lhs);
+        let terms = rhs.terms.map(|t| t.neg(m)).push_to_front(lhs);
         let sums = rhs.sums.map(|s| s.neg(m));
         let constant = rhs.constant.map(|c| DNum::neg_ptr(m, c));
         m.lin_exp(DLinExpr::new(terms, sums, constant))
@@ -118,7 +128,7 @@ macro_rules! expr_num {
 
             fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
                 let (m, rhs) = (rhs.m(), rhs.data());
-                let terms = rhs.terms.map(|t| t.neg());
+                let terms = rhs.terms.map(|t| t.neg(m));
                 let sums = rhs.sums.map(|s| s.neg(m));
                 let constant = num_sub_const(m, self.ptr(), rhs.constant);
                 m.lin_exp(DLinExpr::new(terms, sums, Some(constant)))
@@ -149,9 +159,9 @@ macro_rules! expr_con {
 
             fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
                 let (m, rhs) = (rhs.m(), rhs.data());
-                let terms = rhs.terms.map(|t| t.neg());
+                let terms = rhs.terms.map(|t| t.neg(m));
                 let sums = rhs.sums.map(|s| s.neg(m));
-                let constant = const_add_con(m, rhs.constant, self);
+                let constant = con_sub_const(m, self, rhs.constant);
                 m.lin_exp(DLinExpr::new(terms, sums, Some(constant)))
             }
         }
