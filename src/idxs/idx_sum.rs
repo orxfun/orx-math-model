@@ -36,18 +36,18 @@ pub enum IdxSum<'m, 'd> {
 }
 
 impl<'m, 'd> IdxSum<'m, 'd> {
-    pub(crate) fn destruct(self) -> (&'m Model<'d>, IdxVec<'d>) {
-        let m = match &self {
+    pub(crate) fn m(&self) -> &'m Model<'d> {
+        match self {
             IdxSum::D1(i0) => i0.m(),
             IdxSum::D2(i0, _) => i0.m(),
-        };
+        }
+    }
 
-        let idxs = match self {
+    pub(crate) fn destruct(self) -> IdxVec<'d> {
+        match self {
             IdxSum::D1(i0) => IdxVec::new([i0.ptr()]),
             IdxSum::D2(i0, i1) => IdxVec::new([i0.ptr(), i1.ptr()]),
-        };
-
-        (m, idxs)
+        }
     }
 }
 

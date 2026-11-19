@@ -4,12 +4,12 @@ use crate::scalars::{DNum, ValNum};
 use crate::{ConVec, Model, Ptr, SymWrap, ValTyp};
 use alloc::boxed::Box;
 
-pub type ExprVec<'d> = ConVec<MAX_EXPR_LEN, DLinTerm<'d>>;
+pub type TermVec<'d> = ConVec<MAX_EXPR_LEN, DLinTerm<'d>>;
 pub type SumVec<'d> = ConVec<MAX_EXPR_LEN, DSum<'d>>;
 
 #[derive(derive_new::new)]
 pub struct DLinExpr<'d> {
-    pub(super) terms: ExprVec<'d>,
+    pub(super) terms: TermVec<'d>,
     pub(super) sums: SumVec<'d>,
     pub(super) constant: Option<Ptr<'d, DNum<'d>>>,
 }
