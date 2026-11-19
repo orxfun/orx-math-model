@@ -4,16 +4,16 @@ use crate::{Model, Ptr};
 
 #[derive(derive_new::new, Clone)]
 pub struct DSum<'d> {
-    pub sets: IdxVec<'d>,
+    pub idxs: IdxVec<'d>,
     pub expr: Ptr<'d, DLinExpr<'d>>,
 }
 
 impl<'d> DSum<'d> {
     pub fn neg<'m>(&self, m: &'m Model<'d>) -> Self {
-        Self::new(self.sets.clone(), self.expr.get().neg(m))
+        Self::new(self.idxs.clone(), self.expr.get().neg(m))
     }
 
     pub fn with_expr(&self, expr: Ptr<'d, DLinExpr<'d>>) -> Self {
-        Self::new(self.sets.clone(), expr)
+        Self::new(self.idxs.clone(), expr)
     }
 }

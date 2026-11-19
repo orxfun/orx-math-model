@@ -53,5 +53,5 @@ pub(crate) use symbol::{SymWrap, Symbol};
 pub(crate) use vars::{Bounds, VarD1, VarD2, VarType};
 
 // api
-pub use ff::forall;
+pub use ff::{forall, sum};
 pub use model::Model;
