@@ -1,7 +1,7 @@
 use crate::constraints::{Constraint, DCon, IneqTyp};
 use crate::idxs::ConIdxs;
-use crate::lin_expr::{DLinExpr, SumVec, TermVec};
-use crate::{Int, LinExpr, Model, Num, SymWrap, Var};
+use crate::lin_expr::{DLinExpr, DLinTerm, SumVec, TermVec};
+use crate::{AsF64, Int, LinExpr, Model, Num, SymWrap, Var};
 
 pub struct Forall<'m, 'd>(pub(crate) ConIdxs<'m, 'd>);
 
@@ -19,8 +19,8 @@ pub enum IneqSide<'m, 'd> {
     ConU32(u32),
     ConUsize(usize),
     ConIsize(isize),
-    Int(Int<'m, 'd>),
     Num(Num<'m, 'd>),
+    Int(Int<'m, 'd>),
     Var(Var<'m, 'd>),
     LinExpr(LinExpr<'m, 'd>),
 }
@@ -28,27 +28,49 @@ pub enum IneqSide<'m, 'd> {
 impl<'m, 'd> IneqSide<'m, 'd> {
     fn m(&self) -> Option<&'m Model<'d>> {
         match self {
-            Self::Int(x) => Some(x.m()),
             Self::Num(x) => Some(x.m()),
+            Self::Int(x) => Some(x.m()),
             Self::Var(x) => Some(x.m()),
             Self::LinExpr(x) => Some(x.m()),
             _ => None,
         }
     }
-}
 
-fn con_to_expr<'m, 'd>(m: &'m Model<'d>, con: f64) -> LinExpr<'m, 'd> {
-    num_to_expr(m, m.val_num_con(con))
-}
+    fn to_expr(&self, m: &'m Model<'d>) -> LinExpr<'m, 'd> {
+        fn con_to_expr<'m, 'd>(m: &'m Model<'d>, con: f64) -> LinExpr<'m, 'd> {
+            num_to_expr(m, m.val_num_con(con))
+        }
 
-fn num_to_expr<'m, 'd>(m: &'m Model<'d>, num: Num<'m, 'd>) -> LinExpr<'m, 'd> {
-    let data = DLinExpr::new(TermVec::new([]), SumVec::new([]), Some(num.ptr()));
-    m.lin_exp(data)
-}
+        fn num_to_expr<'m, 'd>(m: &'m Model<'d>, num: Num<'m, 'd>) -> LinExpr<'m, 'd> {
+            let data = DLinExpr::new(TermVec::new([]), SumVec::new([]), Some(num.ptr()));
+            m.lin_exp(data)
+        }
 
-fn int_to_expr<'m, 'd>(m: &'m Model<'d>, int: Int<'m, 'd>) -> LinExpr<'m, 'd> {
-    let data = DLinExpr::new(TermVec::new([]), SumVec::new([]), Some(int.ptr()));
-    m.lin_exp(data)
+        fn int_to_expr<'m, 'd>(m: &'m Model<'d>, int: Int<'m, 'd>) -> LinExpr<'m, 'd> {
+            let data = DLinExpr::new(TermVec::new([]), SumVec::new([]), Some(int.ptr()));
+            m.lin_exp(data)
+        }
+
+        fn var_to_expr<'m, 'd>(m: &'m Model<'d>, var: Var<'m, 'd>) -> LinExpr<'m, 'd> {
+            let data = DLinExpr::new(TermVec::new([DLinTerm::from(var)]), SumVec::new([]), None);
+            m.lin_exp(data)
+        }
+
+        match self {
+            Self::ConF64(c) => con_to_expr(m, *c),
+            Self::ConF32(c) => con_to_expr(m, c.as_f64()),
+            Self::ConI64(c) => con_to_expr(m, c.as_f64()),
+            Self::ConI32(c) => con_to_expr(m, c.as_f64()),
+            Self::ConU64(c) => con_to_expr(m, c.as_f64()),
+            Self::ConU32(c) => con_to_expr(m, c.as_f64()),
+            Self::ConUsize(c) => con_to_expr(m, c.as_f64()),
+            Self::ConIsize(c) => con_to_expr(m, c.as_f64()),
+            Self::Num(n) => num_to_expr(m, *n),
+            Self::Int(n) => int_to_expr(m, *n),
+            Self::Var(v) => var_to_expr(m, *v),
+            Self::LinExpr(e) => *e,
+        }
+    }
 }
 
 pub fn con<'m, 'd>(
@@ -57,6 +79,17 @@ pub fn con<'m, 'd>(
     rhs: impl Into<IneqSide<'m, 'd>>,
     forall: Forall<'m, 'd>,
 ) -> Constraint<'m, 'd> {
+    let [lhs, rhs] = [lhs.into(), rhs.into()];
+    let m = match (lhs.m(), rhs.m()) {
+        (Some(m1), Some(_m2)) => Some(m1),
+        (Some(m1), None) => Some(m1),
+        (None, Some(m2)) => Some(m2),
+        (None, None) => None,
+    };
+
+    // TODO: Handle const-const case somehow!
+    let m = m.unwrap();
+
     let con = |m: &'m Model<'d>, lhs: LinExpr<'m, 'd>, rhs: LinExpr<'m, 'd>| {
         let idxs = forall.0.to_idx_vec();
         let data = DCon::new(idxs, lhs.ptr(), rhs.ptr(), typ);
