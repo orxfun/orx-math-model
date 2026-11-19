@@ -1,7 +1,7 @@
 use crate::{sets::DSet, Dim, Ptr};
 use core::ops::{Deref, Index};
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct ConVec<const N: usize, T> {
     len: usize,
     data: [Option<T>; N],
@@ -60,8 +60,8 @@ impl<const N: usize, T> ConVec<N, T> {
         T: Clone,
     {
         debug_assert!(self.len + other.len <= N);
+        let mut len = self.len;
         let mut data = self.data.clone();
-        let mut len = data.len();
         for i in 0..other.len {
             data[len] = other.data[i].clone();
             len += 1;

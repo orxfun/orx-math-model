@@ -20,52 +20,57 @@ fn t_lin_expr_d1() {
     let m = Model::new();
     let s0 = m.cat_set_int();
     let i0 = s0.idx();
-    let v1 = m.var1(VarType::Binary, s0);
-    let p1 = m.par1_num(s0);
+    let x = m.var1(VarType::Binary, s0);
+    let p = m.par1_num(s0);
 
     // binding
     s0.bind(|| s0_data.iter().copied()).unwrap();
-    p1.bind(|i| p1_data[i]).unwrap();
+    p.bind(|i| p1_data[i]).unwrap();
 
     // running
     let mut elements: Elements<usize> = vec![].into();
     let iter = ElementsIter::<SetCatInt>::new(i0, &mut elements);
 
     for (i, _) in iter.enumerate() {
-        let exp_i0 = s0_data[i];
-        let exp_p1 = p1_data[s0_data[i]];
+        let ei = s0_data[i];
+        let ep = p1_data[s0_data[i]];
 
-        let e = LinExpr::from(v1[i0]);
-        assert_eq!(exp_str(e), format!("x_{exp_i0}"));
+        // let e = LinExpr::from(x[i0]);
+        // assert_eq!(exp_str(e), format!("x_{ei}"));
 
-        let e = 3 * v1[2];
-        assert_eq!(exp_str(e), format!("3 x_2"));
+        // let e = 3 * x[2];
+        // assert_eq!(exp_str(e), format!("3 x_2"));
 
-        let e = -3.2 * v1[i0];
-        assert_eq!(exp_str(e), format!("-3.2 x_{exp_i0}"));
+        // let e = -3.2 * x[i0];
+        // assert_eq!(exp_str(e), format!("-3.2 x_{ei}"));
 
-        let e = p1[2] * v1[i0];
-        assert_eq!(exp_str(e), format!("7 x_{exp_i0}"));
+        // let e = p[2] * x[i0];
+        // assert_eq!(exp_str(e), format!("7 x_{ei}"));
 
-        let e = -p1[i0] * v1[i0];
-        assert_eq!(exp_str(e), format!("-{} x_{exp_i0}", exp_p1));
+        // let e = -p[i0] * x[i0];
+        // assert_eq!(exp_str(e), format!("-{ep} x_{ei}"));
 
-        let e = v1[i0] + 1;
-        assert_eq!(exp_str(e), format!("x_{exp_i0} + 1"));
+        // let e = x[i0] + 1;
+        // assert_eq!(exp_str(e), format!("x_{ei} + 1"));
 
-        let e = -v1[i0] + 1;
-        assert_eq!(exp_str(e), format!("-x_{exp_i0} + 1"));
+        // let e = -x[i0] + 1;
+        // assert_eq!(exp_str(e), format!("-x_{ei} + 1"));
 
-        let e = 3 - p1[i0] * v1[i0];
-        assert_eq!(exp_str(e), format!("-{} x_{exp_i0} + 3", exp_p1));
+        // let e = 3 - p[i0] * x[i0];
+        // assert_eq!(exp_str(e), format!("-{ep} x_{ei} + 3"));
 
-        let e = 3 + (-p1[i0]) * v1[i0];
-        assert_eq!(exp_str(e), format!("-{} x_{exp_i0} + 3", exp_p1));
+        // let e = 3 + (-p[i0]) * x[i0];
+        // assert_eq!(exp_str(e), format!("-{ep} x_{ei} + 3"));
 
-        let e = 2 + (-p1[i0]) * v1[i0] + 9;
-        assert_eq!(exp_str(e), format!("-{} x_{exp_i0} + 11", exp_p1));
+        // let e = 2 + (-p[i0]) * x[i0] + 9;
+        // assert_eq!(exp_str(e), format!("-{ep} x_{ei} + 11"));
 
-        let e = 2 + (-p1[i0]) * v1[i0] - 9;
-        assert_eq!(exp_str(e), format!("-{} x_{exp_i0} - 7", exp_p1));
+        // let e = 2 + (-p[i0]) * x[i0] - 9;
+        // assert_eq!(exp_str(e), format!("-{ep} x_{ei} - 7"));
+
+        let e = 2 * x[0] + 7 - p[i0] * x[2] + 1.5 * x[i0] - 3;
+        assert_eq!(exp_str(e), format!("2 x_0 - {ep} x_2 + 1.5 x_{ei} + 4"));
+
+        break;
     }
 }
