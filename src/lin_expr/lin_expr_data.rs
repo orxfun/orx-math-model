@@ -58,7 +58,7 @@ pub mod ext_test {
     use core::fmt::Write;
 
     impl<'d> DLinExpr<'d> {
-        pub fn eval_append_string(&self, f: &mut String) {
+        pub fn eval_append_string(&self, f: &mut String, prefix_sum: bool) {
             let mut has_terms = false;
             let mut terms = self.terms.iter();
             if let Some(t) = terms.next() {
@@ -77,7 +77,7 @@ pub mod ext_test {
 
         pub fn eval_to_string(&self) -> String {
             let mut f = String::new();
-            self.eval_append_string(&mut f);
+            self.eval_append_string(&mut f, false);
             f
         }
     }
