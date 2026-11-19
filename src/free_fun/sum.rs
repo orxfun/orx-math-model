@@ -45,3 +45,15 @@ pub fn sum1<'m, 'd, E: Into<IntoLinExpr<'m, 'd>>, S0: SetSym<'m, 'd>>(
     let sum_expr = sum_expr(i0);
     sum_gen(s0.m(), sum_expr, idxs)
 }
+
+pub fn sum2<'m, 'd, E: Into<IntoLinExpr<'m, 'd>>, S0: SetSym<'m, 'd>, S1: SetSym<'m, 'd>>(
+    s0: S0,
+    s1: S1,
+    sum_expr: impl Fn(Idx<'m, 'd, S0>, Idx<'m, 'd, S1>) -> E,
+) -> LinExpr<'m, 'd> {
+    let i0 = s0.idx();
+    let i1 = s1.idx();
+    let idxs = IdxVec::new([i0.ptr(), i1.ptr()]);
+    let sum_expr = sum_expr(i0, i1);
+    sum_gen(s0.m(), sum_expr, idxs)
+}
