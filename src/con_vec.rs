@@ -128,8 +128,3 @@ impl<T> Index<usize> for DimVec<T> {
         self.get(idx).unwrap()
     }
 }
-
-// set - vec
-
-#[derive(Clone)]
-pub struct IdxVec<'d>(ConVec<8, Ptr<'d, DIdx<'d>>>);

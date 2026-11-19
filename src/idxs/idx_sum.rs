@@ -1,4 +1,4 @@
-use crate::idxs::{IdxCatInt, IdxCatStr, IdxOrd};
+use crate::idxs::{IdxCatInt, IdxCatStr, IdxOrd, IdxVec};
 
 #[derive(derive_more::From)]
 pub enum Idx<'m, 'd> {
@@ -10,6 +10,15 @@ pub enum Idx<'m, 'd> {
 pub enum IdxSum<'m, 'd> {
     D1(Idx<'m, 'd>),
     D2(Idx<'m, 'd>, Idx<'m, 'd>),
+}
+
+impl<'m, 'd> IdxSum<'m, 'd> {
+    pub(crate) fn into_idx_vec(self) -> IdxVec<'d> {
+        match self {
+            IdxSum::D1(i0) => todo!(),
+            IdxSum::D2(i0, i1) => todo!(),
+        }
+    }
 }
 
 // into

@@ -1,5 +1,6 @@
+use crate::idxs::IdxVec;
 use crate::lin_expr::DLinExpr;
-use crate::{IdxVec, Model, Ptr};
+use crate::{Model, Ptr};
 
 #[derive(derive_new::new, Clone)]
 pub struct DSum<'d> {
