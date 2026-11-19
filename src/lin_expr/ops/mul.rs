@@ -4,18 +4,13 @@ use crate::{AsF64, Int, LinExpr, Model, Num, Ptr, SymWrap, ValTyp, Var, VarType}
 use alloc::boxed::Box;
 use core::ops::Mul;
 
+// num
+
 type Con<'d> = Option<Ptr<'d, DNum<'d>>>;
 
 fn const_mul_num<'m, 'd>(m: &'m Model<'d>, c1: Con<'d>, c2: Ptr<'d, DNum<'d>>) -> Con<'d> {
     c1.map(|c1| {
         let fun = Box::new(move || c1.get().eval() * c2.get().eval());
-        m.val::<ValNum>(DNum::new(ValTyp::Num, fun)).ptr()
-    })
-}
-
-fn const_mul_con<'m, 'd>(m: &'m Model<'d>, c1: Con<'d>, c2: impl AsF64) -> Con<'d> {
-    c1.map(|c1| {
-        let fun = Box::new(move || c1.get().eval() * c2.as_f64());
         m.val::<ValNum>(DNum::new(ValTyp::Num, fun)).ptr()
     })
 }
@@ -43,6 +38,32 @@ fn term_mul_num<'m, 'd>(
     DLinTerm::new(coef, term.var)
 }
 
+fn sum_mul_num<'m, 'd>(m: &'m Model<'d>, sum: &DSum<'d>, num: Ptr<'d, DNum<'d>>) -> DSum<'d> {
+    sum.with_expr(expr_mul_num(m, sum.expr, num))
+}
+
+fn expr_mul_num<'m, 'd>(
+    m: &'m Model<'d>,
+    expr: Ptr<'d, DLinExpr<'d>>,
+    num: Ptr<'d, DNum<'d>>,
+) -> Ptr<'d, DLinExpr<'d>> {
+    let expr = expr.get();
+    let terms = expr.terms.map(|term| term_mul_num(m, term, num));
+    let sums = expr.sums.map(|sum| sum_mul_num(m, sum, num));
+    let constant = const_mul_num(m, expr.constant, num);
+    let expr = DLinExpr::new(terms, sums, constant);
+    m.lin_exp(expr).ptr()
+}
+
+// con
+
+fn const_mul_con<'m, 'd>(m: &'m Model<'d>, c1: Con<'d>, c2: impl AsF64) -> Con<'d> {
+    c1.map(|c1| {
+        let fun = Box::new(move || c1.get().eval() * c2.as_f64());
+        m.val::<ValNum>(DNum::new(ValTyp::Num, fun)).ptr()
+    })
+}
+
 fn term_mul_con<'m, 'd>(m: &'m Model<'d>, term: &DLinTerm<'d>, con: impl AsF64) -> DLinTerm<'d> {
     let coef = match term.coef {
         Coef::One => Coef::Con(con.as_f64()),
@@ -56,6 +77,10 @@ fn term_mul_con<'m, 'd>(m: &'m Model<'d>, term: &DLinTerm<'d>, con: impl AsF64) 
     DLinTerm::new(coef, term.var)
 }
 
+fn sum_mul_con<'m, 'd>(m: &'m Model<'d>, sum: &DSum<'d>, con: impl AsF64) -> DSum<'d> {
+    sum.with_expr(expr_mul_con(m, sum.expr, con))
+}
+
 fn expr_mul_con<'m, 'd>(
     m: &'m Model<'d>,
     expr: Ptr<'d, DLinExpr<'d>>,
@@ -67,10 +92,6 @@ fn expr_mul_con<'m, 'd>(
     let constant = const_mul_con(m, expr.constant, con);
     let expr = DLinExpr::new(terms, sums, constant);
     m.lin_exp(expr).ptr()
-}
-
-fn sum_mul_con<'m, 'd>(m: &'m Model<'d>, sum: &DSum<'d>, con: impl AsF64) -> DSum<'d> {
-    sum.with_expr(expr_mul_con(m, sum.expr, con))
 }
 
 // expr * num
