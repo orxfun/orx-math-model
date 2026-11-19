@@ -48,8 +48,9 @@ pub mod ext_test {
 
     impl<'d> DSum<'d> {
         pub fn eval_append_string(&self, f: &mut String, prefix_sum: bool) {
+            let mut has_terms = prefix_sum;
             let op = |s: &Self| {
-                write!(f, "abc").unwrap();
+                has_terms = s.expr.get().eval_append_string(f, has_terms);
             };
 
             match self.idxs.dim() {

@@ -58,7 +58,7 @@ pub mod ext_test {
     use core::fmt::Write;
 
     impl<'d> DLinExpr<'d> {
-        pub fn eval_append_string(&self, f: &mut String, prefix_sum: bool) {
+        pub fn eval_append_string(&self, f: &mut String, prefix_sum: bool) -> bool {
             let mut has_terms = prefix_sum;
             let mut terms = self.terms.iter();
             if let Some(t) = terms.next() {
@@ -71,8 +71,10 @@ pub mod ext_test {
             }
 
             if let Some(c) = self.constant {
-                write_constant(f, has_terms, c.get().eval());
+                has_terms |= write_constant(f, has_terms, c.get().eval());
             }
+
+            has_terms
         }
 
         pub fn eval_to_string(&self) -> String {
@@ -82,23 +84,37 @@ pub mod ext_test {
         }
     }
 
-    fn write_constant(f: &mut String, has_terms: bool, c: f64) {
+    fn write_constant(f: &mut String, has_terms: bool, c: f64) -> bool {
         match has_terms {
             true => match is_pos(c) {
-                true => write!(f, " + {}", c).unwrap(),
+                true => {
+                    write!(f, " + {}", c).unwrap();
+                    true
+                }
                 false => match is_neg(c) {
-                    true => write!(f, " - {}", -c).unwrap(),
+                    true => {
+                        write!(f, " - {}", -c).unwrap();
+                        true
+                    }
                     false => {
-                        debug_assert!(is_zero(c))
+                        debug_assert!(is_zero(c));
+                        false
                     }
                 },
             },
             false => match is_pos(c) {
-                true => write!(f, "{}", c).unwrap(),
+                true => {
+                    write!(f, "{}", c).unwrap();
+                    true
+                }
                 false => match is_neg(c) {
-                    true => write!(f, "-{}", -c).unwrap(),
+                    true => {
+                        write!(f, "-{}", -c).unwrap();
+                        true
+                    }
                     false => {
-                        debug_assert!(is_zero(c))
+                        debug_assert!(is_zero(c));
+                        false
                     }
                 },
             },
