@@ -1,7 +1,8 @@
 use crate::constants::{MAX_EXPR_LEN, MAX_SUM_LEN};
 use crate::lin_expr::{DLinTerm, DSum};
-use crate::scalars::DNum;
-use crate::{ConVec, Ptr};
+use crate::scalars::{DNum, ValNum};
+use crate::{ConVec, Model, Ptr, SymWrap, ValTyp};
+use alloc::boxed::Box;
 
 pub type ExprVec<'d> = ConVec<MAX_EXPR_LEN, DLinTerm<'d>>;
 pub type SumVec<'d> = ConVec<MAX_EXPR_LEN, DSum<'d>>;
@@ -14,12 +15,38 @@ pub struct DLinExpr<'d> {
 }
 
 impl<'d> DLinExpr<'d> {
-    pub fn with_constant(&self, new_constant: Option<Ptr<'d, DNum<'d>>>) -> Self {
-        Self::new(self.terms.clone(), self.sums.clone(), new_constant)
+    pub fn neg<'m>(&self, m: &'m Model<'d>) -> Ptr<'d, Self> {
+        fn const_neg<'m, 'd>(
+            m: &'m Model<'d>,
+            c1: Option<Ptr<'d, DNum<'d>>>,
+        ) -> Option<Ptr<'d, DNum<'d>>> {
+            c1.map(|c| {
+                let fun = Box::new(move || -c.get().eval());
+                m.val::<ValNum>(DNum::new(ValTyp::Num, fun)).ptr()
+            })
+        }
+
+        let expr_terms = self.terms.map(|t| t.neg());
+        let expr_sums = self.sums.map(|s| s.neg(m));
+        let expr_constant = const_neg(m, self.constant);
+        let expr = DLinExpr::new(expr_terms, expr_sums, expr_constant);
+        m.lin_exp(expr).ptr()
     }
 
-    pub fn neg_with_constant(&self, new_constant: Option<Ptr<'d, DNum<'d>>>) -> Self {
-        Self::new(self.terms.clone(), self.sums.clone(), new_constant)
+    pub fn with_constant(&self, constant: Option<Ptr<'d, DNum<'d>>>) -> Self {
+        Self::new(self.terms.clone(), self.sums.clone(), constant)
+    }
+
+    pub fn neg_with_constant<'m>(
+        &self,
+        m: &'m Model<'d>,
+        constant: Option<Ptr<'d, DNum<'d>>>,
+    ) -> Self {
+        Self::new(
+            self.terms.map(|t| t.neg()),
+            self.sums.map(|s| s.neg(m)),
+            constant,
+        )
     }
 }
 

@@ -15,6 +15,12 @@ pub struct DLinTerm<'d> {
     pub var: Ptr<'d, DVar<'d>>,
 }
 
+impl<'d> DLinTerm<'d> {
+    pub fn neg<'m>(&self) -> Self {
+        todo!()
+    }
+}
+
 #[cfg(test)]
 pub mod ext_test {
     use super::*;
