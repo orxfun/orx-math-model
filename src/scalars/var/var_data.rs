@@ -39,7 +39,7 @@ impl<'d> DVar<'d> {
     // get
 
     #[cfg(test)]
-    pub fn to_string(&self) -> alloc::string::String {
+    pub fn eval_string(&self) -> alloc::string::String {
         use alloc::string::String;
         let mut f = String::new();
         (self.fun_write_str)(&mut f).expect("TODO");

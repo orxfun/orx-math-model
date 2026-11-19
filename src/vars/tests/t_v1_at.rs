@@ -29,11 +29,11 @@ fn v1_at_int_cint() {
     for (i, _) in iter.enumerate() {
         let exp = s0_data[i].to_string();
         for sca in sca1 {
-            assert_eq!(exp, sca.data().to_string());
+            assert_eq!(exp, sca.data().eval_string());
         }
         let exp = s0_data[2].to_string();
         for sca in sca2 {
-            assert_eq!(exp, sca.data().to_string());
+            assert_eq!(exp, sca.data().eval_string());
         }
     }
 }
@@ -63,11 +63,11 @@ fn v1_at_int_cstr() {
     for (i, _) in iter.enumerate() {
         let exp = s0_data[i].to_string();
         for sca in sca1 {
-            assert_eq!(exp, sca.data().to_string());
+            assert_eq!(exp, sca.data().eval_string());
         }
         let exp = s0_data[2].to_string();
         for sca in sca2 {
-            assert_eq!(exp, sca.data().to_string());
+            assert_eq!(exp, sca.data().eval_string());
         }
     }
 }
@@ -97,11 +97,11 @@ fn v1_at_int_ord() {
     for (i, _) in iter.enumerate() {
         let exp = s0_data[i].to_string();
         for sca in sca1 {
-            assert_eq!(exp, sca.data().to_string());
+            assert_eq!(exp, sca.data().eval_string());
         }
         let exp = s0_data[2].to_string();
         for sca in sca2 {
-            assert_eq!(exp, sca.data().to_string());
+            assert_eq!(exp, sca.data().eval_string());
         }
     }
 }
