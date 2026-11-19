@@ -90,29 +90,32 @@ impl<'m, 'd> Sub<LinExpr<'m, 'd>> for LinExpr<'m, 'd> {
     }
 }
 
-// // expr - var
+// expr - var
 
-// impl<'m, 'd> Sub<Var<'m, 'd>> for LinExpr<'m, 'd> {
-//     type Output = LinExpr<'m, 'd>;
+impl<'m, 'd> Sub<Var<'m, 'd>> for LinExpr<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
 
-//     fn sub(self, rhs: Var<'m, 'd>) -> Self::Output {
-//         let rhs = DLinTerm::new(Coef::MinusOne, rhs.ptr());
-//         let terms = self.data().terms.push(rhs);
-//         self.m().lin_exp(DLinExpr::new(terms, self.data().constant))
-//     }
-// }
+    fn sub(self, rhs: Var<'m, 'd>) -> Self::Output {
+        let lhs = self.data();
+        let rhs = DLinTerm::new(Coef::MinusOne, rhs.ptr());
+        let terms = lhs.terms.push(rhs);
+        let sums = lhs.sums.clone();
+        self.m().lin_exp(DLinExpr::new(terms, sums, lhs.constant))
+    }
+}
 
-// impl<'m, 'd> Sub<LinExpr<'m, 'd>> for Var<'m, 'd> {
-//     type Output = LinExpr<'m, 'd>;
+impl<'m, 'd> Sub<LinExpr<'m, 'd>> for Var<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
 
-//     fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
-//         let m = self.m();
-//         let lhs = DLinTerm::new(Coef::One, self.ptr());
-//         let terms = rhs.data().terms.map(|t| term_neg(m, t)).push_to_front(lhs);
-//         let constant = const_neg(m, rhs.data().constant);
-//         m.lin_exp(DLinExpr::new(terms, constant))
-//     }
-// }
+    fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
+        let (m, rhs) = (self.m(), rhs.data());
+        let lhs = DLinTerm::new(Coef::One, self.ptr());
+        let terms = rhs.terms.map(|t| term_neg(m, t)).push_to_front(lhs);
+        let sums = rhs.sums.map(|s| sum_neg(m, s));
+        let constant = const_neg(m, rhs.constant);
+        m.lin_exp(DLinExpr::new(terms, sums, constant))
+    }
+}
 
 // // expr - num
 
