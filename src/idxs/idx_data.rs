@@ -22,4 +22,8 @@ impl<'d> DIdx<'d> {
     pub fn write<S: Set>(&self, value: S::IdxRaw<'d>) {
         self.slot.get_mut().write::<S>(value);
     }
+
+    pub fn set_ptr(&self) -> Ptr<'d, DSet<'d>> {
+        self.set_ptr
+    }
 }
