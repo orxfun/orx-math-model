@@ -1,7 +1,6 @@
 use crate::scalars::{FVarIdx, FVarIdxCtor, FVarWriteCtor, FVarWriteStr};
 use crate::vars::DVars;
 use crate::{Idx1, Idx2, Ptr, Set};
-use alloc::string::String;
 
 #[derive(derive_new::new)]
 pub struct DVar<'d> {
@@ -39,10 +38,17 @@ impl<'d> DVar<'d> {
     // get
 
     #[cfg(test)]
-    pub fn eval_string(&self) -> alloc::string::String {
-        use alloc::string::String;
-        let mut f = String::new();
-        (self.fun_write_str)(&mut f).expect("TODO");
-        f
+    pub fn eval_append_string(
+        &self,
+        f: &mut alloc::string::String,
+    ) -> Result<(), core::fmt::Error> {
+        (self.fun_write_str)(f)
+    }
+
+    #[cfg(test)]
+    pub fn eval_to_string(&self) -> Result<alloc::string::String, core::fmt::Error> {
+        let mut f = alloc::string::String::new();
+        self.eval_append_string(&mut f)?;
+        Ok(f)
     }
 }

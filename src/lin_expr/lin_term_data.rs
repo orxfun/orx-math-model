@@ -19,15 +19,26 @@ impl<'d> DLinTerm<'d> {
     // get
 
     #[cfg(test)]
-    pub fn eval_string(&self) -> alloc::string::String {
-        use alloc::format;
+    pub fn eval_append_string(
+        &self,
+        f: &mut alloc::string::String,
+    ) -> Result<(), core::fmt::Error> {
         use alloc::string::String;
-        let var = self.var.get().eval_string();
+        use core::fmt::Write;
+
         match self.coef {
-            Coef::One => var,
-            Coef::MinusOne => format!("-{var}"),
-            Coef::Con(c) => format!("{c} {var}"),
-            Coef::Ptr(c) => format!("{} {var}", c.get().eval()),
-        }
+            Coef::One => {}
+            Coef::MinusOne => f.push_str("-"),
+            Coef::Con(c) => write!(f, "{} ", c)?,
+            Coef::Ptr(c) => write!(f, "{} ", c.get().eval())?,
+        };
+        self.var.get().eval_append_string(f)
+    }
+
+    #[cfg(test)]
+    pub fn eval_to_string(&self) -> Result<alloc::string::String, core::fmt::Error> {
+        let mut f = alloc::string::String::new();
+        self.eval_append_string(&mut f)?;
+        Ok(f)
     }
 }

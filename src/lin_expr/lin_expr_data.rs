@@ -10,3 +10,15 @@ pub struct DLinExpr<'d> {
     pub(super) terms: ExprVec<'d>,
     pub(super) constant: Option<Ptr<'d, DNum<'d>>>,
 }
+
+impl<'d> DLinExpr<'d> {
+    // get
+
+    #[cfg(test)]
+    pub fn eval_to_string(&self) -> alloc::string::String {
+        use alloc::format;
+        use alloc::string::String;
+
+        todo!()
+    }
+}
