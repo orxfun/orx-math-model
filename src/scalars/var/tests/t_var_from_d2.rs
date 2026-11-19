@@ -17,7 +17,7 @@ fn var_from_var1() {
             // running
             let var = DVar::create_d2::<$s0, $s1>(vard.data_ptr(), || ($i0, $i1));
             let exp = format!("{}_{}", $i0, $i1);
-            assert_eq!(var.to_string(), exp);
+            assert_eq!(var.eval_string(), exp);
         };
     }
 
