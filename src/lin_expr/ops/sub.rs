@@ -7,13 +7,6 @@ use core::ops::Sub;
 
 type Con<'d> = Option<Ptr<'d, DNum<'d>>>;
 
-fn const_neg<'m, 'd>(m: &'m Model<'d>, c1: Con<'d>) -> Con<'d> {
-    c1.map(|c| {
-        let fun = Box::new(move || -c.get().eval());
-        m.val::<ValNum>(DNum::new(ValTyp::Num, fun)).ptr()
-    })
-}
-
 fn const_sub_const<'m, 'd>(m: &'m Model<'d>, c1: Con<'d>, c2: Con<'d>) -> Con<'d> {
     match (c1, c2) {
         (Some(c1), Some(c2)) => Some(m.val::<ValNum>(DNum::sub(c1, c2)).ptr()),
@@ -50,31 +43,6 @@ fn const_sub_con<'m, 'd>(m: &'m Model<'d>, c1: Con<'d>, c2: impl AsF64) -> Ptr<'
     }
 }
 
-fn term_neg<'m, 'd>(m: &'m Model<'d>, term: &DLinTerm<'d>) -> DLinTerm<'d> {
-    let coef = match term.coef {
-        Coef::One => Coef::MinusOne,
-        Coef::MinusOne => Coef::One,
-        Coef::Con(c) => Coef::Con(-c),
-        Coef::Ptr(c) => Coef::Ptr(m.val_unchecked::<ValNum>(DNum::neg(c)).ptr()),
-    };
-    DLinTerm::new(coef, term.var)
-}
-
-fn expr_neg<'m, 'd>(m: &'m Model<'d>, expr: Ptr<'d, DLinExpr<'d>>) -> Ptr<'d, DLinExpr<'d>> {
-    let expr = expr.get();
-    let expr_terms = expr.terms.map(|t| term_neg(m, t));
-    let expr_sums = expr.sums.map(|s| sum_neg(m, s));
-    let expr_constant = const_neg(m, expr.constant);
-    let expr = DLinExpr::new(expr_terms, expr_sums, expr_constant);
-    m.lin_exp(expr).ptr()
-}
-
-fn sum_neg<'m, 'd>(m: &'m Model<'d>, sum: &DSum<'d>) -> DSum<'d> {
-    let expr = expr_neg(m, sum.expr);
-    let sets = sum.sets.clone();
-    DSum::new(sets, expr)
-}
-
 // expr - expr
 
 impl<'m, 'd> Sub<LinExpr<'m, 'd>> for LinExpr<'m, 'd> {
@@ -83,8 +51,8 @@ impl<'m, 'd> Sub<LinExpr<'m, 'd>> for LinExpr<'m, 'd> {
     fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
         let m = self.m();
         let [t1, t2] = [self.data(), rhs.data()];
-        let terms = t1.terms.merge(&t2.terms.map(|t| term_neg(m, t)));
-        let sums = t1.sums.merge(&t2.sums.map(|s| sum_neg(m, s)));
+        let terms = t1.terms.merge(&t2.terms.map(|t| t.neg()));
+        let sums = t1.sums.merge(&t2.sums.map(|s| s.neg(m)));
         let constant = const_sub_const(m, t1.constant, t2.constant);
         m.lin_exp(DLinExpr::new(terms, sums, constant))
     }
@@ -110,9 +78,9 @@ impl<'m, 'd> Sub<LinExpr<'m, 'd>> for Var<'m, 'd> {
     fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
         let (m, rhs) = (rhs.m(), rhs.data());
         let lhs = DLinTerm::new(Coef::One, self.ptr());
-        let terms = rhs.terms.map(|t| term_neg(m, t)).push_to_front(lhs);
-        let sums = rhs.sums.map(|s| sum_neg(m, s));
-        let constant = const_neg(m, rhs.constant);
+        let terms = rhs.terms.map(|t| t.neg()).push_to_front(lhs);
+        let sums = rhs.sums.map(|s| s.neg(m));
+        let constant = rhs.constant.map(|c| DNum::neg_ptr(m, c));
         m.lin_exp(DLinExpr::new(terms, sums, constant))
     }
 }
@@ -136,8 +104,8 @@ macro_rules! expr_num {
 
             fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
                 let (m, rhs) = (rhs.m(), rhs.data());
-                let terms = rhs.terms.map(|t| term_neg(m, t));
-                let sums = rhs.sums.map(|s| sum_neg(m, s));
+                let terms = rhs.terms.map(|t| t.neg());
+                let sums = rhs.sums.map(|s| s.neg(m));
                 let constant = const_sub_num(m, rhs.constant, self.ptr());
                 m.lin_exp(DLinExpr::new(terms, sums, Some(constant)))
             }
@@ -167,8 +135,8 @@ macro_rules! expr_con {
 
             fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
                 let (m, rhs) = (rhs.m(), rhs.data());
-                let terms = rhs.terms.map(|t| term_neg(m, t));
-                let sums = rhs.sums.map(|s| sum_neg(m, s));
+                let terms = rhs.terms.map(|t| t.neg());
+                let sums = rhs.sums.map(|s| s.neg(m));
                 let constant = const_add_con(m, rhs.constant, self);
                 m.lin_exp(DLinExpr::new(terms, sums, Some(constant)))
             }
