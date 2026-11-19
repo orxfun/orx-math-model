@@ -74,32 +74,33 @@ impl<'m, 'd> Add<LinExpr<'m, 'd>> for Var<'m, 'd> {
     }
 }
 
-// // expr + num
+// expr + num
 
-// macro_rules! expr_num {
-//     ($n:ty) => {
-//         impl<'m, 'd> Add<$n> for LinExpr<'m, 'd> {
-//             type Output = LinExpr<'m, 'd>;
+macro_rules! expr_num {
+    ($n:ty) => {
+        impl<'m, 'd> Add<$n> for LinExpr<'m, 'd> {
+            type Output = LinExpr<'m, 'd>;
 
-//             fn add(self, rhs: $n) -> Self::Output {
-//                 let terms = self.data().terms.clone();
-//                 let constant = const_add_num(self.m(), self.data().constant, rhs.ptr());
-//                 self.m().lin_exp(DLinExpr::new(terms, Some(constant)))
-//             }
-//         }
+            fn add(self, rhs: $n) -> Self::Output {
+                let expr = self.data();
+                let (terms, sums) = (expr.terms.clone(), expr.sums.clone());
+                let constant = const_add_num(self.m(), expr.constant, rhs.ptr());
+                self.m().lin_exp(DLinExpr::new(terms, sums, Some(constant)))
+            }
+        }
 
-//         impl<'m, 'd> Add<LinExpr<'m, 'd>> for $n {
-//             type Output = LinExpr<'m, 'd>;
+        impl<'m, 'd> Add<LinExpr<'m, 'd>> for $n {
+            type Output = LinExpr<'m, 'd>;
 
-//             fn add(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
-//                 rhs + self
-//             }
-//         }
-//     };
-// }
+            fn add(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
+                rhs + self
+            }
+        }
+    };
+}
 
-// expr_num!(Int<'m, 'd>);
-// expr_num!(Num<'m, 'd>);
+expr_num!(Int<'m, 'd>);
+expr_num!(Num<'m, 'd>);
 
 // // expr + con
 
