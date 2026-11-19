@@ -1,4 +1,4 @@
-use crate::lin_expr::{Coef, DLinExpr, DLinTerm, DSum, ExprVec};
+use crate::lin_expr::{Coef, DLinExpr, DLinTerm, DSum, ExprVec, SumVec};
 use crate::scalars::{DNum, ValNum};
 use crate::{AsF64, Int, LinExpr, Model, Num, Ptr, SymWrap, ValTyp, Var, VarType};
 use alloc::boxed::Box;
@@ -166,32 +166,33 @@ expr_con!(u32);
 expr_con!(usize);
 expr_con!(isize);
 
-// // var * num
+// var * num
 
-// macro_rules! var_num {
-//     ($n:ty) => {
-//         impl<'m, 'd> Mul<$n> for Var<'m, 'd> {
-//             type Output = LinExpr<'m, 'd>;
+macro_rules! var_num {
+    ($n:ty) => {
+        impl<'m, 'd> Mul<$n> for Var<'m, 'd> {
+            type Output = LinExpr<'m, 'd>;
 
-//             fn mul(self, rhs: $n) -> Self::Output {
-//                 let term = DLinTerm::new(Coef::Ptr(rhs.ptr()), self.ptr());
-//                 let terms = ExprVec::new([term]);
-//                 self.m().lin_exp(DLinExpr::new(terms, None))
-//             }
-//         }
+            fn mul(self, rhs: $n) -> Self::Output {
+                let term = DLinTerm::new(Coef::Ptr(rhs.ptr()), self.ptr());
+                let terms = ExprVec::new([term]);
+                let sums = SumVec::new([]);
+                self.m().lin_exp(DLinExpr::new(terms, sums, None))
+            }
+        }
 
-//         impl<'m, 'd> Mul<Var<'m, 'd>> for $n {
-//             type Output = LinExpr<'m, 'd>;
+        impl<'m, 'd> Mul<Var<'m, 'd>> for $n {
+            type Output = LinExpr<'m, 'd>;
 
-//             fn mul(self, rhs: Var<'m, 'd>) -> Self::Output {
-//                 rhs * self
-//             }
-//         }
-//     };
-// }
+            fn mul(self, rhs: Var<'m, 'd>) -> Self::Output {
+                rhs * self
+            }
+        }
+    };
+}
 
-// var_num!(Num<'m, 'd>);
-// var_num!(Int<'m, 'd>);
+var_num!(Num<'m, 'd>);
+var_num!(Int<'m, 'd>);
 
 // // var * con
 
