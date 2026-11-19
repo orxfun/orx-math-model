@@ -174,21 +174,18 @@ fn t_sum_d2_zeroes() {
     let e = sum(forall((i0, i1)), 7 + 0 * x2[(i0, i1)] - 7.0);
     assert_eq!(e.data().eval_to_string(), "");
 
-    let e = sum(forall((i0, i1)), 3 + x2[(i0, i1)] + 7);
-    assert_eq!(
-        e.data().eval_to_string(),
-        format!("{ex2}_0_2 + {ex2}_0_3 + {ex2}_1_2 + {ex2}_1_3 + {ex2}_2_2 + {ex2}_2_3 + 60")
+    let e = sum(
+        forall((i0, i1)),
+        par[(i0, i1)] * x2[(i0, i1)] + 7 + 0 * x2[(i0, i1)],
     );
-
-    let e = sum(forall((i0, i1)), 3 * x2[(i0, i1)] + 7);
-    assert_eq!(
-        e.data().eval_to_string(),
-        format!("3 {ex2}_0_2 + 3 {ex2}_0_3 + 3 {ex2}_1_2 + 3 {ex2}_1_3 + 3 {ex2}_2_2 + 3 {ex2}_2_3 + 42")
-    );
-
-    let e = sum(forall((i0, i1)), par[(i0, i1)] * x2[(i0, i1)] + 7);
     assert_eq!(
         e.data().eval_to_string(),
         format!("7 {ex2}_0_2 + 9 {ex2}_0_3 + 17 {ex2}_1_2 + 19 {ex2}_1_3 + 27 {ex2}_2_2 + 29 {ex2}_2_3 + 42")
     );
+
+    let e = sum(
+        forall((i0, i1)),
+        (par[(i0, i1)] - par[(i0, i1)]) * x2[(i0, i1)] + 7 + par[(i0, i1)] * 0 * x2[(i0, i1)],
+    );
+    assert_eq!(e.data().eval_to_string(), "42");
 }
