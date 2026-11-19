@@ -21,6 +21,10 @@ impl<const N: usize, T> ConVec<N, T> {
         self.len
     }
 
+    pub fn is_empty(&self) -> bool {
+        self.len > 0
+    }
+
     pub fn get(&self, idx: usize) -> Option<&T> {
         debug_assert!(idx < self.len);
         self.data[idx].as_ref()
@@ -72,6 +76,10 @@ impl<const N: usize, T> ConVec<N, T> {
         }
         let len = self.len;
         Self { len, data }
+    }
+
+    pub fn iter(&self) -> impl Iterator<Item = &T> {
+        self.data.iter().take(self.len).filter_map(|x| x.as_ref())
     }
 }
 

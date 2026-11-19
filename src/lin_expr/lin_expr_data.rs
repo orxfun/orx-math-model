@@ -15,10 +15,33 @@ impl<'d> DLinExpr<'d> {
     // get
 
     #[cfg(test)]
-    pub fn eval_to_string(&self) -> alloc::string::String {
-        use alloc::format;
+    pub fn eval_append_string(
+        &self,
+        f: &mut alloc::string::String,
+    ) -> Result<(), core::fmt::Error> {
         use alloc::string::String;
+        use core::fmt::Write;
 
-        todo!()
+        let mut terms = self.terms.iter();
+        if let Some(t) = terms.next() {
+            t.eval_append_string(f)?;
+            for t in terms {
+                write!(f, " + ")?;
+                t.eval_append_string(f)?;
+            }
+        }
+
+        match (self.constant, self.terms.is_empty()) {
+            (Some(c), true) => write!(f, "{}", c.get().eval()),
+            (Some(c), false) => write!(f, " + {}", c.get().eval()),
+            _ => Ok(()),
+        }
+    }
+
+    #[cfg(test)]
+    pub fn eval_to_string(&self) -> Result<alloc::string::String, core::fmt::Error> {
+        let mut f = alloc::string::String::new();
+        self.eval_append_string(&mut f)?;
+        Ok(f)
     }
 }
