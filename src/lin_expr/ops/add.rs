@@ -53,24 +53,26 @@ impl<'m, 'd> Add<LinExpr<'m, 'd>> for LinExpr<'m, 'd> {
     }
 }
 
-// // expr + var
+// expr + var
 
-// impl<'m, 'd> Add<Var<'m, 'd>> for LinExpr<'m, 'd> {
-//     type Output = LinExpr<'m, 'd>;
+impl<'m, 'd> Add<Var<'m, 'd>> for LinExpr<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
 
-//     fn add(self, rhs: Var<'m, 'd>) -> Self::Output {
-//         let terms = self.data().terms.push(rhs.into());
-//         self.m().lin_exp(DLinExpr::new(terms, self.data().constant))
-//     }
-// }
+    fn add(self, rhs: Var<'m, 'd>) -> Self::Output {
+        let expr = self.data();
+        let terms = expr.terms.push(rhs.into());
+        let (sums, constant) = (expr.sums.clone(), expr.constant);
+        self.m().lin_exp(DLinExpr::new(terms, sums, constant))
+    }
+}
 
-// impl<'m, 'd> Add<LinExpr<'m, 'd>> for Var<'m, 'd> {
-//     type Output = LinExpr<'m, 'd>;
+impl<'m, 'd> Add<LinExpr<'m, 'd>> for Var<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
 
-//     fn add(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
-//         rhs + self
-//     }
-// }
+    fn add(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
+        rhs + self
+    }
+}
 
 // // expr + num
 
