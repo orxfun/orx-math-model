@@ -28,5 +28,8 @@ fn t_sum() {
     assert_eq!(e.data().eval_to_string(), "x_0 + x_1 + x_7 + x_3");
 
     let e = sum(forall(i0), 3 * x1[i0] + 2);
-    // assert_eq!(e.data().eval_to_string(), "3 x_0 + 3 x_1 + 3 x_7 + 3 x_3");
+    assert_eq!(
+        e.data().eval_to_string(),
+        "3 x_0 + 3 x_1 + 3 x_7 + 3 x_3 + 8"
+    );
 }

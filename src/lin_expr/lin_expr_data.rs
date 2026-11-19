@@ -102,7 +102,7 @@ pub mod ext_test {
         }
     }
 
-    fn write_constant(f: &mut String, has_terms: bool, c: f64) -> bool {
+    pub fn write_constant(f: &mut String, has_terms: bool, c: f64) -> bool {
         match has_terms {
             true => match is_pos(c) {
                 true => {

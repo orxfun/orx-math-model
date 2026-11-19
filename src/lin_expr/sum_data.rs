@@ -42,6 +42,7 @@ impl<'d> DSum<'d> {
 pub mod ext_test {
     use super::*;
     use crate::constants::{is_neg, is_pos, is_zero};
+    use crate::lin_expr::lin_expr_data::ext_test::write_constant;
     use crate::Dim;
     use alloc::string::String;
     use core::fmt::Write;
@@ -49,13 +50,25 @@ pub mod ext_test {
     impl<'d> DSum<'d> {
         pub fn eval_append_string(&self, f: &mut String, pre_exists: bool) -> bool {
             let mut pre_exists = pre_exists;
+            let mut acc_const = None;
             let op = |s: &Self| {
-                pre_exists = s.expr.get().eval_append_string(f, pre_exists);
+                let (added, c) = s.expr.get().eval_append_string_exc_constant(f, pre_exists);
+                pre_exists |= added;
+                acc_const = match (acc_const, c) {
+                    (Some(a), Some(b)) => Some(a + b),
+                    (Some(a), None) => Some(a),
+                    (None, Some(b)) => Some(b),
+                    (None, None) => None,
+                }
             };
 
             match self.idxs.dim() {
                 Dim::D1 => self.expand_d1(op),
                 _ => todo!(),
+            }
+
+            if let Some(c) = acc_const {
+                pre_exists |= write_constant(f, pre_exists, c);
             }
 
             pre_exists
