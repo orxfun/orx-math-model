@@ -63,21 +63,17 @@ pub mod ext_test {
 
             let mut terms = self.terms.iter();
             if let Some(t) = terms.next() {
-                let added = t.eval_append_string(f, pre_exists);
-                pre_exists |= added;
+                pre_exists |= t.eval_append_string(f, pre_exists);
                 for t in terms {
-                    let added = t.eval_append_string(f, pre_exists);
-                    pre_exists |= added;
+                    pre_exists |= t.eval_append_string(f, pre_exists);
                 }
             }
 
             let mut sums = self.sums.iter();
             if let Some(s) = sums.next() {
-                let added = s.eval_append_string(f, pre_exists);
-                pre_exists |= added;
+                pre_exists |= s.eval_append_string(f, pre_exists);
                 for s in sums {
-                    let added = s.eval_append_string(f, pre_exists);
-                    pre_exists |= added;
+                    pre_exists |= s.eval_append_string(f, pre_exists);
                 }
             }
 
