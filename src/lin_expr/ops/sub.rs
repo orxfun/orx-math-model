@@ -126,10 +126,8 @@ macro_rules! expr_num {
 
             fn sub(self, rhs: $n) -> Self::Output {
                 let (m, lhs) = (self.m(), self.data());
-                let terms = lhs.terms.clone();
-                let sums = lhs.sums.clone();
                 let constant = const_sub_num(m, lhs.constant, rhs.ptr());
-                m.lin_exp(DLinExpr::new(terms, sums, Some(constant)))
+                m.lin_exp(lhs.with_new_constant(Some(constant)))
             }
         }
 
@@ -159,10 +157,8 @@ macro_rules! expr_con {
 
             fn sub(self, rhs: $c) -> Self::Output {
                 let (m, lhs) = (self.m(), self.data());
-                let terms = lhs.terms.clone();
-                let sums = lhs.sums.clone();
                 let constant = const_sub_con(m, lhs.constant, rhs);
-                m.lin_exp(DLinExpr::new(terms, sums, Some(constant)))
+                m.lin_exp(lhs.with_new_constant(Some(constant)))
             }
         }
 

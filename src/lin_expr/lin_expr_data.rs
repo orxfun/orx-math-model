@@ -13,6 +13,12 @@ pub struct DLinExpr<'d> {
     pub(super) constant: Option<Ptr<'d, DNum<'d>>>,
 }
 
+impl<'d> DLinExpr<'d> {
+    pub fn with_new_constant(&self, new_constant: Option<Ptr<'d, DNum<'d>>>) -> Self {
+        Self::new(self.terms.clone(), self.sums.clone(), new_constant)
+    }
+}
+
 #[cfg(test)]
 pub mod ext_test {
     use super::*;
