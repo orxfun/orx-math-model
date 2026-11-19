@@ -1,4 +1,9 @@
-use crate::idxs::{IdxCatInt, IdxCatStr, IdxOrd, IdxVec};
+use crate::constants::MAX_DIM;
+use crate::idxs::DIdx;
+use crate::idxs::{IdxCatInt, IdxCatStr, IdxOrd};
+use crate::{ConVec, Ptr};
+
+pub type IdxVec<'d> = ConVec<MAX_DIM, Ptr<'d, DIdx<'d>>>;
 
 #[derive(derive_more::From)]
 pub enum Idx<'m, 'd> {
