@@ -1,5 +1,5 @@
 use crate::sets::CatInt;
-use crate::{con, con1, con_depr, eq, forall, geq, leq, Model, SetCatInt, SetSym, VarType};
+use crate::{con, con1, eq, forall, geq, leq, Model, SetCatInt, SetSym, VarType};
 use alloc::vec;
 
 #[test]
@@ -23,8 +23,6 @@ fn con_d0() {
     // let c = con_depr(3, leq, x[2], forall(()));
 
     let c = con(3, leq, x[2]);
-
-    let c = con1::<CatInt>(s0, |i| con(3, leq, x[2]));
 
     let c = con1(s0, |i| con(3, leq, x[2]));
 }

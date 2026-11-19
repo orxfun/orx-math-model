@@ -4,12 +4,6 @@ use crate::idxs::{ConIdxs, IdxVec};
 use crate::lin_expr::{DLinExpr, DLinTerm, SumVec, TermVec};
 use crate::{AsF64, Int, LinExpr, Model, Num, Set, SetSym, SymWrap, Var};
 
-pub struct Forall<'m, 'd>(pub(crate) ConIdxs<'m, 'd>);
-
-pub fn forall<'m, 'd>(indices: impl Into<ConIdxs<'m, 'd>>) -> Forall<'m, 'd> {
-    Forall(indices.into())
-}
-
 #[derive(derive_more::From)]
 pub enum IneqSide<'m, 'd> {
     ConF64(f64),
