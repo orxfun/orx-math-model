@@ -14,7 +14,11 @@ pub struct DLinExpr<'d> {
 }
 
 impl<'d> DLinExpr<'d> {
-    pub fn with_new_constant(&self, new_constant: Option<Ptr<'d, DNum<'d>>>) -> Self {
+    pub fn with_constant(&self, new_constant: Option<Ptr<'d, DNum<'d>>>) -> Self {
+        Self::new(self.terms.clone(), self.sums.clone(), new_constant)
+    }
+
+    pub fn neg_with_constant(&self, new_constant: Option<Ptr<'d, DNum<'d>>>) -> Self {
         Self::new(self.terms.clone(), self.sums.clone(), new_constant)
     }
 }
