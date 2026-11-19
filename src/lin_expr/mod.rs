@@ -8,6 +8,7 @@ mod lin_term_eval;
 mod ops;
 mod sum_data;
 
-pub use lin_expr_data::{DLinExpr, ExprVec};
+pub use lin_expr_data::{DLinExpr, ExprVec, SumVec};
 pub use lin_expr_sym::LinExpr;
 pub use lin_term_data::{Coef, DLinTerm};
+pub use sum_data::DSum;

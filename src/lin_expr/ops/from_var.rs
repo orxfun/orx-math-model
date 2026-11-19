@@ -1,4 +1,4 @@
-use crate::lin_expr::{Coef, DLinExpr, DLinTerm, ExprVec};
+use crate::lin_expr::{Coef, DLinExpr, DLinTerm, ExprVec, SumVec};
 use crate::{LinExpr, SymWrap, Var};
 use core::ops::Neg;
 
@@ -13,7 +13,8 @@ impl<'m, 'd> From<Var<'m, 'd>> for DLinTerm<'d> {
 impl<'m, 'd> From<Var<'m, 'd>> for LinExpr<'m, 'd> {
     fn from(value: Var<'m, 'd>) -> Self {
         let terms = ExprVec::new([value.into()]);
-        let data = DLinExpr::new(terms, None);
+        let sums = SumVec::new([]);
+        let data = DLinExpr::new(terms, sums, None);
         value.m().lin_exp(data)
     }
 }
@@ -26,7 +27,8 @@ impl<'m, 'd> Neg for Var<'m, 'd> {
     fn neg(self) -> Self::Output {
         let term = DLinTerm::new(Coef::MinusOne, self.ptr());
         let terms = ExprVec::new([term]);
-        let data = DLinExpr::new(terms, None);
+        let sums = SumVec::new([]);
+        let data = DLinExpr::new(terms, sums, None);
         self.m().lin_exp(data)
     }
 }
