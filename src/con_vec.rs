@@ -1,4 +1,5 @@
-use crate::{sets::DSet, Dim, Ptr};
+use crate::idxs::DIdx;
+use crate::{Dim, Ptr};
 use core::ops::{Deref, Index};
 
 #[derive(Clone, Debug)]
@@ -131,4 +132,4 @@ impl<T> Index<usize> for DimVec<T> {
 // set - vec
 
 #[derive(Clone)]
-pub struct SetVec<'d>(ConVec<8, Ptr<'d, DSet<'d>>>);
+pub struct IdxVec<'d>(ConVec<8, Ptr<'d, DIdx<'d>>>);

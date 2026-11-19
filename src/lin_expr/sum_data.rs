@@ -1,9 +1,9 @@
 use crate::lin_expr::DLinExpr;
-use crate::{Model, Ptr, SetVec};
+use crate::{IdxVec, Model, Ptr};
 
 #[derive(derive_new::new, Clone)]
 pub struct DSum<'d> {
-    pub sets: SetVec<'d>,
+    pub sets: IdxVec<'d>,
     pub expr: Ptr<'d, DLinExpr<'d>>,
 }
 
