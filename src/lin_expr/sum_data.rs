@@ -20,14 +20,14 @@ impl<'d> DSum<'d> {
 
     // expand - d1
 
-    fn expand_d1(&self, op: impl Fn(&Self)) {
+    fn expand_d1(&self, op: impl FnMut(&Self)) {
         match self.idxs.set_typ(0) {
             SetTyp::CatInt => self.expand_d1_for::<SetCatInt>(op),
             _ => todo!(),
         }
     }
 
-    fn expand_d1_for<I0: Set>(&self, op: impl Fn(&Self)) {
+    fn expand_d1_for<I0: Set>(&self, mut op: impl FnMut(&Self)) {
         assert_eq!(self.idxs.len(), 1);
         let i0 = self.idxs[0];
         let mut elements: Elements<<I0 as Set>::IdxRaw<'d>> = Vec::new().into();
@@ -48,7 +48,9 @@ pub mod ext_test {
 
     impl<'d> DSum<'d> {
         pub fn eval_append_string(&self, f: &mut String) {
-            let op = |s: &Self| {};
+            let op = |s: &Self| {
+                write!(f, "abc").unwrap();
+            };
 
             match self.idxs.dim() {
                 Dim::D1 => self.expand_d1(op),
