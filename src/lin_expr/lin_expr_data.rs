@@ -58,22 +58,13 @@ pub mod ext_test {
     use core::fmt::Write;
 
     impl<'d> DLinExpr<'d> {
-        pub fn eval_append_string(&self, f: &mut String, pre_exists: bool) -> bool {
-            let (mut pre_exists, c) = self.eval_append_string_exc_constant(f, pre_exists);
-
-            if let Some(c) = c {
-                pre_exists |= write_constant(f, pre_exists, c);
-            }
-
-            pre_exists
-        }
-
         pub fn eval_append_string_exc_constant(
             &self,
             f: &mut String,
             pre_exists: bool,
         ) -> (bool, Option<f64>) {
             let mut pre_exists = pre_exists;
+            let mut acc_const = None;
 
             let mut terms = self.terms.iter();
             if let Some(t) = terms.next() {
@@ -85,14 +76,28 @@ pub mod ext_test {
 
             let mut sums = self.sums.iter();
             if let Some(s) = sums.next() {
-                pre_exists |= s.eval_append_string(f, pre_exists);
+                let (added, c) = s.eval_append_string_exc_constant(f, pre_exists);
+                pre_exists |= added;
+                acc_const = add_opt(acc_const, c);
                 for s in sums {
-                    pre_exists |= s.eval_append_string(f, pre_exists);
+                    let (added, c) = s.eval_append_string_exc_constant(f, pre_exists);
+                    pre_exists |= added;
+                    acc_const = add_opt(acc_const, c);
                 }
             }
 
-            let c = self.constant.map(|c| c.get().eval());
-            (pre_exists, c)
+            acc_const = add_opt(acc_const, self.constant.map(|c| c.get().eval()));
+            (pre_exists, acc_const)
+        }
+
+        pub fn eval_append_string(&self, f: &mut String, pre_exists: bool) -> bool {
+            let (mut pre_exists, c) = self.eval_append_string_exc_constant(f, pre_exists);
+
+            if let Some(c) = c {
+                pre_exists |= write_constant(f, pre_exists, c);
+            }
+
+            pre_exists
         }
 
         pub fn eval_to_string(&self) -> String {
@@ -136,6 +141,15 @@ pub mod ext_test {
                     }
                 },
             },
+        }
+    }
+
+    pub fn add_opt(acc_const: Option<f64>, c: Option<f64>) -> Option<f64> {
+        match (acc_const, c) {
+            (Some(a), Some(b)) => Some(a + b),
+            (Some(a), None) => Some(a),
+            (None, Some(b)) => Some(b),
+            (None, None) => None,
         }
     }
 }
