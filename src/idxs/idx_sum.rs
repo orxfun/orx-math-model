@@ -57,49 +57,11 @@ impl<'m, 'd> SumIdxs<'m, 'd> {
     }
 }
 
-// con indices
-
-pub enum ConIdxs<'m, 'd> {
-    D0,
-    D1(Idx<'m, 'd>),
-    D2(Idx<'m, 'd>, Idx<'m, 'd>),
-}
-
-impl<'m, 'd> ConIdxs<'m, 'd> {
-    pub(crate) fn m(&self) -> Option<&'m Model<'d>> {
-        match self {
-            ConIdxs::D0 => None,
-            ConIdxs::D1(i0) => Some(i0.m()),
-            ConIdxs::D2(i0, _) => Some(i0.m()),
-        }
-    }
-
-    pub(crate) fn to_idx_vec(self) -> IdxVec<'d> {
-        match self {
-            ConIdxs::D0 => IdxVec::new([]),
-            ConIdxs::D1(i0) => IdxVec::new([i0.ptr()]),
-            ConIdxs::D2(i0, i1) => IdxVec::new([i0.ptr(), i1.ptr()]),
-        }
-    }
-}
-
 // indices - into
-
-impl<'m, 'd> From<()> for ConIdxs<'m, 'd> {
-    fn from(_: ()) -> Self {
-        Self::D0
-    }
-}
 
 macro_rules! d1 {
     ($i0:ty) => {
         impl<'m, 'd> From<$i0> for SumIdxs<'m, 'd> {
-            fn from(i0: $i0) -> Self {
-                Self::D1(i0.into())
-            }
-        }
-
-        impl<'m, 'd> From<$i0> for ConIdxs<'m, 'd> {
             fn from(i0: $i0) -> Self {
                 Self::D1(i0.into())
             }
@@ -114,12 +76,6 @@ d1!(IdxOrd<'m, 'd>);
 macro_rules! d2 {
     ($i0:ty, $i1:ty) => {
         impl<'m, 'd> From<($i0, $i1)> for SumIdxs<'m, 'd> {
-            fn from((i0, i1): ($i0, $i1)) -> Self {
-                Self::D2(i0.into(), i1.into())
-            }
-        }
-
-        impl<'m, 'd> From<($i0, $i1)> for ConIdxs<'m, 'd> {
             fn from((i0, i1): ($i0, $i1)) -> Self {
                 Self::D2(i0.into(), i1.into())
             }

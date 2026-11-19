@@ -1,6 +1,6 @@
 use crate::constraints::{Constraint, DCon, IneqTyp};
 use crate::free_fun::IneqOp;
-use crate::idxs::{ConIdxs, IdxVec};
+use crate::idxs::IdxVec;
 use crate::lin_expr::{DLinExpr, DLinTerm, SumVec, TermVec};
 use crate::{AsF64, Int, LinExpr, Model, Num, Set, SetSym, SymWrap, Var};
 
