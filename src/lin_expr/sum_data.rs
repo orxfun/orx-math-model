@@ -43,7 +43,7 @@ impl<'d> DSum<'d> {
     // expand - d2
 
     fn expand_d2(&self, op: impl FnMut(&Self)) {
-        match self.idxs.set_typ(1) {
+        match self.idxs.set_typ(0) {
             SetTyp::CatInt => self.expand_d2_i0::<SetCatInt>(op),
             SetTyp::CatStr => self.expand_d2_i0::<SetCatStr>(op),
             SetTyp::Ord => self.expand_d2_i0::<SetOrd>(op),
@@ -59,7 +59,7 @@ impl<'d> DSum<'d> {
     }
 
     fn expand_d2_i0_i1<I0: Set, I1: Set>(&self, mut op: impl FnMut(&Self)) {
-        assert_eq!(self.idxs.len(), 1);
+        assert_eq!(self.idxs.len(), 2);
         let mut elem0: Elements<<I0 as Set>::IdxRaw<'d>> = Vec::new().into();
         let mut elem1: Elements<<I1 as Set>::IdxRaw<'d>> = Vec::new().into();
 
