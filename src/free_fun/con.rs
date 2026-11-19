@@ -25,6 +25,18 @@ pub enum IneqSide<'m, 'd> {
     LinExpr(LinExpr<'m, 'd>),
 }
 
+impl<'m, 'd> IneqSide<'m, 'd> {
+    fn m(&self) -> Option<&'m Model<'d>> {
+        match self {
+            Self::Int(x) => Some(x.m()),
+            Self::Num(x) => Some(x.m()),
+            Self::Var(x) => Some(x.m()),
+            Self::LinExpr(x) => Some(x.m()),
+            _ => None,
+        }
+    }
+}
+
 fn con_to_expr<'m, 'd>(m: &'m Model<'d>, con: f64) -> LinExpr<'m, 'd> {
     num_to_expr(m, m.val_num_con(con))
 }
