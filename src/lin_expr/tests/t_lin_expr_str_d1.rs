@@ -29,7 +29,7 @@ fn t_lin_expr_str_d1() {
 
     // running
     let mut elements: Elements<usize> = vec![].into();
-    let iter = ElementsIter::<SetCatInt>::new(i0, &mut elements);
+    let iter = ElementsIter::<SetCatInt>::new(i0.ptr(), &mut elements);
 
     for (i, _) in iter.enumerate() {
         let ei = s0_data[i];
@@ -126,7 +126,7 @@ fn t_lin_expr_str_d1_zeroes() {
 
     // running
     let mut elements: Elements<usize> = vec![].into();
-    let iter = ElementsIter::<SetCatInt>::new(i0, &mut elements);
+    let iter = ElementsIter::<SetCatInt>::new(i0.ptr(), &mut elements);
 
     for (i, _) in iter.enumerate() {
         let ei = s0_data[i];

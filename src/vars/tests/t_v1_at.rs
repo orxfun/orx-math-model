@@ -27,7 +27,7 @@ fn v1_at_int_cint() {
 
     // running
     let mut elements: Elements<El<'_>> = vec![].into();
-    let iter = ElementsIter::<I0>::new(i0, &mut elements);
+    let iter = ElementsIter::<I0>::new(i0.ptr(), &mut elements);
     for (i, _) in iter.enumerate() {
         let exp = format!("{}_{}", var_name, s0_data[i].to_string());
         for sca in sca1 {
@@ -62,7 +62,7 @@ fn v1_at_int_cstr() {
 
     // running
     let mut elements: Elements<El<'_>> = vec![].into();
-    let iter = ElementsIter::<I0>::new(i0, &mut elements);
+    let iter = ElementsIter::<I0>::new(i0.ptr(), &mut elements);
     for (i, _) in iter.enumerate() {
         let exp = format!("{}_{}", var_name, s0_data[i].to_string());
         for sca in sca1 {
@@ -97,7 +97,7 @@ fn v1_at_int_ord() {
 
     // running
     let mut elements: Elements<El<'_>> = vec![].into();
-    let iter = ElementsIter::<I0>::new(i0, &mut elements);
+    let iter = ElementsIter::<I0>::new(i0.ptr(), &mut elements);
     for (i, _) in iter.enumerate() {
         let exp = format!("{}_{}", var_name, s0_data[i].to_string());
         for sca in sca1 {
