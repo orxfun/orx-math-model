@@ -23,6 +23,7 @@ mod bag;
 mod con_vals;
 mod con_vec;
 mod constants;
+mod constraint;
 mod dim;
 mod elements;
 mod err;
