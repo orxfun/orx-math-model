@@ -74,30 +74,6 @@ impl<'m, 'd> IneqSide<'m, 'd> {
     }
 }
 
-pub fn con_depr<'m, 'd>(
-    lhs: impl Into<IneqSide<'m, 'd>>,
-    typ: impl IneqOp,
-    rhs: impl Into<IneqSide<'m, 'd>>,
-    forall: Forall<'m, 'd>,
-) -> Constraint<'m, 'd> {
-    let [lhs, rhs] = [lhs.into(), rhs.into()];
-    let m = match (lhs.m(), rhs.m()) {
-        (Some(m1), Some(_m2)) => Some(m1),
-        (Some(m1), None) => Some(m1),
-        (None, Some(m2)) => Some(m2),
-        (None, None) => None,
-    };
-
-    // TODO: Handle const-const case somehow!
-    let m = m.unwrap();
-
-    let lhs = lhs.to_expr(m);
-    let rhs = rhs.to_expr(m);
-    let idxs = forall.0.to_idx_vec();
-    let data = DCon::new(idxs, lhs.ptr(), rhs.ptr(), typ.typ());
-    m.constraint(data)
-}
-
 pub fn con_gen<'m, 'd>(
     lhs: impl Into<IneqSide<'m, 'd>>,
     typ: impl IneqOp,
