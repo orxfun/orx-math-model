@@ -1,3 +1,4 @@
+use crate::expand::{expand_d1, expand_d2};
 use crate::idxs::IdxVec;
 use crate::lin_expr::DLinExpr;
 use crate::{Elements, ElementsIter, Ptr, Set, SetCatInt, SetCatStr, SetOrd, SetTyp};
@@ -21,23 +22,11 @@ impl<'d> DCon<'d> {
     // expand - d1
 
     fn expand_d1(&self, op: impl FnMut(&Self)) {
-        match self.idxs.set_typ(0) {
-            SetTyp::CatInt => self.expand_d1_i0::<SetCatInt>(op),
-            SetTyp::CatStr => self.expand_d1_i0::<SetCatStr>(op),
-            SetTyp::Ord => self.expand_d1_i0::<SetOrd>(op),
-        }
+        expand_d1(&self.idxs, self, op);
     }
 
-    fn expand_d1_i0<I0: Set>(&self, mut op: impl FnMut(&Self)) {
-        assert_eq!(self.idxs.len(), 1);
-        let mut elem0: Elements<<I0 as Set>::IdxRaw<'d>> = Vec::new().into();
-
-        let i0 = self.idxs[0];
-
-        let i0 = ElementsIter::<I0>::new(i0, &mut elem0);
-        for _ in i0 {
-            op(self);
-        }
+    fn expand_d2(&self, op: impl FnMut(&Self)) {
+        expand_d2(&self.idxs, self, op);
     }
 }
 
