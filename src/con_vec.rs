@@ -96,6 +96,7 @@ impl<const N: usize, T> Index<usize> for ConVec<N, T> {
 
 // dim - vec
 
+#[derive(Clone)]
 pub struct DimVec<T>(ConVec<MAX_DIM, T>);
 
 impl<T> Deref for DimVec<T> {

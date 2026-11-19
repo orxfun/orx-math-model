@@ -1,6 +1,6 @@
 use crate::idxs::IdxVec;
 use crate::lin_expr::DLinExpr;
-use crate::{Elements, ElementsIter, Model, Ptr, Set};
+use crate::{Elements, ElementsIter, Model, Ptr, Set, SetCatInt, SetTyp};
 use alloc::vec::Vec;
 
 #[derive(derive_new::new, Clone)]
@@ -18,9 +18,16 @@ impl<'d> DSum<'d> {
         Self::new(self.idxs.clone(), expr)
     }
 
-    // expand
+    // expand - d1
 
-    fn expand_d1<I0: Set>(&self, op: impl Fn(&Self)) {
+    fn expand_d1(&self, op: impl Fn(&Self)) {
+        match self.idxs.set_typ(0) {
+            SetTyp::CatInt => self.expand_d1_for::<SetCatInt>(op),
+            _ => todo!(),
+        }
+    }
+
+    fn expand_d1_for<I0: Set>(&self, op: impl Fn(&Self)) {
         assert_eq!(self.idxs.len(), 1);
         let i0 = self.idxs[0];
         let mut elements: Elements<<I0 as Set>::IdxRaw<'d>> = Vec::new().into();
@@ -35,12 +42,18 @@ impl<'d> DSum<'d> {
 pub mod ext_test {
     use super::*;
     use crate::constants::{is_neg, is_pos, is_zero};
+    use crate::Dim;
     use alloc::string::String;
     use core::fmt::Write;
 
     impl<'d> DSum<'d> {
         pub fn eval_append_string(&self, f: &mut String) {
-            // TODO: optimize elements
+            let op = |s: &Self| {};
+
+            match self.idxs.dim() {
+                Dim::D1 => self.expand_d1(op),
+                _ => todo!(),
+            }
         }
 
         pub fn eval_to_string(&self) -> String {

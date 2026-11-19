@@ -1,9 +1,13 @@
-use crate::constants::MAX_DIM;
-use crate::idxs::DIdx;
-use crate::idxs::{IdxCatInt, IdxCatStr, IdxOrd};
-use crate::{ConVec, Model, Ptr, SymWrap};
+use crate::idxs::{DIdx, IdxCatInt, IdxCatStr, IdxOrd};
+use crate::{ConVec, DimVec, Model, Ptr, SetTyp, SymWrap};
 
-pub type IdxVec<'d> = ConVec<MAX_DIM, Ptr<'d, DIdx<'d>>>;
+pub type IdxVec<'d> = DimVec<Ptr<'d, DIdx<'d>>>;
+
+impl<'d> IdxVec<'d> {
+    pub fn set_typ(&self, idx: usize) -> SetTyp {
+        self[idx].get().set_ptr().get().typ()
+    }
+}
 
 #[derive(derive_more::From)]
 pub enum Idx<'m, 'd> {
