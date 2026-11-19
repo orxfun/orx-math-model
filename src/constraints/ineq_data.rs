@@ -1,6 +1,6 @@
 use core::ops::{MulAssign, RemAssign, Shl, ShlAssign, ShrAssign};
 
-use crate::{lin_expr::DLinExpr, LinExpr, Ptr};
+use crate::{constraints::Ineq, lin_expr::DLinExpr, LinExpr, Ptr, SymWrap};
 
 pub enum IneqTyp {
     Leq,
@@ -17,13 +17,14 @@ pub struct DIneq<'d> {
 
 impl<'d> DIneq<'d> {}
 
-// impl<'m, 'd> Shl<LinExpr<'m, 'd>> for LinExpr<'m, 'd> {
-//     type Output =;
+impl<'m, 'd> Shl<LinExpr<'m, 'd>> for LinExpr<'m, 'd> {
+    type Output = Ineq<'m, 'd>;
 
-//     fn shl(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
-//         todo!()
-//     }
-// }
+    fn shl(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
+        let ineq = DIneq::new(self.ptr(), rhs.ptr(), IneqTyp::Leq);
+        self.m().ineq(ineq)
+    }
+}
 
 // impl<'m, 'd> ShlAssign<LinExpr<'m, 'd>> for LinExpr<'m, 'd> {
 //     fn shl_assign(&mut self, rhs: LinExpr<'m, 'd>) {
