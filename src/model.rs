@@ -1,5 +1,5 @@
 use crate::con_vals::{ConVal, DConVal};
-use crate::constraints::DCon;
+use crate::constraints::{Constraint, DCon};
 use crate::idxs::{DIdx, IdxVal};
 use crate::lin_expr::DLinExpr;
 use crate::pars::{DPars, IntParD1, IntParD2, NumParD1, NumParD2, ParFun};
@@ -323,7 +323,7 @@ impl<'d> Model<'d> {
         LinExpr::new(Symbol::new(self, self.lin_exp_bag.push(data)))
     }
 
-    pub(crate) fn constraint<'m>(&'m self, data: DCon<'d>) {
-        self.constraints.push(data);
+    pub(crate) fn constraint<'m>(&'m self, data: DCon<'d>) -> Constraint<'m, 'd> {
+        Constraint::new(Symbol::new(self, self.constraints.push(data)))
     }
 }
