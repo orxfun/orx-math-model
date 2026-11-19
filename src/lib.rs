@@ -27,6 +27,7 @@ mod constraints;
 mod dim;
 mod elements;
 mod err;
+mod expand;
 mod free_fun;
 mod idxs;
 mod lin_expr;
