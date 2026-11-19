@@ -117,36 +117,38 @@ impl<'m, 'd> Sub<LinExpr<'m, 'd>> for Var<'m, 'd> {
     }
 }
 
-// // expr - num
+// expr - num
 
-// macro_rules! expr_num {
-//     ($n:ty) => {
-//         impl<'m, 'd> Sub<$n> for LinExpr<'m, 'd> {
-//             type Output = LinExpr<'m, 'd>;
+macro_rules! expr_num {
+    ($n:ty) => {
+        impl<'m, 'd> Sub<$n> for LinExpr<'m, 'd> {
+            type Output = LinExpr<'m, 'd>;
 
-//             fn sub(self, rhs: $n) -> Self::Output {
-//                 let m = self.m();
-//                 let terms = self.data().terms.clone();
-//                 let constant = const_sub_num(m, self.data().constant, rhs.ptr());
-//                 m.lin_exp(DLinExpr::new(terms, Some(constant)))
-//             }
-//         }
+            fn sub(self, rhs: $n) -> Self::Output {
+                let (m, lhs) = (self.m(), self.data());
+                let terms = lhs.terms.clone();
+                let sums = lhs.sums.clone();
+                let constant = const_sub_num(m, lhs.constant, rhs.ptr());
+                m.lin_exp(DLinExpr::new(terms, sums, Some(constant)))
+            }
+        }
 
-//         impl<'m, 'd> Sub<LinExpr<'m, 'd>> for $n {
-//             type Output = LinExpr<'m, 'd>;
+        impl<'m, 'd> Sub<LinExpr<'m, 'd>> for $n {
+            type Output = LinExpr<'m, 'd>;
 
-//             fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
-//                 let m = rhs.m();
-//                 let terms = rhs.data().terms.map(|t| term_neg(m, t));
-//                 let constant = const_sub_num(m, rhs.data().constant, self.ptr());
-//                 m.lin_exp(DLinExpr::new(terms, Some(constant)))
-//             }
-//         }
-//     };
-// }
+            fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
+                let (m, rhs) = (self.m(), rhs.data());
+                let terms = rhs.terms.map(|t| term_neg(m, t));
+                let sums = rhs.sums.map(|s| sum_neg(m, s));
+                let constant = const_sub_num(m, rhs.constant, self.ptr());
+                m.lin_exp(DLinExpr::new(terms, sums, Some(constant)))
+            }
+        }
+    };
+}
 
-// expr_num!(Num<'m, 'd>);
-// expr_num!(Int<'m, 'd>);
+expr_num!(Num<'m, 'd>);
+expr_num!(Int<'m, 'd>);
 
 // // expr - const
 
