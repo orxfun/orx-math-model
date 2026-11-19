@@ -26,7 +26,7 @@ impl<'m, 'd, T> Symbol<'m, 'd, T> {
 
 // helpers
 
-pub(crate) trait SymWrap<'m, 'd: 'm>: Sized {
+pub(crate) trait SymWrap<'m, 'd: 'm>: Copy + Sized {
     type Data;
 
     fn sym(self) -> Symbol<'m, 'd, Self::Data>;

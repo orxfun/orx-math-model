@@ -3,7 +3,7 @@ use crate::sets::{CatInt, CatStr, DSet, Ord};
 use crate::{Set, SetCatInt, SetCatStr, SetOrd, SymWrap, Symbol};
 use core::ops::Deref;
 
-pub trait SetSym<'m, 'd: 'm>: Copy {
+pub trait SetSym<'m, 'd: 'm>: SymWrap<'m, 'd> {
     type Meta: Set;
 
     fn idx(self) -> <Self::Meta as Set>::IdxSym<'m, 'd>;

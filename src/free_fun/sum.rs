@@ -1,8 +1,7 @@
 use crate::free_fun::IntoLinExpr;
 use crate::idxs::{IdxVec, SumIdxs};
-use crate::lin_expr::DSum;
-use crate::lin_expr::{DLinExpr, SumVec, TermVec};
-use crate::{LinExpr, Model, SetSym, SymWrap};
+use crate::lin_expr::{DLinExpr, DSum, SumVec, TermVec};
+use crate::{LinExpr, Model, Set, SetSym, SymWrap};
 
 pub struct SumOver<'m, 'd>(pub(crate) SumIdxs<'m, 'd>);
 
@@ -35,9 +34,14 @@ fn sum_gen<'m, 'd>(
     m.lin_exp(expr)
 }
 
-// pub fn sum1<'m, 'd, S0: SetSym<'m, 'd>>(
-//     s0: S0,
-//     con: impl Fn(Idx<'m, 'd, S0>) -> Constraint<'m, 'd>,
-// ) -> Constraint<'m, 'd> {
-//     con(s0.idx())
-// }
+type Idx<'m, 'd, S> = <<S as SetSym<'m, 'd>>::Meta as Set>::IdxSym<'m, 'd>;
+
+pub fn sum1<'m, 'd, E: Into<IntoLinExpr<'m, 'd>>, S0: SetSym<'m, 'd>>(
+    s0: S0,
+    sum_expr: impl Fn(Idx<'m, 'd, S0>) -> E,
+) -> LinExpr<'m, 'd> {
+    let i0 = s0.idx();
+    let idxs = IdxVec::new([i0.ptr()]);
+    let sum_expr = sum_expr(i0);
+    sum_gen(s0.m(), sum_expr, idxs)
+}
