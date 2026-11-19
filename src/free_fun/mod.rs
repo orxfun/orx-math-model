@@ -2,6 +2,7 @@
 mod tests;
 
 mod con;
+mod ineq_op;
 mod sum;
 
 pub use con::{con, forall, Forall};
