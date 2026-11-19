@@ -16,11 +16,11 @@ pub enum IneqSide<'m, 'd> {
 }
 
 pub fn con<'m, 'd>(
-    lhs: LinExpr<'m, 'd>,
+    lhs: impl Into<IneqSide<'m, 'd>>,
     typ: IneqTyp,
-    rhs: LinExpr<'m, 'd>,
+    rhs: impl Into<IneqSide<'m, 'd>>,
     forall: Forall<'m, 'd>,
 ) -> Constraint<'m, 'd> {
-    let data = DCon::new(forall.0.to_idx_vec(), lhs.ptr(), rhs.ptr(), typ);
+    // let data = DCon::new(forall.0.to_idx_vec(), lhs.ptr(), rhs.ptr(), typ);
     todo!()
 }
