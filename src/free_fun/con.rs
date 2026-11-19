@@ -90,17 +90,9 @@ pub fn con<'m, 'd>(
     // TODO: Handle const-const case somehow!
     let m = m.unwrap();
 
-    let con = |m: &'m Model<'d>, lhs: LinExpr<'m, 'd>, rhs: LinExpr<'m, 'd>| {
-        let idxs = forall.0.to_idx_vec();
-        let data = DCon::new(idxs, lhs.ptr(), rhs.ptr(), typ);
-        m.constraint(data)
-    };
-
-    match (lhs.into(), rhs.into()) {
-        (IneqSide::ConF64(lhs), IneqSide::ConF64(rhs)) => todo!(),
-        // (IneqSide::Con(lhs), IneqSide::Var(rhs)) => con(rhs.m(), lhs, rhs.into()),
-        _ => todo!(),
-    }
-
-    // let data = DCon::new(forall.0.to_idx_vec(), lhs.ptr(), rhs.ptr(), typ);
+    let lhs = lhs.to_expr(m);
+    let rhs = rhs.to_expr(m);
+    let idxs = forall.0.to_idx_vec();
+    let data = DCon::new(idxs, lhs.ptr(), rhs.ptr(), typ);
+    m.constraint(data)
 }
