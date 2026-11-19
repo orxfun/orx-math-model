@@ -1,9 +1,9 @@
 use crate::lin_expr::{DLinExpr, SumVec, TermVec};
-use crate::{free_fun::ForAll, lin_expr::DSum};
+use crate::{free_fun::SumOver, lin_expr::DSum};
 use crate::{LinExpr, SymWrap};
 
 pub fn sum<'m, 'd>(
-    forall: ForAll<'m, 'd>,
+    forall: SumOver<'m, 'd>,
     sum_expr: impl Into<LinExpr<'m, 'd>>,
 ) -> LinExpr<'m, 'd> {
     let sum_expr = sum_expr.into();

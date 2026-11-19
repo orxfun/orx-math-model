@@ -1,4 +1,4 @@
-use crate::{forall, Model, SymWrap};
+use crate::{over, Model, SymWrap};
 
 #[test]
 fn t_forall() {
@@ -9,8 +9,8 @@ fn t_forall() {
     let i0 = s0.idx();
     let i1 = s1.idx();
 
-    let idxs1 = forall(i0);
-    let idxs2 = forall((i0, i1));
+    let idxs1 = over(i0);
+    let idxs2 = over((i0, i1));
 
     // running
 

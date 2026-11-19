@@ -1,5 +1,5 @@
 use crate::{
-    forall, sum, Bounds, Elements, ElementsIter, LinExpr, Model, Set, SetCatInt, SetCatStr, SetOrd,
+    over, sum, Bounds, Elements, ElementsIter, LinExpr, Model, Set, SetCatInt, SetCatStr, SetOrd,
     SymWrap, VarType,
 };
 use alloc::format;
@@ -106,31 +106,31 @@ fn t_lin_expr_str_d1() {
         );
     }
 
-    let e = 3 + 4 * x[0] + sum(forall(i0), x[i0]);
+    let e = 3 + 4 * x[0] + sum(over(i0), x[i0]);
     assert_eq!(exp_str(e), format!("4 x_0 + x_0 + x_2 + x_3 + 3"));
 
-    let e = 3 + 4 * x[0] + sum(forall(i0), x[i0]) * 2;
+    let e = 3 + 4 * x[0] + sum(over(i0), x[i0]) * 2;
     assert_eq!(exp_str(e), format!("4 x_0 + 2 x_0 + 2 x_2 + 2 x_3 + 3"));
 
-    let e = 3 + 4 * x[0] + sum(forall(i0), x[i0] + 4) * 2 - x[1];
+    let e = 3 + 4 * x[0] + sum(over(i0), x[i0] + 4) * 2 - x[1];
     assert_eq!(
         exp_str(e),
         format!("4 x_0 - x_1 + 2 x_0 + 2 x_2 + 2 x_3 + 27")
     );
 
-    let e = 3 + 4 * x[0] + sum(forall(i0), x[i0] + 4 - x[2] * 0) * 2 - x[1];
+    let e = 3 + 4 * x[0] + sum(over(i0), x[i0] + 4 - x[2] * 0) * 2 - x[1];
     assert_eq!(
         exp_str(e),
         format!("4 x_0 - x_1 + 2 x_0 + 2 x_2 + 2 x_3 + 27")
     );
 
-    let e = (3 + 4 * x[0] + sum(forall(i0), x[i0] + 4 - x[2] * 0) * 2 - x[1]) / 2 + 5;
+    let e = (3 + 4 * x[0] + sum(over(i0), x[i0] + 4 - x[2] * 0) * 2 - x[1]) / 2 + 5;
     assert_eq!(
         exp_str(e),
         format!("2 x_0 - 0.5 x_1 + 1 x_0 + 1 x_2 + 1 x_3 + 18.5")
     );
 
-    let e = (3 + 4 * x[0] + 0 * sum(forall(i0), x[i0] + 4 - x[2] * 0) * 2 - x[1]) / 2 + 5;
+    let e = (3 + 4 * x[0] + 0 * sum(over(i0), x[i0] + 4 - x[2] * 0) * 2 - x[1]) / 2 + 5;
     assert_eq!(exp_str(e), format!("2 x_0 - 0.5 x_1 + 6.5"));
 }
 
