@@ -1,6 +1,7 @@
 use crate::idxs::IdxVec;
 use crate::lin_expr::DLinExpr;
-use crate::{Model, Ptr};
+use crate::{Elements, ElementsIter, Model, Ptr, Set};
+use alloc::vec::Vec;
 
 #[derive(derive_new::new, Clone)]
 pub struct DSum<'d> {
@@ -16,6 +17,15 @@ impl<'d> DSum<'d> {
     pub fn with_expr(&self, expr: Ptr<'d, DLinExpr<'d>>) -> Self {
         Self::new(self.idxs.clone(), expr)
     }
+
+    // expand
+
+    fn expand_d1<I0: Set>(&self, op: impl Fn(&Self)) {
+        assert_eq!(self.idxs.len(), 1);
+        let i0 = self.idxs[0];
+        let mut elements: Elements<<I0 as Set>::IdxRaw<'d>> = Vec::new().into();
+        // let iter = ElementsIter::<I0>::new(i0, &mut elements);
+    }
 }
 
 #[cfg(test)]
@@ -27,7 +37,7 @@ pub mod ext_test {
 
     impl<'d> DSum<'d> {
         pub fn eval_append_string(&self, f: &mut String) {
-            //
+            // TODO: optimize elements
         }
 
         pub fn eval_to_string(&self) -> String {
