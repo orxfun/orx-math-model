@@ -1,4 +1,4 @@
-use crate::{over, Model, SymWrap};
+use crate::{over, Model, SetSym, SymWrap};
 
 #[test]
 fn t_forall() {

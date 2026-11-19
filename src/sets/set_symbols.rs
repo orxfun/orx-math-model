@@ -25,10 +25,6 @@ impl<'m, 'd> CatInt<'m, 'd> {
     pub fn bind<I: IntoIterator<Item = usize>>(self, fun: impl Fn() -> I + 'd) -> Res {
         bind::<SetCatInt, _>(self.0, fun)
     }
-
-    pub fn idx(self) -> IdxCatInt<'m, 'd> {
-        self.0.m.idx::<SetCatInt>(self)
-    }
 }
 
 // cat str
@@ -40,10 +36,6 @@ impl_sym_wrap!(CatStr<'m, 'd>, DSet<'d>);
 impl<'m, 'd> CatStr<'m, 'd> {
     pub fn bind<I: IntoIterator<Item = &'d String>>(self, fun: impl Fn() -> I + 'd) -> Res {
         bind::<SetCatStr, _>(self.0, fun)
-    }
-
-    pub fn idx(self) -> IdxCatStr<'m, 'd> {
-        self.0.m.idx::<SetCatStr>(self)
     }
 }
 

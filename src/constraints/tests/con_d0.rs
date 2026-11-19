@@ -1,4 +1,5 @@
-use crate::{con, con1, con_depr, eq, forall, geq, leq, sets::CatInt, Model, SetCatInt, VarType};
+use crate::sets::CatInt;
+use crate::{con, con1, con_depr, eq, forall, geq, leq, Model, SetCatInt, SetSym, VarType};
 use alloc::vec;
 
 #[test]
