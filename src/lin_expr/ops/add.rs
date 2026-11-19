@@ -148,32 +148,33 @@ impl<'m, 'd> Add<Var<'m, 'd>> for Var<'m, 'd> {
     }
 }
 
-// // var + num
+// var + num
 
-// macro_rules! var_num {
-//     ($n:ty) => {
-//         impl<'m, 'd> Add<$n> for Var<'m, 'd> {
-//             type Output = LinExpr<'m, 'd>;
+macro_rules! var_num {
+    ($n:ty) => {
+        impl<'m, 'd> Add<$n> for Var<'m, 'd> {
+            type Output = LinExpr<'m, 'd>;
 
-//             fn add(self, rhs: $n) -> Self::Output {
-//                 let terms = ExprVec::new([self.into()]);
-//                 let constant = Some(rhs.ptr());
-//                 self.m().lin_exp(DLinExpr::new(terms, constant))
-//             }
-//         }
+            fn add(self, rhs: $n) -> Self::Output {
+                let terms = ExprVec::new([self.into()]);
+                let constant = Some(rhs.ptr());
+                let sums = SumVec::new([]);
+                self.m().lin_exp(DLinExpr::new(terms, sums, constant))
+            }
+        }
 
-//         impl<'m, 'd> Add<Var<'m, 'd>> for $n {
-//             type Output = LinExpr<'m, 'd>;
+        impl<'m, 'd> Add<Var<'m, 'd>> for $n {
+            type Output = LinExpr<'m, 'd>;
 
-//             fn add(self, rhs: Var<'m, 'd>) -> Self::Output {
-//                 rhs + self
-//             }
-//         }
-//     };
-// }
+            fn add(self, rhs: Var<'m, 'd>) -> Self::Output {
+                rhs + self
+            }
+        }
+    };
+}
 
-// var_num!(Num<'m, 'd>);
-// var_num!(Int<'m, 'd>);
+var_num!(Num<'m, 'd>);
+var_num!(Int<'m, 'd>);
 
 // // var + con
 
