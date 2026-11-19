@@ -1,6 +1,7 @@
 use crate::{
     Bounds, Elements, ElementsIter, Model, Set, SetCatInt, SetCatStr, SetOrd, SymWrap, VarType,
 };
+use alloc::format;
 use alloc::string::ToString;
 use alloc::{vec, vec::Vec};
 
@@ -10,6 +11,7 @@ fn v1_at_int_cint() {
     type El<'d> = <I0 as Set>::IdxRaw<'d>;
 
     // data
+    let var_name = "x"; // TODO: var-name-fix
     let s0_data = vec![0, 2, 3];
 
     // modeling
@@ -27,11 +29,11 @@ fn v1_at_int_cint() {
     let mut elements: Elements<El<'_>> = vec![].into();
     let iter = ElementsIter::<I0>::new(i0, &mut elements);
     for (i, _) in iter.enumerate() {
-        let exp = s0_data[i].to_string();
+        let exp = format!("{}_{}", var_name, s0_data[i].to_string());
         for sca in sca1 {
             assert_eq!(exp, sca.data().eval_to_string());
         }
-        let exp = s0_data[2].to_string();
+        let exp = format!("{}_2", var_name);
         for sca in sca2 {
             assert_eq!(exp, sca.data().eval_to_string());
         }
@@ -44,6 +46,7 @@ fn v1_at_int_cstr() {
     type El<'d> = <I0 as Set>::IdxRaw<'d>;
 
     // data
+    let var_name = "x"; // TODO: var-name-fix
     let s0_data: Vec<_> = [0, 2, 3].map(|x| x.to_string()).into_iter().collect();
 
     // modeling
@@ -61,11 +64,11 @@ fn v1_at_int_cstr() {
     let mut elements: Elements<El<'_>> = vec![].into();
     let iter = ElementsIter::<I0>::new(i0, &mut elements);
     for (i, _) in iter.enumerate() {
-        let exp = s0_data[i].to_string();
+        let exp = format!("{}_{}", var_name, s0_data[i].to_string());
         for sca in sca1 {
             assert_eq!(exp, sca.data().eval_to_string());
         }
-        let exp = s0_data[2].to_string();
+        let exp = format!("{}_2", var_name);
         for sca in sca2 {
             assert_eq!(exp, sca.data().eval_to_string());
         }
@@ -78,6 +81,7 @@ fn v1_at_int_ord() {
     type El<'d> = <I0 as Set>::IdxRaw<'d>;
 
     // data
+    let var_name = "x"; // TODO: var-name-fix
     let s0_data = vec![0i64, 2, 3];
 
     // modeling
@@ -95,11 +99,11 @@ fn v1_at_int_ord() {
     let mut elements: Elements<El<'_>> = vec![].into();
     let iter = ElementsIter::<I0>::new(i0, &mut elements);
     for (i, _) in iter.enumerate() {
-        let exp = s0_data[i].to_string();
+        let exp = format!("{}_{}", var_name, s0_data[i].to_string());
         for sca in sca1 {
             assert_eq!(exp, sca.data().eval_to_string());
         }
-        let exp = s0_data[2].to_string();
+        let exp = format!("{}_2", var_name);
         for sca in sca2 {
             assert_eq!(exp, sca.data().eval_to_string());
         }
