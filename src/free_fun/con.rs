@@ -74,7 +74,7 @@ impl<'m, 'd> IneqSide<'m, 'd> {
     }
 }
 
-pub fn con<'m, 'd>(
+pub fn con_depr<'m, 'd>(
     lhs: impl Into<IneqSide<'m, 'd>>,
     typ: impl IneqOp,
     rhs: impl Into<IneqSide<'m, 'd>>,

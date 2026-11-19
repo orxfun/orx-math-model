@@ -1,4 +1,4 @@
-use crate::{con, eq, forall, geq, leq, Model, VarType};
+use crate::{con_depr, eq, forall, geq, leq, Model, VarType};
 use alloc::vec;
 
 #[test]
@@ -19,5 +19,5 @@ fn con_d0() {
 
     let ex1 = "x"; // TODO: var-name-fix
 
-    let c = con(3, leq, x[2], forall(()));
+    let c = con_depr(3, leq, x[2], forall(()));
 }
