@@ -1,4 +1,4 @@
-use crate::{forall, sum, Model, SymWrap, VarType};
+use crate::{sum1, sum2, Model, SetSym, SymWrap, VarType};
 use alloc::format;
 use alloc::string::{String, ToString};
 use alloc::{vec, vec::Vec};
@@ -22,25 +22,25 @@ fn t_sum_d1() {
 
     let ex1 = "x"; // TODO: var-name-fix
 
-    let e = sum(forall(i0), x1[i0]);
+    let e = sum1(s0, |i0| x1[i0]);
     assert_eq!(
         e.data().eval_to_string(),
         format!("{ex1}_0 + {ex1}_1 + {ex1}_7 + {ex1}_3")
     );
 
-    let e = sum(forall(i0), 3 * x1[i0] + 2);
+    let e = sum1(s0, |i0| 3 * x1[i0] + 2);
     assert_eq!(
         e.data().eval_to_string(),
         format!("3 {ex1}_0 + 3 {ex1}_1 + 3 {ex1}_7 + 3 {ex1}_3 + 8")
     );
 
-    let e = sum(forall(i0), 3 * x1[i0] + 2.5 + 7 * x1[i0]);
+    let e = sum1(s0, |i0| 3 * x1[i0] + 2.5 + 7 * x1[i0]);
     assert_eq!(
         e.data().eval_to_string(),
         format!("3 {ex1}_0 + 7 {ex1}_0 + 3 {ex1}_1 + 7 {ex1}_1 + 3 {ex1}_7 + 7 {ex1}_7 + 3 {ex1}_3 + 7 {ex1}_3 + 10")
     );
 
-    let e = sum(forall(i0), 3 * x1[3] + 2.5 + 7 * x1[i0]);
+    let e = sum1(s0, |i0| 3 * x1[3] + 2.5 + 7 * x1[i0]);
     assert_eq!(
         e.data().eval_to_string(),
         format!("3 {ex1}_3 + 7 {ex1}_0 + 3 {ex1}_3 + 7 {ex1}_1 + 3 {ex1}_3 + 7 {ex1}_7 + 3 {ex1}_3 + 7 {ex1}_3 + 10")
@@ -63,10 +63,10 @@ fn t_sum_d1_zeroes() {
 
     // running
 
-    let e = sum(forall(i0), 0 * x1[i0]);
+    let e = sum1(s0, |i0| 0 * x1[i0]);
     assert_eq!(e.data().eval_to_string(), "");
 
-    let e = sum(forall(i0), -3 + 0 * x1[i0] + 3);
+    let e = sum1(s0, |i0| -3 + 0 * x1[i0] + 3);
     assert_eq!(e.data().eval_to_string(), "");
 }
 
@@ -104,31 +104,31 @@ fn t_sum_d2() {
     let ex1 = "x"; // TODO: var-name-fix
     let ex2 = "x"; // TODO: var-name-fix
 
-    let e = sum(forall((i0, i1)), x1[i0]);
+    let e = sum2(s0, s1, |i0, i1| x1[i0]);
     assert_eq!(
         e.data().eval_to_string(),
         format!("{ex1}_0 + {ex1}_0 + {ex1}_1 + {ex1}_1 + {ex1}_2 + {ex1}_2")
     );
 
-    let e = sum(forall((i0, i1)), x2[(i0, i1)]);
+    let e = sum2(s0, s1, |i0, i1| x2[(i0, i1)]);
     assert_eq!(
         e.data().eval_to_string(),
         format!("{ex2}_0_2 + {ex2}_0_3 + {ex2}_1_2 + {ex2}_1_3 + {ex2}_2_2 + {ex2}_2_3")
     );
 
-    let e = sum(forall((i0, i1)), 3 + x2[(i0, i1)] + 7);
+    let e = sum2(s0, s1, |i0, i1| 3 + x2[(i0, i1)] + 7);
     assert_eq!(
         e.data().eval_to_string(),
         format!("{ex2}_0_2 + {ex2}_0_3 + {ex2}_1_2 + {ex2}_1_3 + {ex2}_2_2 + {ex2}_2_3 + 60")
     );
 
-    let e = sum(forall((i0, i1)), 3 * x2[(i0, i1)] + 7);
+    let e = sum2(s0, s1, |i0, i1| 3 * x2[(i0, i1)] + 7);
     assert_eq!(
         e.data().eval_to_string(),
         format!("3 {ex2}_0_2 + 3 {ex2}_0_3 + 3 {ex2}_1_2 + 3 {ex2}_1_3 + 3 {ex2}_2_2 + 3 {ex2}_2_3 + 42")
     );
 
-    let e = sum(forall((i0, i1)), par[(i0, i1)] * x2[(i0, i1)] + 7);
+    let e = sum2(s0, s1, |i0, i1| par[(i0, i1)] * x2[(i0, i1)] + 7);
     assert_eq!(
         e.data().eval_to_string(),
         format!("7 {ex2}_0_2 + 9 {ex2}_0_3 + 17 {ex2}_1_2 + 19 {ex2}_1_3 + 27 {ex2}_2_2 + 29 {ex2}_2_3 + 42")
@@ -168,24 +168,22 @@ fn t_sum_d2_zeroes() {
 
     let ex2 = "x"; // TODO: var-name-fix
 
-    let e = sum(forall((i0, i1)), 0 * x1[i0]);
+    let e = sum2(s0, s1, |i0, i1| 0 * x1[i0]);
     assert_eq!(e.data().eval_to_string(), "");
 
-    let e = sum(forall((i0, i1)), 7 + 0 * x2[(i0, i1)] - 7.0);
+    let e = sum2(s0, s1, |i0, i1| 7 + 0 * x2[(i0, i1)] - 7.0);
     assert_eq!(e.data().eval_to_string(), "");
 
-    let e = sum(
-        forall((i0, i1)),
-        par[(i0, i1)] * x2[(i0, i1)] + 7 + 0 * x2[(i0, i1)],
-    );
+    let e = sum2(s0, s1, |i0, i1| {
+        par[(i0, i1)] * x2[(i0, i1)] + 7 + 0 * x2[(i0, i1)]
+    });
     assert_eq!(
         e.data().eval_to_string(),
         format!("7 {ex2}_0_2 + 9 {ex2}_0_3 + 17 {ex2}_1_2 + 19 {ex2}_1_3 + 27 {ex2}_2_2 + 29 {ex2}_2_3 + 42")
     );
 
-    let e = sum(
-        forall((i0, i1)),
-        (par[(i0, i1)] - par[(i0, i1)]) * x2[(i0, i1)] + 7 + par[(i0, i1)] * 0 * x2[(i0, i1)],
-    );
+    let e = sum2(s0, s1, |i0, i1| {
+        (par[(i0, i1)] - par[(i0, i1)]) * x2[(i0, i1)] + 7 + par[(i0, i1)] * 0 * x2[(i0, i1)]
+    });
     assert_eq!(e.data().eval_to_string(), "42");
 }

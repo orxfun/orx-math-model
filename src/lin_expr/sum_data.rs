@@ -1,3 +1,4 @@
+use crate::expand::{expand_d1, expand_d2};
 use crate::idxs::IdxVec;
 use crate::lin_expr::DLinExpr;
 use crate::{Elements, ElementsIter, Model, Ptr, Set, SetCatInt, SetCatStr, SetOrd, SetTyp};
@@ -18,60 +19,16 @@ impl<'d> DSum<'d> {
         Self::new(self.idxs.clone(), expr)
     }
 
-    // expand - d1
+    // expand
 
     fn expand_d1(&self, op: impl FnMut(&Self)) {
-        match self.idxs.set_typ(0) {
-            SetTyp::CatInt => self.expand_d1_i0::<SetCatInt>(op),
-            SetTyp::CatStr => self.expand_d1_i0::<SetCatStr>(op),
-            SetTyp::Ord => self.expand_d1_i0::<SetOrd>(op),
-        }
-    }
-
-    fn expand_d1_i0<I0: Set>(&self, mut op: impl FnMut(&Self)) {
-        assert_eq!(self.idxs.len(), 1);
-        let mut elem0: Elements<<I0 as Set>::IdxRaw<'d>> = Vec::new().into();
-
-        let i0 = self.idxs[0];
-
-        let i0 = ElementsIter::<I0>::new(i0, &mut elem0);
-        for _ in i0 {
-            op(self);
-        }
+        expand_d1(&self.idxs, self, op);
     }
 
     // expand - d2
 
     fn expand_d2(&self, op: impl FnMut(&Self)) {
-        match self.idxs.set_typ(0) {
-            SetTyp::CatInt => self.expand_d2_i0::<SetCatInt>(op),
-            SetTyp::CatStr => self.expand_d2_i0::<SetCatStr>(op),
-            SetTyp::Ord => self.expand_d2_i0::<SetOrd>(op),
-        }
-    }
-
-    fn expand_d2_i0<I0: Set>(&self, op: impl FnMut(&Self)) {
-        match self.idxs.set_typ(1) {
-            SetTyp::CatInt => self.expand_d2_i0_i1::<I0, SetCatInt>(op),
-            SetTyp::CatStr => self.expand_d2_i0_i1::<I0, SetCatStr>(op),
-            SetTyp::Ord => self.expand_d2_i0_i1::<I0, SetOrd>(op),
-        }
-    }
-
-    fn expand_d2_i0_i1<I0: Set, I1: Set>(&self, mut op: impl FnMut(&Self)) {
-        assert_eq!(self.idxs.len(), 2);
-        let mut elem0: Elements<<I0 as Set>::IdxRaw<'d>> = Vec::new().into();
-        let mut elem1: Elements<<I1 as Set>::IdxRaw<'d>> = Vec::new().into();
-
-        let [i0, i1] = [0, 1].map(|i| self.idxs[i]);
-
-        let i0 = ElementsIter::<I0>::new(i0, &mut elem0);
-        for _ in i0 {
-            let i1 = ElementsIter::<I1>::new(i1, &mut elem1);
-            for _ in i1 {
-                op(self);
-            }
-        }
+        expand_d2(&self.idxs, self, op);
     }
 }
 

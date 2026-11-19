@@ -23,9 +23,11 @@ mod bag;
 mod con_vals;
 mod con_vec;
 mod constants;
+mod constraints;
 mod dim;
 mod elements;
 mod err;
+mod expand;
 mod free_fun;
 mod idxs;
 mod lin_expr;
@@ -53,5 +55,5 @@ pub(crate) use symbol::{SymWrap, Symbol};
 pub(crate) use vars::{Bounds, VarD1, VarD2, VarType};
 
 // api
-pub use free_fun::{forall, sum};
+pub use free_fun::{con, eq, for1, for2, geq, leq, sum1, sum2};
 pub use model::Model;

@@ -1,5 +1,6 @@
 use crate::{
-    Bounds, Elements, ElementsIter, Model, Set, SetCatInt, SetCatStr, SetOrd, SymWrap, VarType,
+    Bounds, Elements, ElementsIter, Model, Set, SetCatInt, SetCatStr, SetOrd, SetSym, SymWrap,
+    VarType,
 };
 use alloc::format;
 use alloc::string::ToString;
