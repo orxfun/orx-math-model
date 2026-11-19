@@ -22,7 +22,7 @@ impl<const N: usize, T> ConVec<N, T> {
     }
 
     pub fn is_empty(&self) -> bool {
-        self.len > 0
+        self.len == 0
     }
 
     pub fn get(&self, idx: usize) -> Option<&T> {

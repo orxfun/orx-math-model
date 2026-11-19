@@ -30,7 +30,10 @@ impl<'d> DLinExpr<'d> {
 
         match (self.constant, self.terms.is_empty()) {
             (Some(c), true) => write!(f, "{}", c.get().eval()).unwrap(),
-            (Some(c), false) => write!(f, " + {}", c.get().eval()).unwrap(),
+            (Some(c), false) => {
+                use crate::lin_expr::lin_term_data::write_prefix_and_coef;
+                write_prefix_and_coef(f, c.get().eval());
+            }
             _ => {}
         }
     }

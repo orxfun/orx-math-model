@@ -1,5 +1,9 @@
 use crate::scalars::{DNum, DVar, ValNum};
 use crate::{AsF64, Model, Ptr, SymWrap, Var};
+#[cfg(test)]
+use alloc::string::String;
+#[cfg(test)]
+use core::fmt::Write;
 
 #[derive(Clone)]
 pub enum Coef<'d> {
@@ -19,18 +23,7 @@ impl<'d> DLinTerm<'d> {
     // get
 
     #[cfg(test)]
-    pub fn eval_append_string(&self, f: &mut alloc::string::String, prefix_sum: bool) {
-        use alloc::string::String;
-        use core::fmt::Write;
-
-        fn write_prefix_and_coef(f: &mut String, c: f64) {
-            match c >= 0.0 {
-                true => write!(f, " + {} ", c),
-                false => write!(f, " - {} ", -c),
-            }
-            .unwrap()
-        }
-
+    pub fn eval_append_string(&self, f: &mut String, prefix_sum: bool) {
         match (&self.coef, prefix_sum) {
             (Coef::One, false) => self.var.get().eval_append_string(f),
             (Coef::MinusOne, false) => {
@@ -66,9 +59,18 @@ impl<'d> DLinTerm<'d> {
     }
 
     #[cfg(test)]
-    pub fn eval_to_string(&self) -> alloc::string::String {
-        let mut f = alloc::string::String::new();
+    pub fn eval_to_string(&self) -> String {
+        let mut f = String::new();
         self.eval_append_string(&mut f, false);
         f
     }
+}
+
+#[cfg(test)]
+pub fn write_prefix_and_coef(f: &mut String, c: f64) {
+    match c >= 0.0 {
+        true => write!(f, " + {}", c),
+        false => write!(f, " - {}", -c),
+    }
+    .unwrap()
 }

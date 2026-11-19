@@ -10,7 +10,7 @@ fn exp_str<'m, 'd>(e: LinExpr<'m, 'd>) -> String {
     e.data().eval_to_string()
 }
 
-// #[test]
+#[test]
 fn t_lin_expr_d1() {
     // data
     let s0_data = vec![0, 2, 3];
@@ -32,7 +32,6 @@ fn t_lin_expr_d1() {
     let iter = ElementsIter::<SetCatInt>::new(i0, &mut elements);
 
     for (i, _) in iter.enumerate() {
-        assert_eq!(i, 33);
         let exp_i0 = s0_data[i];
         let exp_p1 = p1_data[s0_data[i]];
 
@@ -58,12 +57,15 @@ fn t_lin_expr_d1() {
         assert_eq!(exp_str(e), format!("-x_{exp_i0} + 1"));
 
         let e = 3 - p1[i0] * v1[i0];
-        assert_eq!(exp_str(e), format!("3 - {} x_{exp_i0}", exp_p1));
+        assert_eq!(exp_str(e), format!("-{} x_{exp_i0} + 3", exp_p1));
 
         let e = 3 + (-p1[i0]) * v1[i0];
-        assert_eq!(exp_str(e), format!("3 - {} x_{exp_i0}", exp_p1));
+        assert_eq!(exp_str(e), format!("-{} x_{exp_i0} + 3", exp_p1));
 
-        let e = 23 + (-p1[i0]) * v1[i0] + 9;
-        assert_eq!(exp_str(e), format!("3 - {} x_{exp_i0}", exp_p1));
+        let e = 2 + (-p1[i0]) * v1[i0] + 9;
+        assert_eq!(exp_str(e), format!("-{} x_{exp_i0} + 11", exp_p1));
+
+        let e = 2 + (-p1[i0]) * v1[i0] - 9;
+        assert_eq!(exp_str(e), format!("-{} x_{exp_i0} - 7", exp_p1));
     }
 }

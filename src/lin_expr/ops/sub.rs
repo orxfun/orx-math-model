@@ -1,3 +1,4 @@
+use super::add::const_add_con;
 use crate::lin_expr::{Coef, DLinExpr, DLinTerm, ExprVec};
 use crate::scalars::{DNum, ValNum};
 use crate::{AsF64, Int, LinExpr, Model, Num, Ptr, SymWrap, ValTyp, Var};
@@ -149,7 +150,7 @@ macro_rules! expr_con {
             fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
                 let m = rhs.m();
                 let terms = rhs.data().terms.map(|t| term_neg(m, t));
-                let constant = const_sub_con(m, rhs.data().constant, self);
+                let constant = const_add_con(m, rhs.data().constant, self);
                 m.lin_exp(DLinExpr::new(terms, Some(constant)))
             }
         }

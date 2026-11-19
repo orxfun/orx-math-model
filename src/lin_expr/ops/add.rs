@@ -29,7 +29,7 @@ fn const_add_num<'m, 'd>(
     }
 }
 
-fn const_add_con<'m, 'd>(m: &'m Model<'d>, c1: Con<'d>, c2: impl AsF64) -> Ptr<'d, DNum<'d>> {
+pub fn const_add_con<'m, 'd>(m: &'m Model<'d>, c1: Con<'d>, c2: impl AsF64) -> Ptr<'d, DNum<'d>> {
     match c1 {
         Some(c1) => {
             let fun = Box::new(move || c1.get().eval() + c2.as_f64());
