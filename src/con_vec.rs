@@ -1,3 +1,4 @@
+use crate::constants::MAX_DIM;
 use crate::idxs::DIdx;
 use crate::{Dim, Ptr};
 use core::ops::{Deref, Index};
@@ -95,10 +96,10 @@ impl<const N: usize, T> Index<usize> for ConVec<N, T> {
 
 // dim - vec
 
-pub struct DimVec<T>(ConVec<4, T>);
+pub struct DimVec<T>(ConVec<MAX_DIM, T>);
 
 impl<T> Deref for DimVec<T> {
-    type Target = ConVec<4, T>;
+    type Target = ConVec<MAX_DIM, T>;
 
     fn deref(&self) -> &Self::Target {
         &self.0
