@@ -134,3 +134,61 @@ fn t_sum_d2() {
         format!("7 {ex2}_0_2 + 9 {ex2}_0_3 + 17 {ex2}_1_2 + 19 {ex2}_1_3 + 27 {ex2}_2_2 + 29 {ex2}_2_3 + 42")
     );
 }
+
+#[test]
+fn t_sum_d2_zeroes() {
+    // data
+    let values = |i0: usize| {
+        [7, 9]
+            .into_iter()
+            .enumerate()
+            .map(|(i, v)| ((2 + i).to_string(), (10 * i0 + v) as f64))
+            .collect::<HashMap<_, _>>()
+    };
+    let par_data: Vec<HashMap<String, f64>> = (0..3).map(|i0| values(i0)).collect();
+    let s0_data = vec![0, 1, 2];
+    let s1_data: Vec<_> = [2, 3].into_iter().map(|x| x.to_string()).collect();
+
+    // modeling
+    let m = Model::new();
+    let s0 = m.cat_set_int();
+    let s1 = m.cat_set_str();
+    let i0 = s0.idx();
+    let i1 = s1.idx();
+    let x1 = m.var1(VarType::Binary, s0);
+    let x2 = m.var2(VarType::Binary, s0, s1);
+    let par = m.par2_num(s0, s1);
+
+    // binding
+    par.bind(|i, j| par_data[i][j]).unwrap();
+    s0.bind(|| s0_data.iter().copied()).unwrap();
+    s1.bind(|| &s1_data).unwrap();
+
+    // running
+
+    let ex2 = "x"; // TODO: var-name-fix
+
+    let e = sum(forall((i0, i1)), 0 * x1[i0]);
+    assert_eq!(e.data().eval_to_string(), "");
+
+    let e = sum(forall((i0, i1)), 7 + 0 * x2[(i0, i1)] - 7.0);
+    assert_eq!(e.data().eval_to_string(), "");
+
+    let e = sum(forall((i0, i1)), 3 + x2[(i0, i1)] + 7);
+    assert_eq!(
+        e.data().eval_to_string(),
+        format!("{ex2}_0_2 + {ex2}_0_3 + {ex2}_1_2 + {ex2}_1_3 + {ex2}_2_2 + {ex2}_2_3 + 60")
+    );
+
+    let e = sum(forall((i0, i1)), 3 * x2[(i0, i1)] + 7);
+    assert_eq!(
+        e.data().eval_to_string(),
+        format!("3 {ex2}_0_2 + 3 {ex2}_0_3 + 3 {ex2}_1_2 + 3 {ex2}_1_3 + 3 {ex2}_2_2 + 3 {ex2}_2_3 + 42")
+    );
+
+    let e = sum(forall((i0, i1)), par[(i0, i1)] * x2[(i0, i1)] + 7);
+    assert_eq!(
+        e.data().eval_to_string(),
+        format!("7 {ex2}_0_2 + 9 {ex2}_0_3 + 17 {ex2}_1_2 + 19 {ex2}_1_3 + 27 {ex2}_2_2 + 29 {ex2}_2_3 + 42")
+    );
+}
