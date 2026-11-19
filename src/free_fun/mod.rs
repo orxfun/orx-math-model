@@ -5,6 +5,6 @@ mod con;
 mod ineq_op;
 mod sum;
 
-pub use con::{con_depr, forall, Forall};
+pub use con::{con, con1, con_depr, forall, Forall};
 pub use ineq_op::{eq, geq, leq, IneqOp};
 pub use sum::{over, sum, SumOver};

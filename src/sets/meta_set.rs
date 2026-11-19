@@ -66,6 +66,8 @@ pub trait Set: Clone + Copy + 'static {
 
     fn new_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd>;
 
+    fn create_idx_from_set<'m, 'd>(set: Self::SetSym<'m, 'd>) -> Self::IdxSym<'m, 'd>;
+
     fn into_idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>>;
 
     fn into_idx_enum<'d>(raw: Self::IdxRaw<'d>) -> EIdx<'d>;
@@ -195,6 +197,10 @@ impl Set for SetCatInt {
         Self::IdxSym::new(Symbol::new(m, el))
     }
 
+    fn create_idx_from_set<'m, 'd>(set: Self::SetSym<'m, 'd>) -> Self::IdxSym<'m, 'd> {
+        set.idx()
+    }
+
     fn into_idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>> {
         sym.sym()
     }
@@ -293,6 +299,10 @@ impl Set for SetCatStr {
         Self::IdxSym::new(Symbol::new(m, el))
     }
 
+    fn create_idx_from_set<'m, 'd>(set: Self::SetSym<'m, 'd>) -> Self::IdxSym<'m, 'd> {
+        set.idx()
+    }
+
     fn into_idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>> {
         sym.sym()
     }
@@ -389,6 +399,10 @@ impl Set for SetOrd {
 
     fn new_idx_sym<'m, 'd>(m: &'m Model<'d>, el: Elem<'m, DIdx<'d>>) -> Self::IdxSym<'m, 'd> {
         Self::IdxSym::new(Symbol::new(m, el))
+    }
+
+    fn create_idx_from_set<'m, 'd>(set: Self::SetSym<'m, 'd>) -> Self::IdxSym<'m, 'd> {
+        set.idx()
     }
 
     fn into_idx_sym<'m, 'd>(sym: Self::IdxSym<'m, 'd>) -> Symbol<'m, 'd, DIdx<'d>> {

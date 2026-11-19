@@ -1,8 +1,8 @@
 use crate::constraints::{Constraint, DCon, IneqTyp};
 use crate::free_fun::IneqOp;
-use crate::idxs::ConIdxs;
+use crate::idxs::{ConIdxs, IdxVec};
 use crate::lin_expr::{DLinExpr, DLinTerm, SumVec, TermVec};
-use crate::{AsF64, Int, LinExpr, Model, Num, SymWrap, Var};
+use crate::{AsF64, Int, LinExpr, Model, Num, Set, SymWrap, Var};
 
 pub struct Forall<'m, 'd>(pub(crate) ConIdxs<'m, 'd>);
 
@@ -96,4 +96,44 @@ pub fn con_depr<'m, 'd>(
     let idxs = forall.0.to_idx_vec();
     let data = DCon::new(idxs, lhs.ptr(), rhs.ptr(), typ.typ());
     m.constraint(data)
+}
+
+pub fn con_gen<'m, 'd>(
+    lhs: impl Into<IneqSide<'m, 'd>>,
+    typ: impl IneqOp,
+    rhs: impl Into<IneqSide<'m, 'd>>,
+    idxs: IdxVec<'d>,
+) -> Constraint<'m, 'd> {
+    let [lhs, rhs] = [lhs.into(), rhs.into()];
+    let m = match (lhs.m(), rhs.m()) {
+        (Some(m1), Some(_m2)) => Some(m1),
+        (Some(m1), None) => Some(m1),
+        (None, Some(m2)) => Some(m2),
+        (None, None) => None,
+    };
+
+    // TODO: Handle const-const case somehow!
+    let m = m.unwrap();
+
+    let lhs = lhs.to_expr(m);
+    let rhs = rhs.to_expr(m);
+    let data = DCon::new(idxs, lhs.ptr(), rhs.ptr(), typ.typ());
+    m.constraint(data)
+}
+
+pub fn con<'m, 'd>(
+    lhs: impl Into<IneqSide<'m, 'd>>,
+    typ: impl IneqOp,
+    rhs: impl Into<IneqSide<'m, 'd>>,
+) -> Constraint<'m, 'd> {
+    let idxs = IdxVec::new([]);
+    con_gen(lhs, typ, rhs, idxs)
+}
+
+pub fn con1<'m, 'd, S0: Set>(
+    s0: S0::SetSym<'m, 'd>,
+    con: impl Fn(S0::IdxSym<'m, 'd>) -> Constraint<'m, 'd>,
+) -> Constraint<'m, 'd> {
+    let i0 = S0::create_idx_from_set(s0);
+    con(i0)
 }
