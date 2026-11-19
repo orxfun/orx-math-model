@@ -50,17 +50,17 @@ fn v2_at_int_cint_cstr() {
                 assert_eq!(exp, sca.data().eval_to_string());
             }
 
-            let exp = format!("{var_name}_{}", merge(s0_data[i], &s1_data[3]));
+            let exp = format!("{var_name}_{}", merge(s0_data[i], &3.to_string()));
             for sca in sca2 {
                 assert_eq!(exp, sca.data().eval_to_string());
             }
 
-            let exp = format!("{var_name}_{}", merge(s0_data[2], &s1_data[j]));
+            let exp = format!("{var_name}_{}", merge(2.to_string(), &s1_data[j]));
             for sca in sca3 {
                 assert_eq!(exp, sca.data().eval_to_string());
             }
 
-            let exp = format!("{var_name}_{}", merge(s0_data[2], &s1_data[3]));
+            let exp = format!("{var_name}_2_3");
             for sca in sca4 {
                 assert_eq!(exp, sca.data().eval_to_string());
             }
@@ -108,17 +108,17 @@ fn v2_at_int_cstr_ord() {
                 assert_eq!(exp, sca.data().eval_to_string());
             }
 
-            let exp = format!("{var_name}_{}", merge(&s0_data[i], s1_data[3]));
+            let exp = format!("{var_name}_{}", merge(&s0_data[i], &3.to_string()));
             for sca in sca2 {
                 assert_eq!(exp, sca.data().eval_to_string());
             }
 
-            let exp = format!("{var_name}_{}", merge(&s0_data[2], s1_data[j]));
+            let exp = format!("{var_name}_{}", merge(2.to_string(), &s1_data[j]));
             for sca in sca3 {
                 assert_eq!(exp, sca.data().eval_to_string());
             }
 
-            let exp = format!("{var_name}_{}", merge(&s0_data[2], s1_data[3]));
+            let exp = format!("{var_name}_2_3");
             for sca in sca4 {
                 assert_eq!(exp, sca.data().eval_to_string());
             }
@@ -166,17 +166,17 @@ fn v2_at_int_ord_cint() {
                 assert_eq!(exp, sca.data().eval_to_string());
             }
 
-            let exp = format!("{var_name}_{}", merge(s0_data[i], s1_data[3]));
+            let exp = format!("{var_name}_{}", merge(&s0_data[i], &3.to_string()));
             for sca in sca2 {
                 assert_eq!(exp, sca.data().eval_to_string());
             }
 
-            let exp = format!("{var_name}_{}", merge(s0_data[2], s1_data[j]));
+            let exp = format!("{var_name}_{}", merge(2.to_string(), &s1_data[j]));
             for sca in sca3 {
                 assert_eq!(exp, sca.data().eval_to_string());
             }
 
-            let exp = format!("{var_name}_{}", merge(s0_data[2], s1_data[3]));
+            let exp = format!("{var_name}_2_3");
             for sca in sca4 {
                 assert_eq!(exp, sca.data().eval_to_string());
             }
