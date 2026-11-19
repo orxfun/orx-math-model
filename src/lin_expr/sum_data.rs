@@ -29,11 +29,31 @@ impl<'d> DSum<'d> {
 
     fn expand_d1_for<I0: Set>(&self, mut op: impl FnMut(&Self)) {
         assert_eq!(self.idxs.len(), 1);
+        let mut elem0: Elements<<I0 as Set>::IdxRaw<'d>> = Vec::new().into();
+
         let i0 = self.idxs[0];
-        let mut elements: Elements<<I0 as Set>::IdxRaw<'d>> = Vec::new().into();
-        let i0 = ElementsIter::<I0>::new(i0, &mut elements);
+
+        let i0 = ElementsIter::<I0>::new(i0, &mut elem0);
         for _ in i0 {
             op(self);
+        }
+    }
+
+    // expand - d2
+
+    fn expand_d2_for<I0: Set, I1: Set>(&self, mut op: impl FnMut(&Self)) {
+        assert_eq!(self.idxs.len(), 1);
+        let mut elem0: Elements<<I0 as Set>::IdxRaw<'d>> = Vec::new().into();
+        let mut elem1: Elements<<I1 as Set>::IdxRaw<'d>> = Vec::new().into();
+
+        let [i0, i1] = [0, 1].map(|i| self.idxs[i]);
+
+        let i0 = ElementsIter::<I0>::new(i0, &mut elem0);
+        for _ in i0 {
+            let i1 = ElementsIter::<I1>::new(i1, &mut elem1);
+            for _ in i1 {
+                op(self);
+            }
         }
     }
 }
