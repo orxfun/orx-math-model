@@ -1,4 +1,4 @@
-use crate::lin_expr::{Coef, DLinExpr, DLinTerm, ExprVec};
+use crate::lin_expr::{Coef, DLinExpr, DLinTerm, DSum, ExprVec};
 use crate::scalars::{DNum, ValNum};
 use crate::{AsF64, Int, LinExpr, Model, Num, Ptr, SymWrap, ValTyp, Var, VarType};
 use alloc::boxed::Box;
@@ -56,124 +56,141 @@ fn term_mul_con<'m, 'd>(m: &'m Model<'d>, term: &DLinTerm<'d>, con: impl AsF64) 
     DLinTerm::new(coef, term.var)
 }
 
+fn expr_mul_con<'m, 'd>(
+    m: &'m Model<'d>,
+    expr: Ptr<'d, DLinExpr<'d>>,
+    con: impl AsF64,
+) -> Ptr<'d, DLinExpr<'d>> {
+    let expr = expr.get();
+    let terms = expr.terms.map(|term| term_mul_con(m, term, con));
+    let sums = expr.sums.map(|sum| sum_mul_con(m, sum, con));
+    let constant = const_mul_con(m, expr.constant, con);
+    let expr = DLinExpr::new(terms, sums, constant);
+    m.lin_exp(expr).ptr()
+}
+
+fn sum_mul_con<'m, 'd>(m: &'m Model<'d>, sum: &DSum<'d>, con: impl AsF64) -> DSum<'d> {
+    sum.with_expr(expr_mul_con(m, sum.expr, con))
+}
+
 // expr * num
 
-macro_rules! expr_num {
-    ($n:ty) => {
-        impl<'m, 'd> Mul<$n> for LinExpr<'m, 'd> {
-            type Output = LinExpr<'m, 'd>;
+// macro_rules! expr_num {
+//     ($n:ty) => {
+//         impl<'m, 'd> Mul<$n> for LinExpr<'m, 'd> {
+//             type Output = LinExpr<'m, 'd>;
 
-            fn mul(self, rhs: $n) -> Self::Output {
-                let m = self.m();
-                let terms = self.data().terms.map(|t| term_mul_num(m, t, rhs.ptr()));
-                let constant = const_mul_num(m, self.data().constant, rhs.ptr());
-                m.lin_exp(DLinExpr::new(terms, constant))
-            }
-        }
+//             fn mul(self, rhs: $n) -> Self::Output {
+//                 let m = self.m();
+//                 let terms = self.data().terms.map(|t| term_mul_num(m, t, rhs.ptr()));
+//                 let constant = const_mul_num(m, self.data().constant, rhs.ptr());
+//                 m.lin_exp(DLinExpr::new(terms, constant))
+//             }
+//         }
 
-        impl<'m, 'd> Mul<LinExpr<'m, 'd>> for $n {
-            type Output = LinExpr<'m, 'd>;
+//         impl<'m, 'd> Mul<LinExpr<'m, 'd>> for $n {
+//             type Output = LinExpr<'m, 'd>;
 
-            fn mul(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
-                rhs * self
-            }
-        }
-    };
-}
+//             fn mul(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
+//                 rhs * self
+//             }
+//         }
+//     };
+// }
 
-expr_num!(Num<'m, 'd>);
-expr_num!(Int<'m, 'd>);
+// expr_num!(Num<'m, 'd>);
+// expr_num!(Int<'m, 'd>);
 
-// expr * con
+// // expr * con
 
-macro_rules! expr_con {
-    ($c:ty) => {
-        impl<'m, 'd> Mul<$c> for LinExpr<'m, 'd> {
-            type Output = LinExpr<'m, 'd>;
+// macro_rules! expr_con {
+//     ($c:ty) => {
+//         impl<'m, 'd> Mul<$c> for LinExpr<'m, 'd> {
+//             type Output = LinExpr<'m, 'd>;
 
-            fn mul(self, rhs: $c) -> Self::Output {
-                let m = self.m();
-                let terms = self.data().terms.map(|t| term_mul_con(m, t, rhs));
-                let constant = const_mul_con(m, self.data().constant, rhs);
-                m.lin_exp(DLinExpr::new(terms, constant))
-            }
-        }
+//             fn mul(self, rhs: $c) -> Self::Output {
+//                 let m = self.m();
+//                 let terms = self.data().terms.map(|t| term_mul_con(m, t, rhs));
+//                 let constant = const_mul_con(m, self.data().constant, rhs);
+//                 m.lin_exp(DLinExpr::new(terms, constant))
+//             }
+//         }
 
-        impl<'m, 'd> Mul<LinExpr<'m, 'd>> for $c {
-            type Output = LinExpr<'m, 'd>;
+//         impl<'m, 'd> Mul<LinExpr<'m, 'd>> for $c {
+//             type Output = LinExpr<'m, 'd>;
 
-            fn mul(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
-                rhs * self
-            }
-        }
-    };
-}
+//             fn mul(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
+//                 rhs * self
+//             }
+//         }
+//     };
+// }
 
-expr_con!(f64);
-expr_con!(f32);
-expr_con!(i64);
-expr_con!(i32);
-expr_con!(u64);
-expr_con!(u32);
-expr_con!(usize);
-expr_con!(isize);
+// expr_con!(f64);
+// expr_con!(f32);
+// expr_con!(i64);
+// expr_con!(i32);
+// expr_con!(u64);
+// expr_con!(u32);
+// expr_con!(usize);
+// expr_con!(isize);
 
-// var * num
+// // var * num
 
-macro_rules! var_num {
-    ($n:ty) => {
-        impl<'m, 'd> Mul<$n> for Var<'m, 'd> {
-            type Output = LinExpr<'m, 'd>;
+// macro_rules! var_num {
+//     ($n:ty) => {
+//         impl<'m, 'd> Mul<$n> for Var<'m, 'd> {
+//             type Output = LinExpr<'m, 'd>;
 
-            fn mul(self, rhs: $n) -> Self::Output {
-                let term = DLinTerm::new(Coef::Ptr(rhs.ptr()), self.ptr());
-                let terms = ExprVec::new([term]);
-                self.m().lin_exp(DLinExpr::new(terms, None))
-            }
-        }
+//             fn mul(self, rhs: $n) -> Self::Output {
+//                 let term = DLinTerm::new(Coef::Ptr(rhs.ptr()), self.ptr());
+//                 let terms = ExprVec::new([term]);
+//                 self.m().lin_exp(DLinExpr::new(terms, None))
+//             }
+//         }
 
-        impl<'m, 'd> Mul<Var<'m, 'd>> for $n {
-            type Output = LinExpr<'m, 'd>;
+//         impl<'m, 'd> Mul<Var<'m, 'd>> for $n {
+//             type Output = LinExpr<'m, 'd>;
 
-            fn mul(self, rhs: Var<'m, 'd>) -> Self::Output {
-                rhs * self
-            }
-        }
-    };
-}
+//             fn mul(self, rhs: Var<'m, 'd>) -> Self::Output {
+//                 rhs * self
+//             }
+//         }
+//     };
+// }
 
-var_num!(Num<'m, 'd>);
-var_num!(Int<'m, 'd>);
+// var_num!(Num<'m, 'd>);
+// var_num!(Int<'m, 'd>);
 
-// var * con
+// // var * con
 
-macro_rules! var_con {
-    ($c:ty) => {
-        impl<'m, 'd> Mul<$c> for Var<'m, 'd> {
-            type Output = LinExpr<'m, 'd>;
+// macro_rules! var_con {
+//     ($c:ty) => {
+//         impl<'m, 'd> Mul<$c> for Var<'m, 'd> {
+//             type Output = LinExpr<'m, 'd>;
 
-            fn mul(self, rhs: $c) -> Self::Output {
-                let term = DLinTerm::new(Coef::Con(rhs.as_f64()), self.ptr());
-                let terms = ExprVec::new([term]);
-                self.m().lin_exp(DLinExpr::new(terms, None))
-            }
-        }
+//             fn mul(self, rhs: $c) -> Self::Output {
+//                 let term = DLinTerm::new(Coef::Con(rhs.as_f64()), self.ptr());
+//                 let terms = ExprVec::new([term]);
+//                 self.m().lin_exp(DLinExpr::new(terms, None))
+//             }
+//         }
 
-        impl<'m, 'd> Mul<Var<'m, 'd>> for $c {
-            type Output = LinExpr<'m, 'd>;
+//         impl<'m, 'd> Mul<Var<'m, 'd>> for $c {
+//             type Output = LinExpr<'m, 'd>;
 
-            fn mul(self, rhs: Var<'m, 'd>) -> Self::Output {
-                rhs * self
-            }
-        }
-    };
-}
+//             fn mul(self, rhs: Var<'m, 'd>) -> Self::Output {
+//                 rhs * self
+//             }
+//         }
+//     };
+// }
 
-var_con!(f64);
-var_con!(f32);
-var_con!(i64);
-var_con!(i32);
-var_con!(u64);
-var_con!(u32);
-var_con!(usize);
-var_con!(isize);
+// var_con!(f64);
+// var_con!(f32);
+// var_con!(i64);
+// var_con!(i32);
+// var_con!(u64);
+// var_con!(u32);
+// var_con!(usize);
+// var_con!(isize);

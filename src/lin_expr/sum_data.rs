@@ -11,4 +11,8 @@ impl<'d> DSum<'d> {
     pub fn neg<'m>(&self, m: &'m Model<'d>) -> Self {
         Self::new(self.sets.clone(), self.expr.get().neg(m))
     }
+
+    pub fn with_expr(&self, expr: Ptr<'d, DLinExpr<'d>>) -> Self {
+        Self::new(self.sets.clone(), expr)
+    }
 }
