@@ -190,34 +190,36 @@ impl<'m, 'd> Sub<Var<'m, 'd>> for Var<'m, 'd> {
     }
 }
 
-// // var - num
+// var - num
 
-// macro_rules! var_num {
-//     ($n:ty) => {
-//         impl<'m, 'd> Sub<$n> for Var<'m, 'd> {
-//             type Output = LinExpr<'m, 'd>;
+macro_rules! var_num {
+    ($n:ty) => {
+        impl<'m, 'd> Sub<$n> for Var<'m, 'd> {
+            type Output = LinExpr<'m, 'd>;
 
-//             fn sub(self, rhs: $n) -> Self::Output {
-//                 let terms = ExprVec::new([self.into()]);
-//                 let constant = const_sub_num(self.m(), None, rhs.ptr());
-//                 self.m().lin_exp(DLinExpr::new(terms, Some(constant)))
-//             }
-//         }
+            fn sub(self, rhs: $n) -> Self::Output {
+                let terms = ExprVec::new([self.into()]);
+                let sums = SumVec::new([]);
+                let constant = const_sub_num(self.m(), None, rhs.ptr());
+                self.m().lin_exp(DLinExpr::new(terms, sums, Some(constant)))
+            }
+        }
 
-//         impl<'m, 'd> Sub<Var<'m, 'd>> for $n {
-//             type Output = LinExpr<'m, 'd>;
+        impl<'m, 'd> Sub<Var<'m, 'd>> for $n {
+            type Output = LinExpr<'m, 'd>;
 
-//             fn sub(self, rhs: Var<'m, 'd>) -> Self::Output {
-//                 let terms = ExprVec::new([DLinTerm::new(Coef::MinusOne, rhs.ptr())]);
-//                 let constant = Some(self.ptr());
-//                 self.m().lin_exp(DLinExpr::new(terms, constant))
-//             }
-//         }
-//     };
-// }
+            fn sub(self, rhs: Var<'m, 'd>) -> Self::Output {
+                let terms = ExprVec::new([DLinTerm::new(Coef::MinusOne, rhs.ptr())]);
+                let sums = SumVec::new([]);
+                let constant = Some(self.ptr());
+                self.m().lin_exp(DLinExpr::new(terms, sums, constant))
+            }
+        }
+    };
+}
 
-// var_num!(Num<'m, 'd>);
-// var_num!(Int<'m, 'd>);
+var_num!(Num<'m, 'd>);
+var_num!(Int<'m, 'd>);
 
 // // var - con
 
