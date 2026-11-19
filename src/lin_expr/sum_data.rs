@@ -1,6 +1,6 @@
 use crate::idxs::IdxVec;
 use crate::lin_expr::DLinExpr;
-use crate::{Elements, ElementsIter, Model, Ptr, Set, SetCatInt, SetTyp};
+use crate::{Elements, ElementsIter, Model, Ptr, Set, SetCatInt, SetCatStr, SetOrd, SetTyp};
 use alloc::vec::Vec;
 
 #[derive(derive_new::new, Clone)]
@@ -22,12 +22,13 @@ impl<'d> DSum<'d> {
 
     fn expand_d1(&self, op: impl FnMut(&Self)) {
         match self.idxs.set_typ(0) {
-            SetTyp::CatInt => self.expand_d1_for::<SetCatInt>(op),
-            _ => todo!(),
+            SetTyp::CatInt => self.expand_d1_i0::<SetCatInt>(op),
+            SetTyp::CatStr => self.expand_d1_i0::<SetCatStr>(op),
+            SetTyp::Ord => self.expand_d1_i0::<SetOrd>(op),
         }
     }
 
-    fn expand_d1_for<I0: Set>(&self, mut op: impl FnMut(&Self)) {
+    fn expand_d1_i0<I0: Set>(&self, mut op: impl FnMut(&Self)) {
         assert_eq!(self.idxs.len(), 1);
         let mut elem0: Elements<<I0 as Set>::IdxRaw<'d>> = Vec::new().into();
 
@@ -41,7 +42,23 @@ impl<'d> DSum<'d> {
 
     // expand - d2
 
-    fn expand_d2_for<I0: Set, I1: Set>(&self, mut op: impl FnMut(&Self)) {
+    fn expand_d2(&self, op: impl FnMut(&Self)) {
+        match self.idxs.set_typ(1) {
+            SetTyp::CatInt => self.expand_d2_i0::<SetCatInt>(op),
+            SetTyp::CatStr => self.expand_d2_i0::<SetCatStr>(op),
+            SetTyp::Ord => self.expand_d2_i0::<SetOrd>(op),
+        }
+    }
+
+    fn expand_d2_i0<I0: Set>(&self, op: impl FnMut(&Self)) {
+        match self.idxs.set_typ(1) {
+            SetTyp::CatInt => self.expand_d2_i0_i1::<I0, SetCatInt>(op),
+            SetTyp::CatStr => self.expand_d2_i0_i1::<I0, SetCatStr>(op),
+            SetTyp::Ord => self.expand_d2_i0_i1::<I0, SetOrd>(op),
+        }
+    }
+
+    fn expand_d2_i0_i1<I0: Set, I1: Set>(&self, mut op: impl FnMut(&Self)) {
         assert_eq!(self.idxs.len(), 1);
         let mut elem0: Elements<<I0 as Set>::IdxRaw<'d>> = Vec::new().into();
         let mut elem1: Elements<<I1 as Set>::IdxRaw<'d>> = Vec::new().into();
@@ -84,6 +101,7 @@ pub mod ext_test {
 
             match self.idxs.dim() {
                 Dim::D1 => self.expand_d1(op),
+                Dim::D2 => self.expand_d2(op),
                 _ => todo!(),
             }
 
