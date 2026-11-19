@@ -47,12 +47,20 @@ fn expr_mul_num<'m, 'd>(
     expr: Ptr<'d, DLinExpr<'d>>,
     num: Ptr<'d, DNum<'d>>,
 ) -> Ptr<'d, DLinExpr<'d>> {
+    expr_mul_num_sym(m, expr, num).ptr()
+}
+
+fn expr_mul_num_sym<'m, 'd>(
+    m: &'m Model<'d>,
+    expr: Ptr<'d, DLinExpr<'d>>,
+    num: Ptr<'d, DNum<'d>>,
+) -> LinExpr<'m, 'd> {
     let expr = expr.get();
     let terms = expr.terms.map(|term| term_mul_num(m, term, num));
     let sums = expr.sums.map(|sum| sum_mul_num(m, sum, num));
     let constant = const_mul_num(m, expr.constant, num);
     let expr = DLinExpr::new(terms, sums, constant);
-    m.lin_exp(expr).ptr()
+    m.lin_exp(expr)
 }
 
 // con
@@ -86,75 +94,77 @@ fn expr_mul_con<'m, 'd>(
     expr: Ptr<'d, DLinExpr<'d>>,
     con: impl AsF64,
 ) -> Ptr<'d, DLinExpr<'d>> {
+    expr_mul_con_sym(m, expr, con).ptr()
+}
+
+fn expr_mul_con_sym<'m, 'd>(
+    m: &'m Model<'d>,
+    expr: Ptr<'d, DLinExpr<'d>>,
+    con: impl AsF64,
+) -> LinExpr<'m, 'd> {
     let expr = expr.get();
     let terms = expr.terms.map(|term| term_mul_con(m, term, con));
     let sums = expr.sums.map(|sum| sum_mul_con(m, sum, con));
     let constant = const_mul_con(m, expr.constant, con);
     let expr = DLinExpr::new(terms, sums, constant);
-    m.lin_exp(expr).ptr()
+    m.lin_exp(expr)
 }
 
 // expr * num
 
-// macro_rules! expr_num {
-//     ($n:ty) => {
-//         impl<'m, 'd> Mul<$n> for LinExpr<'m, 'd> {
-//             type Output = LinExpr<'m, 'd>;
+macro_rules! expr_num {
+    ($n:ty) => {
+        impl<'m, 'd> Mul<$n> for LinExpr<'m, 'd> {
+            type Output = LinExpr<'m, 'd>;
 
-//             fn mul(self, rhs: $n) -> Self::Output {
-//                 let m = self.m();
-//                 let terms = self.data().terms.map(|t| term_mul_num(m, t, rhs.ptr()));
-//                 let constant = const_mul_num(m, self.data().constant, rhs.ptr());
-//                 m.lin_exp(DLinExpr::new(terms, constant))
-//             }
-//         }
+            fn mul(self, rhs: $n) -> Self::Output {
+                expr_mul_num_sym(self.m(), self.ptr(), rhs.ptr())
+            }
+        }
 
-//         impl<'m, 'd> Mul<LinExpr<'m, 'd>> for $n {
-//             type Output = LinExpr<'m, 'd>;
+        impl<'m, 'd> Mul<LinExpr<'m, 'd>> for $n {
+            type Output = LinExpr<'m, 'd>;
 
-//             fn mul(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
-//                 rhs * self
-//             }
-//         }
-//     };
-// }
+            fn mul(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
+                rhs * self
+            }
+        }
+    };
+}
 
-// expr_num!(Num<'m, 'd>);
-// expr_num!(Int<'m, 'd>);
+expr_num!(Num<'m, 'd>);
+expr_num!(Int<'m, 'd>);
 
-// // expr * con
+// expr * con
 
-// macro_rules! expr_con {
-//     ($c:ty) => {
-//         impl<'m, 'd> Mul<$c> for LinExpr<'m, 'd> {
-//             type Output = LinExpr<'m, 'd>;
+macro_rules! expr_con {
+    ($c:ty) => {
+        impl<'m, 'd> Mul<$c> for LinExpr<'m, 'd> {
+            type Output = LinExpr<'m, 'd>;
 
-//             fn mul(self, rhs: $c) -> Self::Output {
-//                 let m = self.m();
-//                 let terms = self.data().terms.map(|t| term_mul_con(m, t, rhs));
-//                 let constant = const_mul_con(m, self.data().constant, rhs);
-//                 m.lin_exp(DLinExpr::new(terms, constant))
-//             }
-//         }
+            fn mul(self, rhs: $c) -> Self::Output {
+                expr_mul_con_sym(self.m(), self.ptr(), rhs)
+            }
+        }
 
-//         impl<'m, 'd> Mul<LinExpr<'m, 'd>> for $c {
-//             type Output = LinExpr<'m, 'd>;
+        impl<'m, 'd> Mul<LinExpr<'m, 'd>> for $c {
+            type Output = LinExpr<'m, 'd>;
 
-//             fn mul(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
-//                 rhs * self
-//             }
-//         }
-//     };
-// }
+            fn mul(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
+                rhs * self
+            }
+        }
+    };
+}
 
-// expr_con!(f64);
-// expr_con!(f32);
-// expr_con!(i64);
-// expr_con!(i32);
-// expr_con!(u64);
-// expr_con!(u32);
-// expr_con!(usize);
-// expr_con!(isize);
+expr_con!(f64);
+expr_con!(f32);
+expr_con!(i64);
+expr_con!(i32);
+expr_con!(u64);
+expr_con!(u32);
+expr_con!(usize);
+expr_con!(isize);
 
 // // var * num
 
