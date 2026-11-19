@@ -23,8 +23,6 @@ pub mod ext_test {
     use core::fmt::Write;
 
     impl<'d> DLinTerm<'d> {
-        // get
-
         #[cfg(test)]
         pub fn eval_append_string(&self, f: &mut String, prefix_sum: bool) -> bool {
             match (&self.coef, prefix_sum) {
