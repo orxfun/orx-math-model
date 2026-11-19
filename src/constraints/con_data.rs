@@ -19,7 +19,7 @@ pub struct DCon<'d> {
 }
 
 impl<'d> DCon<'d> {
-    // expand - d1
+    // expand
 
     fn expand_d1(&self, op: impl FnMut(&Self)) {
         expand_d1(&self.idxs, self, op);
@@ -33,24 +33,42 @@ impl<'d> DCon<'d> {
 #[cfg(test)]
 pub mod ext_test {
     use super::*;
-    use crate::constants::{is_neg, is_pos, is_zero};
+    use crate::Dim;
     use alloc::string::String;
     use core::fmt::Write;
 
     impl<'d> DCon<'d> {
-        pub fn eval_append_string(&self, f: &mut String, pre_exists: bool) -> bool {
-            // let (mut pre_exists, c) = self.eval_append_string_exc_constant(f, pre_exists);
+        pub fn eval_append_string(&self, f: &mut String) {
+            let mut op = |s: &Self| {
+                let written = s.lhs.get().eval_append_string(f, false);
+                if !written {
+                    write!(f, "0").unwrap();
+                }
 
-            // if let Some(c) = c {
-            //     pre_exists |= write_constant(f, pre_exists, c);
-            // }
+                match s.typ {
+                    IneqTyp::Leq => write!(f, " <= "),
+                    IneqTyp::Geq => write!(f, " >= "),
+                    IneqTyp::Eq => write!(f, " = "),
+                }
+                .unwrap();
 
-            pre_exists
+                let written = s.rhs.get().eval_append_string(f, false);
+                if !written {
+                    write!(f, "0").unwrap();
+                }
+            };
+
+            match self.idxs.dim() {
+                Dim::D0 => op(self),
+                Dim::D1 => self.expand_d1(op),
+                Dim::D2 => self.expand_d2(op),
+                _ => todo!(),
+            }
         }
 
         pub fn eval_to_string(&self) -> String {
             let mut f = String::new();
-            self.eval_append_string(&mut f, false);
+            self.eval_append_string(&mut f);
             f
         }
     }
