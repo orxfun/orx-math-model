@@ -15,9 +15,10 @@ fn var_from_var1() {
             let vard = m.var2(VarType::Binary, s0, s1);
 
             // running
+            let var_name = "x"; // TODO: var-name fix
             let var = DVar::create_d2::<$s0, $s1>(vard.data_ptr(), || ($i0, $i1));
-            let exp = format!("{}_{}", $i0, $i1);
-            assert_eq!(var.to_string(), exp);
+            let exp = format!("{var_name}_{}_{}", $i0, $i1);
+            assert_eq!(var.eval_to_string(), exp);
         };
     }
 

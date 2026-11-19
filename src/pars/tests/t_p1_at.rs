@@ -32,7 +32,7 @@ fn p1_at_cint() {
         for sca in sca1 {
             assert_eq!(exp, sca.data().eval());
         }
-        let exp = par_data[set_data[2]];
+        let exp = par_data[2];
         for sca in sca2 {
             assert_eq!(exp, sca.data().eval());
         }
@@ -72,7 +72,7 @@ fn p1_at_cstr() {
         for sca in sca1 {
             assert_eq!(exp, sca.data().eval_int());
         }
-        let exp = par_data[&set_data[2]];
+        let exp = par_data["3"];
         for sca in sca2 {
             assert_eq!(exp, sca.data().eval_int());
         }
@@ -109,7 +109,7 @@ fn p1_at_ord() {
         for sca in sca1 {
             assert_eq!(exp, sca.data().eval());
         }
-        let exp = par_data(set_data[2]);
+        let exp = par_data(2);
         for sca in sca2 {
             assert_eq!(exp, sca.data().eval());
         }

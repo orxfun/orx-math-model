@@ -4,7 +4,7 @@ use crate::scalars::{DNum, Int, Num, Val, ValInt, ValNum, Var};
 use crate::sets::into_idx::IdxAny;
 use crate::sets::{CatInt, CatStr, DSet, FSet, IndexCatInt, IndexCatStr, IndexOrd, Ord, UFunSet};
 use crate::vars::{VarD1, VarD2};
-use crate::{Model, Ptr, SetSym, SymWrap, Symbol, ValTyp};
+use crate::{Elements, Model, Ptr, SetSym, SymWrap, Symbol, ValTyp};
 use alloc::boxed::Box;
 use alloc::string::{String, ToString};
 use core::fmt::Write;
@@ -48,13 +48,17 @@ pub trait Set: Clone + Copy + 'static {
 
     fn set_ptr<'m, 'd>(sym: Self::SetSym<'m, 'd>) -> Ptr<'d, DSet<'d>>;
 
+    fn fill_elements<'d>(set: &DSet<'d>, elements: &mut Elements<Self::IdxRaw<'d>>);
+
     // idx
 
     type IdxRaw<'d>: Copy;
 
-    type IdxSym<'m, 'd: 'm>;
+    type IdxSym<'m, 'd: 'm>: Copy;
 
     type IdxAny<'m, 'd: 'm>: IdxAny<'m, 'd, Set = Self>;
+
+    fn idx_sym_to_set_data<'m, 'd>(idx: Self::IdxSym<'m, 'd>) -> Ptr<'d, DSet<'d>>;
 
     fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d>;
 
@@ -66,7 +70,7 @@ pub trait Set: Clone + Copy + 'static {
 
     fn into_idx_enum<'d>(raw: Self::IdxRaw<'d>) -> EIdx<'d>;
 
-    fn write_idx_str<'d>(f: &mut String, raw: Self::IdxRaw<'d>) -> Result<(), core::fmt::Error>;
+    fn write_idx_str<'d>(f: &mut String, raw: Self::IdxRaw<'d>);
 
     // p1
 
@@ -160,6 +164,11 @@ impl Set for SetCatInt {
         sym.ptr()
     }
 
+    fn fill_elements<'d>(set: &DSet<'d>, elements: &mut Elements<Self::IdxRaw<'d>>) {
+        let fun = set.fun_set().get().get::<Self>();
+        fun(elements)
+    }
+
     // idx
 
     type IdxRaw<'d> = usize;
@@ -167,6 +176,10 @@ impl Set for SetCatInt {
     type IdxSym<'m, 'd: 'm> = IdxCatInt<'m, 'd>;
 
     type IdxAny<'m, 'd: 'm> = IndexCatInt<'m, 'd>;
+
+    fn idx_sym_to_set_data<'m, 'd>(idx: Self::IdxSym<'m, 'd>) -> Ptr<'d, DSet<'d>> {
+        idx.ptr().get().set_ptr()
+    }
 
     #[inline(always)]
     fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d> {
@@ -192,8 +205,8 @@ impl Set for SetCatInt {
     }
 
     #[inline(always)]
-    fn write_idx_str<'d>(f: &mut String, raw: Self::IdxRaw<'d>) -> Result<(), core::fmt::Error> {
-        write!(f, "{raw}")
+    fn write_idx_str<'d>(f: &mut String, raw: Self::IdxRaw<'d>) {
+        write!(f, "{raw}").unwrap()
     }
 
     // p1
@@ -249,6 +262,11 @@ impl Set for SetCatStr {
         sym.ptr()
     }
 
+    fn fill_elements<'d>(set: &DSet<'d>, elements: &mut Elements<Self::IdxRaw<'d>>) {
+        let fun = set.fun_set().get().get::<Self>();
+        fun(elements)
+    }
+
     // idx
 
     type IdxRaw<'d> = &'d String;
@@ -256,6 +274,10 @@ impl Set for SetCatStr {
     type IdxSym<'m, 'd: 'm> = IdxCatStr<'m, 'd>;
 
     type IdxAny<'m, 'd: 'm> = IndexCatStr<'m, 'd>;
+
+    fn idx_sym_to_set_data<'m, 'd>(idx: Self::IdxSym<'m, 'd>) -> Ptr<'d, DSet<'d>> {
+        idx.ptr().get().set_ptr()
+    }
 
     #[inline(always)]
     fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d> {
@@ -281,8 +303,8 @@ impl Set for SetCatStr {
     }
 
     #[inline(always)]
-    fn write_idx_str<'d>(f: &mut String, raw: Self::IdxRaw<'d>) -> Result<(), core::fmt::Error> {
-        write!(f, "{raw}")
+    fn write_idx_str<'d>(f: &mut String, raw: Self::IdxRaw<'d>) {
+        write!(f, "{raw}").unwrap()
     }
 
     // p1
@@ -338,6 +360,11 @@ impl Set for SetOrd {
         sym.ptr()
     }
 
+    fn fill_elements<'d>(set: &DSet<'d>, elements: &mut Elements<Self::IdxRaw<'d>>) {
+        let fun = set.fun_set().get().get::<Self>();
+        fun(elements)
+    }
+
     // idx
 
     type IdxRaw<'d> = i64;
@@ -345,6 +372,10 @@ impl Set for SetOrd {
     type IdxSym<'m, 'd: 'm> = IdxOrd<'m, 'd>;
 
     type IdxAny<'m, 'd: 'm> = IndexOrd<'m, 'd>;
+
+    fn idx_sym_to_set_data<'m, 'd>(idx: Self::IdxSym<'m, 'd>) -> Ptr<'d, DSet<'d>> {
+        idx.ptr().get().set_ptr()
+    }
 
     #[inline(always)]
     fn idx_unpack<'a, 'd>(u: &'a UIdxVal<'d>) -> Self::IdxRaw<'d> {
@@ -370,8 +401,8 @@ impl Set for SetOrd {
     }
 
     #[inline(always)]
-    fn write_idx_str<'d>(f: &mut String, raw: Self::IdxRaw<'d>) -> Result<(), core::fmt::Error> {
-        write!(f, "{raw}")
+    fn write_idx_str<'d>(f: &mut String, raw: Self::IdxRaw<'d>) {
+        write!(f, "{raw}").unwrap()
     }
 
     // p1

@@ -1,5 +1,4 @@
 use crate::sets::{FSet, FunSet};
-#[cfg(test)]
 use crate::Elements;
 use crate::{Ptr, Res, ResValid, Set, SetTyp, Slot};
 

@@ -16,51 +16,115 @@ pub struct DLinTerm<'d> {
 }
 
 impl<'d> DLinTerm<'d> {
-    // ops
+    // get
 
-    pub fn neg<'m>(&self, m: &'m Model<'d>) -> Self {
-        let coef = match self.coef {
-            Coef::One => Coef::MinusOne,
-            Coef::MinusOne => Coef::One,
-            Coef::Con(c) => Coef::Con(-c),
-            Coef::Ptr(c) => Coef::Ptr(m.val_neg(c)),
-        };
-        Self::new(coef, self.var)
+    #[cfg(test)]
+    pub fn eval_append_string(&self, f: &mut alloc::string::String, prefix_sum: bool) -> bool {
+        match (&self.coef, prefix_sum) {
+            (Coef::One, false) => {
+                self.var.get().eval_append_string(f);
+                true
+            }
+            (Coef::MinusOne, false) => {
+                f.push_str("-");
+                self.var.get().eval_append_string(f);
+                true
+            }
+            (Coef::Con(c), false) => match write_coef(f, *c) {
+                true => {
+                    self.var.get().eval_append_string(f);
+                    true
+                }
+                false => false,
+            },
+            (Coef::Ptr(c), false) => match write_coef(f, c.get().eval()) {
+                true => {
+                    self.var.get().eval_append_string(f);
+                    true
+                }
+                false => false,
+            },
+
+            (Coef::One, true) => {
+                f.push_str(" + ");
+                self.var.get().eval_append_string(f);
+                true
+            }
+            (Coef::MinusOne, true) => {
+                f.push_str(" - ");
+                self.var.get().eval_append_string(f);
+                true
+            }
+            (Coef::Con(c), true) => match write_prefix_and_coef(f, *c) {
+                true => {
+                    self.var.get().eval_append_string(f);
+                    true
+                }
+                false => false,
+            },
+            (Coef::Ptr(c), true) => match write_prefix_and_coef(f, c.get().eval()) {
+                true => {
+                    self.var.get().eval_append_string(f);
+                    true
+                }
+                false => false,
+            },
+        }
     }
 
-    pub fn mul_num<'m>(&self, m: &'m Model<'d>, rhs: Ptr<'d, DNum<'d>>) -> Self {
-        let coef = match self.coef {
-            Coef::One => Coef::Ptr(rhs),
-            Coef::MinusOne => Coef::Ptr(m.val_neg(rhs)),
-            Coef::Con(c) => Coef::Ptr(m.val::<ValNum>(DNum::mul_con(rhs, c)).ptr()),
-            Coef::Ptr(c) => Coef::Ptr(m.val::<ValNum>(DNum::mul(c, rhs)).ptr()),
-        };
-        Self::new(coef, self.var)
-    }
-
-    pub fn mul_con<'m>(&self, m: &'m Model<'d>, rhs: impl AsF64) -> Self {
-        let coef = match self.coef {
-            Coef::One => Coef::Con(rhs.as_f64()),
-            Coef::MinusOne => Coef::Con(-rhs.as_f64()),
-            Coef::Con(c) => Coef::Con(c * rhs.as_f64()),
-            Coef::Ptr(c) => Coef::Ptr(m.val::<ValNum>(DNum::mul_con(c, rhs.as_f64())).ptr()),
-        };
-        Self::new(coef, self.var)
+    #[cfg(test)]
+    pub fn eval_to_string(&self) -> alloc::string::String {
+        let mut f = alloc::string::String::new();
+        self.eval_append_string(&mut f, false);
+        f
     }
 }
 
 #[cfg(test)]
-impl<'d> DLinTerm<'d> {
-    pub fn eval_coef(&self) -> f64 {
-        match self.coef {
-            Coef::One => 1.0,
-            Coef::MinusOne => -1.0,
-            Coef::Con(x) => x,
-            Coef::Ptr(p) => p.get().eval(),
-        }
-    }
+fn write_coef(f: &mut alloc::string::String, c: f64) -> bool {
+    use crate::constants::{is_neg, is_pos, is_zero};
+    use core::fmt::Write;
+    use std::dbg;
 
-    pub fn var(&self) -> Ptr<'d, DVar<'d>> {
-        self.var
+    dbg!(c);
+
+    match is_pos(c) {
+        true => {
+            write!(f, "{} ", c).unwrap();
+            true
+        }
+        false => match is_neg(c) {
+            true => {
+                write!(f, "-{} ", -c).unwrap();
+                true
+            }
+            false => {
+                debug_assert!(is_zero(c));
+                false
+            }
+        },
+    }
+}
+
+#[cfg(test)]
+fn write_prefix_and_coef(f: &mut alloc::string::String, c: f64) -> bool {
+    use crate::constants::{is_neg, is_pos, is_zero};
+    use core::fmt::Write;
+
+    match is_pos(c) {
+        true => {
+            write!(f, " + {} ", c).unwrap();
+            true
+        }
+        false => match is_neg(c) {
+            true => {
+                write!(f, " - {} ", -c).unwrap();
+                true
+            }
+            false => {
+                debug_assert!(is_zero(c));
+                false
+            }
+        },
     }
 }
