@@ -126,6 +126,7 @@ macro_rules! var_num {
             type Output = LinExpr<'m, 'd>;
 
             fn mul(self, rhs: $n) -> Self::Output {
+                assert_eq!(3, 33);
                 let term = DLinTerm::new(Coef::Ptr(rhs.ptr()), self.ptr());
                 let terms = ExprVec::new([term]);
                 self.m().lin_exp(DLinExpr::new(terms, None))
