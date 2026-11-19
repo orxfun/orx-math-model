@@ -1,4 +1,5 @@
 use crate::con_vals::{ConVal, DConVal};
+use crate::constraint::DIneq;
 use crate::idxs::{DIdx, IdxVal};
 use crate::lin_expr::DLinExpr;
 use crate::pars::{DPars, IntParD1, IntParD2, NumParD1, NumParD2, ParFun};
@@ -50,6 +51,7 @@ pub struct Model<'d> {
 
     // expr
     lin_exp_bag: Bag<DLinExpr<'d>>,
+    ineq_bag: Bag<DIneq<'d>>,
 }
 
 impl<'d> Drop for Model<'d> {
@@ -78,6 +80,7 @@ impl<'d> Model<'d> {
             sym_ref_bag: Default::default(),
             common_numbers,
             lin_exp_bag: Default::default(),
+            ineq_bag: Default::default(),
         }
     }
 
