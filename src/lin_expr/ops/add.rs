@@ -1,4 +1,4 @@
-use crate::lin_expr::{DLinExpr, DLinTerm, ExprVec};
+use crate::lin_expr::{DLinExpr, DLinTerm, ExprVec, SumVec};
 use crate::scalars::{DNum, ValNum};
 use crate::{AsF64, ConVec, Int, LinExpr, Model, Num, Ptr, SymWrap, ValTyp, Var};
 use alloc::boxed::Box;
@@ -47,8 +47,9 @@ impl<'m, 'd> Add<LinExpr<'m, 'd>> for LinExpr<'m, 'd> {
     fn add(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
         let [t1, t2] = [self.data(), rhs.data()];
         let terms = t1.terms.merge(&t2.terms);
+        let sums = t1.sums.merge(&t2.sums);
         let constant = const_add_const(self.m(), t1.constant, t2.constant);
-        self.m().lin_exp(DLinExpr::new(terms, constant))
+        self.m().lin_exp(DLinExpr::new(terms, sums, constant))
     }
 }
 
@@ -58,8 +59,10 @@ impl<'m, 'd> Add<Var<'m, 'd>> for LinExpr<'m, 'd> {
     type Output = LinExpr<'m, 'd>;
 
     fn add(self, rhs: Var<'m, 'd>) -> Self::Output {
-        let terms = self.data().terms.push(rhs.into());
-        self.m().lin_exp(DLinExpr::new(terms, self.data().constant))
+        let expr = self.data();
+        let terms = expr.terms.push(rhs.into());
+        let (sums, constant) = (expr.sums.clone(), expr.constant);
+        self.m().lin_exp(DLinExpr::new(terms, sums, constant))
     }
 }
 
@@ -79,9 +82,10 @@ macro_rules! expr_num {
             type Output = LinExpr<'m, 'd>;
 
             fn add(self, rhs: $n) -> Self::Output {
-                let terms = self.data().terms.clone();
-                let constant = const_add_num(self.m(), self.data().constant, rhs.ptr());
-                self.m().lin_exp(DLinExpr::new(terms, Some(constant)))
+                let expr = self.data();
+                let (terms, sums) = (expr.terms.clone(), expr.sums.clone());
+                let constant = const_add_num(self.m(), expr.constant, rhs.ptr());
+                self.m().lin_exp(DLinExpr::new(terms, sums, Some(constant)))
             }
         }
 
@@ -106,9 +110,10 @@ macro_rules! expr_con {
             type Output = LinExpr<'m, 'd>;
 
             fn add(self, rhs: $c) -> Self::Output {
-                let terms = self.data().terms.clone();
-                let constant = const_add_con(self.m(), self.data().constant, rhs);
-                self.m().lin_exp(DLinExpr::new(terms, Some(constant)))
+                let expr = self.data();
+                let (terms, sums) = (expr.terms.clone(), expr.sums.clone());
+                let constant = const_add_con(self.m(), expr.constant, rhs);
+                self.m().lin_exp(DLinExpr::new(terms, sums, Some(constant)))
             }
         }
 
@@ -138,7 +143,8 @@ impl<'m, 'd> Add<Var<'m, 'd>> for Var<'m, 'd> {
 
     fn add(self, rhs: Var<'m, 'd>) -> Self::Output {
         let terms = ExprVec::new([self.into(), rhs.into()]);
-        self.m().lin_exp(DLinExpr::new(terms, None))
+        let sums = SumVec::new([]);
+        self.m().lin_exp(DLinExpr::new(terms, sums, None))
     }
 }
 
@@ -152,7 +158,8 @@ macro_rules! var_num {
             fn add(self, rhs: $n) -> Self::Output {
                 let terms = ExprVec::new([self.into()]);
                 let constant = Some(rhs.ptr());
-                self.m().lin_exp(DLinExpr::new(terms, constant))
+                let sums = SumVec::new([]);
+                self.m().lin_exp(DLinExpr::new(terms, sums, constant))
             }
         }
 
@@ -178,8 +185,9 @@ macro_rules! var_con {
 
             fn add(self, rhs: $c) -> Self::Output {
                 let terms = ExprVec::new([self.into()]);
+                let sums = SumVec::new([]);
                 let constant = Some(self.m().val_num_con(rhs).ptr());
-                self.m().lin_exp(DLinExpr::new(terms, constant))
+                self.m().lin_exp(DLinExpr::new(terms, sums, constant))
             }
         }
 

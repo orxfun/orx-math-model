@@ -1,26 +1,26 @@
-use crate::lin_expr::{Coef, DLinExpr, DLinTerm, ExprVec};
+use crate::lin_expr::{Coef, DLinExpr, DLinTerm, DSum, ExprVec, SumVec};
 use crate::scalars::{DNum, ValNum};
 use crate::{AsF64, Int, LinExpr, Model, Num, Ptr, SymWrap, ValTyp, Var, VarType};
 use alloc::boxed::Box;
 use core::ops::Div;
 
+// num
+
 type Con<'d> = Option<Ptr<'d, DNum<'d>>>;
 
-fn const_mul_num<'m, 'd>(m: &'m Model<'d>, c1: Con<'d>, c2: Ptr<'d, DNum<'d>>) -> Con<'d> {
+fn one_div_num<'m, 'd>(m: &'m Model<'d>, num: Ptr<'d, DNum<'d>>) -> Ptr<'d, DNum<'d>> {
+    let fun = Box::new(move || 1.0 / num.get().eval());
+    m.val::<ValNum>(DNum::new(ValTyp::Num, fun)).ptr()
+}
+
+fn const_div_num<'m, 'd>(m: &'m Model<'d>, c1: Con<'d>, c2: Ptr<'d, DNum<'d>>) -> Con<'d> {
     c1.map(|c1| {
         let fun = Box::new(move || c1.get().eval() / c2.get().eval());
         m.val::<ValNum>(DNum::new(ValTyp::Num, fun)).ptr()
     })
 }
 
-fn const_mul_con<'m, 'd>(m: &'m Model<'d>, c1: Con<'d>, c2: impl AsF64) -> Con<'d> {
-    c1.map(|c1| {
-        let fun = Box::new(move || c1.get().eval() / c2.as_f64());
-        m.val::<ValNum>(DNum::new(ValTyp::Num, fun)).ptr()
-    })
-}
-
-fn term_mul_num<'m, 'd>(
+fn term_div_num<'m, 'd>(
     m: &'m Model<'d>,
     term: &DLinTerm<'d>,
     num: Ptr<'d, DNum<'d>>,
@@ -46,7 +46,41 @@ fn term_mul_num<'m, 'd>(
     DLinTerm::new(coef, term.var)
 }
 
-fn term_mul_con<'m, 'd>(m: &'m Model<'d>, term: &DLinTerm<'d>, con: impl AsF64) -> DLinTerm<'d> {
+fn sum_div_num<'m, 'd>(m: &'m Model<'d>, sum: &DSum<'d>, num: Ptr<'d, DNum<'d>>) -> DSum<'d> {
+    sum.with_expr(expr_div_num(m, sum.expr, num))
+}
+
+fn expr_div_num<'m, 'd>(
+    m: &'m Model<'d>,
+    expr: Ptr<'d, DLinExpr<'d>>,
+    num: Ptr<'d, DNum<'d>>,
+) -> Ptr<'d, DLinExpr<'d>> {
+    expr_div_num_sym(m, expr, num).ptr()
+}
+
+fn expr_div_num_sym<'m, 'd>(
+    m: &'m Model<'d>,
+    expr: Ptr<'d, DLinExpr<'d>>,
+    num: Ptr<'d, DNum<'d>>,
+) -> LinExpr<'m, 'd> {
+    let expr = expr.get();
+    let terms = expr.terms.map(|term| term_div_num(m, term, num));
+    let sums = expr.sums.map(|sum| sum_div_num(m, sum, num));
+    let constant = const_div_num(m, expr.constant, num);
+    let expr = DLinExpr::new(terms, sums, constant);
+    m.lin_exp(expr)
+}
+
+// con
+
+fn const_div_con<'m, 'd>(m: &'m Model<'d>, c1: Con<'d>, c2: impl AsF64) -> Con<'d> {
+    c1.map(|c1| {
+        let fun = Box::new(move || c1.get().eval() / c2.as_f64());
+        m.val::<ValNum>(DNum::new(ValTyp::Num, fun)).ptr()
+    })
+}
+
+fn term_div_con<'m, 'd>(m: &'m Model<'d>, term: &DLinTerm<'d>, con: impl AsF64) -> DLinTerm<'d> {
     let coef = match term.coef {
         Coef::One => Coef::Con(1.0 / con.as_f64()),
         Coef::MinusOne => Coef::Con(-1.0 / con.as_f64()),
@@ -59,6 +93,31 @@ fn term_mul_con<'m, 'd>(m: &'m Model<'d>, term: &DLinTerm<'d>, con: impl AsF64) 
     DLinTerm::new(coef, term.var)
 }
 
+fn sum_div_con<'m, 'd>(m: &'m Model<'d>, sum: &DSum<'d>, con: impl AsF64) -> DSum<'d> {
+    sum.with_expr(expr_div_con(m, sum.expr, con))
+}
+
+fn expr_div_con<'m, 'd>(
+    m: &'m Model<'d>,
+    expr: Ptr<'d, DLinExpr<'d>>,
+    con: impl AsF64,
+) -> Ptr<'d, DLinExpr<'d>> {
+    expr_div_con_sym(m, expr, con).ptr()
+}
+
+fn expr_div_con_sym<'m, 'd>(
+    m: &'m Model<'d>,
+    expr: Ptr<'d, DLinExpr<'d>>,
+    con: impl AsF64,
+) -> LinExpr<'m, 'd> {
+    let expr = expr.get();
+    let terms = expr.terms.map(|term| term_div_con(m, term, con));
+    let sums = expr.sums.map(|sum| sum_div_con(m, sum, con));
+    let constant = const_div_con(m, expr.constant, con);
+    let expr = DLinExpr::new(terms, sums, constant);
+    m.lin_exp(expr)
+}
+
 // expr / num
 
 macro_rules! expr_num {
@@ -67,10 +126,7 @@ macro_rules! expr_num {
             type Output = LinExpr<'m, 'd>;
 
             fn div(self, rhs: $n) -> Self::Output {
-                let m = self.m();
-                let terms = self.data().terms.map(|t| term_mul_num(m, t, rhs.ptr()));
-                let constant = const_mul_num(m, self.data().constant, rhs.ptr());
-                m.lin_exp(DLinExpr::new(terms, constant))
+                expr_div_num_sym(self.m(), self.ptr(), rhs.ptr())
             }
         }
     };
@@ -87,10 +143,7 @@ macro_rules! expr_con {
             type Output = LinExpr<'m, 'd>;
 
             fn div(self, rhs: $c) -> Self::Output {
-                let m = self.m();
-                let terms = self.data().terms.map(|t| term_mul_con(m, t, rhs));
-                let constant = const_mul_con(m, self.data().constant, rhs);
-                m.lin_exp(DLinExpr::new(terms, constant))
+                expr_div_con_sym(self.m(), self.ptr(), rhs)
             }
         }
     };
@@ -113,9 +166,11 @@ macro_rules! var_num {
             type Output = LinExpr<'m, 'd>;
 
             fn div(self, rhs: $n) -> Self::Output {
-                let term = DLinTerm::new(Coef::Ptr(rhs.ptr()), self.ptr());
+                let coef = Coef::Ptr(one_div_num(self.m(), rhs.ptr()));
+                let term = DLinTerm::new(coef, self.ptr());
                 let terms = ExprVec::new([term]);
-                self.m().lin_exp(DLinExpr::new(terms, None))
+                let sums = SumVec::new([]);
+                self.m().lin_exp(DLinExpr::new(terms, sums, None))
             }
         }
     };
@@ -132,9 +187,11 @@ macro_rules! var_con {
             type Output = LinExpr<'m, 'd>;
 
             fn div(self, rhs: $c) -> Self::Output {
-                let term = DLinTerm::new(Coef::Con(rhs.as_f64()), self.ptr());
+                let coef = Coef::Con(1.0 / rhs.as_f64());
+                let term = DLinTerm::new(coef, self.ptr());
                 let terms = ExprVec::new([term]);
-                self.m().lin_exp(DLinExpr::new(terms, None))
+                let sums = SumVec::new([]);
+                self.m().lin_exp(DLinExpr::new(terms, sums, None))
             }
         }
     };

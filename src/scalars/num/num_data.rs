@@ -1,6 +1,7 @@
 use crate::scalars::num::meta_val::round_f64;
 use crate::scalars::num::{FInt, FNum};
-use crate::{AsF64, AsI64, Ptr, ValTyp};
+use crate::scalars::{ValInt, ValNum};
+use crate::{AsF64, AsI64, Model, Ptr, SymWrap, ValTyp};
 use alloc::boxed::Box;
 use core::mem::{transmute, ManuallyDrop};
 
@@ -39,6 +40,14 @@ impl<'d> DNum<'d> {
         match (lhs.get().typ, rhs.get().typ) {
             (ValTyp::Int, ValTyp::Int) => ValTyp::Int,
             _ => ValTyp::Num,
+        }
+    }
+
+    pub fn neg_ptr<'m>(m: &'m Model<'d>, lhs: Ptr<'d, Self>) -> Ptr<'d, Self> {
+        let fun = Box::new(move || -lhs.get().eval());
+        match lhs.get().typ {
+            ValTyp::Int => m.val::<ValInt>(Self::new(ValTyp::Int, fun)).ptr(),
+            ValTyp::Num => m.val::<ValNum>(Self::new(ValTyp::Num, fun)).ptr(),
         }
     }
 
