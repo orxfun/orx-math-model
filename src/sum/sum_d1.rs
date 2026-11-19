@@ -1,6 +1,7 @@
 use crate::idxs::DIdx;
+use crate::lin_expr::DSum;
 use crate::Ptr;
 
 pub struct SumD1<'d> {
-    i0: Ptr<'d, DIdx<'d>>,
+    data: Ptr<'d, DSum<'d>>,
 }

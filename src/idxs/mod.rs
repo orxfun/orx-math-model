@@ -2,6 +2,7 @@
 mod tests;
 
 mod idx_data;
+mod idx_sum;
 mod idx_symbols;
 mod idx_val;
 
