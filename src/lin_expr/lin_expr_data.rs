@@ -59,6 +59,20 @@ pub mod ext_test {
 
     impl<'d> DLinExpr<'d> {
         pub fn eval_append_string(&self, f: &mut String, pre_exists: bool) -> bool {
+            let (mut pre_exists, c) = self.eval_append_string_exc_constant(f, pre_exists);
+
+            if let Some(c) = c {
+                pre_exists |= write_constant(f, pre_exists, c);
+            }
+
+            pre_exists
+        }
+
+        pub fn eval_append_string_exc_constant(
+            &self,
+            f: &mut String,
+            pre_exists: bool,
+        ) -> (bool, Option<f64>) {
             let mut pre_exists = pre_exists;
 
             let mut terms = self.terms.iter();
@@ -77,11 +91,8 @@ pub mod ext_test {
                 }
             }
 
-            if let Some(c) = self.constant {
-                pre_exists |= write_constant(f, pre_exists, c.get().eval());
-            }
-
-            pre_exists
+            let c = self.constant.map(|c| c.get().eval());
+            (pre_exists, c)
         }
 
         pub fn eval_to_string(&self) -> String {
