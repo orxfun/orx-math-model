@@ -6,8 +6,6 @@ use core::ops::Mul;
 
 // num
 
-type Con<'d> = Option<Ptr<'d, DNum<'d>>>;
-
 fn const_mul_num<'m, 'd>(m: &'m Model<'d>, c1: Con<'d>, c2: Ptr<'d, DNum<'d>>) -> Con<'d> {
     c1.map(|c1| {
         let fun = Box::new(move || c1.get().eval() * c2.get().eval());
@@ -64,6 +62,8 @@ fn expr_mul_num_sym<'m, 'd>(
 }
 
 // con
+
+type Con<'d> = Option<Ptr<'d, DNum<'d>>>;
 
 fn const_mul_con<'m, 'd>(m: &'m Model<'d>, c1: Con<'d>, c2: impl AsF64) -> Con<'d> {
     c1.map(|c1| {
