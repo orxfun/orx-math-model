@@ -15,33 +15,30 @@ impl<'d> DLinExpr<'d> {
     // get
 
     #[cfg(test)]
-    pub fn eval_append_string(
-        &self,
-        f: &mut alloc::string::String,
-    ) -> Result<(), core::fmt::Error> {
+    pub fn eval_append_string(&self, f: &mut alloc::string::String) {
         use alloc::string::String;
         use core::fmt::Write;
 
         let mut terms = self.terms.iter();
         if let Some(t) = terms.next() {
-            t.eval_append_string(f)?;
+            t.eval_append_string(f, false);
             for t in terms {
-                write!(f, " + ")?;
-                t.eval_append_string(f)?;
+                write!(f, " + ").unwrap();
+                t.eval_append_string(f, true);
             }
         }
 
         match (self.constant, self.terms.is_empty()) {
-            (Some(c), true) => write!(f, "{}", c.get().eval()),
-            (Some(c), false) => write!(f, " + {}", c.get().eval()),
-            _ => Ok(()),
+            (Some(c), true) => write!(f, "{}", c.get().eval()).unwrap(),
+            (Some(c), false) => write!(f, " + {}", c.get().eval()).unwrap(),
+            _ => {}
         }
     }
 
     #[cfg(test)]
-    pub fn eval_to_string(&self) -> Result<alloc::string::String, core::fmt::Error> {
+    pub fn eval_to_string(&self) -> alloc::string::String {
         let mut f = alloc::string::String::new();
-        self.eval_append_string(&mut f)?;
-        Ok(f)
+        self.eval_append_string(&mut f);
+        f
     }
 }

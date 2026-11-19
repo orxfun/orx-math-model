@@ -4,7 +4,7 @@ use alloc::boxed::Box;
 use alloc::string::String;
 use core::fmt::Write;
 
-pub type FVarToStr<'d> = Box<dyn Fn(&mut String) -> Result<(), core::fmt::Error> + 'd>;
+pub type FVarToStr<'d> = Box<dyn Fn(&mut String) + 'd>;
 
 pub struct FVarToStrCtor;
 
@@ -15,8 +15,9 @@ impl FVarToStrCtor {
     ) -> FVarToStr<'d> {
         // TODO: use parent to add the variable key
         Box::new(move |f| {
-            write!(f, "x_")?;
-            I0::write_idx_str(f, fun())
+            let i0 = fun();
+            f.push_str("x_");
+            I0::write_idx_str(f, i0);
         })
     }
 
@@ -26,10 +27,10 @@ impl FVarToStrCtor {
     ) -> FVarToStr<'d> {
         Box::new(move |f| {
             let (i0, i1) = fun();
-            write!(f, "x_")?;
-            I0::write_idx_str(f, i0)?;
-            write!(f, "_")?;
-            I1::write_idx_str(f, i1)
+            f.push_str("x_");
+            I0::write_idx_str(f, i0);
+            f.push_str("_");
+            I1::write_idx_str(f, i1);
         })
     }
 }

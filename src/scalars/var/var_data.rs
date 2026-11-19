@@ -38,17 +38,14 @@ impl<'d> DVar<'d> {
     // get
 
     #[cfg(test)]
-    pub fn eval_append_string(
-        &self,
-        f: &mut alloc::string::String,
-    ) -> Result<(), core::fmt::Error> {
+    pub fn eval_append_string(&self, f: &mut alloc::string::String) {
         (self.fun_write_str)(f)
     }
 
     #[cfg(test)]
-    pub fn eval_to_string(&self) -> Result<alloc::string::String, core::fmt::Error> {
+    pub fn eval_to_string(&self) -> alloc::string::String {
         let mut f = alloc::string::String::new();
-        self.eval_append_string(&mut f)?;
-        Ok(f)
+        self.eval_append_string(&mut f);
+        f
     }
 }

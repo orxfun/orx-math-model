@@ -66,7 +66,7 @@ pub trait Set: Clone + Copy + 'static {
 
     fn into_idx_enum<'d>(raw: Self::IdxRaw<'d>) -> EIdx<'d>;
 
-    fn write_idx_str<'d>(f: &mut String, raw: Self::IdxRaw<'d>) -> Result<(), core::fmt::Error>;
+    fn write_idx_str<'d>(f: &mut String, raw: Self::IdxRaw<'d>);
 
     // p1
 
@@ -192,8 +192,8 @@ impl Set for SetCatInt {
     }
 
     #[inline(always)]
-    fn write_idx_str<'d>(f: &mut String, raw: Self::IdxRaw<'d>) -> Result<(), core::fmt::Error> {
-        write!(f, "{raw}")
+    fn write_idx_str<'d>(f: &mut String, raw: Self::IdxRaw<'d>) {
+        write!(f, "{raw}").unwrap()
     }
 
     // p1
@@ -281,8 +281,8 @@ impl Set for SetCatStr {
     }
 
     #[inline(always)]
-    fn write_idx_str<'d>(f: &mut String, raw: Self::IdxRaw<'d>) -> Result<(), core::fmt::Error> {
-        write!(f, "{raw}")
+    fn write_idx_str<'d>(f: &mut String, raw: Self::IdxRaw<'d>) {
+        write!(f, "{raw}").unwrap()
     }
 
     // p1
@@ -370,8 +370,8 @@ impl Set for SetOrd {
     }
 
     #[inline(always)]
-    fn write_idx_str<'d>(f: &mut String, raw: Self::IdxRaw<'d>) -> Result<(), core::fmt::Error> {
-        write!(f, "{raw}")
+    fn write_idx_str<'d>(f: &mut String, raw: Self::IdxRaw<'d>) {
+        write!(f, "{raw}").unwrap()
     }
 
     // p1

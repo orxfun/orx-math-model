@@ -19,26 +19,56 @@ impl<'d> DLinTerm<'d> {
     // get
 
     #[cfg(test)]
-    pub fn eval_append_string(
-        &self,
-        f: &mut alloc::string::String,
-    ) -> Result<(), core::fmt::Error> {
+    pub fn eval_append_string(&self, f: &mut alloc::string::String, prefix_sum: bool) {
         use alloc::string::String;
         use core::fmt::Write;
 
-        match self.coef {
-            Coef::One => {}
-            Coef::MinusOne => f.push_str("-"),
-            Coef::Con(c) => write!(f, "{} ", c)?,
-            Coef::Ptr(c) => write!(f, "{} ", c.get().eval())?,
-        };
-        self.var.get().eval_append_string(f)
+        fn write_prefix_and_coef(f: &mut String, c: f64) {
+            match c >= 0.0 {
+                true => write!(f, " + {} ", c),
+                false => write!(f, " - {} ", -c),
+            }
+            .unwrap()
+        }
+
+        match (&self.coef, prefix_sum) {
+            (Coef::One, false) => self.var.get().eval_append_string(f),
+            (Coef::MinusOne, false) => {
+                f.push_str("-");
+                self.var.get().eval_append_string(f);
+            }
+            (Coef::Con(c), false) => {
+                write!(f, "{} ", c).unwrap();
+                self.var.get().eval_append_string(f);
+            }
+            (Coef::Ptr(c), false) => {
+                write!(f, "{} ", c.get().eval()).unwrap();
+                self.var.get().eval_append_string(f);
+            }
+
+            (Coef::One, true) => {
+                f.push_str(" + ");
+                self.var.get().eval_append_string(f);
+            }
+            (Coef::MinusOne, true) => {
+                f.push_str(" - ");
+                self.var.get().eval_append_string(f);
+            }
+            (Coef::Con(c), true) => {
+                write_prefix_and_coef(f, *c);
+                self.var.get().eval_append_string(f);
+            }
+            (Coef::Ptr(c), true) => {
+                write_prefix_and_coef(f, c.get().eval());
+                self.var.get().eval_append_string(f);
+            }
+        }
     }
 
     #[cfg(test)]
-    pub fn eval_to_string(&self) -> Result<alloc::string::String, core::fmt::Error> {
+    pub fn eval_to_string(&self) -> alloc::string::String {
         let mut f = alloc::string::String::new();
-        self.eval_append_string(&mut f)?;
-        Ok(f)
+        self.eval_append_string(&mut f, false);
+        f
     }
 }
