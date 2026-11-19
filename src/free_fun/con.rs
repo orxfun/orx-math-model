@@ -1,13 +1,13 @@
 use crate::constraints::{Constraint, DCon, IneqTyp};
-use crate::free_fun::{IneqOp, IneqSide};
+use crate::free_fun::{IneqOp, IntoLinExpr};
 use crate::idxs::IdxVec;
 use crate::lin_expr::{DLinExpr, DLinTerm, SumVec, TermVec};
 use crate::{AsF64, Int, LinExpr, Model, Num, Set, SetSym, SymWrap, Var};
 
 pub fn con_gen<'m, 'd>(
-    lhs: impl Into<IneqSide<'m, 'd>>,
+    lhs: impl Into<IntoLinExpr<'m, 'd>>,
     typ: impl IneqOp,
-    rhs: impl Into<IneqSide<'m, 'd>>,
+    rhs: impl Into<IntoLinExpr<'m, 'd>>,
     idxs: IdxVec<'d>,
 ) -> Constraint<'m, 'd> {
     let [lhs, rhs] = [lhs.into(), rhs.into()];
@@ -28,9 +28,9 @@ pub fn con_gen<'m, 'd>(
 }
 
 pub fn con<'m, 'd>(
-    lhs: impl Into<IneqSide<'m, 'd>>,
+    lhs: impl Into<IntoLinExpr<'m, 'd>>,
     typ: impl IneqOp,
-    rhs: impl Into<IneqSide<'m, 'd>>,
+    rhs: impl Into<IntoLinExpr<'m, 'd>>,
 ) -> Constraint<'m, 'd> {
     let idxs = IdxVec::new([]);
     con_gen(lhs, typ, rhs, idxs)

@@ -8,5 +8,5 @@ mod sum;
 
 pub use con::{con, for1, for2};
 pub use ineq_op::{eq, geq, leq, IneqOp};
-pub use into_lin_expr::IneqSide;
+pub use into_lin_expr::IntoLinExpr;
 pub use sum::{over, sum, SumOver};

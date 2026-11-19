@@ -2,7 +2,7 @@ use crate::lin_expr::{DLinExpr, DLinTerm, SumVec, TermVec};
 use crate::{AsF64, Int, LinExpr, Model, Num, SymWrap, Var};
 
 #[derive(derive_more::From)]
-pub enum IneqSide<'m, 'd> {
+pub enum IntoLinExpr<'m, 'd> {
     ConF64(f64),
     ConF32(f32),
     ConI64(i64),
@@ -17,7 +17,7 @@ pub enum IneqSide<'m, 'd> {
     LinExpr(LinExpr<'m, 'd>),
 }
 
-impl<'m, 'd> IneqSide<'m, 'd> {
+impl<'m, 'd> IntoLinExpr<'m, 'd> {
     pub fn m(&self) -> Option<&'m Model<'d>> {
         match self {
             Self::Num(x) => Some(x.m()),
