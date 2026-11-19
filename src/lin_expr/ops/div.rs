@@ -6,14 +6,14 @@ use core::ops::Div;
 
 // num
 
-fn const_mul_num<'m, 'd>(m: &'m Model<'d>, c1: Con<'d>, c2: Ptr<'d, DNum<'d>>) -> Con<'d> {
+fn const_div_num<'m, 'd>(m: &'m Model<'d>, c1: Con<'d>, c2: Ptr<'d, DNum<'d>>) -> Con<'d> {
     c1.map(|c1| {
         let fun = Box::new(move || c1.get().eval() / c2.get().eval());
         m.val::<ValNum>(DNum::new(ValTyp::Num, fun)).ptr()
     })
 }
 
-fn term_mul_num<'m, 'd>(
+fn term_div_num<'m, 'd>(
     m: &'m Model<'d>,
     term: &DLinTerm<'d>,
     num: Ptr<'d, DNum<'d>>,
@@ -43,14 +43,14 @@ fn term_mul_num<'m, 'd>(
 
 type Con<'d> = Option<Ptr<'d, DNum<'d>>>;
 
-fn const_mul_con<'m, 'd>(m: &'m Model<'d>, c1: Con<'d>, c2: impl AsF64) -> Con<'d> {
+fn const_div_con<'m, 'd>(m: &'m Model<'d>, c1: Con<'d>, c2: impl AsF64) -> Con<'d> {
     c1.map(|c1| {
         let fun = Box::new(move || c1.get().eval() / c2.as_f64());
         m.val::<ValNum>(DNum::new(ValTyp::Num, fun)).ptr()
     })
 }
 
-fn term_mul_con<'m, 'd>(m: &'m Model<'d>, term: &DLinTerm<'d>, con: impl AsF64) -> DLinTerm<'d> {
+fn term_div_con<'m, 'd>(m: &'m Model<'d>, term: &DLinTerm<'d>, con: impl AsF64) -> DLinTerm<'d> {
     let coef = match term.coef {
         Coef::One => Coef::Con(1.0 / con.as_f64()),
         Coef::MinusOne => Coef::Con(-1.0 / con.as_f64()),
@@ -72,8 +72,8 @@ fn term_mul_con<'m, 'd>(m: &'m Model<'d>, term: &DLinTerm<'d>, con: impl AsF64) 
 
 //             fn div(self, rhs: $n) -> Self::Output {
 //                 let m = self.m();
-//                 let terms = self.data().terms.map(|t| term_mul_num(m, t, rhs.ptr()));
-//                 let constant = const_mul_num(m, self.data().constant, rhs.ptr());
+//                 let terms = self.data().terms.map(|t| term_div_num(m, t, rhs.ptr()));
+//                 let constant = const_div_num(m, self.data().constant, rhs.ptr());
 //                 m.lin_exp(DLinExpr::new(terms, constant))
 //             }
 //         }
@@ -92,8 +92,8 @@ fn term_mul_con<'m, 'd>(m: &'m Model<'d>, term: &DLinTerm<'d>, con: impl AsF64) 
 
 //             fn div(self, rhs: $c) -> Self::Output {
 //                 let m = self.m();
-//                 let terms = self.data().terms.map(|t| term_mul_con(m, t, rhs));
-//                 let constant = const_mul_con(m, self.data().constant, rhs);
+//                 let terms = self.data().terms.map(|t| term_div_con(m, t, rhs));
+//                 let constant = const_div_con(m, self.data().constant, rhs);
 //                 m.lin_exp(DLinExpr::new(terms, constant))
 //             }
 //         }
