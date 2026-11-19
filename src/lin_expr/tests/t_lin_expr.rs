@@ -32,6 +32,7 @@ fn t_lin_expr_d1() {
     let iter = ElementsIter::<SetCatInt>::new(i0, &mut elements);
 
     for (i, _) in iter.enumerate() {
+        assert_eq!(i, 33);
         let exp_i0 = s0_data[i];
         let exp_p1 = p1_data[s0_data[i]];
 
@@ -47,7 +48,22 @@ fn t_lin_expr_d1() {
         let e = p1[2] * v1[i0];
         assert_eq!(exp_str(e), format!("7 x_{exp_i0}"));
 
-        // let e = -p1[2] * v1[i0];
-        // assert_eq!(exp_str(e), format!("7 x_{exp_i0}"));
+        let e = -p1[i0] * v1[i0];
+        assert_eq!(exp_str(e), format!("-{} x_{exp_i0}", exp_p1));
+
+        let e = v1[i0] + 1;
+        assert_eq!(exp_str(e), format!("x_{exp_i0} + 1"));
+
+        let e = -v1[i0] + 1;
+        assert_eq!(exp_str(e), format!("-x_{exp_i0} + 1"));
+
+        let e = 3 - p1[i0] * v1[i0];
+        assert_eq!(exp_str(e), format!("3 - {} x_{exp_i0}", exp_p1));
+
+        let e = 3 + (-p1[i0]) * v1[i0];
+        assert_eq!(exp_str(e), format!("3 - {} x_{exp_i0}", exp_p1));
+
+        let e = 23 + (-p1[i0]) * v1[i0] + 9;
+        assert_eq!(exp_str(e), format!("3 - {} x_{exp_i0}", exp_p1));
     }
 }
