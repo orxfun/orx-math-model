@@ -1,6 +1,6 @@
 use crate::{
-    Bounds, Elements, ElementsIter, LinExpr, Model, Set, SetCatInt, SetCatStr, SetOrd, SymWrap,
-    VarType,
+    forall, sum, Bounds, Elements, ElementsIter, LinExpr, Model, Set, SetCatInt, SetCatStr, SetOrd,
+    SymWrap, VarType,
 };
 use alloc::format;
 use alloc::string::{String, ToString};
@@ -105,6 +105,18 @@ fn t_lin_expr_str_d1() {
             format!("4 {ex}_0 - {} {ex}_2 + 0.75 {ex}_{ei} + 28.75", 2.0 * ep)
         );
     }
+
+    let e = 3 + 4 * x[0] + sum(forall(i0), x[i0]);
+    assert_eq!(exp_str(e), format!("4 x_0 + x_0 + x_2 + x_3 + 3"));
+
+    let e = 3 + 4 * x[0] + sum(forall(i0), x[i0]) * 2;
+    assert_eq!(exp_str(e), format!("4 x_0 + 2 x_0 + 2 x_2 + 2 x_3 + 3"));
+
+    let e = 3 + 4 * x[0] + sum(forall(i0), x[i0] + 4) * 2 - x[1];
+    assert_eq!(
+        exp_str(e),
+        format!("4 x_0 - x_1 + 2 x_0 + 2 x_2 + 2 x_3 + 27")
+    );
 }
 
 #[test]
