@@ -1,7 +1,8 @@
+use crate::free_fun::IntoLinExpr;
 use crate::idxs::{IdxVec, SumIdxs};
 use crate::lin_expr::DSum;
 use crate::lin_expr::{DLinExpr, SumVec, TermVec};
-use crate::{LinExpr, SymWrap};
+use crate::{LinExpr, Model, SetSym, SymWrap};
 
 pub struct SumOver<'m, 'd>(pub(crate) SumIdxs<'m, 'd>);
 
@@ -20,9 +21,13 @@ pub fn sum<'m, 'd>(over: SumOver<'m, 'd>, sum_expr: impl Into<LinExpr<'m, 'd>>) 
     m.lin_exp(expr)
 }
 
-fn sum_gen<'m, 'd>(sum_expr: impl Into<LinExpr<'m, 'd>>, idxs: IdxVec<'d>) -> LinExpr<'m, 'd> {
+fn sum_gen<'m, 'd>(
+    m: &'m Model<'d>,
+    sum_expr: impl Into<IntoLinExpr<'m, 'd>>,
+    idxs: IdxVec<'d>,
+) -> LinExpr<'m, 'd> {
     let sum_expr = sum_expr.into();
-    let m = sum_expr.m();
+    let sum_expr = sum_expr.to_expr(m);
     let sum = DSum::new(idxs, sum_expr.ptr());
     let sums = SumVec::new([sum]);
     let terms = TermVec::new([]);
