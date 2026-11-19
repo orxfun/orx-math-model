@@ -11,7 +11,7 @@ fn exp_str<'m, 'd>(e: LinExpr<'m, 'd>) -> String {
 }
 
 #[test]
-fn t_lin_expr_d1() {
+fn t_lin_expr_str_d1() {
     // data
     let s0_data = vec![0, 2, 3];
     let p1_data = vec![1.0, 2.0, 7.0, 9.0];
