@@ -1,4 +1,4 @@
-use crate::{con_depr, eq, forall, geq, leq, Model, VarType};
+use crate::{con, con1, con_depr, eq, forall, geq, leq, Model, SetCatInt, VarType};
 use alloc::vec;
 
 #[test]
@@ -19,5 +19,9 @@ fn con_d0() {
 
     let ex1 = "x"; // TODO: var-name-fix
 
-    let c = con_depr(3, leq, x[2], forall(()));
+    // let c = con_depr(3, leq, x[2], forall(()));
+
+    let c = con(3, leq, x[2]);
+
+    let c = con1::<SetCatInt>(s0, |i| con(3, leq, x[2]));
 }
