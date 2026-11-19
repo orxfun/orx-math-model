@@ -33,6 +33,7 @@ mod pars;
 mod scalars;
 mod sets;
 mod slot;
+mod sum;
 mod sym_ref;
 mod symbol;
 mod vars;
