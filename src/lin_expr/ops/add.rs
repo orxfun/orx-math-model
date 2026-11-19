@@ -47,157 +47,158 @@ impl<'m, 'd> Add<LinExpr<'m, 'd>> for LinExpr<'m, 'd> {
     fn add(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
         let [t1, t2] = [self.data(), rhs.data()];
         let terms = t1.terms.merge(&t2.terms);
+        let sums = t1.sums.merge(&t2.sums);
         let constant = const_add_const(self.m(), t1.constant, t2.constant);
-        self.m().lin_exp(DLinExpr::new(terms, constant))
+        self.m().lin_exp(DLinExpr::new(terms, sums, constant))
     }
 }
 
-// expr + var
+// // expr + var
 
-impl<'m, 'd> Add<Var<'m, 'd>> for LinExpr<'m, 'd> {
-    type Output = LinExpr<'m, 'd>;
+// impl<'m, 'd> Add<Var<'m, 'd>> for LinExpr<'m, 'd> {
+//     type Output = LinExpr<'m, 'd>;
 
-    fn add(self, rhs: Var<'m, 'd>) -> Self::Output {
-        let terms = self.data().terms.push(rhs.into());
-        self.m().lin_exp(DLinExpr::new(terms, self.data().constant))
-    }
-}
+//     fn add(self, rhs: Var<'m, 'd>) -> Self::Output {
+//         let terms = self.data().terms.push(rhs.into());
+//         self.m().lin_exp(DLinExpr::new(terms, self.data().constant))
+//     }
+// }
 
-impl<'m, 'd> Add<LinExpr<'m, 'd>> for Var<'m, 'd> {
-    type Output = LinExpr<'m, 'd>;
+// impl<'m, 'd> Add<LinExpr<'m, 'd>> for Var<'m, 'd> {
+//     type Output = LinExpr<'m, 'd>;
 
-    fn add(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
-        rhs + self
-    }
-}
+//     fn add(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
+//         rhs + self
+//     }
+// }
 
-// expr + num
+// // expr + num
 
-macro_rules! expr_num {
-    ($n:ty) => {
-        impl<'m, 'd> Add<$n> for LinExpr<'m, 'd> {
-            type Output = LinExpr<'m, 'd>;
+// macro_rules! expr_num {
+//     ($n:ty) => {
+//         impl<'m, 'd> Add<$n> for LinExpr<'m, 'd> {
+//             type Output = LinExpr<'m, 'd>;
 
-            fn add(self, rhs: $n) -> Self::Output {
-                let terms = self.data().terms.clone();
-                let constant = const_add_num(self.m(), self.data().constant, rhs.ptr());
-                self.m().lin_exp(DLinExpr::new(terms, Some(constant)))
-            }
-        }
+//             fn add(self, rhs: $n) -> Self::Output {
+//                 let terms = self.data().terms.clone();
+//                 let constant = const_add_num(self.m(), self.data().constant, rhs.ptr());
+//                 self.m().lin_exp(DLinExpr::new(terms, Some(constant)))
+//             }
+//         }
 
-        impl<'m, 'd> Add<LinExpr<'m, 'd>> for $n {
-            type Output = LinExpr<'m, 'd>;
+//         impl<'m, 'd> Add<LinExpr<'m, 'd>> for $n {
+//             type Output = LinExpr<'m, 'd>;
 
-            fn add(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
-                rhs + self
-            }
-        }
-    };
-}
+//             fn add(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
+//                 rhs + self
+//             }
+//         }
+//     };
+// }
 
-expr_num!(Int<'m, 'd>);
-expr_num!(Num<'m, 'd>);
+// expr_num!(Int<'m, 'd>);
+// expr_num!(Num<'m, 'd>);
 
-// expr + con
+// // expr + con
 
-macro_rules! expr_con {
-    ($c:ty) => {
-        impl<'m, 'd> Add<$c> for LinExpr<'m, 'd> {
-            type Output = LinExpr<'m, 'd>;
+// macro_rules! expr_con {
+//     ($c:ty) => {
+//         impl<'m, 'd> Add<$c> for LinExpr<'m, 'd> {
+//             type Output = LinExpr<'m, 'd>;
 
-            fn add(self, rhs: $c) -> Self::Output {
-                let terms = self.data().terms.clone();
-                let constant = const_add_con(self.m(), self.data().constant, rhs);
-                self.m().lin_exp(DLinExpr::new(terms, Some(constant)))
-            }
-        }
+//             fn add(self, rhs: $c) -> Self::Output {
+//                 let terms = self.data().terms.clone();
+//                 let constant = const_add_con(self.m(), self.data().constant, rhs);
+//                 self.m().lin_exp(DLinExpr::new(terms, Some(constant)))
+//             }
+//         }
 
-        impl<'m, 'd> Add<LinExpr<'m, 'd>> for $c {
-            type Output = LinExpr<'m, 'd>;
+//         impl<'m, 'd> Add<LinExpr<'m, 'd>> for $c {
+//             type Output = LinExpr<'m, 'd>;
 
-            fn add(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
-                rhs + self
-            }
-        }
-    };
-}
+//             fn add(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
+//                 rhs + self
+//             }
+//         }
+//     };
+// }
 
-expr_con!(f64);
-expr_con!(f32);
-expr_con!(i64);
-expr_con!(i32);
-expr_con!(u64);
-expr_con!(u32);
-expr_con!(usize);
-expr_con!(isize);
+// expr_con!(f64);
+// expr_con!(f32);
+// expr_con!(i64);
+// expr_con!(i32);
+// expr_con!(u64);
+// expr_con!(u32);
+// expr_con!(usize);
+// expr_con!(isize);
 
-// var + var
+// // var + var
 
-impl<'m, 'd> Add<Var<'m, 'd>> for Var<'m, 'd> {
-    type Output = LinExpr<'m, 'd>;
+// impl<'m, 'd> Add<Var<'m, 'd>> for Var<'m, 'd> {
+//     type Output = LinExpr<'m, 'd>;
 
-    fn add(self, rhs: Var<'m, 'd>) -> Self::Output {
-        let terms = ExprVec::new([self.into(), rhs.into()]);
-        self.m().lin_exp(DLinExpr::new(terms, None))
-    }
-}
+//     fn add(self, rhs: Var<'m, 'd>) -> Self::Output {
+//         let terms = ExprVec::new([self.into(), rhs.into()]);
+//         self.m().lin_exp(DLinExpr::new(terms, None))
+//     }
+// }
 
-// var + num
+// // var + num
 
-macro_rules! var_num {
-    ($n:ty) => {
-        impl<'m, 'd> Add<$n> for Var<'m, 'd> {
-            type Output = LinExpr<'m, 'd>;
+// macro_rules! var_num {
+//     ($n:ty) => {
+//         impl<'m, 'd> Add<$n> for Var<'m, 'd> {
+//             type Output = LinExpr<'m, 'd>;
 
-            fn add(self, rhs: $n) -> Self::Output {
-                let terms = ExprVec::new([self.into()]);
-                let constant = Some(rhs.ptr());
-                self.m().lin_exp(DLinExpr::new(terms, constant))
-            }
-        }
+//             fn add(self, rhs: $n) -> Self::Output {
+//                 let terms = ExprVec::new([self.into()]);
+//                 let constant = Some(rhs.ptr());
+//                 self.m().lin_exp(DLinExpr::new(terms, constant))
+//             }
+//         }
 
-        impl<'m, 'd> Add<Var<'m, 'd>> for $n {
-            type Output = LinExpr<'m, 'd>;
+//         impl<'m, 'd> Add<Var<'m, 'd>> for $n {
+//             type Output = LinExpr<'m, 'd>;
 
-            fn add(self, rhs: Var<'m, 'd>) -> Self::Output {
-                rhs + self
-            }
-        }
-    };
-}
+//             fn add(self, rhs: Var<'m, 'd>) -> Self::Output {
+//                 rhs + self
+//             }
+//         }
+//     };
+// }
 
-var_num!(Num<'m, 'd>);
-var_num!(Int<'m, 'd>);
+// var_num!(Num<'m, 'd>);
+// var_num!(Int<'m, 'd>);
 
-// var + con
+// // var + con
 
-macro_rules! var_con {
-    ($c:ty) => {
-        impl<'m, 'd> Add<$c> for Var<'m, 'd> {
-            type Output = LinExpr<'m, 'd>;
+// macro_rules! var_con {
+//     ($c:ty) => {
+//         impl<'m, 'd> Add<$c> for Var<'m, 'd> {
+//             type Output = LinExpr<'m, 'd>;
 
-            fn add(self, rhs: $c) -> Self::Output {
-                let terms = ExprVec::new([self.into()]);
-                let constant = Some(self.m().val_num_con(rhs).ptr());
-                self.m().lin_exp(DLinExpr::new(terms, constant))
-            }
-        }
+//             fn add(self, rhs: $c) -> Self::Output {
+//                 let terms = ExprVec::new([self.into()]);
+//                 let constant = Some(self.m().val_num_con(rhs).ptr());
+//                 self.m().lin_exp(DLinExpr::new(terms, constant))
+//             }
+//         }
 
-        impl<'m, 'd> Add<Var<'m, 'd>> for $c {
-            type Output = LinExpr<'m, 'd>;
+//         impl<'m, 'd> Add<Var<'m, 'd>> for $c {
+//             type Output = LinExpr<'m, 'd>;
 
-            fn add(self, rhs: Var<'m, 'd>) -> Self::Output {
-                rhs + self
-            }
-        }
-    };
-}
+//             fn add(self, rhs: Var<'m, 'd>) -> Self::Output {
+//                 rhs + self
+//             }
+//         }
+//     };
+// }
 
-var_con!(f64);
-var_con!(f32);
-var_con!(i64);
-var_con!(i32);
-var_con!(u64);
-var_con!(u32);
-var_con!(usize);
-var_con!(isize);
+// var_con!(f64);
+// var_con!(f32);
+// var_con!(i64);
+// var_con!(i32);
+// var_con!(u64);
+// var_con!(u32);
+// var_con!(usize);
+// var_con!(isize);

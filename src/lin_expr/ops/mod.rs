@@ -1,4 +1,4 @@
-// mod add;
+mod add;
 // mod div;
 mod from_var;
 // mod mul;
