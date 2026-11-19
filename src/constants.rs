@@ -15,3 +15,4 @@ pub const fn is_neg(c: f64) -> bool {
 }
 
 pub const MAX_EXPR_LEN: usize = 8;
+pub const MAX_SUM_LEN: usize = 8;

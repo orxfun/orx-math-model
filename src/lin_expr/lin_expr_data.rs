@@ -1,7 +1,9 @@
-use crate::{constants::MAX_EXPR_LEN, ConVec, Ptr};
+use crate::constants::{MAX_EXPR_LEN, MAX_SUM_LEN};
 use crate::{lin_expr::DLinTerm, scalars::DNum};
+use crate::{ConVec, Ptr};
 
 pub type ExprVec<'d> = ConVec<MAX_EXPR_LEN, DLinTerm<'d>>;
+pub type SumVec<'d> = ConVec<MAX_EXPR_LEN, DLinTerm<'d>>;
 
 #[derive(derive_new::new)]
 pub struct DLinExpr<'d> {
