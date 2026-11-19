@@ -13,5 +13,6 @@ fn t_sum() {
 
     // running
 
-    let sum = sum(forall(i0), x1[i0] + 1);
+    let sum = sum(forall(i0), x1[i0]);
+    assert_eq!(sum.data().eval_to_string(), "1");
 }
