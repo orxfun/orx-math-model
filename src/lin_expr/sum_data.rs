@@ -47,7 +47,7 @@ pub mod ext_test {
     use core::fmt::Write;
 
     impl<'d> DSum<'d> {
-        pub fn eval_append_string(&self, f: &mut String) {
+        pub fn eval_append_string(&self, f: &mut String, prefix_sum: bool) {
             let op = |s: &Self| {
                 write!(f, "abc").unwrap();
             };
@@ -60,7 +60,7 @@ pub mod ext_test {
 
         pub fn eval_to_string(&self) -> String {
             let mut f = String::new();
-            self.eval_append_string(&mut f);
+            self.eval_append_string(&mut f, false);
             f
         }
     }
