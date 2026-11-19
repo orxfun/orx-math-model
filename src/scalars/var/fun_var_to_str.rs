@@ -14,7 +14,10 @@ impl FVarToStrCtor {
         fun: impl Fn() -> Idx1<'d, I0> + 'd,
     ) -> FVarToStr<'d> {
         // TODO: use parent to add the variable key
-        Box::new(move |f| I0::write_idx_str(f, fun()))
+        Box::new(move |f| {
+            write!(f, "x_")?;
+            I0::write_idx_str(f, fun())
+        })
     }
 
     pub fn d2_str<'d, I0: Set, I1: Set>(
@@ -23,6 +26,7 @@ impl FVarToStrCtor {
     ) -> FVarToStr<'d> {
         Box::new(move |f| {
             let (i0, i1) = fun();
+            write!(f, "x_")?;
             I0::write_idx_str(f, i0)?;
             write!(f, "_")?;
             I1::write_idx_str(f, i1)
