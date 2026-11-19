@@ -1,5 +1,6 @@
 use crate::constraints::{DIneq, Ineq, IneqTyp};
-use crate::{LinExpr, SymWrap};
+use crate::sets::CatInt;
+use crate::{LinExpr, SetCatInt, SymWrap};
 
 // macro_rules! con {
 //     ($a:ty <= $b:ty) => {};
@@ -35,8 +36,13 @@ macro_rules! con {
     ($lhs:tt == $rhs:tt) => {
         ineq($lhs, $rhs, IneqTyp::Eq)
     };
+
+    // d1
+    ($lhs:tt <= $rhs:tt | forall $i0:ident in $s0:tt) => {
+        ineq($lhs, $rhs, IneqTyp::Leq)
+    };
 }
 
-fn abc<'m, 'd>(lhs: LinExpr<'m, 'd>, rhs: LinExpr<'m, 'd>) {
-    let a = con!(lhs >= rhs);
+fn abc<'m, 'd>(lhs: LinExpr<'m, 'd>, rhs: LinExpr<'m, 'd>, set: CatInt<'m, 'd>) {
+    let a = con!(lhs <= rhs | forall i in set);
 }
