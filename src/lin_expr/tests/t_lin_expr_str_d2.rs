@@ -19,7 +19,7 @@ fn t_lin_expr_str_d2() {
     type El1<'d> = <I1 as Set>::IdxRaw<'d>;
 
     // data
-    let values = vec![vec![0u32, 1], vec![2, 3], vec![4, 5]];
+    let values = vec![vec![7u32, 1], vec![2, 3], vec![4, 5]];
     let par_data: HashMap<String, Vec<u32>> = values
         .into_iter()
         .enumerate()
@@ -51,49 +51,101 @@ fn t_lin_expr_str_d2() {
         for (j, _) in it1.enumerate() {
             let ei = &s0_data[i];
             let ej = s1_data[j] as usize;
-            let ep = par_data[ei][ej];
+            let ep = par_data[ei][ej] as f64;
             let ex = "x"; // TODO: var-name-fix
 
-            // let e = LinExpr::from(x[(i0, i1)]);
-            // assert_eq!(exp_str(e), format!("{ex}_{ei}_{ej}"));
+            let e = LinExpr::from(x[(i0, i1)]);
+            assert_eq!(exp_str(e), format!("{ex}_{ei}_{ej}"));
 
-            // let e = 3 * x[("bonn", 2)];
-            // assert_eq!(exp_str(e), format!("3 {ex}_bonn_2"));
+            let e = 3 * x[("bonn", 2)];
+            assert_eq!(exp_str(e), format!("3 {ex}_bonn_2"));
 
-            // let e = -3.2 * x[(i0, i1)];
-            // assert_eq!(exp_str(e), format!("-3.2 {ex}_{ei}_{ej}"));
+            let e = -3.2 * x[(i0, i1)];
+            assert_eq!(exp_str(e), format!("-3.2 {ex}_{ei}_{ej}"));
 
-            // let e = p[("2", 0)] * x[(i0, i1)];
-            // assert_eq!(exp_str(e), format!("4 {ex}_{ei}_{ej}"));
+            let e = p[("2", 0)] * x[(i0, i1)];
+            assert_eq!(exp_str(e), format!("4 {ex}_{ei}_{ej}"));
 
-            // let e = -p[(i0, i1)] * x[(i0, i1)];
-            // assert_eq!(exp_str(e), format!("-{ep} {ex}_{ei}_{ej}"));
+            let e = -p[(i0, i1)] * x[(i0, i1)];
+            assert_eq!(exp_str(e), format!("-{ep} {ex}_{ei}_{ej}"));
 
-            // let e = x[(i0, i1)] + 1;
-            // assert_eq!(exp_str(e), format!("{ex}_{ei}_{ej} + 1"));
+            let e = x[(i0, i1)] + 1;
+            assert_eq!(exp_str(e), format!("{ex}_{ei}_{ej} + 1"));
 
-            // let e = -x[(i0, i1)] + 1;
-            // assert_eq!(exp_str(e), format!("-{ex}_{ei}_{ej} + 1"));
+            let e = -x[(i0, i1)] + 1;
+            assert_eq!(exp_str(e), format!("-{ex}_{ei}_{ej} + 1"));
 
-            // let e = 3 - p[(i0, i1)] * x[(i0, i1)];
-            // assert_eq!(exp_str(e), format!("-{ep} {ex}_{ei}_{ej} + 3"));
+            let e = 3 - p[(i0, i1)] * x[(i0, i1)];
+            assert_eq!(exp_str(e), format!("-{ep} {ex}_{ei}_{ej} + 3"));
 
-            // let e = 3 + (-p[(i0, i1)]) * x[(i0, i1)];
-            // assert_eq!(exp_str(e), format!("-{ep} {ex}_{ei}_{ej} + 3"));
+            let e = 3 + (-p[(i0, i1)]) * x[(i0, i1)];
+            assert_eq!(exp_str(e), format!("-{ep} {ex}_{ei}_{ej} + 3"));
 
-            // let e = 2 + (-p[(i0, i1)]) * x[(i0, i1)] + 9;
-            // assert_eq!(exp_str(e), format!("-{ep} {ex}_{ei}_{ej} + 11"));
+            let e = 2 + (-p[(i0, i1)]) * x[(i0, i1)] + 9;
+            assert_eq!(exp_str(e), format!("-{ep} {ex}_{ei}_{ej} + 11"));
 
-            // let e = 2 + (-p[(i0, i1)]) * x[(i0, i1)] - 9;
-            // assert_eq!(exp_str(e), format!("-{ep} {ex}_{ei}_{ej} - 7"));
+            let e = 2 + (-p[(i0, i1)]) * x[(i0, i1)] - 9;
+            assert_eq!(exp_str(e), format!("-{ep} {ex}_{ei}_{ej} - 7"));
 
-            let e = -p[(i0, i1)] * x[("sin", 3)] + 1.5 * x[(i0, i1)] - 3;
+            let e = 2 * x[("mia", 1)] + 7 - p[(i0, i1)] * x[("sin", 3)] + 1.5 * x[(i0, i1)] - 3;
             assert_eq!(
                 exp_str(e),
                 format!("2 {ex}_mia_1 - {ep} {ex}_sin_3 + 1.5 {ex}_{ei}_{ej} + 4")
             );
 
-            break;
+            //
+
+            let e = 2 * x[("mia", 0)] + 7 - p[(i0, i1)] * x[("sin", 2)] + 1.5 * x[(i0, i1)] - 30.5;
+            assert_eq!(
+                exp_str(e),
+                format!("2 {ex}_mia_0 - {ep} {ex}_sin_2 + 1.5 {ex}_{ei}_{ej} - 23.5")
+            );
+
+            let e = 4 * (2 * x[("mia", 0)] + 7 - p[(i0, i1)] * x[("sin", 2)]) + 1.5 * x[(i0, i1)]
+                - 30.5;
+            assert_eq!(
+                exp_str(e),
+                format!(
+                    "8 {ex}_mia_0 - {} {ex}_sin_2 + 1.5 {ex}_{ei}_{ej} - 2.5",
+                    4.0 * ep
+                )
+            );
+
+            let e = (4 * (2 * x[("mia", 0)] + 7 - p[(i0, i1)] * x[("sin", 2)]) + 1.5 * x[(i0, i1)]
+                - 30.5)
+                / 2.0;
+            assert_eq!(
+                exp_str(e),
+                format!(
+                    "4 {ex}_mia_0 - {} {ex}_sin_2 + 0.75 {ex}_{ei}_{ej} - 1.25",
+                    2.0 * ep
+                )
+            );
+
+            let e = (2 * p[("1", 0)] * (2 * x[("mia", 0)] + 7 - p[(i0, i1)] * x[("sin", 2)])
+                + 1.5 * x[(i0, i1)]
+                - 30.5)
+                / p[("1", 0)];
+            assert_eq!(
+                exp_str(e),
+                format!(
+                    "4 {ex}_mia_0 - {} {ex}_sin_2 + 0.75 {ex}_{ei}_{ej} - 1.25",
+                    2.0 * ep
+                )
+            );
+
+            let e = (2 * p[("1", 0)] * (2 * x[("mia", 0)] + 7 - p[(i0, i1)] * x[("sin", 2)])
+                + 1.5 * x[(i0, i1)]
+                - 30.5)
+                / p[("1", 0)]
+                + 30;
+            assert_eq!(
+                exp_str(e),
+                format!(
+                    "4 {ex}_mia_0 - {} {ex}_sin_2 + 0.75 {ex}_{ei}_{ej} + 28.75",
+                    2.0 * ep
+                )
+            );
         }
     }
 }

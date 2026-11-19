@@ -1,3 +1,5 @@
+#[cfg(test)]
+use crate::constants::{is_neg, is_pos, is_zero};
 use crate::scalars::{DNum, DVar, ValNum};
 use crate::{AsF64, Model, Ptr, SymWrap, Var};
 #[cfg(test)]
@@ -68,9 +70,15 @@ impl<'d> DLinTerm<'d> {
 
 #[cfg(test)]
 fn write_prefix_and_coef(f: &mut String, c: f64) {
-    match c >= 0.0 {
+    match is_pos(c) {
         true => write!(f, " + {} ", c),
-        false => write!(f, " - {} ", -c),
+        false => match is_neg(c) {
+            true => write!(f, " - {} ", -c),
+            false => {
+                debug_assert!(is_zero(c));
+                write!(f, " + 0 ")
+            }
+        },
     }
     .unwrap()
 }
