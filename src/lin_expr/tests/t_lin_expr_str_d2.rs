@@ -93,8 +93,6 @@ fn t_lin_expr_str_d2() {
                 format!("2 {ex}_mia_1 - {ep} {ex}_sin_3 + 1.5 {ex}_{ei}_{ej} + 4")
             );
 
-            //
-
             let e = 2 * x[("mia", 0)] + 7 - p[(i0, i1)] * x[("sin", 2)] + 1.5 * x[(i0, i1)] - 30.5;
             assert_eq!(
                 exp_str(e),
