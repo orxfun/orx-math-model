@@ -1,7 +1,7 @@
 use crate::constants::MAX_DIM;
 use crate::idxs::DIdx;
 use crate::idxs::{IdxCatInt, IdxCatStr, IdxOrd};
-use crate::{ConVec, Ptr};
+use crate::{ConVec, Ptr, SymWrap};
 
 pub type IdxVec<'d> = ConVec<MAX_DIM, Ptr<'d, DIdx<'d>>>;
 
@@ -12,6 +12,16 @@ pub enum Idx<'m, 'd> {
     Ord(IdxOrd<'m, 'd>),
 }
 
+impl<'m, 'd> Idx<'m, 'd> {
+    fn ptr(&self) -> Ptr<'d, DIdx<'d>> {
+        match self {
+            Idx::CatInt(x) => x.ptr(),
+            Idx::CatStr(x) => x.ptr(),
+            Idx::Ord(x) => x.ptr(),
+        }
+    }
+}
+
 pub enum IdxSum<'m, 'd> {
     D1(Idx<'m, 'd>),
     D2(Idx<'m, 'd>, Idx<'m, 'd>),
@@ -20,8 +30,8 @@ pub enum IdxSum<'m, 'd> {
 impl<'m, 'd> IdxSum<'m, 'd> {
     pub(crate) fn into_idx_vec(self) -> IdxVec<'d> {
         match self {
-            IdxSum::D1(i0) => todo!(),
-            IdxSum::D2(i0, i1) => todo!(),
+            IdxSum::D1(i0) => IdxVec::new([i0.ptr()]),
+            IdxSum::D2(i0, i1) => IdxVec::new([i0.ptr(), i1.ptr()]),
         }
     }
 }
