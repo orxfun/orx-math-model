@@ -1,5 +1,5 @@
 use crate::con_vals::{ConVal, DConVal};
-use crate::constraints::DIneq;
+use crate::constraints::{DIneq, Ineq};
 use crate::idxs::{DIdx, IdxVal};
 use crate::lin_expr::DLinExpr;
 use crate::pars::{DPars, IntParD1, IntParD2, NumParD1, NumParD2, ParFun};
@@ -321,5 +321,9 @@ impl<'d> Model<'d> {
 
     pub(crate) fn lin_exp<'m>(&'m self, data: DLinExpr<'d>) -> LinExpr<'m, 'd> {
         LinExpr::new(Symbol::new(self, self.lin_exp_bag.push(data)))
+    }
+
+    pub(crate) fn ineq<'m>(&'m self, data: DIneq<'d>) -> Ineq<'m, 'd> {
+        Ineq::new(Symbol::new(self, self.ineq_bag.push(data)))
     }
 }
