@@ -8,6 +8,7 @@ pub type SumVec<'d> = ConVec<MAX_EXPR_LEN, DLinTerm<'d>>;
 #[derive(derive_new::new)]
 pub struct DLinExpr<'d> {
     pub(super) terms: ExprVec<'d>,
+    pub(super) sums: SumVec<'d>,
     pub(super) constant: Option<Ptr<'d, DNum<'d>>>,
 }
 
