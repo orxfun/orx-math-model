@@ -7,6 +7,7 @@ pub enum IneqTyp {
     Geq,
     Eq,
 }
+
 #[derive(derive_new::new)]
 pub struct DCon<'d> {
     idxs: IdxVec<'d>,
