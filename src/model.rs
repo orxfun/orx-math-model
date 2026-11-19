@@ -1,5 +1,5 @@
 use crate::con_vals::{ConVal, DConVal};
-use crate::constraint::DIneq;
+use crate::constraints::DIneq;
 use crate::idxs::{DIdx, IdxVal};
 use crate::lin_expr::DLinExpr;
 use crate::pars::{DPars, IntParD1, IntParD2, NumParD1, NumParD2, ParFun};
