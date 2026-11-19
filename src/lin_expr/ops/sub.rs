@@ -1,5 +1,5 @@
 use super::add::const_add_con;
-use crate::lin_expr::{Coef, DLinExpr, DLinTerm, DSum, ExprVec};
+use crate::lin_expr::{Coef, DLinExpr, DLinTerm, DSum, ExprVec, SumVec};
 use crate::scalars::{DNum, ValNum};
 use crate::{AsF64, Int, LinExpr, Model, Num, Ptr, SymWrap, ValTyp, Var};
 use alloc::boxed::Box;
@@ -177,17 +177,18 @@ expr_con!(u32);
 expr_con!(usize);
 expr_con!(isize);
 
-// // var - var
+// var - var
 
-// impl<'m, 'd> Sub<Var<'m, 'd>> for Var<'m, 'd> {
-//     type Output = LinExpr<'m, 'd>;
+impl<'m, 'd> Sub<Var<'m, 'd>> for Var<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
 
-//     fn sub(self, rhs: Var<'m, 'd>) -> Self::Output {
-//         let t2 = DLinTerm::new(Coef::MinusOne, rhs.ptr());
-//         let terms = ExprVec::new([self.into(), t2]);
-//         self.m().lin_exp(DLinExpr::new(terms, None))
-//     }
-// }
+    fn sub(self, rhs: Var<'m, 'd>) -> Self::Output {
+        let t2 = DLinTerm::new(Coef::MinusOne, rhs.ptr());
+        let terms = ExprVec::new([self.into(), t2]);
+        let sums = SumVec::new([]);
+        self.m().lin_exp(DLinExpr::new(terms, sums, None))
+    }
+}
 
 // // var - num
 
