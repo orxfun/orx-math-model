@@ -95,8 +95,8 @@ fn p2_at_cstr_ord() {
     let par = m.par2_int(s0, s1);
     let sca1 = [par.at(i0, i1), par[(i0, i1)]];
     let sca2 = [par.at(2.to_string(), i1), par[(2.to_string(), i1)]];
-    let sca3 = [par.at(i0, 2), par[(i0, 2)]];
-    let sca4 = [par.at(2.to_string(), 2), par[(2.to_string(), 2)]];
+    let sca3 = [par.at(i0, 1), par[(i0, 1)]];
+    let sca4 = [par.at("2", 1), par[("2", 1)]];
 
     // binding
     par.bind(|i, j| par_data[i][j as usize]).unwrap();
@@ -120,12 +120,12 @@ fn p2_at_cstr_ord() {
                 assert_eq!(exp, sca.data().eval_int());
             }
 
-            let exp = par_data[&i.to_string()][2] as i64;
+            let exp = par_data[&i.to_string()][1] as i64;
             for sca in sca3 {
                 assert_eq!(exp, sca.data().eval_int());
             }
 
-            let exp = par_data[&2.to_string()][2] as i64;
+            let exp = par_data[&2.to_string()][1] as i64;
             for sca in sca4 {
                 assert_eq!(exp, sca.data().eval_int());
             }
@@ -153,9 +153,9 @@ fn p2_at_ord_cint() {
     let i1 = s1.idx();
     let par = m.par2_num(s0, s1);
     let sca1 = [par.at(i0, i1), par[(i0, i1)]];
-    let sca2 = [par.at(i0, 2), par[(i0, 2)]];
+    let sca2 = [par.at(i0, 1), par[(i0, 1)]];
     let sca3 = [par.at(2, i1), par[(2, i1)]];
-    let sca4 = [par.at(2, 2), par[(2, 2)]];
+    let sca4 = [par.at(2, 0), par[(2, 0)]];
 
     // binding
     par.bind(|i, j| par_data[i as usize][j]).unwrap();
@@ -174,7 +174,7 @@ fn p2_at_ord_cint() {
                 assert_eq!(exp, sca.data().eval());
             }
 
-            let exp = par_data[i][2];
+            let exp = par_data[i][1];
             for sca in sca2 {
                 assert_eq!(exp, sca.data().eval());
             }
@@ -184,7 +184,7 @@ fn p2_at_ord_cint() {
                 assert_eq!(exp, sca.data().eval());
             }
 
-            let exp = par_data[2][2];
+            let exp = par_data[2][0];
             for sca in sca4 {
                 assert_eq!(exp, sca.data().eval());
             }
