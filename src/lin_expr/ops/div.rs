@@ -179,27 +179,29 @@ macro_rules! var_num {
 var_num!(Num<'m, 'd>);
 var_num!(Int<'m, 'd>);
 
-// // var / con
+// var / con
 
-// macro_rules! var_con {
-//     ($c:ty) => {
-//         impl<'m, 'd> Div<$c> for Var<'m, 'd> {
-//             type Output = LinExpr<'m, 'd>;
+macro_rules! var_con {
+    ($c:ty) => {
+        impl<'m, 'd> Div<$c> for Var<'m, 'd> {
+            type Output = LinExpr<'m, 'd>;
 
-//             fn div(self, rhs: $c) -> Self::Output {
-//                 let term = DLinTerm::new(Coef::Con(rhs.as_f64()), self.ptr());
-//                 let terms = ExprVec::new([term]);
-//                 self.m().lin_exp(DLinExpr::new(terms, None))
-//             }
-//         }
-//     };
-// }
+            fn div(self, rhs: $c) -> Self::Output {
+                let coef = Coef::Con(1.0 / rhs.as_f64());
+                let term = DLinTerm::new(coef, self.ptr());
+                let terms = ExprVec::new([term]);
+                let sums = SumVec::new([]);
+                self.m().lin_exp(DLinExpr::new(terms, sums, None))
+            }
+        }
+    };
+}
 
-// var_con!(f64);
-// var_con!(f32);
-// var_con!(i64);
-// var_con!(i32);
-// var_con!(u64);
-// var_con!(u32);
-// var_con!(usize);
-// var_con!(isize);
+var_con!(f64);
+var_con!(f32);
+var_con!(i64);
+var_con!(i32);
+var_con!(u64);
+var_con!(u32);
+var_con!(usize);
+var_con!(isize);
