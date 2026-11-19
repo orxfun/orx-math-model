@@ -26,7 +26,7 @@ mod constants;
 mod dim;
 mod elements;
 mod err;
-mod ff;
+mod free_fun;
 mod idxs;
 mod lin_expr;
 mod model;
@@ -53,5 +53,5 @@ pub(crate) use symbol::{SymWrap, Symbol};
 pub(crate) use vars::{Bounds, VarD1, VarD2, VarType};
 
 // api
-pub use ff::{forall, sum};
+pub use free_fun::{forall, sum};
 pub use model::Model;

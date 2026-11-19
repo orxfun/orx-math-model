@@ -1,5 +1,5 @@
 use crate::lin_expr::{DLinExpr, SumVec, TermVec};
-use crate::{ff::ForAll, lin_expr::DSum};
+use crate::{free_fun::ForAll, lin_expr::DSum};
 use crate::{LinExpr, SymWrap};
 
 pub fn sum<'m, 'd>(forall: ForAll<'m, 'd>, sum_expr: LinExpr<'m, 'd>) -> LinExpr<'m, 'd> {
