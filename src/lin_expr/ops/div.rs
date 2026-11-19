@@ -1,10 +1,17 @@
-use crate::lin_expr::{Coef, DLinExpr, DLinTerm, DSum, ExprVec};
+use crate::lin_expr::{Coef, DLinExpr, DLinTerm, DSum, ExprVec, SumVec};
 use crate::scalars::{DNum, ValNum};
 use crate::{AsF64, Int, LinExpr, Model, Num, Ptr, SymWrap, ValTyp, Var, VarType};
 use alloc::boxed::Box;
 use core::ops::Div;
 
 // num
+
+type Con<'d> = Option<Ptr<'d, DNum<'d>>>;
+
+fn one_div_num<'m, 'd>(m: &'m Model<'d>, num: Ptr<'d, DNum<'d>>) -> Ptr<'d, DNum<'d>> {
+    let fun = Box::new(move || 1.0 / num.get().eval());
+    m.val::<ValNum>(DNum::new(ValTyp::Num, fun)).ptr()
+}
 
 fn const_div_num<'m, 'd>(m: &'m Model<'d>, c1: Con<'d>, c2: Ptr<'d, DNum<'d>>) -> Con<'d> {
     c1.map(|c1| {
@@ -66,8 +73,6 @@ fn expr_div_num_sym<'m, 'd>(
 
 // con
 
-type Con<'d> = Option<Ptr<'d, DNum<'d>>>;
-
 fn const_div_con<'m, 'd>(m: &'m Model<'d>, c1: Con<'d>, c2: impl AsF64) -> Con<'d> {
     c1.map(|c1| {
         let fun = Box::new(move || c1.get().eval() / c2.as_f64());
@@ -113,70 +118,66 @@ fn expr_div_con_sym<'m, 'd>(
     m.lin_exp(expr)
 }
 
-// // expr / num
+// expr / num
 
-// macro_rules! expr_num {
-//     ($n:ty) => {
-//         impl<'m, 'd> Div<$n> for LinExpr<'m, 'd> {
-//             type Output = LinExpr<'m, 'd>;
+macro_rules! expr_num {
+    ($n:ty) => {
+        impl<'m, 'd> Div<$n> for LinExpr<'m, 'd> {
+            type Output = LinExpr<'m, 'd>;
 
-//             fn div(self, rhs: $n) -> Self::Output {
-//                 let m = self.m();
-//                 let terms = self.data().terms.map(|t| term_div_num(m, t, rhs.ptr()));
-//                 let constant = const_div_num(m, self.data().constant, rhs.ptr());
-//                 m.lin_exp(DLinExpr::new(terms, constant))
-//             }
-//         }
-//     };
-// }
+            fn div(self, rhs: $n) -> Self::Output {
+                expr_div_num_sym(self.m(), self.ptr(), rhs.ptr())
+            }
+        }
+    };
+}
 
-// expr_num!(Num<'m, 'd>);
-// expr_num!(Int<'m, 'd>);
+expr_num!(Num<'m, 'd>);
+expr_num!(Int<'m, 'd>);
 
-// // expr / con
+// expr / con
 
-// macro_rules! expr_con {
-//     ($c:ty) => {
-//         impl<'m, 'd> Div<$c> for LinExpr<'m, 'd> {
-//             type Output = LinExpr<'m, 'd>;
+macro_rules! expr_con {
+    ($c:ty) => {
+        impl<'m, 'd> Div<$c> for LinExpr<'m, 'd> {
+            type Output = LinExpr<'m, 'd>;
 
-//             fn div(self, rhs: $c) -> Self::Output {
-//                 let m = self.m();
-//                 let terms = self.data().terms.map(|t| term_div_con(m, t, rhs));
-//                 let constant = const_div_con(m, self.data().constant, rhs);
-//                 m.lin_exp(DLinExpr::new(terms, constant))
-//             }
-//         }
-//     };
-// }
+            fn div(self, rhs: $c) -> Self::Output {
+                expr_div_con_sym(self.m(), self.ptr(), rhs)
+            }
+        }
+    };
+}
 
-// expr_con!(f64);
-// expr_con!(f32);
-// expr_con!(i64);
-// expr_con!(i32);
-// expr_con!(u64);
-// expr_con!(u32);
-// expr_con!(usize);
-// expr_con!(isize);
+expr_con!(f64);
+expr_con!(f32);
+expr_con!(i64);
+expr_con!(i32);
+expr_con!(u64);
+expr_con!(u32);
+expr_con!(usize);
+expr_con!(isize);
 
-// // var / num
+// var / num
 
-// macro_rules! var_num {
-//     ($n:ty) => {
-//         impl<'m, 'd> Div<$n> for Var<'m, 'd> {
-//             type Output = LinExpr<'m, 'd>;
+macro_rules! var_num {
+    ($n:ty) => {
+        impl<'m, 'd> Div<$n> for Var<'m, 'd> {
+            type Output = LinExpr<'m, 'd>;
 
-//             fn div(self, rhs: $n) -> Self::Output {
-//                 let term = DLinTerm::new(Coef::Ptr(rhs.ptr()), self.ptr());
-//                 let terms = ExprVec::new([term]);
-//                 self.m().lin_exp(DLinExpr::new(terms, None))
-//             }
-//         }
-//     };
-// }
+            fn div(self, rhs: $n) -> Self::Output {
+                let coef = Coef::Ptr(one_div_num(self.m(), rhs.ptr()));
+                let term = DLinTerm::new(coef, self.ptr());
+                let terms = ExprVec::new([term]);
+                let sums = SumVec::new([]);
+                self.m().lin_exp(DLinExpr::new(terms, sums, None))
+            }
+        }
+    };
+}
 
-// var_num!(Num<'m, 'd>);
-// var_num!(Int<'m, 'd>);
+var_num!(Num<'m, 'd>);
+var_num!(Int<'m, 'd>);
 
 // // var / con
 
