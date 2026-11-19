@@ -1,14 +1,14 @@
 use crate::constraints::IneqTyp;
 
 pub trait IneqOp {
-    fn typ() -> IneqTyp;
+    fn typ(&self) -> IneqTyp;
 }
 
 #[allow(non_camel_case_types)]
 pub struct leq;
 
 impl IneqOp for leq {
-    fn typ() -> IneqTyp {
+    fn typ(&self) -> IneqTyp {
         IneqTyp::Leq
     }
 }
@@ -17,7 +17,7 @@ impl IneqOp for leq {
 pub struct geq;
 
 impl IneqOp for geq {
-    fn typ() -> IneqTyp {
+    fn typ(&self) -> IneqTyp {
         IneqTyp::Geq
     }
 }
@@ -26,7 +26,7 @@ impl IneqOp for geq {
 pub struct eq;
 
 impl IneqOp for eq {
-    fn typ() -> IneqTyp {
+    fn typ(&self) -> IneqTyp {
         IneqTyp::Eq
     }
 }
