@@ -15,16 +15,4 @@ pub struct DLinTerm<'d> {
     pub var: Ptr<'d, DVar<'d>>,
 }
 
-impl<'d> DLinTerm<'d> {
-    // ops
-
-    pub fn neg<'m>(&self, m: &'m Model<'d>) -> Self {
-        let coef = match self.coef {
-            Coef::One => Coef::MinusOne,
-            Coef::MinusOne => Coef::One,
-            Coef::Con(c) => Coef::Con(-c),
-            Coef::Ptr(c) => Coef::Ptr(m.val_neg(c)),
-        };
-        Self::new(coef, self.var)
-    }
-}
+impl<'d> DLinTerm<'d> {}

@@ -49,6 +49,16 @@ fn const_sub_con<'m, 'd>(m: &'m Model<'d>, c1: Con<'d>, c2: impl AsF64) -> Ptr<'
     }
 }
 
+fn term_neg<'m, 'd>(m: &'m Model<'d>, term: &DLinTerm<'d>) -> DLinTerm<'d> {
+    let coef = match term.coef {
+        Coef::One => Coef::MinusOne,
+        Coef::MinusOne => Coef::One,
+        Coef::Con(c) => Coef::Con(-c),
+        Coef::Ptr(c) => Coef::Ptr(m.val_neg(c)),
+    };
+    DLinTerm::new(coef, term.var)
+}
+
 // expr - expr
 
 impl<'m, 'd> Sub<LinExpr<'m, 'd>> for LinExpr<'m, 'd> {
@@ -57,7 +67,7 @@ impl<'m, 'd> Sub<LinExpr<'m, 'd>> for LinExpr<'m, 'd> {
     fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
         let m = self.m();
         let [t1, t2] = [self.data(), rhs.data()];
-        let terms = t1.terms.merge(&t2.terms.map(|t| t.neg(m)));
+        let terms = t1.terms.merge(&t2.terms.map(|t| term_neg(m, t)));
         let constant = const_sub_const(m, t1.constant, t2.constant);
         m.lin_exp(DLinExpr::new(terms, constant))
     }
@@ -81,7 +91,7 @@ impl<'m, 'd> Sub<LinExpr<'m, 'd>> for Var<'m, 'd> {
     fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
         let m = self.m();
         let lhs = DLinTerm::new(Coef::One, self.ptr());
-        let terms = rhs.data().terms.map(|x| x.neg(m)).push_to_front(lhs);
+        let terms = rhs.data().terms.map(|t| term_neg(m, t)).push_to_front(lhs);
         let constant = const_neg(m, rhs.data().constant);
         m.lin_exp(DLinExpr::new(terms, constant))
     }
@@ -107,7 +117,7 @@ macro_rules! expr_num {
 
             fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
                 let m = rhs.m();
-                let terms = rhs.data().terms.map(|x| x.neg(m));
+                let terms = rhs.data().terms.map(|t| term_neg(m, t));
                 let constant = const_sub_num(m, rhs.data().constant, self.ptr());
                 m.lin_exp(DLinExpr::new(terms, Some(constant)))
             }
@@ -138,7 +148,7 @@ macro_rules! expr_con {
 
             fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
                 let m = rhs.m();
-                let terms = rhs.data().terms.map(|x| x.neg(m));
+                let terms = rhs.data().terms.map(|t| term_neg(m, t));
                 let constant = const_sub_con(m, rhs.data().constant, self);
                 m.lin_exp(DLinExpr::new(terms, Some(constant)))
             }
