@@ -83,11 +83,23 @@ impl<'m, 'd> ConIdxs<'m, 'd> {
     }
 }
 
-// into
+// indices - into
+
+impl<'m, 'd> From<()> for ConIdxs<'m, 'd> {
+    fn from(_: ()) -> Self {
+        Self::D0
+    }
+}
 
 macro_rules! d1 {
     ($i0:ty) => {
         impl<'m, 'd> From<$i0> for SumIdxs<'m, 'd> {
+            fn from(i0: $i0) -> Self {
+                Self::D1(i0.into())
+            }
+        }
+
+        impl<'m, 'd> From<$i0> for ConIdxs<'m, 'd> {
             fn from(i0: $i0) -> Self {
                 Self::D1(i0.into())
             }
@@ -102,6 +114,12 @@ d1!(IdxOrd<'m, 'd>);
 macro_rules! d2 {
     ($i0:ty, $i1:ty) => {
         impl<'m, 'd> From<($i0, $i1)> for SumIdxs<'m, 'd> {
+            fn from((i0, i1): ($i0, $i1)) -> Self {
+                Self::D2(i0.into(), i1.into())
+            }
+        }
+
+        impl<'m, 'd> From<($i0, $i1)> for ConIdxs<'m, 'd> {
             fn from((i0, i1): ($i0, $i1)) -> Self {
                 Self::D2(i0.into(), i1.into())
             }
