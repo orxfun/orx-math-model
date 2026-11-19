@@ -26,6 +26,7 @@ mod constants;
 mod dim;
 mod elements;
 mod err;
+mod free_fun;
 mod idxs;
 mod lin_expr;
 mod model;
@@ -40,7 +41,7 @@ mod vars;
 // crate
 pub(crate) use bag::Bag;
 pub(crate) use con_vals::{ConValTyp, TConVal};
-pub(crate) use con_vec::{ConVec, DimVec, SetVec};
+pub(crate) use con_vec::{ConVec, DimVec};
 pub(crate) use dim::Dim;
 pub(crate) use elements::{Elements, ElementsIter};
 pub(crate) use err::{Res, ResValid};
@@ -52,4 +53,5 @@ pub(crate) use symbol::{SymWrap, Symbol};
 pub(crate) use vars::{Bounds, VarD1, VarD2, VarType};
 
 // api
+pub use free_fun::{forall, sum};
 pub use model::Model;

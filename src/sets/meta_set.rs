@@ -54,7 +54,7 @@ pub trait Set: Clone + Copy + 'static {
 
     type IdxRaw<'d>: Copy;
 
-    type IdxSym<'m, 'd: 'm>: Copy;
+    type IdxSym<'m, 'd: 'm>: Copy + SymWrap<'m, 'd, Data = DIdx<'d>>;
 
     type IdxAny<'m, 'd: 'm>: IdxAny<'m, 'd, Set = Self>;
 

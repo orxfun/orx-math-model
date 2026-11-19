@@ -1,4 +1,4 @@
-use crate::lin_expr::{DLinExpr, DLinTerm, ExprVec, SumVec};
+use crate::lin_expr::{DLinExpr, DLinTerm, SumVec, TermVec};
 use crate::scalars::{DNum, ValNum};
 use crate::{AsF64, ConVec, Int, LinExpr, Model, Num, Ptr, SymWrap, ValTyp, Var};
 use alloc::boxed::Box;
@@ -142,7 +142,7 @@ impl<'m, 'd> Add<Var<'m, 'd>> for Var<'m, 'd> {
     type Output = LinExpr<'m, 'd>;
 
     fn add(self, rhs: Var<'m, 'd>) -> Self::Output {
-        let terms = ExprVec::new([self.into(), rhs.into()]);
+        let terms = TermVec::new([self.into(), rhs.into()]);
         let sums = SumVec::new([]);
         self.m().lin_exp(DLinExpr::new(terms, sums, None))
     }
@@ -156,7 +156,7 @@ macro_rules! var_num {
             type Output = LinExpr<'m, 'd>;
 
             fn add(self, rhs: $n) -> Self::Output {
-                let terms = ExprVec::new([self.into()]);
+                let terms = TermVec::new([self.into()]);
                 let constant = Some(rhs.ptr());
                 let sums = SumVec::new([]);
                 self.m().lin_exp(DLinExpr::new(terms, sums, constant))
@@ -184,7 +184,7 @@ macro_rules! var_con {
             type Output = LinExpr<'m, 'd>;
 
             fn add(self, rhs: $c) -> Self::Output {
-                let terms = ExprVec::new([self.into()]);
+                let terms = TermVec::new([self.into()]);
                 let sums = SumVec::new([]);
                 let constant = Some(self.m().val_num_con(rhs).ptr());
                 self.m().lin_exp(DLinExpr::new(terms, sums, constant))

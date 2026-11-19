@@ -1,5 +1,5 @@
 use super::add::const_add_con;
-use crate::lin_expr::{Coef, DLinExpr, DLinTerm, DSum, ExprVec, SumVec};
+use crate::lin_expr::{Coef, DLinExpr, DLinTerm, DSum, SumVec, TermVec};
 use crate::scalars::{DNum, ValNum};
 use crate::{AsF64, Int, LinExpr, Model, Num, Ptr, SymWrap, ValTyp, Var};
 use alloc::boxed::Box;
@@ -184,7 +184,7 @@ impl<'m, 'd> Sub<Var<'m, 'd>> for Var<'m, 'd> {
 
     fn sub(self, rhs: Var<'m, 'd>) -> Self::Output {
         let t2 = DLinTerm::new(Coef::MinusOne, rhs.ptr());
-        let terms = ExprVec::new([self.into(), t2]);
+        let terms = TermVec::new([self.into(), t2]);
         let sums = SumVec::new([]);
         self.m().lin_exp(DLinExpr::new(terms, sums, None))
     }
@@ -198,7 +198,7 @@ macro_rules! var_num {
             type Output = LinExpr<'m, 'd>;
 
             fn sub(self, rhs: $n) -> Self::Output {
-                let terms = ExprVec::new([self.into()]);
+                let terms = TermVec::new([self.into()]);
                 let sums = SumVec::new([]);
                 let constant = const_sub_num(self.m(), None, rhs.ptr());
                 self.m().lin_exp(DLinExpr::new(terms, sums, Some(constant)))
@@ -209,7 +209,7 @@ macro_rules! var_num {
             type Output = LinExpr<'m, 'd>;
 
             fn sub(self, rhs: Var<'m, 'd>) -> Self::Output {
-                let terms = ExprVec::new([DLinTerm::new(Coef::MinusOne, rhs.ptr())]);
+                let terms = TermVec::new([DLinTerm::new(Coef::MinusOne, rhs.ptr())]);
                 let sums = SumVec::new([]);
                 let constant = Some(self.ptr());
                 self.m().lin_exp(DLinExpr::new(terms, sums, constant))
@@ -229,7 +229,7 @@ macro_rules! var_con {
             type Output = LinExpr<'m, 'd>;
 
             fn sub(self, rhs: $c) -> Self::Output {
-                let terms = ExprVec::new([self.into()]);
+                let terms = TermVec::new([self.into()]);
                 let sums = SumVec::new([]);
                 let constant = const_sub_con(self.m(), None, rhs);
                 self.m().lin_exp(DLinExpr::new(terms, sums, Some(constant)))
@@ -240,7 +240,7 @@ macro_rules! var_con {
             type Output = LinExpr<'m, 'd>;
 
             fn sub(self, rhs: Var<'m, 'd>) -> Self::Output {
-                let terms = ExprVec::new([DLinTerm::new(Coef::MinusOne, rhs.ptr())]);
+                let terms = TermVec::new([DLinTerm::new(Coef::MinusOne, rhs.ptr())]);
                 let sums = SumVec::new([]);
                 let constant = rhs.m().val_num_con(self).ptr();
                 rhs.m().lin_exp(DLinExpr::new(terms, sums, Some(constant)))

@@ -135,6 +135,13 @@ impl<'d, T> Ptr<'d, T> {
     pub fn ptr_eq(self, other: Self) -> bool {
         self.p == other.p
     }
+
+    pub unsafe fn into_ptr_mut(self) -> PtrMut<'d, T> {
+        PtrMut {
+            p: self.p as *mut T,
+            phantom: PhantomData,
+        }
+    }
 }
 
 // ptr-mut

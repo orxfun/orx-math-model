@@ -4,12 +4,12 @@ use crate::scalars::{DNum, ValNum};
 use crate::{ConVec, Model, Ptr, SymWrap, ValTyp};
 use alloc::boxed::Box;
 
-pub type ExprVec<'d> = ConVec<MAX_EXPR_LEN, DLinTerm<'d>>;
+pub type TermVec<'d> = ConVec<MAX_EXPR_LEN, DLinTerm<'d>>;
 pub type SumVec<'d> = ConVec<MAX_EXPR_LEN, DSum<'d>>;
 
 #[derive(derive_new::new)]
 pub struct DLinExpr<'d> {
-    pub(super) terms: ExprVec<'d>,
+    pub(super) terms: TermVec<'d>,
     pub(super) sums: SumVec<'d>,
     pub(super) constant: Option<Ptr<'d, DNum<'d>>>,
 }
@@ -58,51 +58,98 @@ pub mod ext_test {
     use core::fmt::Write;
 
     impl<'d> DLinExpr<'d> {
-        pub fn eval_append_string(&self, f: &mut String) {
-            let mut has_terms = false;
+        pub fn eval_append_string_exc_constant(
+            &self,
+            f: &mut String,
+            pre_exists: bool,
+        ) -> (bool, Option<f64>) {
+            let mut pre_exists = pre_exists;
+            let mut acc_const = None;
+
             let mut terms = self.terms.iter();
             if let Some(t) = terms.next() {
-                let added = t.eval_append_string(f, has_terms);
-                has_terms |= added;
+                pre_exists |= t.eval_append_string(f, pre_exists);
                 for t in terms {
-                    let added = t.eval_append_string(f, has_terms);
-                    has_terms |= added;
+                    pre_exists |= t.eval_append_string(f, pre_exists);
                 }
             }
 
-            if let Some(c) = self.constant {
-                write_constant(f, has_terms, c.get().eval());
+            let mut sums = self.sums.iter();
+            if let Some(s) = sums.next() {
+                let (added, c) = s.eval_append_string_exc_constant(f, pre_exists);
+                pre_exists |= added;
+                acc_const = add_opt(acc_const, c);
+                for s in sums {
+                    let (added, c) = s.eval_append_string_exc_constant(f, pre_exists);
+                    pre_exists |= added;
+                    acc_const = add_opt(acc_const, c);
+                }
             }
+
+            acc_const = add_opt(acc_const, self.constant.map(|c| c.get().eval()));
+            (pre_exists, acc_const)
+        }
+
+        pub fn eval_append_string(&self, f: &mut String, pre_exists: bool) -> bool {
+            let (mut pre_exists, c) = self.eval_append_string_exc_constant(f, pre_exists);
+
+            if let Some(c) = c {
+                pre_exists |= write_constant(f, pre_exists, c);
+            }
+
+            pre_exists
         }
 
         pub fn eval_to_string(&self) -> String {
             let mut f = String::new();
-            self.eval_append_string(&mut f);
+            self.eval_append_string(&mut f, false);
             f
         }
     }
 
-    #[cfg(test)]
-    fn write_constant(f: &mut String, has_terms: bool, c: f64) {
+    pub fn write_constant(f: &mut String, has_terms: bool, c: f64) -> bool {
         match has_terms {
             true => match is_pos(c) {
-                true => write!(f, " + {}", c).unwrap(),
+                true => {
+                    write!(f, " + {}", c).unwrap();
+                    true
+                }
                 false => match is_neg(c) {
-                    true => write!(f, " - {}", -c).unwrap(),
+                    true => {
+                        write!(f, " - {}", -c).unwrap();
+                        true
+                    }
                     false => {
-                        debug_assert!(is_zero(c))
+                        debug_assert!(is_zero(c));
+                        false
                     }
                 },
             },
             false => match is_pos(c) {
-                true => write!(f, "{}", c).unwrap(),
+                true => {
+                    write!(f, "{}", c).unwrap();
+                    true
+                }
                 false => match is_neg(c) {
-                    true => write!(f, "-{}", -c).unwrap(),
+                    true => {
+                        write!(f, "-{}", -c).unwrap();
+                        true
+                    }
                     false => {
-                        debug_assert!(is_zero(c))
+                        debug_assert!(is_zero(c));
+                        false
                     }
                 },
             },
+        }
+    }
+
+    pub fn add_opt(acc_const: Option<f64>, c: Option<f64>) -> Option<f64> {
+        match (acc_const, c) {
+            (Some(a), Some(b)) => Some(a + b),
+            (Some(a), None) => Some(a),
+            (None, Some(b)) => Some(b),
+            (None, None) => None,
         }
     }
 }

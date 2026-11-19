@@ -20,7 +20,7 @@ fn idx_set_iter_cat_int() {
 
     // running
     let mut elements: Elements<El<'_>> = vec![].into();
-    let iter = ElementsIter::<S>::new(idx, &mut elements);
+    let iter = ElementsIter::<S>::new(idx.ptr(), &mut elements);
     for (i, _) in iter.enumerate() {
         assert_eq!(idx.data().read::<S>(), values[i]);
     }
@@ -44,7 +44,7 @@ fn idx_set_iter_cat_str() {
 
     // running
     let mut elements: Elements<El<'_>> = vec![].into();
-    let iter = ElementsIter::<S>::new(idx, &mut elements);
+    let iter = ElementsIter::<S>::new(idx.ptr(), &mut elements);
     for (i, _) in iter.enumerate() {
         assert_eq!(idx.data().read::<S>(), &values[i]);
     }
@@ -68,7 +68,7 @@ fn idx_set_iter_ord() {
 
     // running
     let mut elements: Elements<El<'_>> = vec![].into();
-    let iter = ElementsIter::<S>::new(idx, &mut elements);
+    let iter = ElementsIter::<S>::new(idx.ptr(), &mut elements);
     for (i, _) in iter.enumerate() {
         assert_eq!(idx.data().read::<S>(), values[i]);
     }

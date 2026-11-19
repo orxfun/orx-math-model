@@ -41,10 +41,10 @@ fn p2_at_cint_cstr() {
 
     // running
     let mut el0: Elements<El0<'_>> = vec![].into();
-    let it0 = ElementsIter::<I0>::new(i0, &mut el0);
+    let it0 = ElementsIter::<I0>::new(i0.ptr(), &mut el0);
     for (i, _) in it0.enumerate() {
         let mut el1: Elements<El1<'_>> = vec![].into();
-        let it1 = ElementsIter::<I1>::new(i1, &mut el1);
+        let it1 = ElementsIter::<I1>::new(i1.ptr(), &mut el1);
         for (j, _) in it1.enumerate() {
             let exp = par_data[i][&j.to_string()];
             for sca in sca1 {
@@ -105,10 +105,10 @@ fn p2_at_cstr_ord() {
 
     // running
     let mut el0: Elements<El0<'_>> = vec![].into();
-    let it0 = ElementsIter::<I0>::new(i0, &mut el0);
+    let it0 = ElementsIter::<I0>::new(i0.ptr(), &mut el0);
     for (i, _) in it0.enumerate() {
         let mut el1: Elements<El1<'_>> = vec![].into();
-        let it1 = ElementsIter::<I1>::new(i1, &mut el1);
+        let it1 = ElementsIter::<I1>::new(i1.ptr(), &mut el1);
         for (j, _) in it1.enumerate() {
             let exp = par_data[&i.to_string()][j] as i64;
             for sca in sca1 {
@@ -164,10 +164,10 @@ fn p2_at_ord_cint() {
 
     // running
     let mut el0: Elements<El0<'_>> = vec![].into();
-    let it0 = ElementsIter::<I0>::new(i0, &mut el0);
+    let it0 = ElementsIter::<I0>::new(i0.ptr(), &mut el0);
     for (i, _) in it0.enumerate() {
         let mut el1: Elements<El1<'_>> = vec![].into();
-        let it1 = ElementsIter::<I1>::new(i1, &mut el1);
+        let it1 = ElementsIter::<I1>::new(i1.ptr(), &mut el1);
         for (j, _) in it1.enumerate() {
             let exp = par_data[i][j];
             for sca in sca1 {

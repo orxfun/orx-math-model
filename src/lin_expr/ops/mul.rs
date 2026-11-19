@@ -1,4 +1,4 @@
-use crate::lin_expr::{Coef, DLinExpr, DLinTerm, DSum, ExprVec, SumVec};
+use crate::lin_expr::{Coef, DLinExpr, DLinTerm, DSum, SumVec, TermVec};
 use crate::scalars::{DNum, ValNum};
 use crate::{AsF64, Int, LinExpr, Model, Num, Ptr, SymWrap, ValTyp, Var, VarType};
 use alloc::boxed::Box;
@@ -175,7 +175,7 @@ macro_rules! var_num {
 
             fn mul(self, rhs: $n) -> Self::Output {
                 let term = DLinTerm::new(Coef::Ptr(rhs.ptr()), self.ptr());
-                let terms = ExprVec::new([term]);
+                let terms = TermVec::new([term]);
                 let sums = SumVec::new([]);
                 self.m().lin_exp(DLinExpr::new(terms, sums, None))
             }
@@ -203,7 +203,7 @@ macro_rules! var_con {
 
             fn mul(self, rhs: $c) -> Self::Output {
                 let term = DLinTerm::new(Coef::Con(rhs.as_f64()), self.ptr());
-                let terms = ExprVec::new([term]);
+                let terms = TermVec::new([term]);
                 let sums = SumVec::new([]);
                 self.m().lin_exp(DLinExpr::new(terms, sums, None))
             }

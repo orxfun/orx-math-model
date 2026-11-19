@@ -1,4 +1,6 @@
-use crate::{sets::DSet, Dim, Ptr};
+use crate::constants::MAX_DIM;
+use crate::idxs::DIdx;
+use crate::{Dim, Ptr};
 use core::ops::{Deref, Index};
 
 #[derive(Clone, Debug)]
@@ -94,10 +96,11 @@ impl<const N: usize, T> Index<usize> for ConVec<N, T> {
 
 // dim - vec
 
-pub struct DimVec<T>(ConVec<4, T>);
+#[derive(Clone)]
+pub struct DimVec<T>(ConVec<MAX_DIM, T>);
 
 impl<T> Deref for DimVec<T> {
-    type Target = ConVec<4, T>;
+    type Target = ConVec<MAX_DIM, T>;
 
     fn deref(&self) -> &Self::Target {
         &self.0
@@ -127,8 +130,3 @@ impl<T> Index<usize> for DimVec<T> {
         self.get(idx).unwrap()
     }
 }
-
-// set - vec
-
-#[derive(Clone)]
-pub struct SetVec<'d>(ConVec<8, Ptr<'d, DSet<'d>>>);
