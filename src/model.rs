@@ -9,8 +9,8 @@ use crate::slot::State;
 use crate::sym_ref::SymRef;
 use crate::vars::{DVars, VarD1, VarD2};
 use crate::{
-    AsF64, Bag, DimVec, LinExpr, Ptr, Set, SetCatInt, SetCatStr, SetOrd, SetSym, Slot, SymWrap,
-    Symbol, TConVal, ValTyp, VarType,
+    AsF64, Bag, DimVec, LinExpr, Ptr, Set, SetCatInt, SetCatStr, SetOrd, SetSym, Slot, Symbol,
+    TConVal, ValTyp, VarType,
 };
 use core::mem::ManuallyDrop;
 use orx_imp_vec::Elem;
@@ -213,35 +213,6 @@ impl<'d> Model<'d> {
     pub(crate) fn val_unchecked<'m, V: Val>(&'m self, data: DNum<'d>) -> V::Sym<'m, 'd> {
         let el = self.num_bag.push(data);
         V::sym(Symbol::new(self, el))
-    }
-
-    pub(crate) fn val_neg<'m>(&'m self, c: Ptr<'d, DNum<'d>>) -> Ptr<'d, DNum<'d>> {
-        assert_eq!(3, 33);
-        self.val::<ValNum>(DNum::neg(c)).ptr()
-    }
-
-    pub(crate) fn val_add<'m>(
-        &'m self,
-        c1: Ptr<'d, DNum<'d>>,
-        c2: Ptr<'d, DNum<'d>>,
-    ) -> Ptr<'d, DNum<'d>> {
-        self.val::<ValNum>(DNum::add(c1, c2)).ptr()
-    }
-
-    pub(crate) fn val_sub<'m>(
-        &'m self,
-        c1: Ptr<'d, DNum<'d>>,
-        c2: Ptr<'d, DNum<'d>>,
-    ) -> Ptr<'d, DNum<'d>> {
-        self.val::<ValNum>(DNum::sub(c1, c2)).ptr()
-    }
-
-    pub(crate) fn val_mul<'m>(
-        &'m self,
-        c1: Ptr<'d, DNum<'d>>,
-        c2: Ptr<'d, DNum<'d>>,
-    ) -> Ptr<'d, DNum<'d>> {
-        self.val::<ValNum>(DNum::mul(c1, c2)).ptr()
     }
 
     pub(crate) fn val_num_con<'m>(&'m self, num: impl AsF64) -> Num<'m, 'd> {
