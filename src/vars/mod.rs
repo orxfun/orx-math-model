@@ -13,4 +13,4 @@ pub use v0_sym::VarD0;
 pub use v1_sym::VarD1;
 pub use v2_sym::VarD2;
 pub use var_data::DVars;
-pub use var_typ::{BoundsOld, VarType};
+pub use var_typ::VarType;

@@ -1,4 +1,4 @@
-use crate::{BoundsOld, Model, VarType};
+use crate::{Model, VarType};
 
 #[test]
 fn v0_int_cint() {
