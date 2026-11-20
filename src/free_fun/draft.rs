@@ -115,3 +115,11 @@ mod tests {
         let c2 = con::<D2>((s0, s1));
     }
 }
+
+// pub fn for1<'m, 'd, S0, Lhs, Op, Rhs, F>(s0: S0, con: F) -> Constraint<'m, 'd>
+// where
+//     S0: SetSym<'m, 'd>,
+//     Lhs: Into<IntoLinExpr<'m, 'd>>,
+//     Op: IneqOp,
+//     Rhs: Into<IntoLinExpr<'m, 'd>>,
+//     F: Fn(Idx<'m, 'd, S0>) -> (Lhs, Op, Rhs),

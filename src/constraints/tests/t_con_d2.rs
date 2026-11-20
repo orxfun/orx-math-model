@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use crate::constraints::Constraint;
 use crate::sets::CatInt;
 use crate::{
-    con, eq, for1, for2, for2_old, geq, leq, sum1, sum2, Bounds, Model, SetCatInt, SetSym, SymWrap,
+    con, con1, con2, eq, for2_old, geq, leq, sum1, sum2, Bounds, Model, SetCatInt, SetSym, SymWrap,
     VarType,
 };
 use alloc::string::{String, ToString};

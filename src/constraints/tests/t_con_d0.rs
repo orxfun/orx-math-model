@@ -1,7 +1,7 @@
 use crate::constraints::Constraint;
 use crate::sets::CatInt;
 use crate::{
-    con, eq, for1, for2, geq, leq, sum1, sum2, Model, SetCatInt, SetSym, SymWrap, VarType,
+    con, eq, con1, con2, geq, leq, sum1, sum2, Model, SetCatInt, SetSym, SymWrap, VarType,
 };
 use alloc::string::String;
 use alloc::{format, vec};

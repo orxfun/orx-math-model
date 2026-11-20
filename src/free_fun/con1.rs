@@ -4,7 +4,7 @@ use crate::free_fun::{IneqOp, IntoLinExpr};
 use crate::idxs::IdxVec;
 use crate::{SetSym, SymWrap};
 
-pub fn for1<'m, 'd, S0, Lhs, Op, Rhs, F>(s0: S0, con: F) -> Constraint<'m, 'd>
+pub fn con1<'m, 'd, S0, Lhs, Op, Rhs, F>(s0: S0, con: F) -> Constraint<'m, 'd>
 where
     S0: SetSym<'m, 'd>,
     Lhs: Into<IntoLinExpr<'m, 'd>>,
