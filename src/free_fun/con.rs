@@ -60,3 +60,59 @@ pub fn for2<'m, 'd, S0: SetSym<'m, 'd>, S1: SetSym<'m, 'd>>(
     unsafe { con.el().get_mut() }.set_idxs(idxs);
     con
 }
+
+pub struct Con2<'m, 'd, S0, S1>
+where
+    S0: SetSym<'m, 'd>,
+    S1: SetSym<'m, 'd>,
+{
+    s0: S0,
+    s1: S1,
+    lhs: IntoLinExpr<'m, 'd>,
+    typ: IneqTyp,
+    rhs: IntoLinExpr<'m, 'd>,
+}
+
+impl<'m, 'd, S0, S1, Lhs, Op, Rhs, F> From<F> for Con2<'m, 'd, S0, S1>
+where
+    S0: SetSym<'m, 'd>,
+    S1: SetSym<'m, 'd>,
+    Lhs: Into<IntoLinExpr<'m, 'd>>,
+    Op: IneqOp,
+    Rhs: Into<IntoLinExpr<'m, 'd>>,
+    F: Fn(Idx<'m, 'd, S0>, Idx<'m, 'd, S1>) -> (Lhs, Op, Rhs),
+{
+    fn from(value: F) -> Self {
+        todo!()
+    }
+}
+
+pub fn for2a<'m, 'd, S0, S1, Lhs, Op, Rhs, F>(s0: S0, s1: S1, con: F) -> Constraint<'m, 'd>
+where
+    S0: SetSym<'m, 'd>,
+    S1: SetSym<'m, 'd>,
+    Lhs: Into<IntoLinExpr<'m, 'd>>,
+    Op: IneqOp,
+    Rhs: Into<IntoLinExpr<'m, 'd>>,
+    F: Fn(Idx<'m, 'd, S0>, Idx<'m, 'd, S1>) -> (Lhs, Op, Rhs),
+{
+    let (i0, i1) = (s0.idx(), s1.idx());
+    let idxs = IdxVec::new([i0.ptr(), i1.ptr()]);
+    let (lhs, op, rhs) = con(i0, i1);
+
+    let [lhs, rhs] = [lhs.into(), rhs.into()];
+    let m = match (lhs.m(), rhs.m()) {
+        (Some(m1), Some(_m2)) => Some(m1),
+        (Some(m1), None) => Some(m1),
+        (None, Some(m2)) => Some(m2),
+        (None, None) => None,
+    };
+
+    // TODO: Handle const-const case somehow!
+    let m = m.unwrap();
+
+    let (lhs, op, rhs) = (lhs.to_expr(m), op.typ(), rhs.to_expr(m));
+
+    let data = DCon::new(idxs, lhs.ptr(), rhs.ptr(), op);
+    m.constraint(data)
+}
