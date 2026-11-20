@@ -7,16 +7,16 @@ use core::mem::ManuallyDrop;
 
 #[repr(C)]
 pub union UFunPar<'d> {
-    d0: f64,
-    d1: ManuallyDrop<UFunP1<'d>>,
-    d2: ManuallyDrop<UFunP2<'d>>,
+    pub d0: f64,
+    pub d1: ManuallyDrop<UFunP1<'d>>,
+    pub d2: ManuallyDrop<UFunP2<'d>>,
 }
 
 #[derive(derive_new::new)]
 pub struct ParFun<'d> {
     pub val_typ: ValTyp,
     pub idx_types: DimVec<SetTyp>,
-    data: ManuallyDrop<UFunPar<'d>>,
+    pub data: ManuallyDrop<UFunPar<'d>>,
 }
 
 impl<'d> Drop for ParFun<'d> {
@@ -109,7 +109,7 @@ impl<'d> ParFun<'d> {
 
     #[inline(always)]
     pub fn d2_at<I0: Set, I1: Set>(&self, i0: I0::IdxRaw<'d>, i1: I1::IdxRaw<'d>) -> f64 {
-        let fun = I0::unpack_p2_fun_v::<I1>(unsafe { &self.data.d2 });
+        let fun = I0::unpack_p2_fun::<I1>(unsafe { &self.data.d2 });
         fun(i0, i1)
     }
 
