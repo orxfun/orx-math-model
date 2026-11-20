@@ -1,8 +1,7 @@
-use crate::constraints::{Constraint, DCon, IneqTyp};
+use crate::constraints::{Constraint, DCon};
 use crate::free_fun::{IneqOp, IntoLinExpr};
-use crate::idxs::{self, IdxVec};
-use crate::lin_expr::{DLinExpr, DLinTerm, SumVec, TermVec};
-use crate::{AsF64, Int, LinExpr, Model, Num, Set, SetSym, SymWrap, Var};
+use crate::idxs::IdxVec;
+use crate::{Model, Set, SetSym, SymWrap};
 
 pub type Idx<'m, 'd, S> = <<S as SetSym<'m, 'd>>::Meta as Set>::IdxSym<'m, 'd>;
 
