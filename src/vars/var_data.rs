@@ -1,5 +1,5 @@
 use crate::sets::{DSet, FunSet};
-use crate::{Dim, DimVec, Ptr, SetTyp, VarType};
+use crate::{Dim, DimVec, Ptr, VarType};
 
 pub struct DVars<'d> {
     typ: VarType,

@@ -1,5 +1,5 @@
 use crate::scalars::{num::DNum, ValInt, ValNum};
-use crate::{impl_sym_wrap, Model, SymWrap, Symbol};
+use crate::{impl_sym_wrap, SymWrap, Symbol};
 
 // int
 
