@@ -57,7 +57,7 @@ macro_rules! num_idx {
 num_idx!(Num<'m, 'd>, val_num);
 num_idx!(Int<'m, 'd>, val_int);
 
-// num/int - p0
+// num/int - par
 
 macro_rules! num_par {
     ($n1:ty, $par:ty, $out:ty, $fout:ident) => {
