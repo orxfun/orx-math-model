@@ -1,7 +1,9 @@
 use crate::idxs::IdxOrd;
 use crate::lin_expr::ops::add::ord_to_num;
 use crate::lin_expr::{Coef, DLinExpr, DLinTerm, SumVec, TermVec};
+use crate::pars::{IntParD0, NumParD0};
 use crate::scalars::{DNum, ValNum};
+use crate::vars::VarD0;
 use crate::{AsF64, Int, LinExpr, Model, Num, Ptr, SymWrap, ValTyp, Var};
 use alloc::boxed::Box;
 use core::ops::Sub;
@@ -115,6 +117,24 @@ impl<'m, 'd> Sub<LinExpr<'m, 'd>> for Var<'m, 'd> {
     }
 }
 
+// expr - var0
+
+impl<'m, 'd> Sub<VarD0<'m, 'd>> for LinExpr<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn sub(self, rhs: VarD0<'m, 'd>) -> Self::Output {
+        self - Var::from(rhs)
+    }
+}
+
+impl<'m, 'd> Sub<LinExpr<'m, 'd>> for VarD0<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
+        Var::from(self) - rhs
+    }
+}
+
 // expr - num
 
 macro_rules! expr_num {
@@ -161,6 +181,40 @@ impl<'m, 'd> Sub<LinExpr<'m, 'd>> for IdxOrd<'m, 'd> {
 
     fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
         ord_to_num(self) - rhs
+    }
+}
+
+// expr - par
+
+impl<'m, 'd> Sub<NumParD0<'m, 'd>> for LinExpr<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn sub(self, rhs: NumParD0<'m, 'd>) -> Self::Output {
+        self - rhs.to_num()
+    }
+}
+
+impl<'m, 'd> Sub<LinExpr<'m, 'd>> for NumParD0<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
+        self.to_num() - rhs
+    }
+}
+
+impl<'m, 'd> Sub<IntParD0<'m, 'd>> for LinExpr<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn sub(self, rhs: IntParD0<'m, 'd>) -> Self::Output {
+        self - rhs.to_int()
+    }
+}
+
+impl<'m, 'd> Sub<LinExpr<'m, 'd>> for IntParD0<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
+        self.to_int() - rhs
     }
 }
 
@@ -214,6 +268,24 @@ impl<'m, 'd> Sub<Var<'m, 'd>> for Var<'m, 'd> {
     }
 }
 
+// var - var0
+
+impl<'m, 'd> Sub<VarD0<'m, 'd>> for Var<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn sub(self, rhs: VarD0<'m, 'd>) -> Self::Output {
+        self - Var::from(rhs)
+    }
+}
+
+impl<'m, 'd> Sub<Var<'m, 'd>> for VarD0<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn sub(self, rhs: Var<'m, 'd>) -> Self::Output {
+        Var::from(self) - rhs
+    }
+}
+
 // var - num
 
 macro_rules! var_num {
@@ -260,6 +332,40 @@ impl<'m, 'd> Sub<Var<'m, 'd>> for IdxOrd<'m, 'd> {
 
     fn sub(self, rhs: Var<'m, 'd>) -> Self::Output {
         ord_to_num(self) - rhs
+    }
+}
+
+// var - par
+
+impl<'m, 'd> Sub<NumParD0<'m, 'd>> for Var<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn sub(self, rhs: NumParD0<'m, 'd>) -> Self::Output {
+        self - rhs.to_num()
+    }
+}
+
+impl<'m, 'd> Sub<Var<'m, 'd>> for NumParD0<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn sub(self, rhs: Var<'m, 'd>) -> Self::Output {
+        self.to_num() - rhs
+    }
+}
+
+impl<'m, 'd> Sub<IntParD0<'m, 'd>> for Var<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn sub(self, rhs: IntParD0<'m, 'd>) -> Self::Output {
+        self - rhs.to_int()
+    }
+}
+
+impl<'m, 'd> Sub<Var<'m, 'd>> for IntParD0<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn sub(self, rhs: Var<'m, 'd>) -> Self::Output {
+        self.to_int() - rhs
     }
 }
 
