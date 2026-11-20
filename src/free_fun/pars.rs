@@ -1,5 +1,5 @@
 use crate::scalars::{Val, ValInt, ValNum};
-use crate::{Model, Set, SymWrap};
+use crate::{Model, Set, SetSym, SymWrap};
 use alloc::string::{String, ToString};
 use core::marker::PhantomData;
 
@@ -18,15 +18,15 @@ impl<V: Val> BPar<V> {
         V::par_d0(m, self.0)
     }
 
-    pub fn d1<'m, 'd, I0: Set>(self, s0: I0::SetSym<'m, 'd>) -> V::ParD1<'m, 'd, I0> {
+    pub fn d1<'m, 'd, I0: SetSym<'m, 'd>>(self, s0: I0) -> V::ParD1<'m, 'd, I0::Meta> {
         V::par_d1(s0.m(), self.0, s0)
     }
 
-    pub fn d2<'m, 'd, I0: Set, I1: Set>(
+    pub fn d2<'m, 'd, I0: SetSym<'m, 'd>, I1: SetSym<'m, 'd>>(
         self,
-        s0: I0::SetSym<'m, 'd>,
-        s1: I1::SetSym<'m, 'd>,
-    ) -> V::ParD2<'m, 'd, I0, I1> {
+        s0: I0,
+        s1: I1,
+    ) -> V::ParD2<'m, 'd, I0::Meta, I1::Meta> {
         V::par_d2(s0.m(), self.0, s0, s1)
     }
 }

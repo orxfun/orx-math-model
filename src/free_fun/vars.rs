@@ -1,7 +1,7 @@
 use crate::vars::{Binary, BoundD0, BoundD1, BoundD2, Bounds, Continuous, Integer, VarType};
 use crate::{
     BinVarD0, BinVarD1, BinVarD2, ContVarD0, ContVarD1, ContVarD2, IntVarD0, IntVarD1, IntVarD2,
-    Model, Set, SymWrap, VarTyp,
+    Model, Set, SetSym, SymWrap, VarTyp,
 };
 use alloc::string::{String, ToString};
 use core::marker::PhantomData;
@@ -28,15 +28,15 @@ impl BVar<Binary> {
         m.var0::<Binary>(self.0, 0, 1)
     }
 
-    pub fn d1<'m, 'd, I0: Set>(self, s0: I0::SetSym<'m, 'd>) -> BinVarD1<'m, 'd, I0> {
+    pub fn d1<'m, 'd, I0: SetSym<'m, 'd>>(self, s0: I0) -> BinVarD1<'m, 'd, I0::Meta> {
         s0.m().var1::<Binary, _>(self.0, s0, 0, 1)
     }
 
-    pub fn d2<'m, 'd, I0: Set, I1: Set>(
+    pub fn d2<'m, 'd, I0: SetSym<'m, 'd>, I1: SetSym<'m, 'd>>(
         self,
-        s0: I0::SetSym<'m, 'd>,
-        s1: I1::SetSym<'m, 'd>,
-    ) -> BinVarD2<'m, 'd, I0, I1> {
+        s0: I0,
+        s1: I1,
+    ) -> BinVarD2<'m, 'd, I0::Meta, I1::Meta> {
         s0.m().var2::<Binary, _, _>(self.0, s0, s1, 0, 1)
     }
 }
@@ -46,15 +46,15 @@ impl BVar<Continuous> {
         BVar0::new(self.0, m)
     }
 
-    pub fn d1<'m, 'd, I0: Set>(self, s0: I0::SetSym<'m, 'd>) -> BVar1<'m, 'd, Continuous, I0> {
+    pub fn d1<'m, 'd, I0: SetSym<'m, 'd>>(self, s0: I0) -> BVar1<'m, 'd, Continuous, I0::Meta> {
         BVar1::new(self.0, s0)
     }
 
-    pub fn d2<'m, 'd, I0: Set, I1: Set>(
+    pub fn d2<'m, 'd, I0: SetSym<'m, 'd>, I1: SetSym<'m, 'd>>(
         self,
-        s0: I0::SetSym<'m, 'd>,
-        s1: I1::SetSym<'m, 'd>,
-    ) -> BVar2<'m, 'd, Continuous, I0, I1> {
+        s0: I0,
+        s1: I1,
+    ) -> BVar2<'m, 'd, Continuous, I0::Meta, I1::Meta> {
         BVar2::new(self.0, s0, s1)
     }
 }
@@ -64,15 +64,15 @@ impl BVar<Integer> {
         BVar0::new(self.0, m)
     }
 
-    pub fn d1<'m, 'd, I0: Set>(self, s0: I0::SetSym<'m, 'd>) -> BVar1<'m, 'd, Integer, I0> {
+    pub fn d1<'m, 'd, I0: SetSym<'m, 'd>>(self, s0: I0) -> BVar1<'m, 'd, Integer, I0::Meta> {
         BVar1::new(self.0, s0)
     }
 
-    pub fn d2<'m, 'd, I0: Set, I1: Set>(
+    pub fn d2<'m, 'd, I0: SetSym<'m, 'd>, I1: SetSym<'m, 'd>>(
         self,
-        s0: I0::SetSym<'m, 'd>,
-        s1: I1::SetSym<'m, 'd>,
-    ) -> BVar2<'m, 'd, Integer, I0, I1> {
+        s0: I0,
+        s1: I1,
+    ) -> BVar2<'m, 'd, Integer, I0::Meta, I1::Meta> {
         BVar2::new(self.0, s0, s1)
     }
 }
