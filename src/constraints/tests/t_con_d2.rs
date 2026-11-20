@@ -57,43 +57,44 @@ fn t_con_d2() {
     // running
 
     let x_ = "x_"; // TODO: var-name-fix
-    let y_ = "y_"; // TODO: var-name-fix
+    let y_ = "x_"; // TODO: var-name-fix
 
-    // let c = for2(org, dst, |o, d| (1, leq, 2));
+    let c = con2(org, dst, |o, d| (x[(o, d)], leq, y[o]));
+    assert_eq!(
+        exp_str(c),
+        format!(
+            r#"{x_}SIN_BRU <= {y_}SIN
+{x_}SIN_FRA <= {y_}SIN
+{x_}AMS_BRU <= {y_}AMS
+{x_}AMS_FRA <= {y_}AMS
+{x_}MIA_BRU <= {y_}MIA
+{x_}MIA_FRA <= {y_}MIA
+"#
+        )
+    );
 
-    //     let c = for1(s0, |i| con(x[i], leq, 1.0));
-    //     assert_eq!(
-    //         exp_str(c),
-    //         format!(
-    //             r#"{x_}2 <= 1
-    // {x_}3 <= 1
-    // {x_}0 <= 1
-    // {x_}1 <= 1
-    // "#
-    //         )
-    //     );
+    let c = con2(org, dst, |o, d| (x[(o, d)], geq, sum1(org, |o| y[o])));
+    assert_eq!(
+        exp_str(c),
+        format!(
+            r#"{x_}SIN_BRU >= {y_}SIN + {y_}AMS + {y_}MIA
+{x_}SIN_FRA >= {y_}SIN + {y_}AMS + {y_}MIA
+{x_}AMS_BRU >= {y_}SIN + {y_}AMS + {y_}MIA
+{x_}AMS_FRA >= {y_}SIN + {y_}AMS + {y_}MIA
+{x_}MIA_BRU >= {y_}SIN + {y_}AMS + {y_}MIA
+{x_}MIA_FRA >= {y_}SIN + {y_}AMS + {y_}MIA
+"#
+        )
+    );
 
-    //     let c = for1(s0, |i| con(x[i], leq, sum1(s0, |i| x[i] + 1)));
-    //     assert_eq!(
-    //         exp_str(c),
-    //         format!(
-    //             r#"{x_}2 <= {x_}2 + {x_}3 + {x_}0 + {x_}1 + 4
-    // {x_}3 <= {x_}2 + {x_}3 + {x_}0 + {x_}1 + 4
-    // {x_}0 <= {x_}2 + {x_}3 + {x_}0 + {x_}1 + 4
-    // {x_}1 <= {x_}2 + {x_}3 + {x_}0 + {x_}1 + 4
-    // "#
-    //         )
-    //     );
-
-    //     let c = for1(s0, |i| con(x[i], leq, sum1(s0, |j| p[i] * x[j] + 1)));
-    //     assert_eq!(
-    //         exp_str(c),
-    //         format!(
-    //             r#"{x_}2 <= 7 {x_}2 + 7 {x_}3 + 7 {x_}0 + 7 {x_}1 + 4
-    // {x_}3 <= 9 {x_}2 + 9 {x_}3 + 9 {x_}0 + 9 {x_}1 + 4
-    // {x_}0 <= 1 {x_}2 + 1 {x_}3 + 1 {x_}0 + 1 {x_}1 + 4
-    // {x_}1 <= 4
-    // "#
-    //         )
-    //     );
+    let c = con1(org, |o| (sum1(dst, |d| x[(o, d)]), leq, y[o]));
+    assert_eq!(
+        exp_str(c),
+        format!(
+            r#"{x_}SIN_BRU + {x_}SIN_FRA <= {y_}SIN
+{x_}AMS_BRU + {x_}AMS_FRA <= {y_}AMS
+{x_}MIA_BRU + {x_}MIA_FRA <= {y_}MIA
+"#
+        )
+    );
 }
