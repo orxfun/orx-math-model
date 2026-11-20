@@ -38,7 +38,6 @@ pub struct Model<'d> {
     // vals
     num_bag: Bag<DNum<'d>>,
     var_bag: ManuallyDrop<Bag<DVar<'d>>>,
-    // sca_bag: ManuallyDrop<ScaBag<'d>>,
     con_val_bag: Bag<DConVal>,
     sym_ref_bag: Bag<SymRef<'d>>,
 

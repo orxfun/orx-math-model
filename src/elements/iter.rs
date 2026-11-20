@@ -1,5 +1,5 @@
 use crate::idxs::{DIdx, IdxVal};
-use crate::{Elements, Ptr, PtrMut, Set, SymWrap};
+use crate::{Elements, Ptr, PtrMut, Set};
 use core::{iter::Copied, slice::Iter};
 
 // TODO: safety notes, T must be copy and no-drop
@@ -12,6 +12,7 @@ pub struct ElementsIter<'a, 'd, S: Set> {
 impl<'a, 'd, S: Set> Iterator for ElementsIter<'a, 'd, S> {
     type Item = ();
 
+    #[inline(always)]
     fn next(&mut self) -> Option<Self::Item> {
         self.elements_iter.next().map(|x| {
             self.idx.get_mut().write::<S>(x);

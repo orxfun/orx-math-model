@@ -1,8 +1,7 @@
 use crate::expand::{expand_d1, expand_d2};
 use crate::idxs::IdxVec;
 use crate::lin_expr::DLinExpr;
-use crate::{Elements, ElementsIter, Ptr, Set, SetCatInt, SetCatStr, SetOrd, SetTyp};
-use alloc::vec::Vec;
+use crate::Ptr;
 
 pub enum IneqTyp {
     Leq,
