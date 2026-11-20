@@ -27,7 +27,7 @@ pub fn con_gen<'m, 'd>(
     m.constraint(data)
 }
 
-pub fn con<'m, 'd>(
+pub fn con_old<'m, 'd>(
     lhs: impl Into<IntoLinExpr<'m, 'd>>,
     typ: impl IneqOp,
     rhs: impl Into<IntoLinExpr<'m, 'd>>,
