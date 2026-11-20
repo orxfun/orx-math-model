@@ -35,13 +35,21 @@ where
 
 // variants
 
-#[derive(derive_new::new, Clone, Copy)]
-pub struct ContVarD1<'m, 'd, I0: Set>(VarD1<'m, 'd, I0>);
+macro_rules! impl_variants {
+    ($name:ident) => {
+        #[derive(derive_new::new, Clone, Copy)]
+        pub struct $name<'m, 'd, I0: Set>(VarD1<'m, 'd, I0>);
 
-impl<'m, 'd, I0: Set> Deref for ContVarD1<'m, 'd, I0> {
-    type Target = VarD1<'m, 'd, I0>;
+        impl<'m, 'd, I0: Set> Deref for $name<'m, 'd, I0> {
+            type Target = VarD1<'m, 'd, I0>;
 
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
+            fn deref(&self) -> &Self::Target {
+                &self.0
+            }
+        }
+    };
 }
+
+impl_variants!(ContVarD1);
+impl_variants!(BinVarD1);
+impl_variants!(IntVarD1);
