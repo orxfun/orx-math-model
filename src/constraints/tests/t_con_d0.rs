@@ -92,17 +92,9 @@ fn t_con_d0_ord() {
         format!("5 <= 1 {x_}2 + 2 {x_}2 + 3 {x_}3 + 1 {x_}1")
     );
 
-    let c = con(
-        p[2],
-        leq,
-        x[2] * p[0]
-            + sum1(s0, |i| {
-                let b = i + 1;
-                i * x[i]
-            }),
-    );
+    let c = con(p[2], leq, x[2] * p[0] + sum1(s0, |i| i * x[i + 1]));
     assert_eq!(
         exp_str(c),
-        format!("5 <= 1 {x_}2 + 2 {x_}2 + 3 {x_}3 + 1 {x_}1")
+        format!("5 <= 1 {x_}2 + 2 {x_}3 + 3 {x_}4 + 1 {x_}2")
     );
 }
