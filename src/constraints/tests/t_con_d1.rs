@@ -1,8 +1,6 @@
 use crate::constraints::Constraint;
 use crate::sets::CatInt;
-use crate::{
-    con, eq, for1, for2, geq, leq, sum1, sum2, Model, SetCatInt, SetSym, SymWrap, VarType,
-};
+use crate::{eq, for1, for2, geq, leq, sum1, sum2, Model, SetCatInt, SetSym, SymWrap, VarType};
 use alloc::string::String;
 use alloc::{format, vec};
 
@@ -30,7 +28,7 @@ fn t_con_d1() {
 
     let x_ = "x_"; // TODO: var-name-fix
 
-    let c = for1(s0, |i| con(x[i], leq, 1.0));
+    let c = for1(s0, |i| (x[i], leq, 1.0));
     assert_eq!(
         exp_str(c),
         format!(
@@ -42,7 +40,7 @@ fn t_con_d1() {
         )
     );
 
-    let c = for1(s0, |i| con(x[i], leq, sum1(s0, |i| x[i] + 1)));
+    let c = for1(s0, |i| (x[i], leq, sum1(s0, |i| x[i] + 1)));
     assert_eq!(
         exp_str(c),
         format!(
@@ -54,7 +52,7 @@ fn t_con_d1() {
         )
     );
 
-    let c = for1(s0, |i| con(x[i], leq, sum1(s0, |j| p[i] * x[j] + 1)));
+    let c = for1(s0, |i| (x[i], leq, sum1(s0, |j| p[i] * x[j] + 1)));
     assert_eq!(
         exp_str(c),
         format!(
