@@ -2,7 +2,7 @@ use crate::con_vals::{ConVal, DConVal};
 use crate::constraints::{Constraint, DCon};
 use crate::idxs::{DIdx, IdxVal};
 use crate::lin_expr::DLinExpr;
-use crate::pars::{DPars, IntParD1, IntParD2, NumParD1, NumParD2, ParFun};
+use crate::pars::{DPars, IntParD0, IntParD1, IntParD2, NumParD0, NumParD1, NumParD2, ParFun};
 use crate::scalars::{DNum, DVar, Int, Num, Val, ValNum, Var};
 use crate::sets::{CatInt, CatStr, DSet, FunSet, Ord};
 use crate::slot::State;
@@ -109,8 +109,12 @@ impl<'d> Model<'d> {
         self.par_bag.push(DPars::new(sets, fun_slot))
     }
 
-    pub fn par0_int<'m>(&'m self) -> Int<'m, 'd> {
-        todo!()
+    pub fn par0_int<'m>(&'m self) -> IntParD0<'m, 'd> {
+        IntParD0::new(Symbol::new(self, self.par0_elem(ValTyp::Int)))
+    }
+
+    pub fn par0_num<'m>(&'m self) -> NumParD0<'m, 'd> {
+        NumParD0::new(Symbol::new(self, self.par0_elem(ValTyp::Num)))
     }
 
     // p1
