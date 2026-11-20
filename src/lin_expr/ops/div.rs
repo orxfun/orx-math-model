@@ -1,6 +1,8 @@
 use crate::idxs::IdxOrd;
 use crate::lin_expr::{Coef, DLinExpr, DLinTerm, DSum, SumVec, TermVec};
+use crate::pars::{IntParD0, NumParD0};
 use crate::scalars::{DNum, ValNum};
+use crate::vars::VarD0;
 use crate::{AsF64, Int, LinExpr, Model, Num, Ptr, SymWrap, ValTyp, Var};
 use alloc::boxed::Box;
 use core::ops::Div;
@@ -151,6 +153,24 @@ impl<'m, 'd> Div<IdxOrd<'m, 'd>> for LinExpr<'m, 'd> {
     }
 }
 
+// expr / par0
+
+impl<'m, 'd> Div<NumParD0<'m, 'd>> for LinExpr<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn div(self, rhs: NumParD0<'m, 'd>) -> Self::Output {
+        self / rhs.to_num()
+    }
+}
+
+impl<'m, 'd> Div<IntParD0<'m, 'd>> for LinExpr<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn div(self, rhs: IntParD0<'m, 'd>) -> Self::Output {
+        self / rhs.to_int()
+    }
+}
+
 // expr / con
 
 macro_rules! expr_con {
@@ -205,6 +225,24 @@ impl<'m, 'd> Div<IdxOrd<'m, 'd>> for Var<'m, 'd> {
     }
 }
 
+// var / par0
+
+impl<'m, 'd> Div<NumParD0<'m, 'd>> for Var<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn div(self, rhs: NumParD0<'m, 'd>) -> Self::Output {
+        self / rhs.to_num()
+    }
+}
+
+impl<'m, 'd> Div<IntParD0<'m, 'd>> for Var<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn div(self, rhs: IntParD0<'m, 'd>) -> Self::Output {
+        self / rhs.to_int()
+    }
+}
+
 // var / con
 
 macro_rules! var_con {
@@ -218,6 +256,76 @@ macro_rules! var_con {
                 let terms = TermVec::new([term]);
                 let sums = SumVec::new([]);
                 self.m().lin_exp(DLinExpr::new(terms, sums, None))
+            }
+        }
+    };
+}
+
+var_con!(f64);
+var_con!(f32);
+var_con!(i64);
+var_con!(i32);
+var_con!(u64);
+var_con!(u32);
+var_con!(usize);
+var_con!(isize);
+
+// VAR - D0
+
+// var0 / num
+
+macro_rules! var_num {
+    ($n:ty) => {
+        impl<'m, 'd> Div<$n> for VarD0<'m, 'd> {
+            type Output = LinExpr<'m, 'd>;
+
+            fn div(self, rhs: $n) -> Self::Output {
+                Var::from(self) / rhs
+            }
+        }
+    };
+}
+
+var_num!(Num<'m, 'd>);
+var_num!(Int<'m, 'd>);
+
+// var0 / idx
+
+impl<'m, 'd> Div<IdxOrd<'m, 'd>> for VarD0<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn div(self, rhs: IdxOrd<'m, 'd>) -> Self::Output {
+        Var::from(self) / rhs
+    }
+}
+
+// var0 / par0
+
+impl<'m, 'd> Div<NumParD0<'m, 'd>> for VarD0<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn div(self, rhs: NumParD0<'m, 'd>) -> Self::Output {
+        Var::from(self) / rhs
+    }
+}
+
+impl<'m, 'd> Div<IntParD0<'m, 'd>> for VarD0<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn div(self, rhs: IntParD0<'m, 'd>) -> Self::Output {
+        Var::from(self) / rhs
+    }
+}
+
+// var0 / con
+
+macro_rules! var_con {
+    ($c:ty) => {
+        impl<'m, 'd> Div<$c> for VarD0<'m, 'd> {
+            type Output = LinExpr<'m, 'd>;
+
+            fn div(self, rhs: $c) -> Self::Output {
+                Var::from(self) / rhs
             }
         }
     };
