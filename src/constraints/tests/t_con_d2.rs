@@ -1,14 +1,12 @@
-use std::collections::HashMap;
-
 use crate::constraints::Constraint;
 use crate::sets::CatInt;
 use crate::{
-    con, con1, con2, eq, for2_old, geq, leq, sum1, sum2, Bounds, Model, SetCatInt, SetSym, SymWrap,
-    VarType,
+    con, con1, con2, eq, geq, leq, sum1, sum2, Bounds, Model, SetCatInt, SetSym, SymWrap, VarType,
 };
 use alloc::string::{String, ToString};
 use alloc::vec::Vec;
 use alloc::{format, vec};
+use std::collections::HashMap;
 
 fn exp_str<'m, 'd>(con: Constraint<'m, 'd>) -> String {
     con.data().eval_to_string()
