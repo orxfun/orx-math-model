@@ -357,3 +357,123 @@ var_con!(u64);
 var_con!(u32);
 var_con!(usize);
 var_con!(isize);
+
+// VARD0
+
+// var0 + var0
+
+impl<'m, 'd> Add<VarD0<'m, 'd>> for VarD0<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn add(self, rhs: VarD0<'m, 'd>) -> Self::Output {
+        self + Var::from(rhs)
+    }
+}
+
+// var0 + num
+
+macro_rules! var_num {
+    ($n:ty) => {
+        impl<'m, 'd> Add<$n> for VarD0<'m, 'd> {
+            type Output = LinExpr<'m, 'd>;
+
+            fn add(self, rhs: $n) -> Self::Output {
+                Var::from(self) + rhs
+            }
+        }
+
+        impl<'m, 'd> Add<VarD0<'m, 'd>> for $n {
+            type Output = LinExpr<'m, 'd>;
+
+            fn add(self, rhs: VarD0<'m, 'd>) -> Self::Output {
+                rhs + self
+            }
+        }
+    };
+}
+
+var_num!(Num<'m, 'd>);
+var_num!(Int<'m, 'd>);
+
+// var0 + idx
+
+impl<'m, 'd> Add<IdxOrd<'m, 'd>> for VarD0<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn add(self, rhs: IdxOrd<'m, 'd>) -> Self::Output {
+        Var::from(self) + rhs
+    }
+}
+
+impl<'m, 'd> Add<VarD0<'m, 'd>> for IdxOrd<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn add(self, rhs: VarD0<'m, 'd>) -> Self::Output {
+        rhs + self
+    }
+}
+
+// var0 + par
+
+impl<'m, 'd> Add<NumParD0<'m, 'd>> for VarD0<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn add(self, rhs: NumParD0<'m, 'd>) -> Self::Output {
+        Var::from(self) + rhs
+    }
+}
+
+impl<'m, 'd> Add<VarD0<'m, 'd>> for NumParD0<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn add(self, rhs: VarD0<'m, 'd>) -> Self::Output {
+        rhs + self
+    }
+}
+
+impl<'m, 'd> Add<IntParD0<'m, 'd>> for VarD0<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn add(self, rhs: IntParD0<'m, 'd>) -> Self::Output {
+        Var::from(self) + rhs
+    }
+}
+
+impl<'m, 'd> Add<VarD0<'m, 'd>> for IntParD0<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn add(self, rhs: VarD0<'m, 'd>) -> Self::Output {
+        rhs + self
+    }
+}
+
+// var0 + con
+
+macro_rules! var_con {
+    ($c:ty) => {
+        impl<'m, 'd> Add<$c> for VarD0<'m, 'd> {
+            type Output = LinExpr<'m, 'd>;
+
+            fn add(self, rhs: $c) -> Self::Output {
+                Var::from(self) + rhs
+            }
+        }
+
+        impl<'m, 'd> Add<VarD0<'m, 'd>> for $c {
+            type Output = LinExpr<'m, 'd>;
+
+            fn add(self, rhs: VarD0<'m, 'd>) -> Self::Output {
+                rhs + self
+            }
+        }
+    };
+}
+
+var_con!(f64);
+var_con!(f32);
+var_con!(i64);
+var_con!(i32);
+var_con!(u64);
+var_con!(u32);
+var_con!(usize);
+var_con!(isize);

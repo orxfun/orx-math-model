@@ -361,7 +361,7 @@ macro_rules! var0_num {
 var0_num!(Num<'m, 'd>);
 var0_num!(Int<'m, 'd>);
 
-// azazzxcvzxcvzxcvzxcvzxcvzxvzxcvzxcv
+// VARD0
 
 // var0 * idx
 
