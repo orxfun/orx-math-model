@@ -5,11 +5,9 @@ use crate::{AsF64, Dim, DimVec, Set, SetTyp, ValTyp};
 use alloc::boxed::Box;
 use core::mem::ManuallyDrop;
 
-pub type FP0<'d> = Box<dyn Fn() -> f64 + 'd>;
-
 #[repr(C)]
 pub union UFunPar<'d> {
-    d0: ManuallyDrop<FP0<'d>>,
+    d0: f64,
     d1: ManuallyDrop<UFunP1<'d>>,
     d2: ManuallyDrop<UFunP2<'d>>,
 }
@@ -24,7 +22,7 @@ pub struct ParFun<'d> {
 impl<'d> Drop for ParFun<'d> {
     fn drop(&mut self) {
         match self.idx_types.dim() {
-            Dim::D0 => unsafe { ManuallyDrop::drop(&mut self.data.d0) },
+            Dim::D0 => {}
             Dim::D1 => unsafe { &mut self.data.d1 }.man_drop(self.idx_types[0]),
             Dim::D2 => unsafe { &mut self.data.d2 }.man_drop(self.idx_types[0], self.idx_types[1]),
         }
@@ -34,9 +32,7 @@ impl<'d> Drop for ParFun<'d> {
 impl<'d> ParFun<'d> {
     pub fn empty(val_typ: ValTyp, idxs: DimVec<SetTyp>) -> Self {
         let data = ManuallyDrop::new(match idxs.dim() {
-            Dim::D0 => UFunPar {
-                d0: ManuallyDrop::new(Box::new(|| 0.0)),
-            },
+            Dim::D0 => UFunPar { d0: 0.0 },
             Dim::D1 => UFunPar {
                 d1: UFunP1::empty(idxs[0]),
             },
@@ -56,16 +52,13 @@ impl<'d> ParFun<'d> {
     pub fn d0_create<V: AsF64>(val_typ: ValTyp, fun: impl Fn() -> V + 'd) -> Self {
         let idx_types = DimVec::new([]);
         let fun = Box::new(move || fun().as_f64());
-        let data = ManuallyDrop::new(UFunPar {
-            d0: ManuallyDrop::new(fun),
-        });
+        let data = ManuallyDrop::new(UFunPar { d0: fun() });
         Self::new(val_typ, idx_types, data)
     }
 
     #[inline(always)]
     pub fn d0_at(&self) -> f64 {
-        let fun = unsafe { &self.data.d0 };
-        fun()
+        *unsafe { &self.data.d0 }
     }
 
     #[inline(always)]
