@@ -102,25 +102,31 @@ impl<'d> Model<'d> {
 
     // p0
 
-    fn par0_elem<'m>(&'m self, val_typ: ValTyp) -> Elem<'m, DPars<'d>> {
+    fn par0_elem<'m>(&'m self, key: impl ToString, val_typ: ValTyp) -> Elem<'m, DPars<'d>> {
         let fun = ParFun::empty(val_typ, DimVec::new([]));
         let fun_el = self.par_fun_bag.push(fun);
         let fun_slot = Slot::new(self, fun_el);
         let sets = DimVec::new([]);
-        self.par_bag.push(DPars::new(sets, fun_slot))
+        self.par_bag
+            .push(DPars::new(key.to_string(), sets, fun_slot))
     }
 
-    pub fn par0_int<'m>(&'m self) -> IntParD0<'m, 'd> {
-        IntParD0::new(Symbol::new(self, self.par0_elem(ValTyp::Int)))
+    pub fn par0_int<'m>(&'m self, key: impl ToString) -> IntParD0<'m, 'd> {
+        IntParD0::new(Symbol::new(self, self.par0_elem(key, ValTyp::Int)))
     }
 
-    pub fn par0_num<'m>(&'m self) -> NumParD0<'m, 'd> {
-        NumParD0::new(Symbol::new(self, self.par0_elem(ValTyp::Num)))
+    pub fn par0_num<'m>(&'m self, key: impl ToString) -> NumParD0<'m, 'd> {
+        NumParD0::new(Symbol::new(self, self.par0_elem(key, ValTyp::Num)))
     }
 
     // p1
 
-    fn par1_elem<'m, S0>(&'m self, val_typ: ValTyp, s0: S0) -> Elem<'m, DPars<'d>>
+    fn par1_elem<'m, S0>(
+        &'m self,
+        key: impl ToString,
+        val_typ: ValTyp,
+        s0: S0,
+    ) -> Elem<'m, DPars<'d>>
     where
         S0: SetSym<'m, 'd>,
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
@@ -130,28 +136,35 @@ impl<'d> Model<'d> {
         let fun_el = self.par_fun_bag.push(fun);
         let fun_slot = Slot::new(self, fun_el);
         let sets = DimVec::new([<S0::Meta as Set>::set_ptr(s0)]);
-        self.par_bag.push(DPars::new(sets, fun_slot))
+        self.par_bag
+            .push(DPars::new(key.to_string(), sets, fun_slot))
     }
 
-    pub fn par1_int<'m, S0>(&'m self, s0: S0) -> IntParD1<'m, 'd, S0::Meta>
+    pub fn par1_int<'m, S0>(&'m self, key: impl ToString, s0: S0) -> IntParD1<'m, 'd, S0::Meta>
     where
         S0: SetSym<'m, 'd>,
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
     {
-        IntParD1::new(Symbol::new(self, self.par1_elem(ValTyp::Int, s0)))
+        IntParD1::new(Symbol::new(self, self.par1_elem(key, ValTyp::Int, s0)))
     }
 
-    pub fn par1_num<'m, S0>(&'m self, s0: S0) -> NumParD1<'m, 'd, S0::Meta>
+    pub fn par1_num<'m, S0>(&'m self, key: impl ToString, s0: S0) -> NumParD1<'m, 'd, S0::Meta>
     where
         S0: SetSym<'m, 'd>,
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
     {
-        NumParD1::new(Symbol::new(self, self.par1_elem(ValTyp::Num, s0)))
+        NumParD1::new(Symbol::new(self, self.par1_elem(key, ValTyp::Num, s0)))
     }
 
     // p2
 
-    fn par2_elem<'m, S0, S1>(&'m self, val_typ: ValTyp, s0: S0, s1: S1) -> Elem<'m, DPars<'d>>
+    fn par2_elem<'m, S0, S1>(
+        &'m self,
+        key: impl ToString,
+        val_typ: ValTyp,
+        s0: S0,
+        s1: S1,
+    ) -> Elem<'m, DPars<'d>>
     where
         S0: SetSym<'m, 'd>,
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
@@ -166,27 +179,38 @@ impl<'d> Model<'d> {
             <S0::Meta as Set>::set_ptr(s0),
             <S1::Meta as Set>::set_ptr(s1),
         ]);
-        self.par_bag.push(DPars::new(sets, fun_slot))
+        self.par_bag
+            .push(DPars::new(key.to_string(), sets, fun_slot))
     }
 
-    pub fn par2_int<'m, S0, S1>(&'m self, s0: S0, s1: S1) -> IntParD2<'m, 'd, S0::Meta, S1::Meta>
+    pub fn par2_int<'m, S0, S1>(
+        &'m self,
+        key: impl ToString,
+        s0: S0,
+        s1: S1,
+    ) -> IntParD2<'m, 'd, S0::Meta, S1::Meta>
     where
         S0: SetSym<'m, 'd>,
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
         S1: SetSym<'m, 'd>,
         S1::Meta: Set<SetSym<'m, 'd> = S1>,
     {
-        IntParD2::new(Symbol::new(self, self.par2_elem(ValTyp::Int, s0, s1)))
+        IntParD2::new(Symbol::new(self, self.par2_elem(key, ValTyp::Int, s0, s1)))
     }
 
-    pub fn par2<'m, S0, S1>(&'m self, s0: S0, s1: S1) -> NumParD2<'m, 'd, S0::Meta, S1::Meta>
+    pub fn par2_num<'m, S0, S1>(
+        &'m self,
+        key: impl ToString,
+        s0: S0,
+        s1: S1,
+    ) -> NumParD2<'m, 'd, S0::Meta, S1::Meta>
     where
         S0: SetSym<'m, 'd>,
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
         S1: SetSym<'m, 'd>,
         S1::Meta: Set<SetSym<'m, 'd> = S1>,
     {
-        NumParD2::new(Symbol::new(self, self.par2_elem(ValTyp::Num, s0, s1)))
+        NumParD2::new(Symbol::new(self, self.par2_elem(key, ValTyp::Num, s0, s1)))
     }
 
     // vars

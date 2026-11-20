@@ -88,7 +88,7 @@ fn t_sum_d2() {
     let s1 = m.cat_set_str("s1");
     let x1 = m.var1(VarType::Binary, s0);
     let x2 = m.var2(VarType::Binary, s0, s1);
-    let par = m.par2(s0, s1);
+    let par = m.par2_num(s0, s1);
 
     // binding
     par.bind(|i, j| par_data[i][j]).unwrap();
@@ -151,7 +151,7 @@ fn t_sum_d2_zeroes() {
     let s1 = m.cat_set_str("s1");
     let x1 = m.var1(VarType::Binary, s0);
     let x2 = m.var2(VarType::Binary, s0, s1);
-    let par = m.par2(s0, s1);
+    let par = m.par2_num(s0, s1);
 
     // binding
     par.bind(|i, j| par_data[i][j]).unwrap();
