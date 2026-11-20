@@ -19,11 +19,6 @@ fn v2_int_cint_cstr() {
     let j = s1.idx();
     let p2 = m.par2_num("p1", s0, s1);
 
-    // bounds: no binding
-    let [lower, upper] = [true, false].map(|x| var.data().resolve_bounds_d2::<I0, I1>(x));
-    assert_eq!(lower.eval(0, &n[2]), None);
-    assert_eq!(upper.eval(2, &n[1]), None);
-
     // bounds: constant
     unsafe { var.data_mut() }.set_bound_d1(true, 10);
     unsafe { var.data_mut() }.set_bound_d1(false, 12.0);

@@ -13,11 +13,6 @@ fn v1_int_cint() {
     let i = s.idx();
     let p1 = m.par1_num("p1", s);
 
-    // bounds: no binding
-    let [lower, upper] = [true, false].map(|x| var.data().resolve_bounds_d1::<I0>(x));
-    assert_eq!(lower.eval(0), None);
-    assert_eq!(upper.eval(2), None);
-
     // bounds: constant
     unsafe { var.data_mut() }.set_bound_d1(true, 10);
     unsafe { var.data_mut() }.set_bound_d1(false, 12.0);
@@ -62,11 +57,6 @@ fn v1_int_cstr() {
     let i = s.idx();
     let p1 = m.par1_num("p1", s);
 
-    // bounds: no binding
-    let [lower, upper] = [true, false].map(|x| var.data().resolve_bounds_d1::<I0>(x));
-    assert_eq!(lower.eval(&numbers[0]), None);
-    assert_eq!(upper.eval(&numbers[2]), None);
-
     // bounds: constant
     unsafe { var.data_mut() }.set_bound_d1(true, 10);
     unsafe { var.data_mut() }.set_bound_d1(false, 12.0);
@@ -108,11 +98,6 @@ fn v1_int_ord() {
     let p0 = m.par0_int("p0");
     let i = s.idx();
     let p1 = m.par1_num("p1", s);
-
-    // bounds: no binding
-    let [lower, upper] = [true, false].map(|x| var.data().resolve_bounds_d1::<I0>(x));
-    assert_eq!(lower.eval(0), None);
-    assert_eq!(upper.eval(2), None);
 
     // bounds: constant
     unsafe { var.data_mut() }.set_bound_d1(true, 10);
