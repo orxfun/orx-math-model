@@ -12,7 +12,6 @@ fn t_sum_d1() {
     // modeling
     let m = Model::new();
     let s0 = m.cat_set_int();
-    let i0 = s0.idx();
     let x1 = m.var1(VarType::Binary, s0);
 
     // binding
