@@ -7,7 +7,7 @@ use crate::scalars::{DNum, DVar, Int, Num, Val, ValNum, Var};
 use crate::sets::{CatInt, CatStr, DSet, FunSet, Ord};
 use crate::slot::State;
 use crate::sym_ref::SymRef;
-use crate::vars::{ContVarD0, ContVarD1, DVars, VarD0, VarD1, VarD2};
+use crate::vars::{ContVarD0, ContVarD1, DVars, VarD0, VarD1, VarD2, VarType};
 use crate::{
     AsF64, Bag, DimVec, LinExpr, Ptr, Set, SetCatInt, SetCatStr, SetOrd, SetSym, Slot, Symbol,
     TConVal, ValTyp, VarTyp,
@@ -215,36 +215,32 @@ impl<'d> Model<'d> {
 
     // vars
 
-    pub fn var0<'m>(&'m self, key: impl ToString, typ: VarTyp) -> ContVarD0<'m, 'd> {
-        let data = DVars::new_d0(key.to_string(), typ);
+    pub fn var0<'m, V: VarType>(&'m self, key: impl ToString) -> V::VarD0<'m, 'd> {
+        let data = DVars::new_d0(key.to_string(), V::typ());
         let el = self.vars_bag.push(data);
-        ContVarD0::new(VarD0::new(Symbol::new(self, el)))
+        VarD0::new(Symbol::new(self, el)).into()
     }
 
-    pub fn var1<'m, S0>(
-        &'m self,
-        key: impl ToString,
-        typ: VarTyp,
-        s0: S0,
-    ) -> ContVarD1<'m, 'd, S0::Meta>
+    pub fn var1<'m, V, S0>(&'m self, key: impl ToString, s0: S0) -> V::VarD1<'m, 'd, S0::Meta>
     where
+        V: VarType,
         S0: SetSym<'m, 'd>,
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
     {
         let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
-        let data = DVars::new_d1(key.to_string(), typ, s0_ptr);
+        let data = DVars::new_d1(key.to_string(), V::typ(), s0_ptr);
         let el = self.vars_bag.push(data);
-        ContVarD1::new(VarD1::new(Symbol::new(self, el)))
+        VarD1::new(Symbol::new(self, el)).into()
     }
 
-    pub fn var2<'m, S0, S1>(
+    pub fn var2<'m, V, S0, S1>(
         &'m self,
         key: impl ToString,
-        typ: VarTyp,
         s0: S0,
         s1: S1,
-    ) -> VarD2<'m, 'd, S0::Meta, S1::Meta>
+    ) -> V::VarD2<'m, 'd, S0::Meta, S1::Meta>
     where
+        V: VarType,
         S0: SetSym<'m, 'd>,
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
         S1: SetSym<'m, 'd>,
@@ -252,9 +248,9 @@ impl<'d> Model<'d> {
     {
         let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
         let s1_ptr = <S1::Meta as Set>::set_ptr(s1);
-        let data = DVars::new_d2(key.to_string(), typ, s0_ptr, s1_ptr);
+        let data = DVars::new_d2(key.to_string(), V::typ(), s0_ptr, s1_ptr);
         let el = self.vars_bag.push(data);
-        VarD2::new(Symbol::new(self, el))
+        VarD2::new(Symbol::new(self, el)).into()
     }
 
     // scalars

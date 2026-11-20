@@ -1,3 +1,4 @@
+use crate::vars::Binary;
 use crate::{
     Elements, ElementsIter, Model, Set, SetCatInt, SetCatStr, SetOrd, SetSym, SymWrap, VarTyp,
 };
@@ -18,7 +19,7 @@ fn v1_at_int_cint() {
     let m = Model::new();
     let s0 = m.cat_set_int("s0");
     let i0 = s0.idx();
-    let v1 = m.var1("x", VarTyp::Binary, s0);
+    let v1 = m.var1::<Binary, _>("x", s0);
     let sca1 = [v1.at(i0), v1[i0]];
     let sca2 = [v1.at(2), v1[2]];
 
@@ -53,7 +54,7 @@ fn v1_at_int_cstr() {
     let m = Model::new();
     let s0 = m.cat_set_str("s0");
     let i0 = s0.idx();
-    let v1 = m.var1("x", VarTyp::Continuous, s0);
+    let v1 = m.var1::<Binary, _>("x", s0);
     let sca1 = [v1.at(i0), v1[i0]];
     let sca2 = [v1.at("2"), v1["2"]];
 
@@ -88,7 +89,7 @@ fn v1_at_int_ord() {
     let m = Model::new();
     let s0 = m.ord_set("s0");
     let i0 = s0.idx();
-    let v1 = m.var1("x", VarTyp::Binary, s0);
+    let v1 = m.var1::<Binary, _>("x", s0);
     let sca1 = [v1.at(i0), v1[i0]];
     let sca2 = [v1.at(2), v1[2]];
 

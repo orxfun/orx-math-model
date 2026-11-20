@@ -1,4 +1,7 @@
-use crate::{Model, SetCatInt, SetCatStr, SetOrd, SetSym, SymWrap, VarTyp};
+use crate::{
+    vars::{Binary, Continuous, Integer},
+    Model, SetCatInt, SetCatStr, SetOrd, SetSym, SymWrap, VarTyp,
+};
 use alloc::{string::ToString, vec::Vec};
 
 #[test]
@@ -12,7 +15,7 @@ fn v2_int_cint_cstr() {
     let m = Model::new();
     let s0 = m.cat_set_int("s0");
     let s1 = m.cat_set_str("s1");
-    let var = m.var2("x", VarTyp::Binary, s0, s1);
+    let var = m.var2::<Binary, _, _>("x", s0, s1);
     let p0 = m.par0_int("p0");
     let i = s0.idx();
     let j = s1.idx();
@@ -63,7 +66,7 @@ fn v2_int_cstr_ord() {
     let m = Model::new();
     let s0 = m.cat_set_str("s0");
     let s1 = m.ord_set("s1");
-    let _var = m.var2("x", VarTyp::Continuous, s0, s1);
+    let _var = m.var2::<Continuous, _, _>("x", s0, s1);
 }
 
 #[test]
@@ -72,5 +75,5 @@ fn v2_int_ord_cint() {
     let m = Model::new();
     let s0 = m.ord_set("s0");
     let s1 = m.cat_set_int("s1");
-    let _var = m.var2("x", VarTyp::Integer, s0, s1);
+    let _var = m.var2::<Integer, _, _>("x", s0, s1);
 }

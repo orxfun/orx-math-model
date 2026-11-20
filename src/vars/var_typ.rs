@@ -18,6 +18,8 @@ pub trait VarType {
     type VarD1<'m, 'd: 'm, I0: Set>: From<VarD1<'m, 'd, I0>>;
 
     type VarD2<'m, 'd: 'm, I0: Set, I1: Set>: From<VarD2<'m, 'd, I0, I1>>;
+
+    fn typ() -> VarTyp;
 }
 
 pub struct Continuous;
@@ -27,6 +29,10 @@ impl VarType for Continuous {
     type VarD1<'m, 'd: 'm, I0: Set> = ContVarD1<'m, 'd, I0>;
 
     type VarD2<'m, 'd: 'm, I0: Set, I1: Set> = ContVarD2<'m, 'd, I0, I1>;
+
+    fn typ() -> VarTyp {
+        VarTyp::Continuous
+    }
 }
 
 pub struct Binary;
@@ -36,6 +42,10 @@ impl VarType for Binary {
     type VarD1<'m, 'd: 'm, I0: Set> = BinVarD1<'m, 'd, I0>;
 
     type VarD2<'m, 'd: 'm, I0: Set, I1: Set> = BinVarD2<'m, 'd, I0, I1>;
+
+    fn typ() -> VarTyp {
+        VarTyp::Binary
+    }
 }
 
 pub struct Integer;
@@ -45,4 +55,8 @@ impl VarType for Integer {
     type VarD1<'m, 'd: 'm, I0: Set> = IntVarD1<'m, 'd, I0>;
 
     type VarD2<'m, 'd: 'm, I0: Set, I1: Set> = IntVarD2<'m, 'd, I0, I1>;
+
+    fn typ() -> VarTyp {
+        VarTyp::Integer
+    }
 }
