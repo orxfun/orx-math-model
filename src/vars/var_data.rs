@@ -36,6 +36,30 @@ impl<'d> DVars<'d> {
         Self::new(key, typ, bounds, sets)
     }
 
+    pub fn set_bound_d0(&mut self, lower: bool, bound: impl Into<BoundD0<'d>>) {
+        let bounds = unsafe { &mut self.bounds.d0 };
+        match lower {
+            true => bounds.lower = bound.into(),
+            false => bounds.upper = bound.into(),
+        }
+    }
+
+    pub fn set_bound_d1(&mut self, lower: bool, bound: impl Into<BoundD1<'d>>) {
+        let bounds = unsafe { &mut self.bounds.d1 };
+        match lower {
+            true => bounds.lower = bound.into(),
+            false => bounds.upper = bound.into(),
+        }
+    }
+
+    pub fn set_bound_d2(&mut self, lower: bool, bound: impl Into<BoundD2<'d>>) {
+        let bounds = unsafe { &mut self.bounds.d2 };
+        match lower {
+            true => bounds.lower = bound.into(),
+            false => bounds.upper = bound.into(),
+        }
+    }
+
     // get
 
     pub fn dim(&self) -> Dim {
