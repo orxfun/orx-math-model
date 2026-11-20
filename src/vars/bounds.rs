@@ -13,7 +13,7 @@ pub union UBounds<'d> {
     pub d2: Bounds<BoundD2<'d>>,
 }
 
-#[derive(Clone, Copy)]
+#[derive(derive_new::new, Clone, Copy)]
 pub struct Bounds<T> {
     pub lower: T,
     pub upper: T,

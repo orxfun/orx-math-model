@@ -1,27 +1,39 @@
 use crate::sets::{DSet, FunSet};
+use crate::vars::{BoundD0, BoundD1, BoundD2, Bounds, UBounds};
 use crate::{Dim, DimVec, Ptr, VarType};
 use alloc::string::String;
 
+#[derive(derive_new::new)]
 pub struct DVars<'d> {
     key: String,
     typ: VarType,
+    bounds: UBounds<'d>,
     sets: DimVec<Ptr<'d, DSet<'d>>>,
 }
 
 impl<'d> DVars<'d> {
     pub fn new_d0(key: String, typ: VarType) -> Self {
         let sets = DimVec::new([]);
-        Self { key, typ, sets }
+        let bounds = UBounds {
+            d0: Bounds::new(BoundD0::None, BoundD0::None),
+        };
+        Self::new(key, typ, bounds, sets)
     }
 
     pub fn new_d1(key: String, typ: VarType, s0: Ptr<'d, DSet<'d>>) -> Self {
         let sets = DimVec::new([s0]);
-        Self { key, typ, sets }
+        let bounds = UBounds {
+            d1: Bounds::new(BoundD1::None, BoundD1::None),
+        };
+        Self::new(key, typ, bounds, sets)
     }
 
     pub fn new_d2(key: String, typ: VarType, s0: Ptr<'d, DSet<'d>>, s1: Ptr<'d, DSet<'d>>) -> Self {
         let sets = DimVec::new([s0, s1]);
-        Self { key, typ, sets }
+        let bounds = UBounds {
+            d2: Bounds::new(BoundD2::None, BoundD2::None),
+        };
+        Self::new(key, typ, bounds, sets)
     }
 
     // get
