@@ -1,5 +1,5 @@
 use crate::free_fun::IntoLinExpr;
-use crate::idxs::{IdxVec, SumIdxs};
+use crate::idxs::IdxVec;
 use crate::lin_expr::{DLinExpr, DSum, SumVec, TermVec};
 use crate::{LinExpr, Model, Set, SetSym, SymWrap};
 
