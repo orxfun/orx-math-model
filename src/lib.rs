@@ -12,7 +12,7 @@
 )]
 #![no_std]
 // TODO: clean up this
-// #![allow(dead_code, unused_imports)]
+#![allow(dead_code, unused_imports)]
 
 extern crate alloc;
 
@@ -42,7 +42,7 @@ mod vars;
 
 // crate
 pub(crate) use bag::Bag;
-pub(crate) use con_vals::{ConValTyp, TConVal};
+pub(crate) use con_vals::TConVal;
 pub(crate) use con_vec::{ConVec, DimVec};
 pub(crate) use dim::Dim;
 pub(crate) use elements::{Elements, ElementsIter};
