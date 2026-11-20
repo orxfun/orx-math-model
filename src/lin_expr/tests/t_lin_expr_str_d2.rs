@@ -34,7 +34,7 @@ fn t_lin_expr_str_d2() {
     let s1 = m.ord_set("s1");
     let i0 = s0.idx();
     let i1 = s1.idx();
-    let p = m.par2_int(s0, s1);
+    let p = m.par2_int("p", s0, s1);
     let x = m.var2(VarType::Cont(Bounds::default()), s0, s1);
 
     // binding

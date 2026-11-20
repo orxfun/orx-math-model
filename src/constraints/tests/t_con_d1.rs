@@ -17,7 +17,7 @@ fn t_con_d1() {
     let m = Model::new();
     let s0 = m.cat_set_int("s0");
     let x = m.var1(VarType::Binary, s0);
-    let p = m.par1_num(s0);
+    let p = m.par1_num("p", s0);
 
     // binding
     s0.bind(|| s0_data.iter().copied()).unwrap();
