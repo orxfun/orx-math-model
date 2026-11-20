@@ -1,4 +1,4 @@
-use crate::{Bag, Model, Res, ResValid};
+use crate::{Model, Res, ResValid};
 use core::marker::PhantomData;
 use orx_imp_vec::Elem;
 
@@ -8,16 +8,6 @@ use orx_imp_vec::Elem;
 pub enum State {
     Empty,
     Bound,
-}
-
-pub struct SlotStates {
-    bag: Bag<State>,
-}
-
-impl SlotStates {
-    pub fn push(&self) -> Elem<'_, State> {
-        self.bag.push(State::Empty)
-    }
 }
 
 // slot
