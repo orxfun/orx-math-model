@@ -7,7 +7,7 @@ use crate::scalars::{DNum, DVar, Int, Num, Val, ValNum, Var};
 use crate::sets::{CatInt, CatStr, DSet, FunSet, Ord};
 use crate::slot::State;
 use crate::sym_ref::SymRef;
-use crate::vars::{DVars, VarD1, VarD2};
+use crate::vars::{DVars, VarD0, VarD1, VarD2};
 use crate::{
     AsF64, Bag, DimVec, LinExpr, Ptr, Set, SetCatInt, SetCatStr, SetOrd, SetSym, Slot, Symbol,
     TConVal, ValTyp, VarType,
@@ -189,6 +189,12 @@ impl<'d> Model<'d> {
     }
 
     // vars
+
+    pub fn var0<'m>(&'m self, typ: VarType) -> VarD0<'m, 'd> {
+        let data = DVars::new_d0(typ);
+        let el = self.vars_bag.push(data);
+        VarD0::new(Symbol::new(self, el))
+    }
 
     pub fn var1<'m, S0>(&'m self, typ: VarType, s0: S0) -> VarD1<'m, 'd, S0::Meta>
     where
