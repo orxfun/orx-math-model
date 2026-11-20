@@ -28,5 +28,5 @@ fn con_d0() {
 
     let c = for1(s0, |i| con(3, leq, x[2]));
 
-    let c = for2(s0, s1, |i, j| con(3, leq, sum1(s0, |i0| x[2])));
+    // let c = for2(s0, s1, |i, j| con(3, leq, sum1(s0, |i0| j * x[2])));
 }
