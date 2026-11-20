@@ -1,5 +1,6 @@
 use crate::constraints::Constraint;
-use crate::{con, con1, con2, geq, leq, sum1, sum2,  Model, SymWrap, VarType};
+use crate::vars::{Binary, Continuous};
+use crate::{con, con1, con2, geq, leq, sum1, sum2, Model, SymWrap, VarTyp};
 use alloc::string::{String, ToString};
 use alloc::vec::Vec;
 use alloc::{format, vec};
@@ -37,8 +38,8 @@ fn t_con_d2() {
     let org = m.cat_set_str("org");
     let dst = m.cat_set_str("dst");
     let c = m.par2_num("c", org, dst);
-    let y = m.var1("y", VarType::Binary, org);
-    let x = m.var2("x", VarType::Continuous, org, dst);
+    let y = m.var1::<Binary, _>("y", org, 0, 1);
+    let x = m.var2::<Continuous, _, _>("x", org, dst, 0, 1);
 
     // binding
     org.bind(|| &d_org).unwrap();

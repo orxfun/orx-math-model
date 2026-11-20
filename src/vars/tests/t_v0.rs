@@ -1,19 +1,15 @@
-use crate::{vars::bounds::ResolvedBoundD0, Model, SetCatInt, SetSym, SymWrap, VarType};
+use crate::vars::{bounds::ResolvedBoundD0, Binary};
+use crate::{Model, SetCatInt, SetSym, SymWrap, VarTyp};
 
 #[test]
 fn t_v0() {
     // modeling
     let m = Model::new();
-    let var = m.var0("x", VarType::Binary);
+    let var = m.var0::<Binary>("x", 0, 1);
     let p0 = m.par0_int("p0");
     let s = m.cat_set_int("s");
     let i = s.idx();
     let p1 = m.par1_num("p1", s);
-
-    // bounds: no binding
-    let [lower, upper] = [true, false].map(|x| var.data().resolve_bounds_d0(x).eval());
-    assert_eq!(lower, None);
-    assert_eq!(upper, None);
 
     // bounds: constant
     unsafe { var.data_mut() }.set_bound_d0(true, 10);

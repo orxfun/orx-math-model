@@ -2,7 +2,7 @@ use crate::scalars::Var;
 use crate::vars::DVars;
 use crate::{Set, SymWrap, Symbol};
 use core::marker::PhantomData;
-use core::ops::Index;
+use core::ops::{Deref, Index};
 
 #[derive(derive_new::new, Clone, Copy)]
 pub struct VarD2<'m, 'd, I0: Set, I1: Set>(Symbol<'m, 'd, DVars<'d>>, PhantomData<(I0, I1)>);
@@ -38,3 +38,30 @@ where
         self.m().var_ref(self.at(i0, i1))
     }
 }
+
+// variants
+
+macro_rules! impl_variants {
+    ($name:ident) => {
+        #[derive(derive_new::new, Clone, Copy)]
+        pub struct $name<'m, 'd, I0: Set, I1: Set>(VarD2<'m, 'd, I0, I1>);
+
+        impl<'m, 'd, I0: Set, I1: Set> Deref for $name<'m, 'd, I0, I1> {
+            type Target = VarD2<'m, 'd, I0, I1>;
+
+            fn deref(&self) -> &Self::Target {
+                &self.0
+            }
+        }
+
+        impl<'m, 'd, I0: Set, I1: Set> From<VarD2<'m, 'd, I0, I1>> for $name<'m, 'd, I0, I1> {
+            fn from(value: VarD2<'m, 'd, I0, I1>) -> Self {
+                Self(value)
+            }
+        }
+    };
+}
+
+impl_variants!(ContVarD2);
+impl_variants!(BinVarD2);
+impl_variants!(IntVarD2);

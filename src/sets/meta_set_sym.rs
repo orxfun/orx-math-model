@@ -3,7 +3,7 @@ use crate::sets::{CatInt, CatStr, Ord};
 use crate::{Set, SetCatInt, SetCatStr, SetOrd, SymWrap};
 
 pub trait SetSym<'m, 'd: 'm>: SymWrap<'m, 'd> {
-    type Meta: Set;
+    type Meta: Set<SetSym<'m, 'd> = Self>;
 
     fn idx(self) -> <Self::Meta as Set>::IdxSym<'m, 'd>;
 }

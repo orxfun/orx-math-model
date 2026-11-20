@@ -1,5 +1,6 @@
 use crate::scalars::DVar;
-use crate::{Model, SetCatInt, SetCatStr, SetOrd, SymWrap, VarType};
+use crate::vars::Binary;
+use crate::{Model, SetCatInt, SetCatStr, SetOrd, SymWrap, VarTyp};
 use alloc::{format, string::ToString};
 
 #[test]
@@ -10,7 +11,7 @@ fn var_from_var1() {
             let m = Model::new();
             let s0 = m.set::<$s0>("S");
             let s1 = m.set::<$s1>("T");
-            let vard = m.var2("x", VarType::Binary, s0, s1);
+            let vard = m.var2::<Binary, _, _>("x", s0, s1, 0, 1);
 
             // running
             let var_name = "x"; // TODO: var-name fix

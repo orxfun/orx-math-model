@@ -1,6 +1,6 @@
+use crate::vars::Continuous;
 use crate::{
-     Elements, ElementsIter, LinExpr, Model, Set, SetCatStr, SetOrd, SetSym, SymWrap,
-    VarType,
+    Elements, ElementsIter, LinExpr, Model, Set, SetCatStr, SetOrd, SetSym, SymWrap, VarTyp,
 };
 use alloc::format;
 use alloc::string::{String, ToString};
@@ -35,7 +35,7 @@ fn t_lin_expr_str_d2() {
     let i0 = s0.idx();
     let i1 = s1.idx();
     let p = m.par2_int("p", s0, s1);
-    let x = m.var2("x", VarType::Continuous, s0, s1);
+    let x = m.var2::<Continuous, _, _>("x", s0, s1, 0, 1);
 
     // binding
     p.bind(|i, j| par_data[i][j as usize]).unwrap();
