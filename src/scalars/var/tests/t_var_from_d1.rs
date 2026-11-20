@@ -1,8 +1,7 @@
-use crate::scalars::num::{DNum, ValInt, ValNum};
 use crate::scalars::DVar;
 use crate::{Model, SetCatInt, SetCatStr, SetOrd, SymWrap, VarType};
+use alloc::format;
 use alloc::string::ToString;
-use alloc::{boxed::Box, format};
 
 #[test]
 fn var_from_var1() {
@@ -15,7 +14,7 @@ fn var_from_var1() {
 
             // running
             let var_name = "x"; // TODO: var-name fix
-            let var = DVar::create_d1::<$s0>(vard.data_ptr(), || $i0);
+            let var = DVar::create_d1::<$s0>(vard.ptr(), || $i0);
             assert_eq!(var.eval_to_string(), format!("{var_name}_{}", $i0));
         };
     }

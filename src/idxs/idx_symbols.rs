@@ -1,5 +1,5 @@
 use crate::idxs::DIdx;
-use crate::{impl_sym_wrap, SymWrap, Symbol};
+use crate::{impl_sym_wrap, Symbol};
 
 // cat int
 

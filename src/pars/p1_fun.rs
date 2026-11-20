@@ -1,4 +1,4 @@
-use crate::{Set, SetCatInt, SetCatStr, SetOrd, SetTyp, ValTyp};
+use crate::{Set, SetCatInt, SetCatStr, SetOrd, SetTyp};
 use alloc::boxed::Box;
 use core::mem::{transmute, ManuallyDrop};
 

@@ -1,7 +1,5 @@
 use crate::lin_expr::{Coef, DLinExpr, DLinTerm, SumVec, TermVec};
-use crate::scalars::{DNum, ValNum};
-use crate::{LinExpr, Model, Ptr, SymWrap, ValTyp, Var};
-use alloc::boxed::Box;
+use crate::{LinExpr, SymWrap, Var};
 use core::ops::Neg;
 
 impl<'m, 'd> Neg for LinExpr<'m, 'd> {

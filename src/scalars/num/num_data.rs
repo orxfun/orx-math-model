@@ -1,9 +1,8 @@
 use crate::scalars::num::meta_val::round_f64;
-use crate::scalars::num::{FInt, FNum};
+use crate::scalars::num::FNum;
 use crate::scalars::{ValInt, ValNum};
 use crate::{AsF64, AsI64, Model, Ptr, SymWrap, ValTyp};
 use alloc::boxed::Box;
-use core::mem::{transmute, ManuallyDrop};
 
 #[derive(derive_new::new)]
 pub struct DNum<'d> {

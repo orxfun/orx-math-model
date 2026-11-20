@@ -42,7 +42,7 @@ mod vars;
 
 // crate
 pub(crate) use bag::Bag;
-pub(crate) use con_vals::{ConValTyp, TConVal};
+pub(crate) use con_vals::TConVal;
 pub(crate) use con_vec::{ConVec, DimVec};
 pub(crate) use dim::Dim;
 pub(crate) use elements::{Elements, ElementsIter};
@@ -52,8 +52,10 @@ pub(crate) use scalars::{AsF64, AsI64, Int, Num, ValTyp, Var};
 pub(crate) use sets::{EIdx, Idx1, Idx2, Set, SetCatInt, SetCatStr, SetOrd, SetSym, SetTyp};
 pub(crate) use slot::{Ptr, PtrMut, Slot};
 pub(crate) use symbol::{SymWrap, Symbol};
-pub(crate) use vars::{Bounds, VarD1, VarD2, VarType};
 
 // api
-pub use free_fun::{con, eq, for1, for2, geq, leq, sum1, sum2};
+pub use free_fun::{con, con1, con2, eq, geq, leq, sum1, sum2};
 pub use model::Model;
+pub use pars::{IntParD1, IntParD2, NumParD1, NumParD2};
+pub use sets::{CatInt, CatStr, Ord};
+pub use vars::{Bounds, VarD1, VarD2, VarType};

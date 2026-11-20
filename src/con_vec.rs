@@ -1,6 +1,5 @@
 use crate::constants::MAX_DIM;
-use crate::idxs::DIdx;
-use crate::{Dim, Ptr};
+use crate::Dim;
 use core::ops::{Deref, Index};
 
 #[derive(Clone, Debug)]

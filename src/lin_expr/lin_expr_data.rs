@@ -1,4 +1,4 @@
-use crate::constants::{MAX_EXPR_LEN, MAX_SUM_LEN};
+use crate::constants::MAX_EXPR_LEN;
 use crate::lin_expr::{DLinTerm, DSum};
 use crate::scalars::{DNum, ValNum};
 use crate::{ConVec, Model, Ptr, SymWrap, ValTyp};

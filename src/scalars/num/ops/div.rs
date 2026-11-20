@@ -1,6 +1,6 @@
 use super::add::val_num;
 use crate::idxs::IdxOrd;
-use crate::scalars::{AsF64, DNum, ValInt, ValNum};
+use crate::scalars::AsF64;
 use crate::{Int, Num, SetOrd, SymWrap};
 use alloc::boxed::Box;
 use core::ops::Div;

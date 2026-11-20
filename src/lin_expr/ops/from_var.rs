@@ -1,6 +1,5 @@
 use crate::lin_expr::{Coef, DLinExpr, DLinTerm, SumVec, TermVec};
 use crate::{LinExpr, SymWrap, Var};
-use core::ops::Neg;
 
 impl<'m, 'd> From<Var<'m, 'd>> for DLinTerm<'d> {
     fn from(value: Var<'m, 'd>) -> Self {

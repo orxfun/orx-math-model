@@ -1,4 +1,4 @@
-use crate::{Res, ResValid, Set, SetTyp};
+use crate::{Set, SetTyp};
 use alloc::string::String;
 
 #[repr(C)]

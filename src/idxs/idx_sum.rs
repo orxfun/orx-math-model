@@ -1,5 +1,5 @@
-use crate::idxs::{DIdx, IdxCatInt, IdxCatStr, IdxOrd};
-use crate::{ConVec, DimVec, Model, Ptr, SetTyp, SymWrap};
+use crate::idxs::DIdx;
+use crate::{DimVec, Ptr, SetTyp};
 
 pub type IdxVec<'d> = DimVec<Ptr<'d, DIdx<'d>>>;
 
@@ -8,89 +8,3 @@ impl<'d> IdxVec<'d> {
         self[idx].get().set_ptr().get().typ()
     }
 }
-
-#[derive(derive_more::From)]
-pub enum Idx<'m, 'd> {
-    CatInt(IdxCatInt<'m, 'd>),
-    CatStr(IdxCatStr<'m, 'd>),
-    Ord(IdxOrd<'m, 'd>),
-}
-
-impl<'m, 'd> Idx<'m, 'd> {
-    fn m(&self) -> &'m Model<'d> {
-        match self {
-            Idx::CatInt(x) => x.m(),
-            Idx::CatStr(x) => x.m(),
-            Idx::Ord(x) => x.m(),
-        }
-    }
-
-    fn ptr(&self) -> Ptr<'d, DIdx<'d>> {
-        match self {
-            Idx::CatInt(x) => x.ptr(),
-            Idx::CatStr(x) => x.ptr(),
-            Idx::Ord(x) => x.ptr(),
-        }
-    }
-}
-
-// sum indices
-
-pub enum SumIdxs<'m, 'd> {
-    D1(Idx<'m, 'd>),
-    D2(Idx<'m, 'd>, Idx<'m, 'd>),
-}
-
-impl<'m, 'd> SumIdxs<'m, 'd> {
-    pub(crate) fn m(&self) -> &'m Model<'d> {
-        match self {
-            SumIdxs::D1(i0) => i0.m(),
-            SumIdxs::D2(i0, _) => i0.m(),
-        }
-    }
-
-    pub(crate) fn to_idx_vec(self) -> IdxVec<'d> {
-        match self {
-            SumIdxs::D1(i0) => IdxVec::new([i0.ptr()]),
-            SumIdxs::D2(i0, i1) => IdxVec::new([i0.ptr(), i1.ptr()]),
-        }
-    }
-}
-
-// indices - into
-
-macro_rules! d1 {
-    ($i0:ty) => {
-        impl<'m, 'd> From<$i0> for SumIdxs<'m, 'd> {
-            fn from(i0: $i0) -> Self {
-                Self::D1(i0.into())
-            }
-        }
-    };
-}
-
-d1!(IdxCatInt<'m, 'd>);
-d1!(IdxCatStr<'m, 'd>);
-d1!(IdxOrd<'m, 'd>);
-
-macro_rules! d2 {
-    ($i0:ty, $i1:ty) => {
-        impl<'m, 'd> From<($i0, $i1)> for SumIdxs<'m, 'd> {
-            fn from((i0, i1): ($i0, $i1)) -> Self {
-                Self::D2(i0.into(), i1.into())
-            }
-        }
-    };
-}
-
-d2!(IdxCatInt<'m, 'd>, IdxCatInt<'m, 'd>);
-d2!(IdxCatInt<'m, 'd>, IdxCatStr<'m, 'd>);
-d2!(IdxCatInt<'m, 'd>, IdxOrd<'m, 'd>);
-
-d2!(IdxCatStr<'m, 'd>, IdxCatInt<'m, 'd>);
-d2!(IdxCatStr<'m, 'd>, IdxCatStr<'m, 'd>);
-d2!(IdxCatStr<'m, 'd>, IdxOrd<'m, 'd>);
-
-d2!(IdxOrd<'m, 'd>, IdxCatInt<'m, 'd>);
-d2!(IdxOrd<'m, 'd>, IdxCatStr<'m, 'd>);
-d2!(IdxOrd<'m, 'd>, IdxOrd<'m, 'd>);
