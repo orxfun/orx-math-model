@@ -1,7 +1,6 @@
 use crate::idxs::{IdxCatInt, IdxCatStr, IdxOrd};
-use crate::sets::{CatInt, CatStr, DSet, Ord};
-use crate::{Set, SetCatInt, SetCatStr, SetOrd, SymWrap, Symbol};
-use core::ops::Deref;
+use crate::sets::{CatInt, CatStr, Ord};
+use crate::{Set, SetCatInt, SetCatStr, SetOrd, SymWrap};
 
 pub trait SetSym<'m, 'd: 'm>: SymWrap<'m, 'd> {
     type Meta: Set;
