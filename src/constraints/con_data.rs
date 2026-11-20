@@ -60,6 +60,8 @@ pub mod ext_test {
                 if !written {
                     write!(f, "0").unwrap();
                 }
+
+                writeln!(f).unwrap();
             };
 
             match self.idxs.dim() {
