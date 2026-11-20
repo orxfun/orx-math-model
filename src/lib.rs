@@ -53,10 +53,13 @@ pub(crate) use scalars::{AsF64, AsI64, Int, Num, ValTyp, Var};
 pub(crate) use sets::{EIdx, Idx1, Idx2, Set, SetCatInt, SetCatStr, SetOrd, SetSym, SetTyp};
 pub(crate) use slot::{Ptr, PtrMut, Slot};
 pub(crate) use symbol::{SymWrap, Symbol};
+pub(crate) use vars::{VarD0, VarD1, VarD2, VarTyp};
 
 // api
 pub use free_fun::{con, con1, con2, eq, geq, leq, par, par_int, set, sum1, sum2};
 pub use model::Model;
 pub use pars::{IntParD0, IntParD1, IntParD2, NumParD0, NumParD1, NumParD2};
 pub use sets::{CatInt, CatStr, Ord};
-pub use vars::{VarD1, VarD2, VarTyp};
+pub use vars::{
+    BinVarD0, BinVarD1, BinVarD2, ContVarD0, ContVarD1, ContVarD2, IntVarD0, IntVarD1, IntVarD2,
+};

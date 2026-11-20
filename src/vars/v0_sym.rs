@@ -20,6 +20,12 @@ macro_rules! impl_variants {
                 &self.0
             }
         }
+
+        impl<'m, 'd> From<VarD0<'m, 'd>> for $name<'m, 'd> {
+            fn from(value: VarD0<'m, 'd>) -> Self {
+                Self(value)
+            }
+        }
     };
 }
 
