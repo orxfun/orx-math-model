@@ -1,4 +1,5 @@
 use crate::idxs::IdxOrd;
+use crate::pars::{IntParD0, NumParD0};
 use crate::scalars::{DNum, FNum, ValInt, ValNum};
 use crate::{AsF64, Int, Model, Num, SetOrd, SymWrap, ValTyp};
 use alloc::boxed::Box;
@@ -60,6 +61,35 @@ macro_rules! num_idx {
 
 num_idx!(Num<'m, 'd>, val_num);
 num_idx!(Int<'m, 'd>, val_int);
+
+// num/int + p0
+
+macro_rules! num_par {
+    ($n1:ty, $par:ty, $out:ty, $fout:ident) => {
+        impl<'m, 'd> Add<$par> for $n1 {
+            type Output = $out;
+
+            fn add(self, rhs: $par) -> Self::Output {
+                let (t1, t2) = (self.ptr(), rhs.ptr().get().fun_ptr());
+                let fun = Box::new(move || t1.get().eval() + t2.get().d0_at());
+                $fout(self.m(), fun)
+            }
+        }
+
+        impl<'m, 'd> Add<$n1> for $par {
+            type Output = $out;
+
+            fn add(self, rhs: $n1) -> Self::Output {
+                rhs + self
+            }
+        }
+    };
+}
+
+num_par!(Num<'m, 'd>, NumParD0<'m, 'd>, Num<'m, 'd>, val_num);
+num_par!(Num<'m, 'd>, IntParD0<'m, 'd>, Num<'m, 'd>, val_num);
+num_par!(Int<'m, 'd>, NumParD0<'m, 'd>, Num<'m, 'd>, val_num);
+num_par!(Int<'m, 'd>, IntParD0<'m, 'd>, Int<'m, 'd>, val_int);
 
 // num + con
 
