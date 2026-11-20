@@ -1,12 +1,9 @@
 #[cfg(test)]
 mod tests;
-#[cfg(test)]
-pub use lin_expr_data::ext_test::*;
 
 mod lin_expr_data;
 mod lin_expr_sym;
 mod lin_term_data;
-mod lin_term_eval;
 mod ops;
 mod sum_data;
 

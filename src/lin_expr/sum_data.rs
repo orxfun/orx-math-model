@@ -1,10 +1,7 @@
 use crate::expand::{expand_d1, expand_d2};
 use crate::idxs::IdxVec;
 use crate::lin_expr::DLinExpr;
-use crate::{
-    Elements, ElementsIter, Model, Ptr, Set, SetCatInt, SetCatStr, SetOrd, SetTyp, SymWrap,
-};
-use alloc::vec::Vec;
+use crate::{Model, Ptr, SymWrap};
 
 #[derive(derive_new::new, Clone)]
 pub struct DSum<'d> {
@@ -38,11 +35,9 @@ impl<'d> DSum<'d> {
 #[cfg(test)]
 pub mod ext_test {
     use super::*;
-    use crate::constants::{is_neg, is_pos, is_zero};
     use crate::lin_expr::lin_expr_data::ext_test::{add_opt, write_constant};
     use crate::Dim;
     use alloc::string::String;
-    use core::fmt::Write;
 
     impl<'d> DSum<'d> {
         pub fn eval_append_string_exc_constant(
