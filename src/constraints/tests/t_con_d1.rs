@@ -33,6 +33,11 @@ fn t_con_d1() {
     let c = for1(s0, |i| con(x[i], leq, 1.0));
     assert_eq!(exp_str(c), format!("?"));
 
+    let text = r#"
+first line
+second line
+"#;
+
     // // con(3, leq, x[2]);
 
     // let c = con(3, eq, 0 * x[2]);
