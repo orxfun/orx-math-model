@@ -72,17 +72,14 @@ impl<'d> DVars<'d> {
         }
     }
 
-    pub fn resolve_bounds_d1<I0: Set>(&self, lower: bool) -> ResolvedBoundD1<'_, 'd, I0> {
+    pub fn resolve_bounds_d1<I0: Set>(&self, lower: bool) -> ResolvedBoundD1<'d, I0> {
         match lower {
             true => unsafe { &self.bounds.d1 }.lower.resolve(),
             false => unsafe { &self.bounds.d1 }.upper.resolve(),
         }
     }
 
-    pub fn resolve_bounds_d2<I0: Set, I1: Set>(
-        &self,
-        lower: bool,
-    ) -> ResolvedBoundD2<'_, 'd, I0, I1> {
+    pub fn resolve_bounds_d2<I0: Set, I1: Set>(&self, lower: bool) -> ResolvedBoundD2<'d, I0, I1> {
         match lower {
             true => unsafe { &self.bounds.d2 }.lower.resolve(),
             false => unsafe { &self.bounds.d2 }.upper.resolve(),

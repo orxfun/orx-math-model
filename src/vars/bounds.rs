@@ -44,6 +44,18 @@ macro_rules! impl_from_num {
                 Self::Num(value.ptr())
             }
         }
+
+        impl<'m, 'd> From<IntParD0<'m, 'd>> for $bound {
+            fn from(value: IntParD0<'m, 'd>) -> Self {
+                Self::Num(value.to_int().ptr())
+            }
+        }
+
+        impl<'m, 'd> From<NumParD0<'m, 'd>> for $bound {
+            fn from(value: NumParD0<'m, 'd>) -> Self {
+                Self::Num(value.to_num().ptr())
+            }
+        }
     };
 }
 
@@ -66,18 +78,6 @@ impl ResolvedBoundD0 {
 
 impl_from_con!(BoundD0<'d>);
 impl_from_num!(BoundD0<'d>);
-
-impl<'m, 'd> From<IntParD0<'m, 'd>> for BoundD0<'d> {
-    fn from(value: IntParD0<'m, 'd>) -> Self {
-        Self::Num(value.to_int().ptr())
-    }
-}
-
-impl<'m, 'd> From<NumParD0<'m, 'd>> for BoundD0<'d> {
-    fn from(value: NumParD0<'m, 'd>) -> Self {
-        Self::Num(value.to_num().ptr())
-    }
-}
 
 impl<'d> BoundD0<'d> {
     #[inline(always)]
@@ -108,10 +108,21 @@ pub enum BoundD1<'d> {
     ParD1(Ptr<'d, DPars<'d>>),
 }
 
-pub enum ResolvedBoundD1<'a, 'd, I0: Set> {
+pub enum ResolvedBoundD1<'d, I0: Set> {
     None,
     Con(f64),
-    ParD1(&'a Box<dyn Fn(I0::IdxRaw<'d>) -> f64 + 'd>),
+    ParD1(&'d Box<dyn Fn(I0::IdxRaw<'d>) -> f64 + 'd>),
+}
+
+impl<'d, I0: Set> ResolvedBoundD1<'d, I0> {
+    #[inline(always)]
+    pub fn eval(&self, i0: I0::IdxRaw<'d>) -> Option<f64> {
+        match self {
+            Self::None => None,
+            Self::Con(x) => Some(*x),
+            Self::ParD1(x) => Some(x(i0)),
+        }
+    }
 }
 
 impl_from_con!(BoundD1<'d>);
@@ -140,7 +151,7 @@ impl<'d> BoundD1<'d> {
         }
     }
 
-    pub fn resolve<I0: Set>(&self) -> ResolvedBoundD1<'_, 'd, I0> {
+    pub fn resolve<I0: Set>(&self) -> ResolvedBoundD1<'d, I0> {
         match self {
             Self::None => ResolvedBoundD1::None,
             Self::Con(x) => ResolvedBoundD1::Con(*x),
@@ -163,10 +174,10 @@ pub enum BoundD2<'d> {
     ParD2(Ptr<'d, DPars<'d>>),
 }
 
-pub enum ResolvedBoundD2<'a, 'd, I0: Set, I1: Set> {
+pub enum ResolvedBoundD2<'d, I0: Set, I1: Set> {
     None,
     Con(f64),
-    ParD2(&'a Box<dyn Fn(I0::IdxRaw<'d>, I1::IdxRaw<'d>) -> f64 + 'd>),
+    ParD2(&'d Box<dyn Fn(I0::IdxRaw<'d>, I1::IdxRaw<'d>) -> f64 + 'd>),
 }
 
 impl_from_con!(BoundD2<'d>);
@@ -195,7 +206,7 @@ impl<'d> BoundD2<'d> {
         }
     }
 
-    pub fn resolve<I0: Set, I1: Set>(&self) -> ResolvedBoundD2<'_, 'd, I0, I1> {
+    pub fn resolve<I0: Set, I1: Set>(&self) -> ResolvedBoundD2<'d, I0, I1> {
         match self {
             Self::None => ResolvedBoundD2::None,
             Self::Con(x) => ResolvedBoundD2::Con(*x),

@@ -10,18 +10,19 @@ fn t_v0() {
     let i = s.idx();
     let p1 = m.par1_num("p1", s);
 
+    // bounds: no binding
     let [lower, upper] = [true, false].map(|x| var.data().resolve_bounds_d0(x).eval());
     assert_eq!(lower, None);
     assert_eq!(upper, None);
 
-    // no binding
+    // bounds: constant
     unsafe { var.data_mut() }.set_bound_d0(true, 10);
     unsafe { var.data_mut() }.set_bound_d0(false, 12.0);
     let [lower, upper] = [true, false].map(|x| var.data().resolve_bounds_d0(x).eval());
     assert_eq!(lower, Some(10.0));
     assert_eq!(upper, Some(12.0));
 
-    // with late binding
+    // bounds: with late binding
     unsafe { var.data_mut() }.set_bound_d0(true, p0);
     unsafe { var.data_mut() }.set_bound_d0(false, p1[i]);
 
