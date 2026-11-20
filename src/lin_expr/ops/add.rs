@@ -1,6 +1,6 @@
 use crate::idxs::IdxOrd;
 use crate::lin_expr::{DLinExpr, DLinTerm, SumVec, TermVec};
-use crate::scalars::{DNum, ValNum};
+use crate::scalars::{DNum, ValInt, ValNum};
 use crate::{AsF64, ConVec, Int, LinExpr, Model, Num, Ptr, SymWrap, ValTyp, Var};
 use alloc::boxed::Box;
 use core::ops::Add;
@@ -38,6 +38,11 @@ pub fn const_add_con<'m, 'd>(m: &'m Model<'d>, c1: Con<'d>, c2: impl AsF64) -> P
         }
         None => m.val_num_con(c2).ptr(),
     }
+}
+
+pub fn ord_to_num<'m, 'd>(idx: IdxOrd<'m, 'd>) -> Num<'m, 'd> {
+    let int = idx.data().ord_to_int();
+    idx.m().val::<ValNum>(int)
 }
 
 // expr + expr
@@ -109,10 +114,7 @@ impl<'m, 'd> Add<IdxOrd<'m, 'd>> for LinExpr<'m, 'd> {
     type Output = LinExpr<'m, 'd>;
 
     fn add(self, rhs: IdxOrd<'m, 'd>) -> Self::Output {
-        let expr = self.data();
-        let (terms, sums) = (expr.terms.clone(), expr.sums.clone());
-        let constant = const_add_num(self.m(), expr.constant, rhs.ptr());
-        self.m().lin_exp(DLinExpr::new(terms, sums, Some(constant)))
+        self + ord_to_num(rhs)
     }
 }
 
@@ -197,6 +199,24 @@ macro_rules! var_num {
 
 var_num!(Num<'m, 'd>);
 var_num!(Int<'m, 'd>);
+
+// var + idx
+
+impl<'m, 'd> Add<IdxOrd<'m, 'd>> for Var<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn add(self, rhs: IdxOrd<'m, 'd>) -> Self::Output {
+        self + ord_to_num(rhs)
+    }
+}
+
+impl<'m, 'd> Add<Var<'m, 'd>> for IdxOrd<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn add(self, rhs: Var<'m, 'd>) -> Self::Output {
+        rhs + self
+    }
+}
 
 // var + con
 

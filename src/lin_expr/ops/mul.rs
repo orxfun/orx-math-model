@@ -1,3 +1,5 @@
+use crate::idxs::IdxOrd;
+use crate::lin_expr::ops::add::ord_to_num;
 use crate::lin_expr::{Coef, DLinExpr, DLinTerm, DSum, SumVec, TermVec};
 use crate::scalars::{DNum, ValNum};
 use crate::{AsF64, Int, LinExpr, Model, Num, Ptr, SymWrap, ValTyp, Var, VarType};
@@ -135,6 +137,24 @@ macro_rules! expr_num {
 expr_num!(Num<'m, 'd>);
 expr_num!(Int<'m, 'd>);
 
+// expr * idx
+
+impl<'m, 'd> Mul<IdxOrd<'m, 'd>> for LinExpr<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn mul(self, rhs: IdxOrd<'m, 'd>) -> Self::Output {
+        self * ord_to_num(rhs)
+    }
+}
+
+impl<'m, 'd> Mul<LinExpr<'m, 'd>> for IdxOrd<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn mul(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
+        rhs * self
+    }
+}
+
 // expr * con
 
 macro_rules! expr_con {
@@ -193,6 +213,24 @@ macro_rules! var_num {
 
 var_num!(Num<'m, 'd>);
 var_num!(Int<'m, 'd>);
+
+// var * idx
+
+impl<'m, 'd> Mul<IdxOrd<'m, 'd>> for Var<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn mul(self, rhs: IdxOrd<'m, 'd>) -> Self::Output {
+        self * ord_to_num(rhs)
+    }
+}
+
+impl<'m, 'd> Mul<Var<'m, 'd>> for IdxOrd<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn mul(self, rhs: Var<'m, 'd>) -> Self::Output {
+        rhs * self
+    }
+}
 
 // var * con
 

@@ -1,3 +1,4 @@
+use crate::idxs::IdxOrd;
 use crate::lin_expr::{Coef, DLinExpr, DLinTerm, DSum, SumVec, TermVec};
 use crate::scalars::{DNum, ValNum};
 use crate::{AsF64, Int, LinExpr, Model, Num, Ptr, SymWrap, ValTyp, Var, VarType};
@@ -118,6 +119,11 @@ fn expr_div_con_sym<'m, 'd>(
     m.lin_exp(expr)
 }
 
+fn ord_to_num_recip<'m, 'd>(idx: IdxOrd<'m, 'd>) -> Num<'m, 'd> {
+    let int = idx.data().ord_to_int_recip();
+    idx.m().val::<ValNum>(int)
+}
+
 // expr / num
 
 macro_rules! expr_num {
@@ -134,6 +140,16 @@ macro_rules! expr_num {
 
 expr_num!(Num<'m, 'd>);
 expr_num!(Int<'m, 'd>);
+
+// expr / idx
+
+impl<'m, 'd> Div<IdxOrd<'m, 'd>> for LinExpr<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn div(self, rhs: IdxOrd<'m, 'd>) -> Self::Output {
+        self * ord_to_num_recip(rhs)
+    }
+}
 
 // expr / con
 
@@ -178,6 +194,16 @@ macro_rules! var_num {
 
 var_num!(Num<'m, 'd>);
 var_num!(Int<'m, 'd>);
+
+// var / idx
+
+impl<'m, 'd> Div<IdxOrd<'m, 'd>> for Var<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn div(self, rhs: IdxOrd<'m, 'd>) -> Self::Output {
+        self * ord_to_num_recip(rhs)
+    }
+}
 
 // var / con
 
