@@ -1,3 +1,10 @@
-use alloc::string::String;
+use crate::VarType;
+use alloc::string::{String, ToString};
 
-pub struct BVar(String);
+pub fn var(key: impl ToString) -> BVar {
+    BVar(key.to_string(), VarType::Continuous)
+}
+
+pub struct BVar(String, VarType);
+
+impl BVar {}
