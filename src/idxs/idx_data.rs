@@ -1,6 +1,8 @@
 use crate::idxs::IdxVal;
+use crate::scalars::DNum;
 use crate::sets::DSet;
-use crate::{Ptr, PtrMut, Set, Slot};
+use crate::{AsF64, Ptr, PtrMut, Set, SetOrd, Slot, ValTyp};
+use alloc::boxed::Box;
 
 #[derive(derive_new::new)]
 pub struct DIdx<'d> {
@@ -25,5 +27,11 @@ impl<'d> DIdx<'d> {
 
     pub fn set_ptr(&self) -> Ptr<'d, DSet<'d>> {
         self.set_ptr
+    }
+
+    pub fn ord_to_int(&self) -> DNum<'d> {
+        let val = self.slot.ptr();
+        let fun = Box::new(move || val.get().read::<SetOrd>().as_f64());
+        DNum::new(ValTyp::Int, fun)
     }
 }
