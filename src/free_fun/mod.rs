@@ -9,6 +9,7 @@ mod into_lin_expr;
 mod pars;
 mod sets;
 mod sum;
+mod vars;
 
 pub use con0::con;
 pub use con1::con1;
