@@ -6,6 +6,7 @@ mod con1;
 mod con2;
 mod ineq_op;
 mod into_lin_expr;
+mod pars;
 mod sets;
 mod sum;
 
