@@ -20,6 +20,11 @@ impl<'d> DPars<'d> {
 
     // bind
 
+    pub fn d0_bind<V: AsF64>(&self, val_typ: ValTyp, fun: impl Fn() -> V + 'd) -> Res {
+        debug_assert_eq!(self.fun().val_typ, val_typ);
+        self.slot.bind(ParFun::d0_create::<V>(val_typ, fun))
+    }
+
     pub fn d1_bind<V: AsF64, I0: Set>(
         &self,
         val_typ: ValTyp,

@@ -1,0 +1,8 @@
+use crate::{Bounds, Model, VarType};
+
+#[test]
+fn v0_int_cint() {
+    // modeling
+    let m = Model::new();
+    let _var = m.var0(VarType::Binary);
+}

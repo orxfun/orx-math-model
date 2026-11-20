@@ -1,5 +1,6 @@
 use super::add::val_num;
 use crate::idxs::IdxOrd;
+use crate::pars::{IntParD0, NumParD0};
 use crate::scalars::AsF64;
 use crate::{Int, Num, SetOrd, SymWrap};
 use alloc::boxed::Box;
@@ -26,7 +27,7 @@ num_num!(Num<'m, 'd>, Int<'m, 'd>, Num<'m, 'd>, val_num);
 num_num!(Int<'m, 'd>, Num<'m, 'd>, Num<'m, 'd>, val_num);
 num_num!(Int<'m, 'd>, Int<'m, 'd>, Num<'m, 'd>, val_num);
 
-// num/int - idx
+// num/int / idx
 
 macro_rules! num_idx {
     ($n1:ty, $fout:ident) => {
@@ -56,6 +57,37 @@ macro_rules! num_idx {
 
 num_idx!(Num<'m, 'd>, val_num);
 num_idx!(Int<'m, 'd>, val_num);
+
+// num/int / par
+
+macro_rules! num_par {
+    ($n1:ty, $par:ty, $out:ty, $fout:ident) => {
+        impl<'m, 'd> Div<$par> for $n1 {
+            type Output = $out;
+
+            fn div(self, rhs: $par) -> Self::Output {
+                let (t1, t2) = (self.ptr(), rhs.ptr().get().fun_ptr());
+                let fun = Box::new(move || t1.get().eval() / t2.get().d0_at());
+                $fout(self.m(), fun)
+            }
+        }
+
+        impl<'m, 'd> Div<$n1> for $par {
+            type Output = $out;
+
+            fn div(self, rhs: $n1) -> Self::Output {
+                let (t1, t2) = (self.ptr().get().fun_ptr(), rhs.ptr());
+                let fun = Box::new(move || t1.get().d0_at() / t2.get().eval());
+                $fout(self.m(), fun)
+            }
+        }
+    };
+}
+
+num_par!(Num<'m, 'd>, NumParD0<'m, 'd>, Num<'m, 'd>, val_num);
+num_par!(Num<'m, 'd>, IntParD0<'m, 'd>, Num<'m, 'd>, val_num);
+num_par!(Int<'m, 'd>, NumParD0<'m, 'd>, Num<'m, 'd>, val_num);
+num_par!(Int<'m, 'd>, IntParD0<'m, 'd>, Num<'m, 'd>, val_num);
 
 // num/int / con
 
@@ -113,6 +145,37 @@ impl<'m, 'd> Div for IdxOrd<'m, 'd> {
     }
 }
 
+// idx / par
+
+macro_rules! idx_par {
+    ($par:ty, $out:ty, $fout:ident) => {
+        impl<'m, 'd> Div<$par> for IdxOrd<'m, 'd> {
+            type Output = $out;
+
+            fn div(self, rhs: $par) -> Self::Output {
+                let (t1, t2) = (self.ptr(), rhs.ptr().get().fun_ptr());
+                let fun =
+                    Box::new(move || (t1.get().read::<SetOrd>() / t2.get().d0_at_int()) as f64);
+                $fout(self.m(), fun)
+            }
+        }
+
+        impl<'m, 'd> Div<IdxOrd<'m, 'd>> for $par {
+            type Output = $out;
+
+            fn div(self, rhs: IdxOrd<'m, 'd>) -> Self::Output {
+                let (t1, t2) = (self.ptr().get().fun_ptr(), rhs.ptr());
+                let fun =
+                    Box::new(move || (t1.get().d0_at_int() / t2.get().read::<SetOrd>()) as f64);
+                $fout(self.m(), fun)
+            }
+        }
+    };
+}
+
+idx_par!(NumParD0<'m, 'd>, Num<'m, 'd>, val_num);
+idx_par!(IntParD0<'m, 'd>, Num<'m, 'd>, val_num);
+
 // idx/con
 
 macro_rules! idx_con {
@@ -147,3 +210,47 @@ idx_con!(u64, Num<'m, 'd>, val_num);
 idx_con!(u32, Num<'m, 'd>, val_num);
 idx_con!(usize, Num<'m, 'd>, val_num);
 idx_con!(isize, Num<'m, 'd>, val_num);
+
+// par / con
+
+macro_rules! par_con {
+    ($par:ty, $con:ty, $out:ty, $fout:ident) => {
+        impl<'m, 'd> Div<$con> for $par {
+            type Output = $out;
+
+            fn div(self, rhs: $con) -> Self::Output {
+                let t1 = self.ptr().get().fun_ptr();
+                let fun = Box::new(move || t1.get().d0_at() / rhs.as_f64());
+                $fout(self.m(), fun)
+            }
+        }
+
+        impl<'m, 'd> Div<$par> for $con {
+            type Output = $out;
+
+            fn div(self, rhs: $par) -> Self::Output {
+                let t2 = rhs.ptr().get().fun_ptr();
+                let fun = Box::new(move || self.as_f64() / t2.get().d0_at());
+                $fout(rhs.m(), fun)
+            }
+        }
+    };
+}
+
+par_con!(IntParD0<'m, 'd>, f64, Num<'m, 'd>, val_num);
+par_con!(IntParD0<'m, 'd>, f32, Num<'m, 'd>, val_num);
+par_con!(IntParD0<'m, 'd>, i64, Num<'m, 'd>, val_num);
+par_con!(IntParD0<'m, 'd>, i32, Num<'m, 'd>, val_num);
+par_con!(IntParD0<'m, 'd>, u64, Num<'m, 'd>, val_num);
+par_con!(IntParD0<'m, 'd>, u32, Num<'m, 'd>, val_num);
+par_con!(IntParD0<'m, 'd>, usize, Num<'m, 'd>, val_num);
+par_con!(IntParD0<'m, 'd>, isize, Num<'m, 'd>, val_num);
+
+par_con!(NumParD0<'m, 'd>, f64, Num<'m, 'd>, val_num);
+par_con!(NumParD0<'m, 'd>, f32, Num<'m, 'd>, val_num);
+par_con!(NumParD0<'m, 'd>, i64, Num<'m, 'd>, val_num);
+par_con!(NumParD0<'m, 'd>, i32, Num<'m, 'd>, val_num);
+par_con!(NumParD0<'m, 'd>, u64, Num<'m, 'd>, val_num);
+par_con!(NumParD0<'m, 'd>, u32, Num<'m, 'd>, val_num);
+par_con!(NumParD0<'m, 'd>, usize, Num<'m, 'd>, val_num);
+par_con!(NumParD0<'m, 'd>, isize, Num<'m, 'd>, val_num);

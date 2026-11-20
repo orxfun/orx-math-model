@@ -32,6 +32,7 @@ mod free_fun;
 mod idxs;
 mod lin_expr;
 mod model;
+mod model_builder;
 mod pars;
 mod scalars;
 mod sets;

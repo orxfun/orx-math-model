@@ -9,6 +9,13 @@ pub type FVarToStr<'d> = Box<dyn Fn(&mut String) + 'd>;
 pub struct FVarToStrCtor;
 
 impl FVarToStrCtor {
+    pub fn d0_str<'d>(parent: Ptr<'d, DVars<'d>>) -> FVarToStr<'d> {
+        // TODO: use parent to add the variable key
+        Box::new(move |f| {
+            f.push_str("x_");
+        })
+    }
+
     pub fn d1_str<'d, I0: Set>(
         parent: Ptr<'d, DVars<'d>>,
         fun: impl Fn() -> Idx1<'d, I0> + 'd,

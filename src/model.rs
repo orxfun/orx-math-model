@@ -2,12 +2,12 @@ use crate::con_vals::{ConVal, DConVal};
 use crate::constraints::{Constraint, DCon};
 use crate::idxs::{DIdx, IdxVal};
 use crate::lin_expr::DLinExpr;
-use crate::pars::{DPars, IntParD1, IntParD2, NumParD1, NumParD2, ParFun};
+use crate::pars::{DPars, IntParD0, IntParD1, IntParD2, NumParD0, NumParD1, NumParD2, ParFun};
 use crate::scalars::{DNum, DVar, Int, Num, Val, ValNum, Var};
 use crate::sets::{CatInt, CatStr, DSet, FunSet, Ord};
 use crate::slot::State;
 use crate::sym_ref::SymRef;
-use crate::vars::{DVars, VarD1, VarD2};
+use crate::vars::{DVars, VarD0, VarD1, VarD2};
 use crate::{
     AsF64, Bag, DimVec, LinExpr, Ptr, Set, SetCatInt, SetCatStr, SetOrd, SetSym, Slot, Symbol,
     TConVal, ValTyp, VarType,
@@ -99,6 +99,24 @@ impl<'d> Model<'d> {
         S::new_idx_sym(self, el)
     }
 
+    // p0
+
+    fn par0_elem<'m>(&'m self, val_typ: ValTyp) -> Elem<'m, DPars<'d>> {
+        let fun = ParFun::empty(val_typ, DimVec::new([]));
+        let fun_el = self.par_fun_bag.push(fun);
+        let fun_slot = Slot::new(self, fun_el);
+        let sets = DimVec::new([]);
+        self.par_bag.push(DPars::new(sets, fun_slot))
+    }
+
+    pub fn par0_int<'m>(&'m self) -> IntParD0<'m, 'd> {
+        IntParD0::new(Symbol::new(self, self.par0_elem(ValTyp::Int)))
+    }
+
+    pub fn par0_num<'m>(&'m self) -> NumParD0<'m, 'd> {
+        NumParD0::new(Symbol::new(self, self.par0_elem(ValTyp::Num)))
+    }
+
     // p1
 
     fn par1_elem<'m, S0>(&'m self, val_typ: ValTyp, s0: S0) -> Elem<'m, DPars<'d>>
@@ -171,6 +189,12 @@ impl<'d> Model<'d> {
     }
 
     // vars
+
+    pub fn var0<'m>(&'m self, typ: VarType) -> VarD0<'m, 'd> {
+        let data = DVars::new_d0(typ);
+        let el = self.vars_bag.push(data);
+        VarD0::new(Symbol::new(self, el))
+    }
 
     pub fn var1<'m, S0>(&'m self, typ: VarType, s0: S0) -> VarD1<'m, 'd, S0::Meta>
     where

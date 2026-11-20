@@ -1,7 +1,9 @@
 use crate::idxs::IdxOrd;
 use crate::lin_expr::ops::add::ord_to_num;
 use crate::lin_expr::{Coef, DLinExpr, DLinTerm, DSum, SumVec, TermVec};
+use crate::pars::{IntParD0, NumParD0};
 use crate::scalars::{DNum, ValNum};
+use crate::vars::VarD0;
 use crate::{AsF64, Int, LinExpr, Model, Num, Ptr, SymWrap, ValTyp, Var};
 use alloc::boxed::Box;
 use core::ops::Mul;
@@ -155,6 +157,40 @@ impl<'m, 'd> Mul<LinExpr<'m, 'd>> for IdxOrd<'m, 'd> {
     }
 }
 
+// expr * par0
+
+impl<'m, 'd> Mul<NumParD0<'m, 'd>> for LinExpr<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn mul(self, rhs: NumParD0<'m, 'd>) -> Self::Output {
+        self * rhs.to_num()
+    }
+}
+
+impl<'m, 'd> Mul<LinExpr<'m, 'd>> for NumParD0<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn mul(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
+        rhs * self
+    }
+}
+
+impl<'m, 'd> Mul<IntParD0<'m, 'd>> for LinExpr<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn mul(self, rhs: IntParD0<'m, 'd>) -> Self::Output {
+        self * rhs.to_int()
+    }
+}
+
+impl<'m, 'd> Mul<LinExpr<'m, 'd>> for IntParD0<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn mul(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
+        rhs * self
+    }
+}
+
 // expr * con
 
 macro_rules! expr_con {
@@ -232,6 +268,40 @@ impl<'m, 'd> Mul<Var<'m, 'd>> for IdxOrd<'m, 'd> {
     }
 }
 
+// var * par0
+
+impl<'m, 'd> Mul<NumParD0<'m, 'd>> for Var<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn mul(self, rhs: NumParD0<'m, 'd>) -> Self::Output {
+        self * rhs.to_num()
+    }
+}
+
+impl<'m, 'd> Mul<Var<'m, 'd>> for NumParD0<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn mul(self, rhs: Var<'m, 'd>) -> Self::Output {
+        rhs * self
+    }
+}
+
+impl<'m, 'd> Mul<IntParD0<'m, 'd>> for Var<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn mul(self, rhs: IntParD0<'m, 'd>) -> Self::Output {
+        self * rhs.to_int()
+    }
+}
+
+impl<'m, 'd> Mul<Var<'m, 'd>> for IntParD0<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn mul(self, rhs: Var<'m, 'd>) -> Self::Output {
+        rhs * self
+    }
+}
+
 // var * con
 
 macro_rules! var_con {
@@ -251,6 +321,116 @@ macro_rules! var_con {
             type Output = LinExpr<'m, 'd>;
 
             fn mul(self, rhs: Var<'m, 'd>) -> Self::Output {
+                rhs * self
+            }
+        }
+    };
+}
+
+var_con!(f64);
+var_con!(f32);
+var_con!(i64);
+var_con!(i32);
+var_con!(u64);
+var_con!(u32);
+var_con!(usize);
+var_con!(isize);
+
+// var0 * num
+
+macro_rules! var0_num {
+    ($n:ty) => {
+        impl<'m, 'd> Mul<$n> for VarD0<'m, 'd> {
+            type Output = LinExpr<'m, 'd>;
+
+            fn mul(self, rhs: $n) -> Self::Output {
+                Var::from(self) * rhs
+            }
+        }
+
+        impl<'m, 'd> Mul<VarD0<'m, 'd>> for $n {
+            type Output = LinExpr<'m, 'd>;
+
+            fn mul(self, rhs: VarD0<'m, 'd>) -> Self::Output {
+                rhs * self
+            }
+        }
+    };
+}
+
+var0_num!(Num<'m, 'd>);
+var0_num!(Int<'m, 'd>);
+
+// VARD0
+
+// var0 * idx
+
+impl<'m, 'd> Mul<IdxOrd<'m, 'd>> for VarD0<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn mul(self, rhs: IdxOrd<'m, 'd>) -> Self::Output {
+        Var::from(self) * rhs
+    }
+}
+
+impl<'m, 'd> Mul<VarD0<'m, 'd>> for IdxOrd<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn mul(self, rhs: VarD0<'m, 'd>) -> Self::Output {
+        rhs * self
+    }
+}
+
+// var * par0
+
+impl<'m, 'd> Mul<NumParD0<'m, 'd>> for VarD0<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn mul(self, rhs: NumParD0<'m, 'd>) -> Self::Output {
+        Var::from(self) * rhs
+    }
+}
+
+impl<'m, 'd> Mul<VarD0<'m, 'd>> for NumParD0<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn mul(self, rhs: VarD0<'m, 'd>) -> Self::Output {
+        rhs * self
+    }
+}
+
+impl<'m, 'd> Mul<IntParD0<'m, 'd>> for VarD0<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn mul(self, rhs: IntParD0<'m, 'd>) -> Self::Output {
+        Var::from(self) * rhs
+    }
+}
+
+impl<'m, 'd> Mul<VarD0<'m, 'd>> for IntParD0<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn mul(self, rhs: VarD0<'m, 'd>) -> Self::Output {
+        rhs * self
+    }
+}
+
+// var * con
+
+macro_rules! var_con {
+    ($c:ty) => {
+        impl<'m, 'd> Mul<$c> for VarD0<'m, 'd> {
+            type Output = LinExpr<'m, 'd>;
+
+            fn mul(self, rhs: $c) -> Self::Output {
+                Var::from(self) * rhs
+            }
+        }
+
+        impl<'m, 'd> Mul<VarD0<'m, 'd>> for $c {
+            type Output = LinExpr<'m, 'd>;
+
+            fn mul(self, rhs: VarD0<'m, 'd>) -> Self::Output {
                 rhs * self
             }
         }

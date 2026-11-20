@@ -8,6 +8,10 @@ pub type FVarIdx<'d> = Box<dyn Fn() -> IdxEvalVec<'d> + 'd>;
 pub struct FVarIdxCtor;
 
 impl FVarIdxCtor {
+    pub fn d0<'d>() -> FVarIdx<'d> {
+        Box::new(|| IdxEvalVec(ConVec::new([])))
+    }
+
     pub fn d1<'d, I0: Set>(fun: impl Fn() -> Idx1<'d, I0> + 'd) -> FVarIdx<'d> {
         Box::new(move || {
             let i0 = fun();

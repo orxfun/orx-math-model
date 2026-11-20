@@ -7,6 +7,7 @@ use core::mem::ManuallyDrop;
 
 #[repr(C)]
 pub union UFunPar<'d> {
+    d0: f64,
     d1: ManuallyDrop<UFunP1<'d>>,
     d2: ManuallyDrop<UFunP2<'d>>,
 }
@@ -21,9 +22,9 @@ pub struct ParFun<'d> {
 impl<'d> Drop for ParFun<'d> {
     fn drop(&mut self) {
         match self.idx_types.dim() {
+            Dim::D0 => {}
             Dim::D1 => unsafe { &mut self.data.d1 }.man_drop(self.idx_types[0]),
             Dim::D2 => unsafe { &mut self.data.d2 }.man_drop(self.idx_types[0], self.idx_types[1]),
-            _ => todo!(),
         }
     }
 }
@@ -31,19 +32,39 @@ impl<'d> Drop for ParFun<'d> {
 impl<'d> ParFun<'d> {
     pub fn empty(val_typ: ValTyp, idxs: DimVec<SetTyp>) -> Self {
         let data = ManuallyDrop::new(match idxs.dim() {
+            Dim::D0 => UFunPar { d0: 0.0 },
             Dim::D1 => UFunPar {
                 d1: UFunP1::empty(idxs[0]),
             },
             Dim::D2 => UFunPar {
                 d2: UFunP2::empty(idxs[0], idxs[1]),
             },
-            _ => todo!(),
         });
         Self::new(val_typ, idxs, data)
     }
 
     pub fn dim(&self) -> Dim {
         self.idx_types.dim()
+    }
+
+    // d0
+
+    pub fn d0_create<V: AsF64>(val_typ: ValTyp, fun: impl Fn() -> V + 'd) -> Self {
+        let idx_types = DimVec::new([]);
+        let fun = Box::new(move || fun().as_f64());
+        let data = ManuallyDrop::new(UFunPar { d0: fun() });
+        Self::new(val_typ, idx_types, data)
+    }
+
+    #[inline(always)]
+    pub fn d0_at(&self) -> f64 {
+        *unsafe { &self.data.d0 }
+    }
+
+    #[inline(always)]
+    pub fn d0_at_int(&self) -> i64 {
+        debug_assert_eq!(self.val_typ, ValTyp::Int);
+        round_f64(self.d0_at())
     }
 
     // d1

@@ -12,6 +12,12 @@ pub struct DVar<'d> {
 impl<'d> DVar<'d> {
     // create
 
+    pub fn create_d0(parent: Ptr<'d, DVars<'d>>) -> Self {
+        let fun_idx = FVarIdxCtor::d0();
+        let fun_write_str = FVarToStrCtor::d0_str(parent);
+        Self::new(parent, fun_idx, fun_write_str)
+    }
+
     pub fn create_d1<I0: Set>(
         parent: Ptr<'d, DVars<'d>>,
         fun: impl Fn() -> Idx1<'d, I0> + 'd + Copy,

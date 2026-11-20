@@ -1,5 +1,5 @@
 use crate::constraints::Constraint;
-use crate::{con1, con2, geq, leq, sum1, Bounds, Model, SymWrap, VarType};
+use crate::{con, con1, con2, geq, leq, sum1, sum2, Bounds, Model, SymWrap, VarType};
 use alloc::string::{String, ToString};
 use alloc::vec::Vec;
 use alloc::{format, vec};
