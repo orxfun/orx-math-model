@@ -28,7 +28,7 @@ fn p2_at_cint_cstr() {
     let s1 = m.cat_set_str();
     let i0 = s0.idx();
     let i1 = s1.idx();
-    let par = m.par2_num(s0, s1);
+    let par = m.par2(s0, s1);
     let sca1 = [par.at(i0, i1), par[(i0, i1)]];
     let sca2 = [par.at(i0, 2.to_string()), par[(i0, 2.to_string())]];
     let sca3 = [par.at(2, i1), par[(2, i1)]];
@@ -151,7 +151,7 @@ fn p2_at_ord_cint() {
     let s1 = m.cat_set_int();
     let i0 = s0.idx();
     let i1 = s1.idx();
-    let par = m.par2_num(s0, s1);
+    let par = m.par2(s0, s1);
     let sca1 = [par.at(i0, i1), par[(i0, i1)]];
     let sca2 = [par.at(i0, 1), par[(i0, 1)]];
     let sca3 = [par.at(2, i1), par[(2, i1)]];

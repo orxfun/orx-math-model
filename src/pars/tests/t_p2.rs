@@ -22,7 +22,7 @@ fn p2_cint_cstr() {
     let m = Model::new();
     let s0 = m.cat_set_int();
     let s1 = m.cat_set_str();
-    let par = m.par2_num(s0, s1);
+    let par = m.par2(s0, s1);
 
     // binding
     par.bind(|i, j| par_data[i][j]).unwrap();
@@ -53,7 +53,7 @@ fn p2_cstr_ord() {
     let m = Model::new();
     let s0 = m.cat_set_str();
     let s1 = m.ord_set();
-    let par = m.par2_num(s0, s1);
+    let par = m.par2(s0, s1);
 
     // binding
     par.bind(|i, j| par_data[i][j as usize]).unwrap();

@@ -186,7 +186,7 @@ impl<'d> Model<'d> {
         IntParD2::new(Symbol::new(self, self.par2_elem(ValTyp::Int, s0, s1)))
     }
 
-    pub fn par2_num<'m, S0, S1>(&'m self, s0: S0, s1: S1) -> NumParD2<'m, 'd, S0::Meta, S1::Meta>
+    pub fn par2<'m, S0, S1>(&'m self, s0: S0, s1: S1) -> NumParD2<'m, 'd, S0::Meta, S1::Meta>
     where
         S0: SetSym<'m, 'd>,
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
