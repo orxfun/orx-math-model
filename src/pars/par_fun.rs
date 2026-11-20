@@ -34,13 +34,15 @@ impl<'d> Drop for ParFun<'d> {
 impl<'d> ParFun<'d> {
     pub fn empty(val_typ: ValTyp, idxs: DimVec<SetTyp>) -> Self {
         let data = ManuallyDrop::new(match idxs.dim() {
+            Dim::D0 => UFunPar {
+                d0: ManuallyDrop::new(Box::new(|| 0.0)),
+            },
             Dim::D1 => UFunPar {
                 d1: UFunP1::empty(idxs[0]),
             },
             Dim::D2 => UFunPar {
                 d2: UFunP2::empty(idxs[0], idxs[1]),
             },
-            _ => todo!(),
         });
         Self::new(val_typ, idxs, data)
     }
