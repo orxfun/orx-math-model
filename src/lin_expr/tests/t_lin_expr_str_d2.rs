@@ -153,7 +153,7 @@ fn t_lin_expr_str_d2() {
             assert_eq!(
                 exp_str(-e),
                 format!(
-                    "-4 {ex}_mia_0 + {} {ex}_sin_2 -1 0.75 {ex}_{ei}_{ej} -1 28.75",
+                    "-4 {ex}_mia_0 + {} {ex}_sin_2 - 0.75 {ex}_{ei}_{ej} - 28.75",
                     2.0 * ep
                 )
             );
