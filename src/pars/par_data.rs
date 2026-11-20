@@ -1,9 +1,11 @@
 use crate::pars::par_fun::ParFun;
 use crate::sets::DSet;
 use crate::{AsF64, DimVec, Ptr, Res, Set, Slot, ValTyp};
+use alloc::string::String;
 
 #[derive(derive_new::new)]
 pub struct DPars<'d> {
+    key: String,
     sets: DimVec<Ptr<'d, DSet<'d>>>,
     slot: Slot<'d, ParFun<'d>>,
 }

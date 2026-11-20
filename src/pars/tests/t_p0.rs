@@ -11,8 +11,8 @@ fn t_p0() {
 
     // modeling
     let m = Model::new();
-    let pi = m.par0_int();
-    let pn = m.par0_num();
+    let pi = m.par0_int("pi");
+    let pn = m.par0_num("pn");
 
     // binding
     pi.bind(|| *val).unwrap();

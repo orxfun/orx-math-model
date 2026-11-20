@@ -7,7 +7,7 @@ fn idx_cat_int() {
 
     // modeling
     let m = Model::new();
-    let set = m.cat_set_int();
+    let set = m.cat_set_int("S");
     let idx = set.idx();
 
     // running
@@ -26,7 +26,7 @@ fn idx_cat_str() {
 
     // modeling
     let m = Model::new();
-    let set = m.cat_set_str();
+    let set = m.cat_set_str("S");
     let idx = set.idx();
 
     // running
@@ -42,7 +42,7 @@ fn idx_ord() {
 
     // modeling
     let m = Model::new();
-    let set = m.ord_set();
+    let set = m.ord_set("S");
     let idx = set.idx();
 
     // running

@@ -11,8 +11,8 @@ fn t_sum_d1() {
 
     // modeling
     let m = Model::new();
-    let s0 = m.cat_set_int();
-    let x1 = m.var1(VarType::Binary, s0);
+    let s0 = m.cat_set_int("s0");
+    let x1 = m.var1("x", VarType::Binary, s0);
 
     // binding
     s0.bind(|| s0_data.iter().copied()).unwrap();
@@ -53,8 +53,8 @@ fn t_sum_d1_zeroes() {
 
     // modeling
     let m = Model::new();
-    let s0 = m.cat_set_int();
-    let x1 = m.var1(VarType::Binary, s0);
+    let s0 = m.cat_set_int("s0");
+    let x1 = m.var1("x", VarType::Binary, s0);
 
     // binding
     s0.bind(|| s0_data.iter().copied()).unwrap();
@@ -84,11 +84,11 @@ fn t_sum_d2() {
 
     // modeling
     let m = Model::new();
-    let s0 = m.cat_set_int();
-    let s1 = m.cat_set_str();
-    let x1 = m.var1(VarType::Binary, s0);
-    let x2 = m.var2(VarType::Binary, s0, s1);
-    let par = m.par2(s0, s1);
+    let s0 = m.cat_set_int("s0");
+    let s1 = m.cat_set_str("s1");
+    let x1 = m.var1("x", VarType::Binary, s0);
+    let x2 = m.var2("y", VarType::Binary, s0, s1);
+    let par = m.par2_num("p", s0, s1);
 
     // binding
     par.bind(|i, j| par_data[i][j]).unwrap();
@@ -147,11 +147,11 @@ fn t_sum_d2_zeroes() {
 
     // modeling
     let m = Model::new();
-    let s0 = m.cat_set_int();
-    let s1 = m.cat_set_str();
-    let x1 = m.var1(VarType::Binary, s0);
-    let x2 = m.var2(VarType::Binary, s0, s1);
-    let par = m.par2(s0, s1);
+    let s0 = m.cat_set_int("s0");
+    let s1 = m.cat_set_str("s1");
+    let x1 = m.var1("x", VarType::Binary, s0);
+    let x2 = m.var2("y", VarType::Binary, s0, s1);
+    let par = m.par2_num("p", s0, s1);
 
     // binding
     par.bind(|i, j| par_data[i][j]).unwrap();

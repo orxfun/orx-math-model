@@ -12,8 +12,8 @@ fn p1_cint() {
 
     // modeling
     let m = Model::new();
-    let set = m.cat_set_int();
-    let par = m.par1_num(set);
+    let set = m.cat_set_int("S");
+    let par = m.par1_num("p", set);
 
     // binding
     par.bind(|i| values[i]).unwrap();
@@ -38,8 +38,8 @@ fn p1_cstr() {
 
     // modeling
     let m = Model::new();
-    let set = m.cat_set_str();
-    let par = m.par1_int(set);
+    let set = m.cat_set_str("S");
+    let par = m.par1_int("p", set);
 
     // binding
     par.bind(|i| values[i]).unwrap();
@@ -60,8 +60,8 @@ fn p1_ord() {
 
     // modeling
     let m = Model::new();
-    let set = m.ord_set();
-    let par = m.par1_num(set);
+    let set = m.ord_set("S");
+    let par = m.par1_num("p", set);
 
     // binding
     par.bind(|i| values(i)).unwrap();

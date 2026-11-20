@@ -1,7 +1,6 @@
-use crate::{
-    scalars::{num::DNum, Int, Num},
-    Symbol,
-};
+use crate::scalars::{num::DNum, Int, Num};
+use crate::{IntParD0, IntParD1, IntParD2, Model, NumParD0, NumParD1, NumParD2, Set, Symbol};
+use alloc::string::ToString;
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum ValTyp {
@@ -15,6 +14,23 @@ pub trait Val: Clone + Copy + 'static {
     fn typ() -> ValTyp;
 
     fn sym<'m, 'd: 'm>(sym: Symbol<'m, 'd, DNum<'d>>) -> Self::Sym<'m, 'd>;
+
+    // pars
+    type ParD0<'m, 'd: 'm>;
+    type ParD1<'m, 'd: 'm, I0: Set>;
+    type ParD2<'m, 'd: 'm, I0: Set, I1: Set>;
+    fn par_d0<'m, 'd: 'm>(m: &'m Model<'d>, key: impl ToString) -> Self::ParD0<'m, 'd>;
+    fn par_d1<'m, 'd: 'm, I0: Set>(
+        m: &'m Model<'d>,
+        key: impl ToString,
+        s0: I0::SetSym<'m, 'd>,
+    ) -> Self::ParD1<'m, 'd, I0>;
+    fn par_d2<'m, 'd: 'm, I0: Set, I1: Set>(
+        m: &'m Model<'d>,
+        key: impl ToString,
+        s0: I0::SetSym<'m, 'd>,
+        s1: I1::SetSym<'m, 'd>,
+    ) -> Self::ParD2<'m, 'd, I0, I1>;
 }
 
 #[derive(Clone, Copy)]
@@ -30,6 +46,29 @@ impl Val for ValInt {
     fn sym<'m, 'd: 'm>(sym: Symbol<'m, 'd, DNum<'d>>) -> Self::Sym<'m, 'd> {
         Self::Sym::new(sym)
     }
+
+    // pars
+    type ParD0<'m, 'd: 'm> = IntParD0<'m, 'd>;
+    type ParD1<'m, 'd: 'm, I0: Set> = IntParD1<'m, 'd, I0>;
+    type ParD2<'m, 'd: 'm, I0: Set, I1: Set> = IntParD2<'m, 'd, I0, I1>;
+    fn par_d0<'m, 'd: 'm>(m: &'m Model<'d>, key: impl ToString) -> Self::ParD0<'m, 'd> {
+        m.par0_int(key)
+    }
+    fn par_d1<'m, 'd: 'm, I0: Set>(
+        m: &'m Model<'d>,
+        key: impl ToString,
+        s0: I0::SetSym<'m, 'd>,
+    ) -> Self::ParD1<'m, 'd, I0> {
+        m.par1_int(key, s0)
+    }
+    fn par_d2<'m, 'd: 'm, I0: Set, I1: Set>(
+        m: &'m Model<'d>,
+        key: impl ToString,
+        s0: I0::SetSym<'m, 'd>,
+        s1: I1::SetSym<'m, 'd>,
+    ) -> Self::ParD2<'m, 'd, I0, I1> {
+        m.par2_int(key, s0, s1)
+    }
 }
 
 #[derive(Clone, Copy)]
@@ -44,6 +83,30 @@ impl Val for ValNum {
 
     fn sym<'m, 'd: 'm>(sym: Symbol<'m, 'd, DNum<'d>>) -> Self::Sym<'m, 'd> {
         Self::Sym::new(sym)
+    }
+
+    // pars
+    type ParD0<'m, 'd: 'm> = NumParD0<'m, 'd>;
+    type ParD1<'m, 'd: 'm, I0: Set> = NumParD1<'m, 'd, I0>;
+    type ParD2<'m, 'd: 'm, I0: Set, I1: Set> = NumParD2<'m, 'd, I0, I1>;
+
+    fn par_d0<'m, 'd: 'm>(m: &'m Model<'d>, key: impl ToString) -> Self::ParD0<'m, 'd> {
+        m.par0_num(key)
+    }
+    fn par_d1<'m, 'd: 'm, I0: Set>(
+        m: &'m Model<'d>,
+        key: impl ToString,
+        s0: I0::SetSym<'m, 'd>,
+    ) -> Self::ParD1<'m, 'd, I0> {
+        m.par1_num(key, s0)
+    }
+    fn par_d2<'m, 'd: 'm, I0: Set, I1: Set>(
+        m: &'m Model<'d>,
+        key: impl ToString,
+        s0: I0::SetSym<'m, 'd>,
+        s1: I1::SetSym<'m, 'd>,
+    ) -> Self::ParD2<'m, 'd, I0, I1> {
+        m.par2_num(key, s0, s1)
     }
 }
 

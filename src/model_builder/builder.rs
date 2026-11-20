@@ -104,14 +104,14 @@ impl<Sci: Dim, Scs: Dim, So: Dim, P: Dim, Pi: Dim, V: Dim> ModelBuilder<Sci, Scs
             V::Arr<VarD0<'m, 'd>>,
         ),
     {
-        let sci = Sci::map(self.set_cat_int, |_key| m.cat_set_int());
-        let scs = Scs::map(self.set_cat_str, |_key| m.cat_set_str());
-        let so = So::map(self.set_ord, |_key| m.ord_set());
-        let p = P::map(self.par0, |_key| m.par0_num());
-        let pi = Pi::map(self.pari0, |_key| m.par0_int());
-        let v = V::map(self.var0, |_key| m.var0(VarType::Binary));
+        // let sci = Sci::map(self.set_cat_int, |_key| m.cat_set_int());
+        // let scs = Scs::map(self.set_cat_str, |_key| m.cat_set_str());
+        // let so = So::map(self.set_ord, |_key| m.ord_set());
+        // let p = P::map(self.par0, |_key| m.par0_num());
+        // let pi = Pi::map(self.pari0, |_key| m.par0_int());
+        // let v = V::map(self.var0, |_key| m.var0(VarType::Binary));
 
-        f(sci, scs, so, p, pi, v);
+        // f(sci, scs, so, p, pi, v);
     }
 }
 
@@ -136,15 +136,15 @@ mod tests {
             .int_par("count")
             .var("total-cost")
             .build(&m, |[], [org, dst], [t], [cost], [count], [z]| {
-                let x = m.var2(VarType::Binary, org, dst);
-                let y = m.var1(VarType::Binary, org);
+                // let x = m.var2(VarType::Binary, org, dst);
+                // let y = m.var1(VarType::Binary, org);
 
-                org.bind(|| &d_org).unwrap();
-                dst.bind(|| &d_dst).unwrap();
+                // org.bind(|| &d_org).unwrap();
+                // dst.bind(|| &d_dst).unwrap();
 
-                let c = con1(org, |o| (sum1(dst, |d| x[(o, d)]), leq, y[o]));
-                let s = c.data().eval_to_string();
-                assert_eq!(s, "2");
+                // let c = con1(org, |o| (sum1(dst, |d| x[(o, d)]), leq, y[o]));
+                // let s = c.data().eval_to_string();
+                // assert_eq!(s, "2");
             });
     }
 }

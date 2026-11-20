@@ -4,5 +4,5 @@ use crate::{Bounds, Model, VarType};
 fn v0_int_cint() {
     // modeling
     let m = Model::new();
-    let _var = m.var0(VarType::Binary);
+    let _var = m.var0("x", VarType::Binary);
 }

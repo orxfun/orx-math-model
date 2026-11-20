@@ -14,9 +14,9 @@ fn p1_at_cint() {
 
     // modeling
     let m = Model::new();
-    let set = m.cat_set_int();
+    let set = m.cat_set_int("S");
     let idx = set.idx();
-    let par = m.par1_num(set);
+    let par = m.par1_num("p", set);
     let sca1 = [par.at(idx), par[idx]];
     let sca2 = [par.at(2), par[2]];
 
@@ -54,9 +54,9 @@ fn p1_at_cstr() {
 
     // modeling
     let m = Model::new();
-    let set = m.cat_set_str();
+    let set = m.cat_set_str("S");
     let idx = set.idx();
-    let par = m.par1_int(set);
+    let par = m.par1_int("p", set);
     let sca1 = [par.at(idx), par[idx]];
     let sca2 = [par.at(3.to_string()), par["3"], par[&set_data[2]]];
 
@@ -90,9 +90,9 @@ fn p1_at_ord() {
 
     // modeling
     let m = Model::new();
-    let set = m.ord_set();
+    let set = m.ord_set("S");
     let idx = set.idx();
-    let par = m.par1_num(set);
+    let par = m.par1_num("p", set);
     let sca1 = [par.at(idx), par[idx]];
     let sca2 = [par.at(2), par[2]];
     // TODO: add sca3 to test Int as index

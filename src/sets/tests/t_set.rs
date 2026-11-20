@@ -9,7 +9,7 @@ fn set_cat_int() {
 
     // modeling
     let m = Model::new();
-    let set = m.cat_set_int();
+    let set = m.cat_set_int("S");
 
     // binding
     set.bind(|| values.iter().copied()).unwrap();
@@ -27,7 +27,7 @@ fn set_cat_str() {
 
     // modeling
     let m = Model::new();
-    let set = m.cat_set_str();
+    let set = m.cat_set_str("S");
 
     // binding
     set.bind(|| &values).unwrap();
@@ -45,7 +45,7 @@ fn set_ord() {
 
     // modeling
     let m = Model::new();
-    let set = m.ord_set();
+    let set = m.ord_set("S");
 
     // binding
     set.bind(|| values.iter().copied()).unwrap();

@@ -20,9 +20,9 @@ fn p2_cint_cstr() {
 
     // modeling
     let m = Model::new();
-    let s0 = m.cat_set_int();
-    let s1 = m.cat_set_str();
-    let par = m.par2(s0, s1);
+    let s0 = m.cat_set_int("s0");
+    let s1 = m.cat_set_str("s1");
+    let par = m.par2_num("p", s0, s1);
 
     // binding
     par.bind(|i, j| par_data[i][j]).unwrap();
@@ -51,9 +51,9 @@ fn p2_cstr_ord() {
 
     // modeling
     let m = Model::new();
-    let s0 = m.cat_set_str();
-    let s1 = m.ord_set();
-    let par = m.par2(s0, s1);
+    let s0 = m.cat_set_str("s0");
+    let s1 = m.ord_set("s1");
+    let par = m.par2_num("p", s0, s1);
 
     // binding
     par.bind(|i, j| par_data[i][j as usize]).unwrap();
@@ -77,9 +77,9 @@ fn p2_ord_cint() {
 
     // modeling
     let m = Model::new();
-    let s0 = m.ord_set();
-    let s1 = m.cat_set_int();
-    let par = m.par2_int(s0, s1);
+    let s0 = m.ord_set("s0");
+    let s1 = m.cat_set_int("s1");
+    let par = m.par2_int("p", s0, s1);
 
     // binding
     par.bind(|i, j| par_data[i as usize][j]).unwrap();
