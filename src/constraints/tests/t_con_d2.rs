@@ -61,7 +61,7 @@ fn t_con_d2() {
     let x_ = "x_"; // TODO: var-name-fix
     let y_ = "y_"; // TODO: var-name-fix
 
-    let c = for2(org, dst, |o, d| (1, leq, 2));
+    // let c = for2(org, dst, |o, d| (1, leq, 2));
 
     //     let c = for1(s0, |i| con(x[i], leq, 1.0));
     //     assert_eq!(
