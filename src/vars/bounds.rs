@@ -2,9 +2,9 @@ use crate::{pars::DPars, scalars::DNum};
 use crate::{AsF64, Int, IntParD0, Num, NumParD0, Ptr, SymWrap};
 use alloc::boxed::Box;
 
-pub struct BoundsD0<'d> {
-    lower: BoundD0<'d>,
-    upper: BoundD0<'d>,
+pub struct Bounds<T> {
+    pub lower: T,
+    pub upper: T,
 }
 
 // d0
