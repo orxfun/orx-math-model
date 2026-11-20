@@ -18,6 +18,12 @@ impl Dimension for D0 {
     }
 }
 
+impl<'m, 'd> From<()> for AnySets<'m, 'd, 0> {
+    fn from(_: ()) -> Self {
+        AnySets([])
+    }
+}
+
 // d1
 
 pub struct D1;
@@ -75,7 +81,7 @@ any_d2!(Ord<'m, 'd>, CatInt<'m, 'd>);
 any_d2!(Ord<'m, 'd>, CatStr<'m, 'd>);
 any_d2!(Ord<'m, 'd>, Ord<'m, 'd>);
 
-// con
+// any sets
 
 #[derive(derive_more::From)]
 pub enum AnySet<'m, 'd> {
@@ -86,6 +92,26 @@ pub enum AnySet<'m, 'd> {
 
 pub struct AnySets<'m, 'd, const D: usize>([AnySet<'m, 'd>; D]);
 
-fn con<'m, 'd, D: Dimension>(sets: [AnySet<'m, 'd>; 2]) {
+// con
+
+fn con<'m, 'd: 'm, D: Dimension>(sets: impl Into<D::Sets<'m, 'd>>) {
     //
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::Model;
+
+    #[test]
+    fn abc() {
+        let m = Model::new();
+        let s0 = m.cat_set_int();
+        let s1 = m.cat_set_str();
+        let s2 = m.ord_set();
+
+        let c0 = con::<D0>(());
+        let c1 = con::<D1>(s0);
+        let c2 = con::<D2>((s0, s1));
+    }
 }
