@@ -17,4 +17,10 @@ fn t_p0() {
     // binding
     pi.bind(|| *val).unwrap();
     pn.bind(|| 42).unwrap();
+
+    // running
+    assert_eq!(pi.to_int().data().eval(), 27.0);
+    assert_eq!(pi.to_int().data().eval_int(), 27);
+
+    assert_eq!(pn.to_num().data().eval(), 42.0);
 }

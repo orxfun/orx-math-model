@@ -1,6 +1,7 @@
 #[cfg(test)]
 mod tests;
 
+mod v0_sym;
 mod v1_sym;
 mod v2_sym;
 mod var_data;
