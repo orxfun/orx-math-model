@@ -31,12 +31,16 @@ fn t_con_d1() {
     let x_ = "x_"; // TODO: var-name-fix
 
     let c = for1(s0, |i| con(x[i], leq, 1.0));
-    assert_eq!(exp_str(c), format!("?"));
-
-    let text = r#"
-first line
-second line
-"#;
+    assert_eq!(
+        exp_str(c),
+        format!(
+            r#"{x_}2 <= 1
+{x_}3 <= 1
+{x_}0 <= 1
+{x_}1 <= 1
+"#
+        )
+    );
 
     // // con(3, leq, x[2]);
 
