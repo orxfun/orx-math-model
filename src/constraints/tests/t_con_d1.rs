@@ -42,29 +42,27 @@ fn t_con_d1() {
         )
     );
 
-    // // con(3, leq, x[2]);
+    let c = for1(s0, |i| con(x[i], leq, sum1(s0, |i| x[i] + 1)));
+    assert_eq!(
+        exp_str(c),
+        format!(
+            r#"{x_}2 <= {x_}2 + {x_}3 + {x_}0 + {x_}1 + 4
+{x_}3 <= {x_}2 + {x_}3 + {x_}0 + {x_}1 + 4
+{x_}0 <= {x_}2 + {x_}3 + {x_}0 + {x_}1 + 4
+{x_}1 <= {x_}2 + {x_}3 + {x_}0 + {x_}1 + 4
+"#
+        )
+    );
 
-    // let c = con(3, eq, 0 * x[2]);
-    // assert_eq!(exp_str(c), format!("3 = 0"));
-
-    // let c = con(7 - p[2], leq, x[2]);
-    // assert_eq!(exp_str(c), format!("0 <= {x_}2"));
-
-    // let c = con(7 - p[2], geq, x[2] * p[1]);
-    // assert_eq!(exp_str(c), format!("0 >= 0"));
-
-    // let c = con(p[2], leq, x[2] * p[0] + 2);
-    // assert_eq!(exp_str(c), format!("7 <= 1 {x_}2 + 2"));
-
-    // let c = con(p[2], leq, x[2] * p[0] + sum1(s0, |i| p[i] * x[i]));
-    // assert_eq!(
-    //     exp_str(c),
-    //     format!("7 <= 1 {x_}2 + 7 {x_}2 + 9 {x_}3 + 1 {x_}0")
-    // );
-
-    // let c = con(x[0] * p[2], leq, x[2] * p[0] + sum1(s0, |i| p[i] * x[i]));
-    // assert_eq!(
-    //     exp_str(c),
-    //     format!("7 {x_}0 <= 1 {x_}2 + 7 {x_}2 + 9 {x_}3 + 1 {x_}0")
-    // );
+    let c = for1(s0, |i| con(x[i], leq, sum1(s0, |j| p[i] * x[j] + 1)));
+    assert_eq!(
+        exp_str(c),
+        format!(
+            r#"{x_}2 <= 7 {x_}2 + 7 {x_}3 + 7 {x_}0 + 7 {x_}1 + 4
+{x_}3 <= 9 {x_}2 + 9 {x_}3 + 9 {x_}0 + 9 {x_}1 + 4
+{x_}0 <= 1 {x_}2 + 1 {x_}3 + 1 {x_}0 + 1 {x_}1 + 4
+{x_}1 <= 4
+"#
+        )
+    );
 }
