@@ -36,6 +36,8 @@ impl<'d> DVars<'d> {
         Self::new(key, typ, bounds, sets)
     }
 
+    // set bounds
+
     pub fn set_bound_d0(&mut self, lower: bool, bound: impl Into<BoundD0<'d>>) {
         let bounds = unsafe { &mut self.bounds.d0 };
         match lower {

@@ -39,6 +39,10 @@ pub(crate) trait SymWrap<'m, 'd: 'm>: Copy + Sized {
         unsafe { self.sym().el.get() }
     }
 
+    unsafe fn data_mut(self) -> &'m mut Self::Data {
+        unsafe { self.sym().el.get_mut() }
+    }
+
     fn ptr(self) -> Ptr<'d, Self::Data> {
         Ptr::new_from_el(self.sym().el)
     }
