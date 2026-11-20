@@ -49,7 +49,7 @@ pub fn for1<'m, 'd, S0: SetSym<'m, 'd>>(
     con
 }
 
-pub fn for2<'m, 'd, S0: SetSym<'m, 'd>, S1: SetSym<'m, 'd>>(
+pub fn for2_old<'m, 'd, S0: SetSym<'m, 'd>, S1: SetSym<'m, 'd>>(
     s0: S0,
     s1: S1,
     con: impl Fn(Idx<'m, 'd, S0>, Idx<'m, 'd, S1>) -> Constraint<'m, 'd>,
@@ -87,7 +87,7 @@ where
     }
 }
 
-pub fn for2a<'m, 'd, S0, S1, Lhs, Op, Rhs, F>(s0: S0, s1: S1, con: F) -> Constraint<'m, 'd>
+pub fn for2<'m, 'd, S0, S1, Lhs, Op, Rhs, F>(s0: S0, s1: S1, con: F) -> Constraint<'m, 'd>
 where
     S0: SetSym<'m, 'd>,
     S1: SetSym<'m, 'd>,

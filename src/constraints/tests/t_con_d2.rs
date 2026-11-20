@@ -3,7 +3,8 @@ use std::collections::HashMap;
 use crate::constraints::Constraint;
 use crate::sets::CatInt;
 use crate::{
-    con, eq, for1, for2, geq, leq, sum1, sum2, Bounds, Model, SetCatInt, SetSym, SymWrap, VarType,
+    con, eq, for1, for2, for2_old, geq, leq, sum1, sum2, Bounds, Model, SetCatInt, SetSym, SymWrap,
+    VarType,
 };
 use alloc::string::{String, ToString};
 use alloc::vec::Vec;
@@ -60,7 +61,7 @@ fn t_con_d2() {
     let x_ = "x_"; // TODO: var-name-fix
     let y_ = "y_"; // TODO: var-name-fix
 
-    // let c = for2(org, dst, con(|o, d| 1, leq, 2));
+    let c = for2(org, dst, |o, d| (1, leq, 2));
 
     //     let c = for1(s0, |i| con(x[i], leq, 1.0));
     //     assert_eq!(
