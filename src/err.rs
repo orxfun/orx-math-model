@@ -1,6 +1,6 @@
-use crate::{con_vals::ConValTyp, slot::State, Model, SetTyp, Symbol};
+use crate::SetTyp;
+use crate::{con_vals::ConValTyp, slot::State};
 use alloc::string::String;
-use core::ops::Deref;
 
 // res
 
@@ -29,26 +29,10 @@ pub trait ResValid {
 
     // panic
 
-    fn dbg_assert_same_model<'m, 'd, T>(
-        m: &'m Model<'d>,
-        sym: impl Deref<Target = Symbol<'m, 'd, T>>,
-    ) {
-        debug_assert!(core::ptr::eq(m, sym.m), "wrong model used");
-    }
-
     fn dbg_assert_same_set(a: SetTyp, b: SetTyp) {
         debug_assert_eq!(a, b, "wrong set type")
     }
-
-    // fn dbg_assert_same_val(a: ValTyp, b: ValTyp) {
-    //     debug_assert_eq!(a, b, "wrong val type")
-    // }
-
     fn dbg_assert_same_con_val(a: ConValTyp, b: ConValTyp) {
         debug_assert_eq!(a, b, "wrong constant value type")
-    }
-
-    fn dbg_assert_slot_bound(state: State) {
-        Self::assert_slot_bound(state).unwrap();
     }
 }
