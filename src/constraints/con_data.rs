@@ -22,6 +22,7 @@ impl<'d> DCon<'d> {
     // expand
 
     fn expand_d1(&self, op: impl FnMut(&Self)) {
+        assert_eq!(3, 33);
         expand_d1(&self.idxs, self, op);
     }
 
@@ -57,6 +58,9 @@ pub mod ext_test {
                     write!(f, "0").unwrap();
                 }
             };
+
+            assert_eq!(self.idxs.len(), 3);
+            assert_eq!(self.idxs.dim(), Dim::D2);
 
             match self.idxs.dim() {
                 Dim::D0 => op(self),
