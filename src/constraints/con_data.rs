@@ -18,10 +18,6 @@ pub struct DCon<'d> {
 }
 
 impl<'d> DCon<'d> {
-    pub(crate) fn set_idxs(&mut self, idxs: IdxVec<'d>) {
-        self.idxs = idxs;
-    }
-
     // expand
 
     fn expand_d1(&self, op: impl FnMut(&Self)) {
