@@ -1,6 +1,6 @@
 use crate::constraints::{Constraint, DCon, IneqTyp};
 use crate::free_fun::{IneqOp, IntoLinExpr};
-use crate::idxs::IdxVec;
+use crate::idxs::{self, IdxVec};
 use crate::lin_expr::{DLinExpr, DLinTerm, SumVec, TermVec};
 use crate::{AsF64, Int, LinExpr, Model, Num, Set, SetSym, SymWrap, Var};
 
@@ -42,7 +42,11 @@ pub fn for1<'m, 'd, S0: SetSym<'m, 'd>>(
     s0: S0,
     con: impl Fn(Idx<'m, 'd, S0>) -> Constraint<'m, 'd>,
 ) -> Constraint<'m, 'd> {
-    con(s0.idx())
+    let i0 = s0.idx();
+    let idxs = IdxVec::new([i0.ptr()]);
+    let con = con(i0);
+    unsafe { con.el().get_mut() }.set_idxs(idxs);
+    con
 }
 
 pub fn for2<'m, 'd, S0: SetSym<'m, 'd>, S1: SetSym<'m, 'd>>(
@@ -50,5 +54,9 @@ pub fn for2<'m, 'd, S0: SetSym<'m, 'd>, S1: SetSym<'m, 'd>>(
     s1: S1,
     con: impl Fn(Idx<'m, 'd, S0>, Idx<'m, 'd, S1>) -> Constraint<'m, 'd>,
 ) -> Constraint<'m, 'd> {
-    con(s0.idx(), s1.idx())
+    let (i0, i1) = (s0.idx(), s1.idx());
+    let idxs = IdxVec::new([i0.ptr(), i1.ptr()]);
+    let con = con(i0, i1);
+    unsafe { con.el().get_mut() }.set_idxs(idxs);
+    con
 }
