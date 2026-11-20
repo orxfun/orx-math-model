@@ -11,7 +11,7 @@ fn exp_str<'m, 'd>(con: Constraint<'m, 'd>) -> String {
 }
 
 #[test]
-fn t_con_d0() {
+fn t_con_d0_cint() {
     // data
     let s0_data = vec![2, 3, 0, 1];
     let p1_data = vec![1.0, 0.0, 7.0, 9.0];
@@ -44,6 +44,41 @@ fn t_con_d0() {
 
     let c = con(p[2], leq, x[2] * p[0] + 2);
     assert_eq!(exp_str(c), format!("7 <= 1 {x_}2 + 2"));
+
+    let c = con(p[2], leq, x[2] * p[0] + sum1(s0, |i| p[i] * x[i]));
+    assert_eq!(
+        exp_str(c),
+        format!("7 <= 1 {x_}2 + 7 {x_}2 + 9 {x_}3 + 1 {x_}0")
+    );
+
+    let c = con(x[0] * p[2], leq, x[2] * p[0] + sum1(s0, |i| p[i] * x[i]));
+    assert_eq!(
+        exp_str(c),
+        format!("7 {x_}0 <= 1 {x_}2 + 7 {x_}2 + 9 {x_}3 + 1 {x_}0")
+    );
+}
+
+#[test]
+fn t_con_d0_ord() {
+    // data
+    let s0_data = vec![2, 3, 0, 1];
+
+    // modeling
+    let m = Model::new();
+    let s0 = m.ord_set();
+    let x = m.var1(VarType::Binary, s0);
+    let p = m.par1_num(s0);
+
+    // binding
+    s0.bind(|| s0_data.iter().copied()).unwrap();
+    p.bind(|i| 2 * i + 1).unwrap();
+
+    // running
+
+    let x_ = "x_"; // TODO: var-name-fix
+
+    let c = con(p[2], leq, x[2] * p[0] + 2);
+    assert_eq!(exp_str(c), format!("5 <= 1 {x_}2 + 2"));
 
     let c = con(p[2], leq, x[2] * p[0] + sum1(s0, |i| p[i] * x[i]));
     assert_eq!(

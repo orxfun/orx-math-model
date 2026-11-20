@@ -33,14 +33,14 @@ impl<'d> DCon<'d> {
 #[cfg(test)]
 pub mod ext_test {
     use super::*;
-    use crate::Dim;
+    use crate::{constants::is_zero, lin_expr::sub_opt, Dim};
     use alloc::string::String;
     use core::fmt::Write;
 
     impl<'d> DCon<'d> {
         pub fn eval_append_string(&self, f: &mut String) {
             let mut op = |s: &Self| {
-                let written = s.lhs.get().eval_append_string(f, false);
+                let (written, con_lhs) = s.lhs.get().eval_append_string_exc_constant(f, false);
                 if !written {
                     write!(f, "0").unwrap();
                 }
@@ -52,9 +52,12 @@ pub mod ext_test {
                 }
                 .unwrap();
 
-                let written = s.rhs.get().eval_append_string(f, false);
-                if !written {
-                    write!(f, "0").unwrap();
+                let (written, con_rhs) = s.rhs.get().eval_append_string_exc_constant(f, false);
+                let remainder = sub_opt(con_rhs, con_lhs).unwrap_or(0.0);
+                match (written, remainder) {
+                    (false, r) => write!(f, "{}", r).unwrap(),
+                    (true, r) if !is_zero(r) => write!(f, "{}", r).unwrap(),
+                    _ => {}
                 }
             };
 
