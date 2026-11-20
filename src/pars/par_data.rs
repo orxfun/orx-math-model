@@ -1,8 +1,6 @@
-use crate::pars::p1_fun::FP1;
 use crate::pars::par_fun::ParFun;
 use crate::sets::DSet;
 use crate::{AsF64, DimVec, Ptr, Res, Set, Slot, ValTyp};
-use alloc::boxed::Box;
 
 #[derive(derive_new::new)]
 pub struct DPars<'d> {

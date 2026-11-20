@@ -13,4 +13,4 @@ pub use p1_sym::{IntParD1, NumParD1};
 pub use p2_fun::{UFunP2, UFunP2_I0, FP2};
 pub use p2_sym::{IntParD2, NumParD2};
 pub use par_data::DPars;
-pub use par_fun::{ParFun, UFunPar};
+pub use par_fun::ParFun;
