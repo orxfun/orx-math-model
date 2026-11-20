@@ -7,7 +7,9 @@ use crate::scalars::{DNum, DVar, Int, Num, Val, ValNum, Var};
 use crate::sets::{CatInt, CatStr, DSet, FunSet, Ord};
 use crate::slot::State;
 use crate::sym_ref::SymRef;
-use crate::vars::{BoundD0, ContVarD0, ContVarD1, DVars, VarD0, VarD1, VarD2, VarType};
+use crate::vars::{
+    BoundD0, BoundD1, BoundD2, ContVarD0, ContVarD1, DVars, VarD0, VarD1, VarD2, VarType,
+};
 use crate::{
     AsF64, Bag, DimVec, LinExpr, Ptr, Set, SetCatInt, SetCatStr, SetOrd, SetSym, Slot, Symbol,
     TConVal, ValTyp, VarTyp,
@@ -221,19 +223,25 @@ impl<'d> Model<'d> {
         lb: impl Into<BoundD0<'d>>,
         ub: impl Into<BoundD0<'d>>,
     ) -> V::VarD0<'m, 'd> {
-        let data = DVars::new_d0(key.to_string(), V::typ());
+        let data = DVars::new_d0(key.to_string(), V::typ(), lb, ub);
         let el = self.vars_bag.push(data);
         VarD0::new(Symbol::new(self, el)).into()
     }
 
-    pub fn var1<'m, V, S0>(&'m self, key: impl ToString, s0: S0) -> V::VarD1<'m, 'd, S0::Meta>
+    pub fn var1<'m, V, S0>(
+        &'m self,
+        key: impl ToString,
+        s0: S0,
+        lb: impl Into<BoundD1<'d>>,
+        ub: impl Into<BoundD1<'d>>,
+    ) -> V::VarD1<'m, 'd, S0::Meta>
     where
         V: VarType,
         S0: SetSym<'m, 'd>,
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
     {
         let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
-        let data = DVars::new_d1(key.to_string(), V::typ(), s0_ptr);
+        let data = DVars::new_d1(key.to_string(), V::typ(), s0_ptr, lb, ub);
         let el = self.vars_bag.push(data);
         VarD1::new(Symbol::new(self, el)).into()
     }
@@ -243,6 +251,8 @@ impl<'d> Model<'d> {
         key: impl ToString,
         s0: S0,
         s1: S1,
+        lb: impl Into<BoundD2<'d>>,
+        ub: impl Into<BoundD2<'d>>,
     ) -> V::VarD2<'m, 'd, S0::Meta, S1::Meta>
     where
         V: VarType,
@@ -253,7 +263,7 @@ impl<'d> Model<'d> {
     {
         let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
         let s1_ptr = <S1::Meta as Set>::set_ptr(s1);
-        let data = DVars::new_d2(key.to_string(), V::typ(), s0_ptr, s1_ptr);
+        let data = DVars::new_d2(key.to_string(), V::typ(), s0_ptr, s1_ptr, lb, ub);
         let el = self.vars_bag.push(data);
         VarD2::new(Symbol::new(self, el)).into()
     }

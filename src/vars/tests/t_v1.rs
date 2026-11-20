@@ -8,7 +8,7 @@ fn v1_int_cint() {
     // modeling
     let m = Model::new();
     let s = m.cat_set_int("S");
-    let var = m.var1::<Binary, _>("x", s);
+    let var = m.var1::<Binary, _>("x", s, 0, 1);
     let p0 = m.par0_int("p0");
     let i = s.idx();
     let p1 = m.par1_num("p1", s);
@@ -57,7 +57,7 @@ fn v1_int_cstr() {
     // modeling
     let m = Model::new();
     let s = m.cat_set_str("S");
-    let var = m.var1::<Binary, _>("x", s);
+    let var = m.var1::<Binary, _>("x", s, 0, 1);
     let p0 = m.par0_int("p0");
     let i = s.idx();
     let p1 = m.par1_num("p1", s);
@@ -104,7 +104,7 @@ fn v1_int_ord() {
     // modeling
     let m = Model::new();
     let s = m.ord_set("S");
-    let var = m.var1::<Binary, _>("x", s);
+    let var = m.var1::<Binary, _>("x", s, 0, 1);
     let p0 = m.par0_int("p0");
     let i = s.idx();
     let p1 = m.par1_num("p1", s);

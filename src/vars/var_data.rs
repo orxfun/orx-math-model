@@ -13,26 +13,44 @@ pub struct DVars<'d> {
 }
 
 impl<'d> DVars<'d> {
-    pub fn new_d0(key: String, typ: VarTyp) -> Self {
+    pub fn new_d0(
+        key: String,
+        typ: VarTyp,
+        lb: impl Into<BoundD0<'d>>,
+        ub: impl Into<BoundD0<'d>>,
+    ) -> Self {
         let sets = DimVec::new([]);
         let bounds = UBounds {
-            d0: Bounds::new(BoundD0::None, BoundD0::None),
+            d0: Bounds::new(lb.into(), ub.into()),
         };
         Self::new(key, typ, bounds, sets)
     }
 
-    pub fn new_d1(key: String, typ: VarTyp, s0: Ptr<'d, DSet<'d>>) -> Self {
+    pub fn new_d1(
+        key: String,
+        typ: VarTyp,
+        s0: Ptr<'d, DSet<'d>>,
+        lb: impl Into<BoundD1<'d>>,
+        ub: impl Into<BoundD1<'d>>,
+    ) -> Self {
         let sets = DimVec::new([s0]);
         let bounds = UBounds {
-            d1: Bounds::new(BoundD1::None, BoundD1::None),
+            d1: Bounds::new(lb.into(), ub.into()),
         };
         Self::new(key, typ, bounds, sets)
     }
 
-    pub fn new_d2(key: String, typ: VarTyp, s0: Ptr<'d, DSet<'d>>, s1: Ptr<'d, DSet<'d>>) -> Self {
+    pub fn new_d2(
+        key: String,
+        typ: VarTyp,
+        s0: Ptr<'d, DSet<'d>>,
+        s1: Ptr<'d, DSet<'d>>,
+        lb: impl Into<BoundD2<'d>>,
+        ub: impl Into<BoundD2<'d>>,
+    ) -> Self {
         let sets = DimVec::new([s0, s1]);
         let bounds = UBounds {
-            d2: Bounds::new(BoundD2::None, BoundD2::None),
+            d2: Bounds::new(lb.into(), ub.into()),
         };
         Self::new(key, typ, bounds, sets)
     }

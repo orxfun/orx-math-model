@@ -18,7 +18,7 @@ fn t_lin_expr_str_d1() {
     let m = Model::new();
     let s0 = m.cat_set_int("s0");
     let i0 = s0.idx();
-    let x = m.var1::<Binary, _>("x", s0);
+    let x = m.var1::<Binary, _>("x", s0, 0, 1);
     let p = m.par1_num("p", s0);
 
     // binding
@@ -142,7 +142,7 @@ fn t_lin_expr_str_d1_zeroes() {
     let m = Model::new();
     let s0 = m.cat_set_int("s0");
     let i0 = s0.idx();
-    let x = m.var1::<Binary, _>("x", s0);
+    let x = m.var1::<Binary, _>("x", s0, 0, 1);
     let p = m.par1_num("p", s0);
 
     // binding
