@@ -1,7 +1,7 @@
 use crate::idxs::IdxOrd;
-use crate::lin_expr::{DLinExpr, DLinTerm, SumVec, TermVec};
-use crate::scalars::{DNum, ValInt, ValNum};
-use crate::{AsF64, ConVec, Int, LinExpr, Model, Num, Ptr, SymWrap, ValTyp, Var};
+use crate::lin_expr::{DLinExpr, SumVec, TermVec};
+use crate::scalars::{DNum, ValNum};
+use crate::{AsF64, Int, LinExpr, Model, Num, Ptr, SymWrap, ValTyp, Var};
 use alloc::boxed::Box;
 use core::ops::Add;
 
