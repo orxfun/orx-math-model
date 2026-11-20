@@ -22,10 +22,6 @@ impl Default for ModelBuilder<D0, D0, D0, D0, D0> {
 }
 
 impl<Sci: Dim, Scs: Dim, So: Dim, P: Dim, V: Dim> ModelBuilder<Sci, Scs, So, P, V> {
-    pub fn cat_sets<const N: usize>(self, sets: [&str; N]) -> Self {
-        self
-    }
-
     pub fn cat_set_int(self, key: impl ToString) -> ModelBuilder<Sci::Next, Scs, So, P, V> {
         ModelBuilder {
             set_cat_int: Sci::arr_push(self.set_cat_int, key.to_string()),
