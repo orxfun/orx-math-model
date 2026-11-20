@@ -1,6 +1,7 @@
 use crate::sets::{DSet, FunSet};
+use crate::vars::bounds::{ResolvedBoundD0, ResolvedBoundD1, ResolvedBoundD2};
 use crate::vars::{BoundD0, BoundD1, BoundD2, Bounds, UBounds};
-use crate::{Dim, DimVec, Ptr, VarType};
+use crate::{Dim, DimVec, Ptr, Set, VarType};
 use alloc::string::String;
 
 #[derive(derive_new::new)]
@@ -59,6 +60,32 @@ impl<'d> DVars<'d> {
         match lower {
             true => bounds.lower = bound.into(),
             false => bounds.upper = bound.into(),
+        }
+    }
+
+    // resolve bounds
+
+    pub fn resolve_bounds_d0(&self, lower: bool) -> ResolvedBoundD0 {
+        match lower {
+            true => unsafe { &self.bounds.d0 }.lower.resolve(),
+            false => unsafe { &self.bounds.d0 }.upper.resolve(),
+        }
+    }
+
+    pub fn resolve_bounds_d1<I0: Set>(&self, lower: bool) -> ResolvedBoundD1<'_, 'd, I0> {
+        match lower {
+            true => unsafe { &self.bounds.d1 }.lower.resolve(),
+            false => unsafe { &self.bounds.d1 }.upper.resolve(),
+        }
+    }
+
+    pub fn resolve_bounds_d2<I0: Set, I1: Set>(
+        &self,
+        lower: bool,
+    ) -> ResolvedBoundD2<'_, 'd, I0, I1> {
+        match lower {
+            true => unsafe { &self.bounds.d2 }.lower.resolve(),
+            false => unsafe { &self.bounds.d2 }.upper.resolve(),
         }
     }
 
