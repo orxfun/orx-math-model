@@ -19,3 +19,4 @@ pub use into_lin_expr::IntoLinExpr;
 pub use pars::{par, par_int};
 pub use sets::set;
 pub use sum::{sum1, sum2};
+pub use vars::var;

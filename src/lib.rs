@@ -55,7 +55,7 @@ pub(crate) use symbol::{SymWrap, Symbol};
 pub(crate) use vars::{VarD0, VarD1, VarD2, VarTyp};
 
 // api
-pub use free_fun::{con, con1, con2, eq, geq, leq, par, par_int, set, sum1, sum2};
+pub use free_fun::{con, con1, con2, eq, geq, leq, par, par_int, set, sum1, sum2, var};
 pub use model::Model;
 pub use pars::{IntParD0, IntParD1, IntParD2, NumParD0, NumParD1, NumParD2};
 pub use sets::{CatInt, CatStr, Ord};
