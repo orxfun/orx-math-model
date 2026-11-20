@@ -1,5 +1,6 @@
 use super::add::{val_int, val_num};
 use crate::idxs::IdxOrd;
+use crate::pars::{IntParD0, NumParD0};
 use crate::scalars::AsF64;
 use crate::{Int, Num, SetOrd, SymWrap};
 use alloc::boxed::Box;
@@ -54,6 +55,35 @@ macro_rules! num_idx {
 num_idx!(Num<'m, 'd>, val_num);
 num_idx!(Int<'m, 'd>, val_int);
 
+// num/int * par
+
+macro_rules! num_par {
+    ($n1:ty, $par:ty, $out:ty, $fout:ident) => {
+        impl<'m, 'd> Mul<$par> for $n1 {
+            type Output = $out;
+
+            fn mul(self, rhs: $par) -> Self::Output {
+                let (t1, t2) = (self.ptr(), rhs.ptr().get().fun_ptr());
+                let fun = Box::new(move || t1.get().eval() * t2.get().d0_at());
+                $fout(self.m(), fun)
+            }
+        }
+
+        impl<'m, 'd> Mul<$n1> for $par {
+            type Output = $out;
+
+            fn mul(self, rhs: $n1) -> Self::Output {
+                rhs * self
+            }
+        }
+    };
+}
+
+num_par!(Num<'m, 'd>, NumParD0<'m, 'd>, Num<'m, 'd>, val_num);
+num_par!(Num<'m, 'd>, IntParD0<'m, 'd>, Num<'m, 'd>, val_num);
+num_par!(Int<'m, 'd>, NumParD0<'m, 'd>, Num<'m, 'd>, val_num);
+num_par!(Int<'m, 'd>, IntParD0<'m, 'd>, Int<'m, 'd>, val_int);
+
 // num * con
 
 macro_rules! num_con {
@@ -96,7 +126,7 @@ num_con!(Int<'m, 'd>, u32, Int<'m, 'd>, val_int);
 num_con!(Int<'m, 'd>, usize, Int<'m, 'd>, val_int);
 num_con!(Int<'m, 'd>, isize, Int<'m, 'd>, val_int);
 
-// idx + idx
+// idx * idx
 
 impl<'m, 'd> Mul for IdxOrd<'m, 'd> {
     type Output = Int<'m, 'd>;
@@ -107,6 +137,34 @@ impl<'m, 'd> Mul for IdxOrd<'m, 'd> {
         val_int(self.m(), fun)
     }
 }
+
+// idx * par
+
+macro_rules! idx_par {
+    ($par:ty, $out:ty, $fout:ident) => {
+        impl<'m, 'd> Mul<$par> for IdxOrd<'m, 'd> {
+            type Output = $out;
+
+            fn mul(self, rhs: $par) -> Self::Output {
+                let (t1, t2) = (self.ptr(), rhs.ptr().get().fun_ptr());
+                let fun =
+                    Box::new(move || (t1.get().read::<SetOrd>() * t2.get().d0_at_int()) as f64);
+                $fout(self.m(), fun)
+            }
+        }
+
+        impl<'m, 'd> Mul<IdxOrd<'m, 'd>> for $par {
+            type Output = $out;
+
+            fn mul(self, rhs: IdxOrd<'m, 'd>) -> Self::Output {
+                rhs * self
+            }
+        }
+    };
+}
+
+idx_par!(NumParD0<'m, 'd>, Num<'m, 'd>, val_num);
+idx_par!(IntParD0<'m, 'd>, Int<'m, 'd>, val_int);
 
 // idx*con
 
@@ -140,3 +198,45 @@ idx_con!(u64, Int<'m, 'd>, val_int);
 idx_con!(u32, Int<'m, 'd>, val_int);
 idx_con!(usize, Int<'m, 'd>, val_int);
 idx_con!(isize, Int<'m, 'd>, val_int);
+
+// par * con
+
+macro_rules! par_con {
+    ($par:ty, $con:ty, $out:ty, $fout:ident) => {
+        impl<'m, 'd> Mul<$con> for $par {
+            type Output = $out;
+
+            fn mul(self, rhs: $con) -> Self::Output {
+                let t1 = self.ptr().get().fun_ptr();
+                let fun = Box::new(move || t1.get().d0_at() * rhs.as_f64());
+                $fout(self.m(), fun)
+            }
+        }
+
+        impl<'m, 'd> Mul<$par> for $con {
+            type Output = $out;
+
+            fn mul(self, rhs: $par) -> Self::Output {
+                rhs * self
+            }
+        }
+    };
+}
+
+par_con!(IntParD0<'m, 'd>, f64, Num<'m, 'd>, val_num);
+par_con!(IntParD0<'m, 'd>, f32, Num<'m, 'd>, val_num);
+par_con!(IntParD0<'m, 'd>, i64, Int<'m, 'd>, val_int);
+par_con!(IntParD0<'m, 'd>, i32, Int<'m, 'd>, val_int);
+par_con!(IntParD0<'m, 'd>, u64, Int<'m, 'd>, val_int);
+par_con!(IntParD0<'m, 'd>, u32, Int<'m, 'd>, val_int);
+par_con!(IntParD0<'m, 'd>, usize, Int<'m, 'd>, val_int);
+par_con!(IntParD0<'m, 'd>, isize, Int<'m, 'd>, val_int);
+
+par_con!(NumParD0<'m, 'd>, f64, Num<'m, 'd>, val_num);
+par_con!(NumParD0<'m, 'd>, f32, Num<'m, 'd>, val_num);
+par_con!(NumParD0<'m, 'd>, i64, Num<'m, 'd>, val_num);
+par_con!(NumParD0<'m, 'd>, i32, Num<'m, 'd>, val_num);
+par_con!(NumParD0<'m, 'd>, u64, Num<'m, 'd>, val_num);
+par_con!(NumParD0<'m, 'd>, u32, Num<'m, 'd>, val_num);
+par_con!(NumParD0<'m, 'd>, usize, Num<'m, 'd>, val_num);
+par_con!(NumParD0<'m, 'd>, isize, Num<'m, 'd>, val_num);
