@@ -41,7 +41,7 @@ pub fn const_add_con<'m, 'd>(m: &'m Model<'d>, c1: Con<'d>, c2: impl AsF64) -> P
 }
 
 pub fn ord_to_num<'m, 'd>(idx: IdxOrd<'m, 'd>) -> Num<'m, 'd> {
-    let int = idx.data().ord_to_int();
+    let int = idx.data().ord_to_num();
     idx.m().val::<ValNum>(int)
 }
 

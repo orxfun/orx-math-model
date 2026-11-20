@@ -70,7 +70,7 @@ fn con_sub_const<'m, 'd>(m: &'m Model<'d>, c1: impl AsF64, c2: Con<'d>) -> Ptr<'
 }
 
 fn ord_to_num_neg<'m, 'd>(idx: IdxOrd<'m, 'd>) -> Num<'m, 'd> {
-    let int = idx.data().ord_to_int_neg();
+    let int = idx.data().ord_to_num_neg();
     idx.m().val::<ValNum>(int)
 }
 

@@ -151,13 +151,4 @@ pub mod ext_test {
             (None, None) => None,
         }
     }
-
-    pub fn sub_opt(a: Option<f64>, b: Option<f64>) -> Option<f64> {
-        match (a, b) {
-            (Some(a), Some(b)) => Some(a - b),
-            (Some(a), None) => Some(a),
-            (None, Some(b)) => Some(-b),
-            (None, None) => None,
-        }
-    }
 }

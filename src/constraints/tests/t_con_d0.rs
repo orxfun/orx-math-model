@@ -83,12 +83,26 @@ fn t_con_d0_ord() {
     let c = con(p[2], leq, x[2] * p[0] + sum1(s0, |i| p[i] * x[i]));
     assert_eq!(
         exp_str(c),
-        format!("7 <= 1 {x_}2 + 7 {x_}2 + 9 {x_}3 + 1 {x_}0")
+        format!("5 <= 1 {x_}2 + 5 {x_}2 + 7 {x_}3 + 1 {x_}0 + 3 {x_}1")
     );
 
-    let c = con(x[0] * p[2], leq, x[2] * p[0] + sum1(s0, |i| p[i] * x[i]));
+    let c = con(p[2], leq, x[2] * p[0] + sum1(s0, |i| i * x[i]));
     assert_eq!(
         exp_str(c),
-        format!("7 {x_}0 <= 1 {x_}2 + 7 {x_}2 + 9 {x_}3 + 1 {x_}0")
+        format!("5 <= 1 {x_}2 + 2 {x_}2 + 3 {x_}3 + 1 {x_}1")
+    );
+
+    let c = con(
+        p[2],
+        leq,
+        x[2] * p[0]
+            + sum1(s0, |i| {
+                let b = i + 1;
+                i * x[i]
+            }),
+    );
+    assert_eq!(
+        exp_str(c),
+        format!("5 <= 1 {x_}2 + 2 {x_}2 + 3 {x_}3 + 1 {x_}1")
     );
 }

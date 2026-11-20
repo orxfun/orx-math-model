@@ -29,21 +29,21 @@ impl<'d> DIdx<'d> {
         self.set_ptr
     }
 
-    pub fn ord_to_int(&self) -> DNum<'d> {
+    pub fn ord_to_num(&self) -> DNum<'d> {
         let val = self.slot.ptr();
         let fun = Box::new(move || val.get().read::<SetOrd>().as_f64());
-        DNum::new(ValTyp::Int, fun)
+        DNum::new(ValTyp::Num, fun)
     }
 
-    pub fn ord_to_int_neg(&self) -> DNum<'d> {
+    pub fn ord_to_num_neg(&self) -> DNum<'d> {
         let val = self.slot.ptr();
         let fun = Box::new(move || -val.get().read::<SetOrd>().as_f64());
-        DNum::new(ValTyp::Int, fun)
+        DNum::new(ValTyp::Num, fun)
     }
 
-    pub fn ord_to_int_recip(&self) -> DNum<'d> {
+    pub fn ord_to_num_recip(&self) -> DNum<'d> {
         let val = self.slot.ptr();
         let fun = Box::new(move || 1.0 / val.get().read::<SetOrd>().as_f64());
-        DNum::new(ValTyp::Int, fun)
+        DNum::new(ValTyp::Num, fun)
     }
 }

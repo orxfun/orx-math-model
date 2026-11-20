@@ -134,9 +134,9 @@ macro_rules! idx_con {
 
 idx_con!(f64, Num<'m, 'd>, val_num);
 idx_con!(f32, Num<'m, 'd>, val_num);
-idx_con!(i64, Num<'m, 'd>, val_num);
-idx_con!(i32, Num<'m, 'd>, val_num);
-idx_con!(u64, Num<'m, 'd>, val_num);
-idx_con!(u32, Num<'m, 'd>, val_num);
-idx_con!(usize, Num<'m, 'd>, val_num);
-idx_con!(isize, Num<'m, 'd>, val_num);
+idx_con!(i64, Int<'m, 'd>, val_int);
+idx_con!(i32, Int<'m, 'd>, val_int);
+idx_con!(u64, Int<'m, 'd>, val_int);
+idx_con!(u32, Int<'m, 'd>, val_int);
+idx_con!(usize, Int<'m, 'd>, val_int);
+idx_con!(isize, Int<'m, 'd>, val_int);

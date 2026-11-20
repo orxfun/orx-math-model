@@ -120,7 +120,7 @@ fn expr_div_con_sym<'m, 'd>(
 }
 
 fn ord_to_num_recip<'m, 'd>(idx: IdxOrd<'m, 'd>) -> Num<'m, 'd> {
-    let int = idx.data().ord_to_int_recip();
+    let int = idx.data().ord_to_num_recip();
     idx.m().val::<ValNum>(int)
 }
 
