@@ -1,5 +1,5 @@
-use crate::idxs::{DIdx, IdxCatInt, IdxCatStr, IdxOrd};
-use crate::{DimVec, Model, Ptr, SetTyp, SymWrap};
+use crate::idxs::DIdx;
+use crate::{DimVec, Ptr, SetTyp};
 
 pub type IdxVec<'d> = DimVec<Ptr<'d, DIdx<'d>>>;
 
