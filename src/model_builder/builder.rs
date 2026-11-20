@@ -55,4 +55,24 @@ impl<Sci: Dim, Scs: Dim, So: Dim, P: Dim, V: Dim> ModelBuilder<Sci, Scs, So, P, 
             var0: self.var0,
         }
     }
+
+    pub fn par(self, key: impl ToString) -> ModelBuilder<Sci, Scs, So, P::Next, V> {
+        ModelBuilder {
+            set_cat_int: self.set_cat_int,
+            set_cat_str: self.set_cat_str,
+            set_ord: self.set_ord,
+            par0: P::arr_push(self.par0, key.to_string()),
+            var0: self.var0,
+        }
+    }
+
+    pub fn var(self, key: impl ToString) -> ModelBuilder<Sci, Scs, So, P, V::Next> {
+        ModelBuilder {
+            set_cat_int: self.set_cat_int,
+            set_cat_str: self.set_cat_str,
+            set_ord: self.set_ord,
+            par0: self.par0,
+            var0: V::arr_push(self.var0, key.to_string()),
+        }
+    }
 }
