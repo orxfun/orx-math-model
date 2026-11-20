@@ -1,7 +1,9 @@
 use crate::expand::{expand_d1, expand_d2};
 use crate::idxs::IdxVec;
 use crate::lin_expr::DLinExpr;
-use crate::{Elements, ElementsIter, Model, Ptr, Set, SetCatInt, SetCatStr, SetOrd, SetTyp};
+use crate::{
+    Elements, ElementsIter, Model, Ptr, Set, SetCatInt, SetCatStr, SetOrd, SetTyp, SymWrap,
+};
 use alloc::vec::Vec;
 
 #[derive(derive_new::new, Clone)]
@@ -12,7 +14,8 @@ pub struct DSum<'d> {
 
 impl<'d> DSum<'d> {
     pub fn neg<'m>(&self, m: &'m Model<'d>) -> Self {
-        Self::new(self.idxs.clone(), self.expr.get().neg(m))
+        let expr = m.lin_exp(self.expr.get().neg(m)).ptr();
+        Self::new(self.idxs.clone(), expr)
     }
 
     pub fn with_expr(&self, expr: Ptr<'d, DLinExpr<'d>>) -> Self {

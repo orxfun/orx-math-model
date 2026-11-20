@@ -1,4 +1,6 @@
 use super::add::const_add_con;
+use crate::idxs::IdxOrd;
+use crate::lin_expr::ops::add::ord_to_num;
 use crate::lin_expr::{Coef, DLinExpr, DLinTerm, DSum, SumVec, TermVec};
 use crate::scalars::{DNum, ValNum};
 use crate::{AsF64, Int, LinExpr, Model, Num, Ptr, SymWrap, ValTyp, Var};
@@ -65,6 +67,11 @@ fn con_sub_const<'m, 'd>(m: &'m Model<'d>, c1: impl AsF64, c2: Con<'d>) -> Ptr<'
         }
         None => m.val_num_con(c1.as_f64()).ptr(),
     }
+}
+
+fn ord_to_num_neg<'m, 'd>(idx: IdxOrd<'m, 'd>) -> Num<'m, 'd> {
+    let int = idx.data().ord_to_num_neg();
+    idx.m().val::<ValNum>(int)
 }
 
 // expr - expr
@@ -139,6 +146,24 @@ macro_rules! expr_num {
 
 expr_num!(Num<'m, 'd>);
 expr_num!(Int<'m, 'd>);
+
+// expr - idx
+
+impl<'m, 'd> Sub<IdxOrd<'m, 'd>> for LinExpr<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn sub(self, rhs: IdxOrd<'m, 'd>) -> Self::Output {
+        self + ord_to_num_neg(rhs)
+    }
+}
+
+impl<'m, 'd> Sub<LinExpr<'m, 'd>> for IdxOrd<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn sub(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
+        ord_to_num(self) - rhs
+    }
+}
 
 // expr - const
 
@@ -220,6 +245,24 @@ macro_rules! var_num {
 
 var_num!(Num<'m, 'd>);
 var_num!(Int<'m, 'd>);
+
+// var - idx
+
+impl<'m, 'd> Sub<IdxOrd<'m, 'd>> for Var<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn sub(self, rhs: IdxOrd<'m, 'd>) -> Self::Output {
+        self + ord_to_num_neg(rhs)
+    }
+}
+
+impl<'m, 'd> Sub<Var<'m, 'd>> for IdxOrd<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn sub(self, rhs: Var<'m, 'd>) -> Self::Output {
+        ord_to_num(self) - rhs
+    }
+}
 
 // var - con
 

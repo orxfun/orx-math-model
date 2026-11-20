@@ -15,7 +15,7 @@ pub struct DLinExpr<'d> {
 }
 
 impl<'d> DLinExpr<'d> {
-    pub fn neg<'m>(&self, m: &'m Model<'d>) -> Ptr<'d, Self> {
+    pub fn neg<'m>(&self, m: &'m Model<'d>) -> Self {
         fn const_neg<'m, 'd>(
             m: &'m Model<'d>,
             c1: Option<Ptr<'d, DNum<'d>>>,
@@ -29,8 +29,7 @@ impl<'d> DLinExpr<'d> {
         let expr_terms = self.terms.map(|t| t.neg(m));
         let expr_sums = self.sums.map(|s| s.neg(m));
         let expr_constant = const_neg(m, self.constant);
-        let expr = DLinExpr::new(expr_terms, expr_sums, expr_constant);
-        m.lin_exp(expr).ptr()
+        DLinExpr::new(expr_terms, expr_sums, expr_constant)
     }
 
     pub fn with_constant(&self, constant: Option<Ptr<'d, DNum<'d>>>) -> Self {

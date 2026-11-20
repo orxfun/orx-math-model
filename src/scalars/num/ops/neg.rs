@@ -1,7 +1,18 @@
+use crate::idxs::IdxOrd;
 use crate::scalars::num::ops::add::{val_int, val_num};
-use crate::{Int, Num, SymWrap};
+use crate::{Int, Num, SetOrd, SymWrap};
 use alloc::boxed::Box;
 use core::ops::Neg;
+
+impl<'m, 'd> Neg for IdxOrd<'m, 'd> {
+    type Output = Int<'m, 'd>;
+
+    fn neg(self) -> Self::Output {
+        let t1 = self.ptr();
+        let fun = Box::new(move || -t1.get().read::<SetOrd>() as f64);
+        val_int(self.m(), fun)
+    }
+}
 
 macro_rules! num {
     ($n:ty, $fout:ident) => {

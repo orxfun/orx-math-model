@@ -1,0 +1,61 @@
+use crate::constraints::Constraint;
+use crate::sets::CatInt;
+use crate::{
+    con, eq, for1, for2, geq, leq, sum1, sum2, Model, SetCatInt, SetSym, SymWrap, VarType,
+};
+use alloc::string::String;
+use alloc::{format, vec};
+
+fn exp_str<'m, 'd>(con: Constraint<'m, 'd>) -> String {
+    con.data().eval_to_string()
+}
+
+#[test]
+fn t_con_d1() {
+    // data
+    let s0_data = vec![2, 3, 0, 1];
+    let p1_data = vec![1.0, 0.0, 7.0, 9.0];
+
+    // modeling
+    let m = Model::new();
+    let s0 = m.cat_set_int();
+    let x = m.var1(VarType::Binary, s0);
+    let p = m.par1_num(s0);
+
+    // binding
+    s0.bind(|| s0_data.iter().copied()).unwrap();
+    p.bind(|i| p1_data[i]).unwrap();
+
+    // running
+
+    let x_ = "x_"; // TODO: var-name-fix
+
+    let c = for1(s0, |i| con(x[i], leq, 1.0));
+    assert_eq!(exp_str(c), format!("?"));
+
+    // // con(3, leq, x[2]);
+
+    // let c = con(3, eq, 0 * x[2]);
+    // assert_eq!(exp_str(c), format!("3 = 0"));
+
+    // let c = con(7 - p[2], leq, x[2]);
+    // assert_eq!(exp_str(c), format!("0 <= {x_}2"));
+
+    // let c = con(7 - p[2], geq, x[2] * p[1]);
+    // assert_eq!(exp_str(c), format!("0 >= 0"));
+
+    // let c = con(p[2], leq, x[2] * p[0] + 2);
+    // assert_eq!(exp_str(c), format!("7 <= 1 {x_}2 + 2"));
+
+    // let c = con(p[2], leq, x[2] * p[0] + sum1(s0, |i| p[i] * x[i]));
+    // assert_eq!(
+    //     exp_str(c),
+    //     format!("7 <= 1 {x_}2 + 7 {x_}2 + 9 {x_}3 + 1 {x_}0")
+    // );
+
+    // let c = con(x[0] * p[2], leq, x[2] * p[0] + sum1(s0, |i| p[i] * x[i]));
+    // assert_eq!(
+    //     exp_str(c),
+    //     format!("7 {x_}0 <= 1 {x_}2 + 7 {x_}2 + 9 {x_}3 + 1 {x_}0")
+    // );
+}
