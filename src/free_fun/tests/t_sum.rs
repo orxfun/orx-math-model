@@ -54,7 +54,6 @@ fn t_sum_d1_zeroes() {
     // modeling
     let m = Model::new();
     let s0 = m.cat_set_int();
-    let i0 = s0.idx();
     let x1 = m.var1(VarType::Binary, s0);
 
     // binding
@@ -87,8 +86,6 @@ fn t_sum_d2() {
     let m = Model::new();
     let s0 = m.cat_set_int();
     let s1 = m.cat_set_str();
-    let i0 = s0.idx();
-    let i1 = s1.idx();
     let x1 = m.var1(VarType::Binary, s0);
     let x2 = m.var2(VarType::Binary, s0, s1);
     let par = m.par2(s0, s1);
@@ -103,7 +100,7 @@ fn t_sum_d2() {
     let ex1 = "x"; // TODO: var-name-fix
     let ex2 = "x"; // TODO: var-name-fix
 
-    let e = sum2(s0, s1, |i0, i1| x1[i0]);
+    let e = sum2(s0, s1, |i0, _| x1[i0]);
     assert_eq!(
         e.data().eval_to_string(),
         format!("{ex1}_0 + {ex1}_0 + {ex1}_1 + {ex1}_1 + {ex1}_2 + {ex1}_2")
@@ -152,8 +149,6 @@ fn t_sum_d2_zeroes() {
     let m = Model::new();
     let s0 = m.cat_set_int();
     let s1 = m.cat_set_str();
-    let i0 = s0.idx();
-    let i1 = s1.idx();
     let x1 = m.var1(VarType::Binary, s0);
     let x2 = m.var2(VarType::Binary, s0, s1);
     let par = m.par2(s0, s1);
