@@ -1,5 +1,7 @@
 use crate::model_builder::{Dim, D0};
-use crate::{CatInt, CatStr, Model, Ord};
+use crate::pars::{IntParD0, NumParD0};
+use crate::vars::VarD0;
+use crate::{CatInt, CatStr, Model, Ord, VarType};
 use alloc::string::{String, ToString};
 
 pub struct ModelBuilder<Sci: Dim, Scs: Dim, So: Dim, P: Dim, Pi: Dim, V: Dim> {
@@ -91,12 +93,58 @@ impl<Sci: Dim, Scs: Dim, So: Dim, P: Dim, Pi: Dim, V: Dim> ModelBuilder<Sci, Scs
         }
     }
 
-    pub fn build<'m, 'd: 'm, F>(f: F) -> Model<'d>
+    pub fn build<'m, 'd: 'm, F>(self, m: &'m Model<'d>, f: F)
     where
-        F: Fn(Sci::Arr<CatInt<'m, 'd>>, Sci::Arr<CatStr<'m, 'd>>, Sci::Arr<Ord<'m, 'd>>),
+        F: Fn(
+            Sci::Arr<CatInt<'m, 'd>>,
+            Scs::Arr<CatStr<'m, 'd>>,
+            So::Arr<Ord<'m, 'd>>,
+            P::Arr<NumParD0<'m, 'd>>,
+            Pi::Arr<IntParD0<'m, 'd>>,
+            V::Arr<VarD0<'m, 'd>>,
+        ),
     {
+        let sci = Sci::map(self.set_cat_int, |_key| m.cat_set_int());
+        let scs = Scs::map(self.set_cat_str, |_key| m.cat_set_str());
+        let so = So::map(self.set_ord, |_key| m.ord_set());
+        let p = P::map(self.par0, |_key| m.par0_num());
+        let pi = Pi::map(self.pari0, |_key| m.par0_int());
+        let v = V::map(self.var0, |_key| m.var0(VarType::Binary));
+
+        f(sci, scs, so, p, pi, v);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use alloc::vec;
+
+    use super::*;
+    use crate::*;
+
+    #[test]
+    fn abc() {
+        let d_org = vec!["x".to_string(), "y".to_string()];
+        let d_dst = vec!["a".to_string()];
         let m = Model::new();
 
-        m
+        ModelBuilder::default()
+            .cat_set_str("org")
+            .cat_set_str("dst")
+            .ord_set("t")
+            .par("cost")
+            .int_par("count")
+            .var("total-cost")
+            .build(&m, |[], [org, dst], [t], [cost], [count], [z]| {
+                let x = m.var2(VarType::Binary, org, dst);
+                let y = m.var1(VarType::Binary, org);
+
+                org.bind(|| &d_org).unwrap();
+                dst.bind(|| &d_dst).unwrap();
+
+                let c = con1(org, |o| (sum1(dst, |d| x[(o, d)]), leq, y[o]));
+                let s = c.data().eval_to_string();
+                assert_eq!(s, "2");
+            });
     }
 }

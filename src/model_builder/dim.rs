@@ -6,6 +6,10 @@ pub trait Dim {
     fn arr_push<T>(arr: Self::Arr<T>, value: T) -> <Self::Next as Dim>::Arr<T>
     where
         T: Clone;
+
+    fn map<T, U>(arr: Self::Arr<T>, f: impl Fn(T) -> U) -> Self::Arr<U>
+    where
+        T: Clone;
 }
 
 pub enum Never {}
@@ -18,6 +22,10 @@ impl Dim for Never {
     where
         T: Clone,
     {
+        unreachable!()
+    }
+
+    fn map<T, U>(_: Self::Arr<T>, _: impl Fn(T) -> U) -> <Self::Next as Dim>::Arr<U> {
         unreachable!()
     }
 }
@@ -36,6 +44,13 @@ impl Dim for D0 {
     {
         [value]
     }
+
+    fn map<T, U>(_: Self::Arr<T>, _: impl Fn(T) -> U) -> Self::Arr<U>
+    where
+        T: Clone,
+    {
+        []
+    }
 }
 
 // dim 1
@@ -51,6 +66,13 @@ impl Dim for D1 {
         T: Clone,
     {
         [arr[0].clone(), value]
+    }
+
+    fn map<T, U>(arr: Self::Arr<T>, f: impl Fn(T) -> U) -> Self::Arr<U>
+    where
+        T: Clone,
+    {
+        arr.map(|x| f(x.clone()))
     }
 }
 
@@ -68,6 +90,13 @@ impl Dim for D2 {
     {
         [arr[0].clone(), arr[1].clone(), value]
     }
+
+    fn map<T, U>(arr: Self::Arr<T>, f: impl Fn(T) -> U) -> Self::Arr<U>
+    where
+        T: Clone,
+    {
+        arr.map(|x| f(x.clone()))
+    }
 }
 
 // dim 3
@@ -83,5 +112,12 @@ impl Dim for D3 {
         T: Clone,
     {
         unreachable!()
+    }
+
+    fn map<T, U>(arr: Self::Arr<T>, f: impl Fn(T) -> U) -> Self::Arr<U>
+    where
+        T: Clone,
+    {
+        arr.map(|x| f(x.clone()))
     }
 }

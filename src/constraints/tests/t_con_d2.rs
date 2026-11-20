@@ -10,21 +10,6 @@ fn exp_str<'m, 'd>(con: Constraint<'m, 'd>) -> String {
 }
 
 #[test]
-fn abc() {
-    // modeling
-    let m = Model::new();
-    let org = m.cat_set_str();
-    let dst = m.cat_set_str();
-    let c = m.par2(org, dst);
-    let y = m.var1(VarType::Binary, org);
-    let x = m.var2(VarType::Cont(Bounds::default()), org, dst);
-
-    con2(org, dst, |o, d| (x[(o, d)], leq, y[o]));
-    con2(org, dst, |o, d| (x[(o, d)], geq, sum1(org, |o| y[o])));
-    con(sum2(org, dst, |o, d| c[(o, d)] * x[(o, d)]), leq, 3);
-}
-
-#[test]
 fn t_con_d2() {
     // data
     fn arr_to_loc<const N: usize>(arr: [&str; N]) -> Vec<String> {
