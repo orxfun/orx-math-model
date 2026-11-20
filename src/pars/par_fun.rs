@@ -62,6 +62,18 @@ impl<'d> ParFun<'d> {
         Self::new(val_typ, idx_types, data)
     }
 
+    #[inline(always)]
+    pub fn d0_at(&self) -> f64 {
+        let fun = unsafe { &self.data.d0 };
+        fun()
+    }
+
+    #[inline(always)]
+    pub fn d0_at_int(&self) -> i64 {
+        debug_assert_eq!(self.val_typ, ValTyp::Int);
+        round_f64(self.d0_at())
+    }
+
     // d1
 
     pub fn d1_create<V: AsF64, I0: Set>(

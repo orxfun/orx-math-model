@@ -13,6 +13,11 @@ impl<'m, 'd> IntParD0<'m, 'd> {
     pub fn bind<V: AsF64>(self, fun: impl Fn() -> V + 'd) -> Res {
         self.data().d0_bind::<V>(ValTyp::Int, fun)
     }
+
+    pub(crate) fn to_int(self) -> Int<'m, 'd> {
+        let x = self.data().fun();
+        todo!()
+    }
 }
 
 // num
