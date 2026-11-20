@@ -215,25 +215,31 @@ impl<'d> Model<'d> {
 
     // vars
 
-    pub fn var0<'m>(&'m self, typ: VarType) -> VarD0<'m, 'd> {
-        let data = DVars::new_d0(typ);
+    pub fn var0<'m>(&'m self, key: impl ToString, typ: VarType) -> VarD0<'m, 'd> {
+        let data = DVars::new_d0(key.to_string(), typ);
         let el = self.vars_bag.push(data);
         VarD0::new(Symbol::new(self, el))
     }
 
-    pub fn var1<'m, S0>(&'m self, typ: VarType, s0: S0) -> VarD1<'m, 'd, S0::Meta>
+    pub fn var1<'m, S0>(
+        &'m self,
+        key: impl ToString,
+        typ: VarType,
+        s0: S0,
+    ) -> VarD1<'m, 'd, S0::Meta>
     where
         S0: SetSym<'m, 'd>,
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
     {
         let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
-        let data = DVars::new_d1(typ, s0_ptr);
+        let data = DVars::new_d1(key.to_string(), typ, s0_ptr);
         let el = self.vars_bag.push(data);
         VarD1::new(Symbol::new(self, el))
     }
 
     pub fn var2<'m, S0, S1>(
         &'m self,
+        key: impl ToString,
         typ: VarType,
         s0: S0,
         s1: S1,
@@ -246,7 +252,7 @@ impl<'d> Model<'d> {
     {
         let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
         let s1_ptr = <S1::Meta as Set>::set_ptr(s1);
-        let data = DVars::new_d2(typ, s0_ptr, s1_ptr);
+        let data = DVars::new_d2(key.to_string(), typ, s0_ptr, s1_ptr);
         let el = self.vars_bag.push(data);
         VarD2::new(Symbol::new(self, el))
     }

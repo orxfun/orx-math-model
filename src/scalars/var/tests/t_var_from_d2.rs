@@ -10,7 +10,7 @@ fn var_from_var1() {
             let m = Model::new();
             let s0 = m.set::<$s0>("S");
             let s1 = m.set::<$s1>("T");
-            let vard = m.var2(VarType::Binary, s0, s1);
+            let vard = m.var2("x", VarType::Binary, s0, s1);
 
             // running
             let var_name = "x"; // TODO: var-name fix

@@ -37,8 +37,8 @@ fn t_con_d2() {
     let org = m.cat_set_str("org");
     let dst = m.cat_set_str("dst");
     let c = m.par2_num("c", org, dst);
-    let y = m.var1(VarType::Binary, org);
-    let x = m.var2(VarType::Cont(Bounds::default()), org, dst);
+    let y = m.var1("y", VarType::Binary, org);
+    let x = m.var2("x", VarType::Cont(Bounds::default()), org, dst);
 
     // binding
     org.bind(|| &d_org).unwrap();

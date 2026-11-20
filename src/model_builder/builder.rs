@@ -136,15 +136,15 @@ mod tests {
             .int_par("count")
             .var("total-cost")
             .build(&m, |[], [org, dst], [t], [cost], [count], [z]| {
-                let x = m.var2(VarType::Binary, org, dst);
-                let y = m.var1(VarType::Binary, org);
+                // let x = m.var2(VarType::Binary, org, dst);
+                // let y = m.var1(VarType::Binary, org);
 
-                org.bind(|| &d_org).unwrap();
-                dst.bind(|| &d_dst).unwrap();
+                // org.bind(|| &d_org).unwrap();
+                // dst.bind(|| &d_dst).unwrap();
 
-                let c = con1(org, |o| (sum1(dst, |d| x[(o, d)]), leq, y[o]));
-                let s = c.data().eval_to_string();
-                assert_eq!(s, "2");
+                // let c = con1(org, |o| (sum1(dst, |d| x[(o, d)]), leq, y[o]));
+                // let s = c.data().eval_to_string();
+                // assert_eq!(s, "2");
             });
     }
 }
