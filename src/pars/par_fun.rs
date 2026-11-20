@@ -24,9 +24,9 @@ pub struct ParFun<'d> {
 impl<'d> Drop for ParFun<'d> {
     fn drop(&mut self) {
         match self.idx_types.dim() {
+            Dim::D0 => unsafe { ManuallyDrop::drop(&mut self.data.d0) },
             Dim::D1 => unsafe { &mut self.data.d1 }.man_drop(self.idx_types[0]),
             Dim::D2 => unsafe { &mut self.data.d2 }.man_drop(self.idx_types[0], self.idx_types[1]),
-            _ => todo!(),
         }
     }
 }
@@ -47,6 +47,17 @@ impl<'d> ParFun<'d> {
 
     pub fn dim(&self) -> Dim {
         self.idx_types.dim()
+    }
+
+    // d0
+
+    pub fn d0_create<V: AsF64>(val_typ: ValTyp, fun: impl Fn() -> V + 'd) -> Self {
+        let idx_types = DimVec::new([]);
+        let fun = Box::new(move || fun().as_f64());
+        let data = ManuallyDrop::new(UFunPar {
+            d0: ManuallyDrop::new(fun),
+        });
+        Self::new(val_typ, idx_types, data)
     }
 
     // d1
