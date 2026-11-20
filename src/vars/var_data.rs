@@ -7,6 +7,11 @@ pub struct DVars<'d> {
 }
 
 impl<'d> DVars<'d> {
+    pub fn new_d0(typ: VarType) -> Self {
+        let sets = DimVec::new([]);
+        Self { typ, sets }
+    }
+
     pub fn new_d1(typ: VarType, s0: Ptr<'d, DSet<'d>>) -> Self {
         let sets = DimVec::new([s0]);
         Self { typ, sets }
