@@ -91,9 +91,9 @@ pub trait Set: Clone + Copy + 'static {
 
     // p2
 
-    fn unpack_p2_fun_v_i0<'a, 'd, I0: Set>(u: &'a UFunP2_I0<'d, I0>) -> &'a FP2<'d, I0, Self>;
+    fn unpack_p2_fun_i0<'a, 'd, I0: Set>(u: &'a UFunP2_I0<'d, I0>) -> &'a FP2<'d, I0, Self>;
 
-    fn unpack_p2_fun_v<'a, 'd, I1: Set>(u: &'a UFunP2<'d>) -> &'a FP2<'d, Self, I1>;
+    fn unpack_p2_fun<'a, 'd, I1: Set>(u: &'a UFunP2<'d>) -> &'a FP2<'d, Self, I1>;
 
     fn num_p2_at<'m, 'd, I1: Set>(
         par: NumParD2<'m, 'd, Self, I1>,
@@ -218,13 +218,13 @@ impl Set for SetCatInt {
     // p2
 
     #[inline(always)]
-    fn unpack_p2_fun_v_i0<'a, 'd, I0: Set>(u: &'a UFunP2_I0<'d, I0>) -> &'a FP2<'d, I0, Self> {
+    fn unpack_p2_fun_i0<'a, 'd, I0: Set>(u: &'a UFunP2_I0<'d, I0>) -> &'a FP2<'d, I0, Self> {
         unsafe { &u.cint }
     }
 
     #[inline(always)]
-    fn unpack_p2_fun_v<'a, 'd, I1: Set>(u: &'a UFunP2<'d>) -> &'a FP2<'d, Self, I1> {
-        I1::unpack_p2_fun_v_i0(unsafe { &u.cint })
+    fn unpack_p2_fun<'a, 'd, I1: Set>(u: &'a UFunP2<'d>) -> &'a FP2<'d, Self, I1> {
+        I1::unpack_p2_fun_i0(unsafe { &u.cint })
     }
 }
 
@@ -316,13 +316,13 @@ impl Set for SetCatStr {
     // p2
 
     #[inline(always)]
-    fn unpack_p2_fun_v_i0<'a, 'd, I0: Set>(u: &'a UFunP2_I0<'d, I0>) -> &'a FP2<'d, I0, Self> {
+    fn unpack_p2_fun_i0<'a, 'd, I0: Set>(u: &'a UFunP2_I0<'d, I0>) -> &'a FP2<'d, I0, Self> {
         unsafe { &u.cstr }
     }
 
     #[inline(always)]
-    fn unpack_p2_fun_v<'a, 'd, I1: Set>(u: &'a UFunP2<'d>) -> &'a FP2<'d, Self, I1> {
-        I1::unpack_p2_fun_v_i0(unsafe { &u.cstr })
+    fn unpack_p2_fun<'a, 'd, I1: Set>(u: &'a UFunP2<'d>) -> &'a FP2<'d, Self, I1> {
+        I1::unpack_p2_fun_i0(unsafe { &u.cstr })
     }
 }
 
@@ -414,12 +414,12 @@ impl Set for SetOrd {
     // p2
 
     #[inline(always)]
-    fn unpack_p2_fun_v_i0<'a, 'd, I0: Set>(u: &'a UFunP2_I0<'d, I0>) -> &'a FP2<'d, I0, Self> {
+    fn unpack_p2_fun_i0<'a, 'd, I0: Set>(u: &'a UFunP2_I0<'d, I0>) -> &'a FP2<'d, I0, Self> {
         unsafe { &u.ord }
     }
 
     #[inline(always)]
-    fn unpack_p2_fun_v<'a, 'd, I1: Set>(u: &'a UFunP2<'d>) -> &'a FP2<'d, Self, I1> {
-        I1::unpack_p2_fun_v_i0(unsafe { &u.ord })
+    fn unpack_p2_fun<'a, 'd, I1: Set>(u: &'a UFunP2<'d>) -> &'a FP2<'d, Self, I1> {
+        I1::unpack_p2_fun_i0(unsafe { &u.ord })
     }
 }
