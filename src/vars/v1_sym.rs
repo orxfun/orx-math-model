@@ -1,6 +1,6 @@
 use crate::scalars::Var;
 use crate::vars::DVars;
-use crate::{Model, Ptr, Set, SymWrap, Symbol};
+use crate::{Set, SymWrap, Symbol};
 use core::marker::PhantomData;
 use core::ops::Index;
 

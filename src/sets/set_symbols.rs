@@ -1,8 +1,6 @@
-use crate::idxs::{IdxCatInt, IdxCatStr, IdxOrd};
+use crate::idxs::IdxOrd;
 use crate::sets::DSet;
-use crate::{
-    impl_sym_wrap, Elements, Model, Ptr, Res, Set, SetCatInt, SetCatStr, SetOrd, SymWrap, Symbol,
-};
+use crate::{impl_sym_wrap, Elements, Res, Set, SetCatInt, SetCatStr, SetOrd, Symbol};
 use alloc::{boxed::Box, string::String};
 
 fn bind<'d, S, I>(set: Symbol<'_, 'd, DSet<'d>>, fun: impl Fn() -> I + 'd) -> Res
