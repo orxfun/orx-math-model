@@ -1,7 +1,7 @@
 use crate::model_builder::{Dim, D0};
 use crate::pars::{IntParD0, NumParD0};
 use crate::vars::VarD0;
-use crate::{CatInt, CatStr, Model, Ord, VarType};
+use crate::{CatInt, CatStr, Model, Ord, VarTyp};
 use alloc::string::{String, ToString};
 
 pub struct ModelBuilder<Sci: Dim, Scs: Dim, So: Dim, P: Dim, Pi: Dim, V: Dim> {

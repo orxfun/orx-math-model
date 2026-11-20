@@ -1,10 +1,10 @@
-use crate::{vars::bounds::ResolvedBoundD0, Model, SetCatInt, SetSym, SymWrap, VarType};
+use crate::{vars::bounds::ResolvedBoundD0, Model, SetCatInt, SetSym, SymWrap, VarTyp};
 
 #[test]
 fn t_v0() {
     // modeling
     let m = Model::new();
-    let var = m.var0("x", VarType::Binary);
+    let var = m.var0("x", VarTyp::Binary);
     let p0 = m.par0_int("p0");
     let s = m.cat_set_int("s");
     let i = s.idx();

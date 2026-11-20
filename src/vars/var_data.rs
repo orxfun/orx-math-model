@@ -1,19 +1,19 @@
 use crate::sets::{DSet, FunSet};
 use crate::vars::bounds::{ResolvedBoundD0, ResolvedBoundD1, ResolvedBoundD2};
 use crate::vars::{BoundD0, BoundD1, BoundD2, Bounds, UBounds};
-use crate::{Dim, DimVec, Ptr, Set, VarType};
+use crate::{Dim, DimVec, Ptr, Set, VarTyp};
 use alloc::string::String;
 
 #[derive(derive_new::new)]
 pub struct DVars<'d> {
     key: String,
-    typ: VarType,
+    typ: VarTyp,
     bounds: UBounds<'d>,
     sets: DimVec<Ptr<'d, DSet<'d>>>,
 }
 
 impl<'d> DVars<'d> {
-    pub fn new_d0(key: String, typ: VarType) -> Self {
+    pub fn new_d0(key: String, typ: VarTyp) -> Self {
         let sets = DimVec::new([]);
         let bounds = UBounds {
             d0: Bounds::new(BoundD0::None, BoundD0::None),
@@ -21,7 +21,7 @@ impl<'d> DVars<'d> {
         Self::new(key, typ, bounds, sets)
     }
 
-    pub fn new_d1(key: String, typ: VarType, s0: Ptr<'d, DSet<'d>>) -> Self {
+    pub fn new_d1(key: String, typ: VarTyp, s0: Ptr<'d, DSet<'d>>) -> Self {
         let sets = DimVec::new([s0]);
         let bounds = UBounds {
             d1: Bounds::new(BoundD1::None, BoundD1::None),
@@ -29,7 +29,7 @@ impl<'d> DVars<'d> {
         Self::new(key, typ, bounds, sets)
     }
 
-    pub fn new_d2(key: String, typ: VarType, s0: Ptr<'d, DSet<'d>>, s1: Ptr<'d, DSet<'d>>) -> Self {
+    pub fn new_d2(key: String, typ: VarTyp, s0: Ptr<'d, DSet<'d>>, s1: Ptr<'d, DSet<'d>>) -> Self {
         let sets = DimVec::new([s0, s1]);
         let bounds = UBounds {
             d2: Bounds::new(BoundD2::None, BoundD2::None),
@@ -92,7 +92,7 @@ impl<'d> DVars<'d> {
         self.sets.dim()
     }
 
-    pub fn typ(&self) -> VarType {
+    pub fn typ(&self) -> VarTyp {
         self.typ
     }
 

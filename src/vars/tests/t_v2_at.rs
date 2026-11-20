@@ -1,5 +1,5 @@
 use crate::{
-    Elements, ElementsIter, Model, Set, SetCatInt, SetCatStr, SetOrd, SetSym, SymWrap, VarType,
+    Elements, ElementsIter, Model, Set, SetCatInt, SetCatStr, SetOrd, SetSym, SymWrap, VarTyp,
 };
 use alloc::format;
 use alloc::string::{String, ToString};
@@ -28,7 +28,7 @@ fn v2_at_int_cint_cstr() {
     let s1 = m.cat_set_str("s1");
     let i0 = s0.idx();
     let i1 = s1.idx();
-    let var = m.var2("x", VarType::Binary, s0, s1);
+    let var = m.var2("x", VarTyp::Binary, s0, s1);
     let sca1 = [var.at(i0, i1), var[(i0, i1)]];
     let sca2 = [var.at(i0, "3"), var[(i0, "3")]];
     let sca3 = [var.at(2, i1), var[(2, i1)]];
@@ -86,7 +86,7 @@ fn v2_at_int_cstr_ord() {
     let s1 = m.ord_set("s1");
     let i0 = s0.idx();
     let i1 = s1.idx();
-    let var = m.var2("x", VarType::Integer, s0, s1);
+    let var = m.var2("x", VarTyp::Integer, s0, s1);
     let sca1 = [var.at(i0, i1), var[(i0, i1)]];
     let sca2 = [var.at(i0, 3), var[(i0, 3)]];
     let sca3 = [var.at("2", i1), var[("2", i1)]];
@@ -144,7 +144,7 @@ fn v2_at_int_ord_cint() {
     let s1 = m.cat_set_int("s1");
     let i0 = s0.idx();
     let i1 = s1.idx();
-    let var = m.var2("x", VarType::Continuous, s0, s1);
+    let var = m.var2("x", VarTyp::Continuous, s0, s1);
     let sca1 = [var.at(i0, i1), var[(i0, i1)]];
     let sca2 = [var.at(i0, 3), var[(i0, 3)]];
     let sca3 = [var.at(2, i1), var[(2, i1)]];

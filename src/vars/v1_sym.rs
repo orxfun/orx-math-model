@@ -2,7 +2,7 @@ use crate::scalars::Var;
 use crate::vars::DVars;
 use crate::{Set, SymWrap, Symbol};
 use core::marker::PhantomData;
-use core::ops::Index;
+use core::ops::{Deref, Index};
 
 #[derive(derive_new::new, Clone, Copy)]
 pub struct VarD1<'m, 'd, I0: Set>(Symbol<'m, 'd, DVars<'d>>, PhantomData<I0>);
@@ -30,5 +30,18 @@ where
 
     fn index(&self, i0: Idx0) -> &Self::Output {
         self.m().var_ref(self.at(i0))
+    }
+}
+
+// variants
+
+#[derive(derive_new::new, Clone, Copy)]
+pub struct ContVarD1<'m, 'd, I0: Set>(VarD1<'m, 'd, I0>);
+
+impl<'m, 'd, I0: Set> Deref for ContVarD1<'m, 'd, I0> {
+    type Target = VarD1<'m, 'd, I0>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
     }
 }

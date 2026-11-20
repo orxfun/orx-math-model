@@ -7,10 +7,10 @@ use crate::scalars::{DNum, DVar, Int, Num, Val, ValNum, Var};
 use crate::sets::{CatInt, CatStr, DSet, FunSet, Ord};
 use crate::slot::State;
 use crate::sym_ref::SymRef;
-use crate::vars::{DVars, VarD0, VarD1, VarD2};
+use crate::vars::{ContVarD0, ContVarD1, DVars, VarD0, VarD1, VarD2};
 use crate::{
     AsF64, Bag, DimVec, LinExpr, Ptr, Set, SetCatInt, SetCatStr, SetOrd, SetSym, Slot, Symbol,
-    TConVal, ValTyp, VarType,
+    TConVal, ValTyp, VarTyp,
 };
 use alloc::string::{String, ToString};
 use core::mem::ManuallyDrop;
@@ -215,18 +215,18 @@ impl<'d> Model<'d> {
 
     // vars
 
-    pub fn var0<'m>(&'m self, key: impl ToString, typ: VarType) -> VarD0<'m, 'd> {
+    pub fn var0<'m>(&'m self, key: impl ToString, typ: VarTyp) -> ContVarD0<'m, 'd> {
         let data = DVars::new_d0(key.to_string(), typ);
         let el = self.vars_bag.push(data);
-        VarD0::new(Symbol::new(self, el))
+        ContVarD0::new(VarD0::new(Symbol::new(self, el)))
     }
 
     pub fn var1<'m, S0>(
         &'m self,
         key: impl ToString,
-        typ: VarType,
+        typ: VarTyp,
         s0: S0,
-    ) -> VarD1<'m, 'd, S0::Meta>
+    ) -> ContVarD1<'m, 'd, S0::Meta>
     where
         S0: SetSym<'m, 'd>,
         S0::Meta: Set<SetSym<'m, 'd> = S0>,
@@ -234,13 +234,13 @@ impl<'d> Model<'d> {
         let s0_ptr = <S0::Meta as Set>::set_ptr(s0);
         let data = DVars::new_d1(key.to_string(), typ, s0_ptr);
         let el = self.vars_bag.push(data);
-        VarD1::new(Symbol::new(self, el))
+        ContVarD1::new(VarD1::new(Symbol::new(self, el)))
     }
 
     pub fn var2<'m, S0, S1>(
         &'m self,
         key: impl ToString,
-        typ: VarType,
+        typ: VarTyp,
         s0: S0,
         s1: S1,
     ) -> VarD2<'m, 'd, S0::Meta, S1::Meta>
