@@ -1,5 +1,5 @@
 use crate::scalars::{DNum, DVar, ValNum};
-use crate::{AsF64, Model, Ptr, SymWrap, Var};
+use crate::{Model, Ptr, SymWrap};
 
 #[derive(Clone)]
 pub enum Coef<'d> {

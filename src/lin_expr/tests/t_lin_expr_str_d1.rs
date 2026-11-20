@@ -1,10 +1,7 @@
-use crate::{
-    sum1, sum2, Bounds, Elements, ElementsIter, LinExpr, Model, Set, SetCatInt, SetCatStr, SetOrd,
-    SetSym, SymWrap, VarType,
-};
+use crate::{sum1, Elements, ElementsIter, LinExpr, Model, SetCatInt, SetSym, SymWrap, VarType};
 use alloc::format;
-use alloc::string::{String, ToString};
-use alloc::{vec, vec::Vec};
+use alloc::string::String;
+use alloc::vec;
 
 fn exp_str<'m, 'd>(e: LinExpr<'m, 'd>) -> String {
     e.data().eval_to_string()
