@@ -1,6 +1,5 @@
-use alloc::{string::ToString, vec::Vec};
-
 use crate::{Model, SetCatInt, SetCatStr, SetOrd, SetSym, SymWrap, VarType};
+use alloc::{string::ToString, vec::Vec};
 
 #[test]
 fn v1_int_cint() {

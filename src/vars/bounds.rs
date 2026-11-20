@@ -180,6 +180,17 @@ pub enum ResolvedBoundD2<'d, I0: Set, I1: Set> {
     ParD2(&'d Box<dyn Fn(I0::IdxRaw<'d>, I1::IdxRaw<'d>) -> f64 + 'd>),
 }
 
+impl<'d, I0: Set, I1: Set> ResolvedBoundD2<'d, I0, I1> {
+    #[inline(always)]
+    pub fn eval(&self, i0: I0::IdxRaw<'d>, i1: I1::IdxRaw<'d>) -> Option<f64> {
+        match self {
+            Self::None => None,
+            Self::Con(x) => Some(*x),
+            Self::ParD2(x) => Some(x(i0, i1)),
+        }
+    }
+}
+
 impl_from_con!(BoundD2<'d>);
 impl_from_num!(BoundD2<'d>);
 
