@@ -56,9 +56,12 @@ pub enum BoundD0<'d> {
     Num(Ptr<'d, DNum<'d>>),
 }
 
-pub enum ResolvedBoundD0 {
-    None,
-    Con(f64),
+pub struct ResolvedBoundD0(Option<f64>);
+
+impl ResolvedBoundD0 {
+    pub fn eval(&self) -> Option<f64> {
+        self.0
+    }
 }
 
 impl_from_con!(BoundD0<'d>);
@@ -87,11 +90,11 @@ impl<'d> BoundD0<'d> {
     }
 
     pub fn resolve(&self) -> ResolvedBoundD0 {
-        match self {
-            Self::None => ResolvedBoundD0::None,
-            Self::Con(x) => ResolvedBoundD0::Con(*x),
-            Self::Num(x) => ResolvedBoundD0::Con(x.get().eval()),
-        }
+        ResolvedBoundD0(match self {
+            Self::None => None,
+            Self::Con(x) => Some(*x),
+            Self::Num(x) => Some(x.get().eval()),
+        })
     }
 }
 
