@@ -5,8 +5,11 @@ use crate::{AsF64, Dim, DimVec, Set, SetTyp, ValTyp};
 use alloc::boxed::Box;
 use core::mem::ManuallyDrop;
 
+pub type FP0<'d> = Box<dyn Fn() -> f64 + 'd>;
+
 #[repr(C)]
 pub union UFunPar<'d> {
+    d0: ManuallyDrop<FP0<'d>>,
     d1: ManuallyDrop<UFunP1<'d>>,
     d2: ManuallyDrop<UFunP2<'d>>,
 }
