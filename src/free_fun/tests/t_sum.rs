@@ -1,4 +1,4 @@
-use crate::{sum1, sum2, Model, SetSym, SymWrap, VarType};
+use crate::{sum1, sum2, Model, SymWrap, VarType};
 use alloc::format;
 use alloc::string::{String, ToString};
 use alloc::{vec, vec::Vec};
@@ -162,7 +162,7 @@ fn t_sum_d2_zeroes() {
 
     let ex2 = "x"; // TODO: var-name-fix
 
-    let e = sum2(s0, s1, |i0, i1| 0 * x1[i0]);
+    let e = sum2(s0, s1, |i0, _i1| 0 * x1[i0]);
     assert_eq!(e.data().eval_to_string(), "");
 
     let e = sum2(s0, s1, |i0, i1| 7 + 0 * x2[(i0, i1)] - 7.0);
