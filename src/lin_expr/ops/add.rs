@@ -1,6 +1,8 @@
 use crate::idxs::IdxOrd;
 use crate::lin_expr::{DLinExpr, SumVec, TermVec};
+use crate::pars::{IntParD0, NumParD0};
 use crate::scalars::{DNum, ValNum};
+use crate::vars::VarD0;
 use crate::{AsF64, Int, LinExpr, Model, Num, Ptr, SymWrap, ValTyp, Var};
 use alloc::boxed::Box;
 use core::ops::Add;
@@ -80,6 +82,24 @@ impl<'m, 'd> Add<LinExpr<'m, 'd>> for Var<'m, 'd> {
     }
 }
 
+// expr + var0
+
+impl<'m, 'd> Add<VarD0<'m, 'd>> for LinExpr<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn add(self, rhs: VarD0<'m, 'd>) -> Self::Output {
+        self + Var::from(rhs)
+    }
+}
+
+impl<'m, 'd> Add<LinExpr<'m, 'd>> for VarD0<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn add(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
+        rhs + self
+    }
+}
+
 // expr + num
 
 macro_rules! expr_num {
@@ -119,6 +139,40 @@ impl<'m, 'd> Add<IdxOrd<'m, 'd>> for LinExpr<'m, 'd> {
 }
 
 impl<'m, 'd> Add<LinExpr<'m, 'd>> for IdxOrd<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn add(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
+        rhs + self
+    }
+}
+
+// expr + par
+
+impl<'m, 'd> Add<NumParD0<'m, 'd>> for LinExpr<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn add(self, rhs: NumParD0<'m, 'd>) -> Self::Output {
+        self + rhs.to_num()
+    }
+}
+
+impl<'m, 'd> Add<LinExpr<'m, 'd>> for NumParD0<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn add(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
+        rhs + self
+    }
+}
+
+impl<'m, 'd> Add<IntParD0<'m, 'd>> for LinExpr<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn add(self, rhs: IntParD0<'m, 'd>) -> Self::Output {
+        self + rhs.to_int()
+    }
+}
+
+impl<'m, 'd> Add<LinExpr<'m, 'd>> for IntParD0<'m, 'd> {
     type Output = LinExpr<'m, 'd>;
 
     fn add(self, rhs: LinExpr<'m, 'd>) -> Self::Output {
@@ -172,6 +226,24 @@ impl<'m, 'd> Add<Var<'m, 'd>> for Var<'m, 'd> {
     }
 }
 
+// var + var0
+
+impl<'m, 'd> Add<VarD0<'m, 'd>> for Var<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn add(self, rhs: VarD0<'m, 'd>) -> Self::Output {
+        self + Var::from(rhs)
+    }
+}
+
+impl<'m, 'd> Add<Var<'m, 'd>> for VarD0<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn add(self, rhs: Var<'m, 'd>) -> Self::Output {
+        rhs + self
+    }
+}
+
 // var + num
 
 macro_rules! var_num {
@@ -211,6 +283,40 @@ impl<'m, 'd> Add<IdxOrd<'m, 'd>> for Var<'m, 'd> {
 }
 
 impl<'m, 'd> Add<Var<'m, 'd>> for IdxOrd<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn add(self, rhs: Var<'m, 'd>) -> Self::Output {
+        rhs + self
+    }
+}
+
+// var + par
+
+impl<'m, 'd> Add<NumParD0<'m, 'd>> for Var<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn add(self, rhs: NumParD0<'m, 'd>) -> Self::Output {
+        self + rhs.to_num()
+    }
+}
+
+impl<'m, 'd> Add<Var<'m, 'd>> for NumParD0<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn add(self, rhs: Var<'m, 'd>) -> Self::Output {
+        rhs + self
+    }
+}
+
+impl<'m, 'd> Add<IntParD0<'m, 'd>> for Var<'m, 'd> {
+    type Output = LinExpr<'m, 'd>;
+
+    fn add(self, rhs: IntParD0<'m, 'd>) -> Self::Output {
+        self + rhs.to_int()
+    }
+}
+
+impl<'m, 'd> Add<Var<'m, 'd>> for IntParD0<'m, 'd> {
     type Output = LinExpr<'m, 'd>;
 
     fn add(self, rhs: Var<'m, 'd>) -> Self::Output {
