@@ -17,7 +17,7 @@ fn v1_at_int_cint() {
 
     // modeling
     let m = Model::new();
-    let s0 = m.cat_set_int();
+    let s0 = m.cat_set_int("s0");
     let i0 = s0.idx();
     let v1 = m.var1(VarType::Binary, s0);
     let sca1 = [v1.at(i0), v1[i0]];
@@ -52,7 +52,7 @@ fn v1_at_int_cstr() {
 
     // modeling
     let m = Model::new();
-    let s0 = m.cat_set_str();
+    let s0 = m.cat_set_str("s0");
     let i0 = s0.idx();
     let v1 = m.var1(VarType::Cont(Bounds::default()), s0);
     let sca1 = [v1.at(i0), v1[i0]];
@@ -87,7 +87,7 @@ fn v1_at_int_ord() {
 
     // modeling
     let m = Model::new();
-    let s0 = m.ord_set();
+    let s0 = m.ord_set("s0");
     let i0 = s0.idx();
     let v1 = m.var1(VarType::Binary, s0);
     let sca1 = [v1.at(i0), v1[i0]];

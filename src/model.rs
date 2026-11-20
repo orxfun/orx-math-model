@@ -12,6 +12,7 @@ use crate::{
     AsF64, Bag, DimVec, LinExpr, Ptr, Set, SetCatInt, SetCatStr, SetOrd, SetSym, Slot, Symbol,
     TConVal, ValTyp, VarType,
 };
+use alloc::string::{String, ToString};
 use core::mem::ManuallyDrop;
 use orx_imp_vec::Elem;
 
@@ -66,23 +67,23 @@ impl<'d> Model<'d> {
 
     // sets
 
-    pub fn cat_set_int<'m>(&'m self) -> CatInt<'m, 'd> {
-        self.set::<SetCatInt>()
+    pub fn cat_set_int<'m>(&'m self, key: impl ToString) -> CatInt<'m, 'd> {
+        self.set::<SetCatInt>(key)
     }
 
-    pub fn cat_set_str<'m>(&'m self) -> CatStr<'m, 'd> {
-        self.set::<SetCatStr>()
+    pub fn cat_set_str<'m>(&'m self, key: impl ToString) -> CatStr<'m, 'd> {
+        self.set::<SetCatStr>(key)
     }
 
-    pub fn ord_set<'m>(&'m self) -> Ord<'m, 'd> {
-        self.set::<SetOrd>()
+    pub fn ord_set<'m>(&'m self, key: impl ToString) -> Ord<'m, 'd> {
+        self.set::<SetOrd>(key)
     }
 
-    pub(crate) fn set<'m, S: Set>(&'m self) -> S::SetSym<'m, 'd> {
+    pub(crate) fn set<'m, S: Set>(&'m self, key: impl ToString) -> S::SetSym<'m, 'd> {
         let fun = FunSet::empty(S::typ());
         let fun_el = self.set_fun_bag.push(fun);
         let fun_slot = Slot::new(self, fun_el);
-        let data = DSet::new(fun_slot);
+        let data = DSet::new(key.to_string(), fun_slot);
         let el = self.set_bag.push(data);
         S::new_set_sym(self, el)
     }

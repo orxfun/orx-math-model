@@ -4,7 +4,7 @@ use crate::{Bounds, Model, VarType};
 fn v1_int_cint() {
     // modeling
     let m = Model::new();
-    let set = m.cat_set_int();
+    let set = m.cat_set_int("S");
     let _var = m.var1(VarType::Binary, set);
 }
 
@@ -12,7 +12,7 @@ fn v1_int_cint() {
 fn v1_int_cstr() {
     // modeling
     let m = Model::new();
-    let set = m.cat_set_str();
+    let set = m.cat_set_str("S");
     let _var = m.var1(VarType::Cont(Bounds::default()), set);
 }
 
@@ -20,6 +20,6 @@ fn v1_int_cstr() {
 fn v1_int_ord() {
     // modeling
     let m = Model::new();
-    let set = m.ord_set();
+    let set = m.ord_set("S");
     let _var = m.var1(VarType::Int(Bounds::default()), set);
 }

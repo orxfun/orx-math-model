@@ -9,7 +9,7 @@ fn var_from_var1() {
         ($s0:ty, $i0:expr) => {
             // modeling
             let m = Model::new();
-            let s0 = m.set::<$s0>();
+            let s0 = m.set::<$s0>("S");
             let vard = m.var1(VarType::Binary, s0);
 
             // running

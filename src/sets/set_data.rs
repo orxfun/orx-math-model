@@ -1,8 +1,10 @@
 use crate::sets::{FSet, FunSet};
 use crate::{Ptr, Res, ResValid, Set, SetTyp, Slot};
+use alloc::string::String;
 
 #[derive(derive_new::new)]
 pub struct DSet<'d> {
+    key: String,
     slot: Slot<'d, FunSet<'d>>,
 }
 

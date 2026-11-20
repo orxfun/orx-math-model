@@ -34,8 +34,8 @@ fn t_con_d2() {
 
     // modeling
     let m = Model::new();
-    let org = m.cat_set_str();
-    let dst = m.cat_set_str();
+    let org = m.cat_set_str("org");
+    let dst = m.cat_set_str("dst");
     let c = m.par2(org, dst);
     let y = m.var1(VarType::Binary, org);
     let x = m.var2(VarType::Cont(Bounds::default()), org, dst);

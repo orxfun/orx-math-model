@@ -24,8 +24,8 @@ fn p2_at_cint_cstr() {
 
     // modeling
     let m = Model::new();
-    let s0 = m.cat_set_int();
-    let s1 = m.cat_set_str();
+    let s0 = m.cat_set_int("s0");
+    let s1 = m.cat_set_str("s1");
     let i0 = s0.idx();
     let i1 = s1.idx();
     let par = m.par2(s0, s1);
@@ -88,8 +88,8 @@ fn p2_at_cstr_ord() {
 
     // modeling
     let m = Model::new();
-    let s0 = m.cat_set_str();
-    let s1 = m.ord_set();
+    let s0 = m.cat_set_str("s0");
+    let s1 = m.ord_set("s1");
     let i0 = s0.idx();
     let i1 = s1.idx();
     let par = m.par2_int(s0, s1);
@@ -147,8 +147,8 @@ fn p2_at_ord_cint() {
 
     // modeling
     let m = Model::new();
-    let s0 = m.ord_set();
-    let s1 = m.cat_set_int();
+    let s0 = m.ord_set("s0");
+    let s1 = m.cat_set_int("s1");
     let i0 = s0.idx();
     let i1 = s1.idx();
     let par = m.par2(s0, s1);

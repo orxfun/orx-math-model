@@ -12,7 +12,7 @@ fn p1_cint() {
 
     // modeling
     let m = Model::new();
-    let set = m.cat_set_int();
+    let set = m.cat_set_int("S");
     let par = m.par1_num(set);
 
     // binding
@@ -38,7 +38,7 @@ fn p1_cstr() {
 
     // modeling
     let m = Model::new();
-    let set = m.cat_set_str();
+    let set = m.cat_set_str("S");
     let par = m.par1_int(set);
 
     // binding
@@ -60,7 +60,7 @@ fn p1_ord() {
 
     // modeling
     let m = Model::new();
-    let set = m.ord_set();
+    let set = m.ord_set("S");
     let par = m.par1_num(set);
 
     // binding
