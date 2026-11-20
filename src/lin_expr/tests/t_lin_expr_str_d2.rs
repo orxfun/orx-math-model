@@ -65,6 +65,7 @@ fn t_lin_expr_str_d2() {
 
             let e = p[("2", 0)] * x[(i0, i1)];
             assert_eq!(exp_str(e), format!("4 {ex}_{ei}_{ej}"));
+            assert_eq!(exp_str(-e), format!("-4 {ex}_{ei}_{ej}"));
 
             let e = -p[(i0, i1)] * x[(i0, i1)];
             assert_eq!(exp_str(e), format!("-{ep} {ex}_{ei}_{ej}"));
@@ -80,6 +81,7 @@ fn t_lin_expr_str_d2() {
 
             let e = 3 + (-p[(i0, i1)]) * x[(i0, i1)];
             assert_eq!(exp_str(e), format!("-{ep} {ex}_{ei}_{ej} + 3"));
+            assert_eq!(exp_str(-e), format!("{ep} {ex}_{ei}_{ej} - 3"));
 
             let e = 2 + (-p[(i0, i1)]) * x[(i0, i1)] + 9;
             assert_eq!(exp_str(e), format!("-{ep} {ex}_{ei}_{ej} + 11"));
@@ -91,6 +93,10 @@ fn t_lin_expr_str_d2() {
             assert_eq!(
                 exp_str(e),
                 format!("2 {ex}_mia_1 - {ep} {ex}_sin_3 + 1.5 {ex}_{ei}_{ej} + 4")
+            );
+            assert_eq!(
+                exp_str(-e),
+                format!("-2 {ex}_mia_1 + {ep} {ex}_sin_3 - 1.5 {ex}_{ei}_{ej} - 4")
             );
 
             let e = 2 * x[("mia", 0)] + 7 - p[(i0, i1)] * x[("sin", 2)] + 1.5 * x[(i0, i1)] - 30.5;
@@ -141,6 +147,13 @@ fn t_lin_expr_str_d2() {
                 exp_str(e),
                 format!(
                     "4 {ex}_mia_0 - {} {ex}_sin_2 + 0.75 {ex}_{ei}_{ej} + 28.75",
+                    2.0 * ep
+                )
+            );
+            assert_eq!(
+                exp_str(-e),
+                format!(
+                    "-4 {ex}_mia_0 + {} {ex}_sin_2 -1 0.75 {ex}_{ei}_{ej} -1 28.75",
                     2.0 * ep
                 )
             );
