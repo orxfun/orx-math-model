@@ -1,14 +1,13 @@
 use crate::idxs::{DIdx, IdxCatInt, IdxCatStr, IdxOrd, UIdxVal};
 use crate::pars::{IntParD1, IntParD2, NumParD1, NumParD2, UFunP1, UFunP2, UFunP2_I0, FP1, FP2};
-use crate::scalars::{DNum, Int, Num, Val, ValInt, ValNum, Var};
+use crate::scalars::{Int, Num, ValInt, ValNum, Var};
 use crate::sets::into_idx::IdxAny;
 use crate::sets::{CatInt, CatStr, DSet, FSet, IndexCatInt, IndexCatStr, IndexOrd, Ord, UFunSet};
 use crate::vars::{VarD1, VarD2};
-use crate::{Elements, Model, Ptr, SetSym, SymWrap, Symbol, ValTyp};
-use alloc::boxed::Box;
-use alloc::string::{String, ToString};
+use crate::{Elements, Model, Ptr, SetSym, SymWrap, Symbol};
+use alloc::string::String;
 use core::fmt::Write;
-use core::mem::{transmute, ManuallyDrop};
+use core::mem::ManuallyDrop;
 use orx_imp_vec::Elem;
 
 // idx types

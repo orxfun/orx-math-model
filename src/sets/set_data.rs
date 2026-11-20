@@ -1,5 +1,4 @@
 use crate::sets::{FSet, FunSet};
-use crate::Elements;
 use crate::{Ptr, Res, ResValid, Set, SetTyp, Slot};
 
 #[derive(derive_new::new)]
@@ -18,15 +17,22 @@ impl<'d> DSet<'d> {
         self.slot.bind(fun)
     }
 
-    #[cfg(test)]
-    pub fn t_fill<S: Set>(&self, elements: &mut Elements<S::IdxRaw<'d>>) {
-        Res::assert_slot_bound(self.slot.state()).unwrap();
-        debug_assert_eq!(S::typ(), self.typ());
-        let fun = self.slot.get().get::<S>();
-        fun(elements);
-    }
-
     pub fn fun_set(&self) -> Ptr<'d, FunSet<'d>> {
         self.slot.ptr()
+    }
+}
+
+#[cfg(test)]
+mod ext_tests {
+    use super::*;
+    use crate::Elements;
+
+    impl<'d> DSet<'d> {
+        pub fn t_fill<S: Set>(&self, elements: &mut Elements<S::IdxRaw<'d>>) {
+            Res::assert_slot_bound(self.slot.state()).unwrap();
+            debug_assert_eq!(S::typ(), self.typ());
+            let fun = self.slot.get().get::<S>();
+            fun(elements);
+        }
     }
 }
