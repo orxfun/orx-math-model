@@ -4,10 +4,20 @@ use crate::{
 };
 use alloc::boxed::Box;
 
+#[repr(C)]
+pub union UBounds<'d> {
+    pub d0: Bounds<BoundD0<'d>>,
+    pub d1: Bounds<BoundD1<'d>>,
+    pub d2: Bounds<BoundD2<'d>>,
+}
+
+#[derive(Clone, Copy)]
 pub struct Bounds<T> {
     pub lower: T,
     pub upper: T,
 }
+
+// macros
 
 macro_rules! impl_from_con {
     ($bound:ty) => {
@@ -37,6 +47,7 @@ macro_rules! impl_from_num {
 
 // d0
 
+#[derive(Clone, Copy)]
 pub enum BoundD0<'d> {
     None,
     Con(f64),
@@ -60,6 +71,7 @@ impl<'m, 'd> From<NumParD0<'m, 'd>> for BoundD0<'d> {
 
 // d1
 
+#[derive(Clone, Copy)]
 pub enum BoundD1<'d> {
     None,
     Con(f64),
@@ -84,6 +96,7 @@ impl<'m, 'd, I0: Set> From<NumParD1<'m, 'd, I0>> for BoundD1<'d> {
 
 // d2
 
+#[derive(Clone, Copy)]
 pub enum BoundD2<'d> {
     None,
     Con(f64),
