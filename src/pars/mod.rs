@@ -1,6 +1,7 @@
 #[cfg(test)]
 mod tests;
 
+mod p0_sym;
 mod p1_fun;
 mod p1_sym;
 mod p2_fun;
@@ -8,6 +9,7 @@ mod p2_sym;
 mod par_data;
 mod par_fun;
 
+pub use p0_sym::{IntParD0, NumParD0};
 pub use p1_fun::{UFunP1, FP1};
 pub use p1_sym::{IntParD1, NumParD1};
 pub use p2_fun::{UFunP2, UFunP2_I0, FP2};

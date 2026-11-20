@@ -99,6 +99,20 @@ impl<'d> Model<'d> {
         S::new_idx_sym(self, el)
     }
 
+    // p0
+
+    fn par0_elem<'m>(&'m self, val_typ: ValTyp) -> Elem<'m, DPars<'d>> {
+        let fun = ParFun::empty(val_typ, DimVec::new([]));
+        let fun_el = self.par_fun_bag.push(fun);
+        let fun_slot = Slot::new(self, fun_el);
+        let sets = DimVec::new([]);
+        self.par_bag.push(DPars::new(sets, fun_slot))
+    }
+
+    pub fn par0_int<'m>(&'m self) -> Int<'m, 'd> {
+        todo!()
+    }
+
     // p1
 
     fn par1_elem<'m, S0>(&'m self, val_typ: ValTyp, s0: S0) -> Elem<'m, DPars<'d>>
