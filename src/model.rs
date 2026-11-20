@@ -7,7 +7,7 @@ use crate::scalars::{DNum, DVar, Int, Num, Val, ValNum, Var};
 use crate::sets::{CatInt, CatStr, DSet, FunSet, Ord};
 use crate::slot::State;
 use crate::sym_ref::SymRef;
-use crate::vars::{ContVarD0, ContVarD1, DVars, VarD0, VarD1, VarD2, VarType};
+use crate::vars::{BoundD0, ContVarD0, ContVarD1, DVars, VarD0, VarD1, VarD2, VarType};
 use crate::{
     AsF64, Bag, DimVec, LinExpr, Ptr, Set, SetCatInt, SetCatStr, SetOrd, SetSym, Slot, Symbol,
     TConVal, ValTyp, VarTyp,
@@ -215,7 +215,12 @@ impl<'d> Model<'d> {
 
     // vars
 
-    pub fn var0<'m, V: VarType>(&'m self, key: impl ToString) -> V::VarD0<'m, 'd> {
+    pub fn var0<'m, V: VarType>(
+        &'m self,
+        key: impl ToString,
+        lb: impl Into<BoundD0<'d>>,
+        ub: impl Into<BoundD0<'d>>,
+    ) -> V::VarD0<'m, 'd> {
         let data = DVars::new_d0(key.to_string(), V::typ());
         let el = self.vars_bag.push(data);
         VarD0::new(Symbol::new(self, el)).into()

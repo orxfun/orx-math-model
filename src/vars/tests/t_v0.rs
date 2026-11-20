@@ -5,7 +5,7 @@ use crate::{Model, SetCatInt, SetSym, SymWrap, VarTyp};
 fn t_v0() {
     // modeling
     let m = Model::new();
-    let var = m.var0::<Binary>("x");
+    let var = m.var0::<Binary>("x", 0, 1);
     let p0 = m.par0_int("p0");
     let s = m.cat_set_int("s");
     let i = s.idx();
