@@ -1,7 +1,6 @@
 #[cfg(test)]
 mod tests;
 
-mod c1_fun;
 mod con_data;
 mod con_macro;
 mod con_sym;
