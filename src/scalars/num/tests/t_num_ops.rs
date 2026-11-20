@@ -1,5 +1,5 @@
 use crate::scalars::num::{DNum, ValInt, ValNum};
-use crate::{Int, Model, Num, SymWrap, ValTyp};
+use crate::{Int, Model, Num, SymWrap};
 
 #[test]
 fn ops_num() {
