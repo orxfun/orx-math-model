@@ -3,25 +3,19 @@ use crate::constraints::{Constraint, DCon};
 use crate::idxs::{DIdx, IdxVal};
 use crate::lin_expr::DLinExpr;
 use crate::pars::{DPars, IntParD1, IntParD2, NumParD1, NumParD2, ParFun};
-use crate::scalars::{CommonNumbers, DNum, DVar, Int, Num, Val, ValNum, Var};
-// use crate::lin_expr::{DLinExpr, LinExpBag, LinExpr};
-// use crate::pars::{ParBag, ParD1, ParD2, ParFun, ParFunBag};
-// use crate::scalars::{DSca, FVar1, FVar2, ScaBag};
-use crate::sets::{CatInt, CatStr, DSet, FunSet, Ord, SetBag, SetFunBag};
-use crate::slot::{SlotStates, State};
+use crate::scalars::{DNum, DVar, Int, Num, Val, ValNum, Var};
+use crate::sets::{CatInt, CatStr, DSet, FunSet, Ord};
+use crate::slot::State;
 use crate::sym_ref::SymRef;
 use crate::vars::{DVars, VarD1, VarD2};
-// use crate::sym_refs::SymRefBag;
-// use crate::vars::{DVars, VarBag, VarD1, VarD2, VarType};
 use crate::{
-    AsF64, AsI64, Bag, DimVec, LinExpr, Ptr, Res, ResValid, Set, SetCatInt, SetCatStr, SetOrd,
-    SetSym, Slot, SymWrap, Symbol, TConVal, ValTyp, VarType,
+    AsF64, Bag, DimVec, LinExpr, Ptr, Set, SetCatInt, SetCatStr, SetOrd, SetSym, Slot, SymWrap,
+    Symbol, TConVal, ValTyp, VarType,
 };
-// use crate::{Int, Num, Sca, ScaInt, ScaNum, Val, Var};
-use alloc::boxed::Box;
 use core::mem::ManuallyDrop;
 use orx_imp_vec::Elem;
 
+#[derive(Default)]
 pub struct Model<'d> {
     // states
     slot_states: Bag<State>,
@@ -47,7 +41,6 @@ pub struct Model<'d> {
     // sca_bag: ManuallyDrop<ScaBag<'d>>,
     con_val_bag: Bag<DConVal>,
     sym_ref_bag: Bag<SymRef<'d>>,
-    common_numbers: CommonNumbers<'d>,
 
     // expr
     lin_exp_bag: Bag<DLinExpr<'d>>,
@@ -63,25 +56,7 @@ impl<'d> Drop for Model<'d> {
 
 impl<'d> Model<'d> {
     pub fn new() -> Self {
-        let num_bag = Bag::default();
-        let common_numbers = CommonNumbers::new(&num_bag);
-        Self {
-            slot_states: Default::default(),
-            set_fun_bag: Default::default(),
-            set_bag: Default::default(),
-            par_fun_bag: Default::default(),
-            par_bag: Default::default(),
-            vars_bag: Default::default(),
-            idx_val_bag: Default::default(),
-            idx_bag: Default::default(),
-            num_bag,
-            var_bag: Default::default(),
-            con_val_bag: Default::default(),
-            sym_ref_bag: Default::default(),
-            common_numbers,
-            lin_exp_bag: Default::default(),
-            constraints: Default::default(),
-        }
+        Self::default()
     }
 
     // states
@@ -229,21 +204,6 @@ impl<'d> Model<'d> {
     }
 
     // scalars
-
-    pub(crate) fn one<'m>(&'m self) -> Int<'m, 'd> {
-        let el = unsafe { self.common_numbers.one.into_el() };
-        Int::new(Symbol::new(self, el))
-    }
-
-    pub(crate) fn minus_one<'m>(&'m self) -> Int<'m, 'd> {
-        let el = unsafe { self.common_numbers.minus_one.into_el() };
-        Int::new(Symbol::new(self, el))
-    }
-
-    pub(crate) fn zero<'m>(&'m self) -> Int<'m, 'd> {
-        let el = unsafe { self.common_numbers.zero.into_el() };
-        Int::new(Symbol::new(self, el))
-    }
 
     pub(crate) fn val<'m, V: Val>(&'m self, data: DNum<'d>) -> V::Sym<'m, 'd> {
         debug_assert_eq!(data.typ, V::typ());
